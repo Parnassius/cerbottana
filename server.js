@@ -1,7 +1,7 @@
 const http = require('http');
 
 http.createServer(function(request, response) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.write('cerbottana');
-  res.end();
+  response.writeHead(200, {'Content-Type': 'text/plain'});
+  response.write('cerbottana');
+  response.end();
 }).listen(process.env.PORT || 5000);
