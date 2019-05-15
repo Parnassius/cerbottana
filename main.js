@@ -5,5 +5,7 @@ global.toId = function(text) {
 require('./chat.js');
 require('./parser.js');
 
+require('./server.js');
+
 global.Connection = null;
 require('./connection.js');
