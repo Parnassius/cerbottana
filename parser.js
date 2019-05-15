@@ -5,8 +5,6 @@ global.Parser = {
   parse: function(message) {
     if (!message) return;
 
-    console.log(message);
-
     let parts = message.split('|');
     let first = parts[0].split('\n');
     let roomid = first[0].toLowerCase().replace(/[^a-z0-9-]/g, '') || 'lobby';

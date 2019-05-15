@@ -1,28 +1,22 @@
 const WebSocket = require('faye-websocket').Client;
 
-function connect() {
-  const conn = new WebSocket("ws://" + process.env.SHOWDOWN_HOST + ":" + process.env.SHOWDOWN_PORT + "/showdown/websocket");
+const conn = new WebSocket("ws://" + process.env.SHOWDOWN_HOST + ":" + process.env.SHOWDOWN_PORT + "/showdown/websocket");
 
-  conn.onopen = function() {
-    console.log('connection open');
-  };
+conn.onopen = function() {
 
-  conn.onerror = function(error) {
-    console.log('error');
-    setTimeout(connect, 15000);
-  };
+};
 
-  conn.onclose = function(close) {
-    console.log('close');
-    setTimeout(connect, 15000);
-  };
+conn.onerror = function(error) {
+  process.exit(0);
+};
 
-  conn.onmessage = function(message) {
-    console.log('message: ' + message.data);
-    Parser.parse(message.data);
-  };
+conn.onclose = function(close) {
+  process.exit(0);
+};
 
-  Connection = conn;
-}
+conn.onmessage = function(message) {
+  console.log('message: ' + message.data);
+  Parser.parse(message.data);
+};
 
-connect();
+Connection = conn;
