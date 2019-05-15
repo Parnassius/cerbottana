@@ -1,10 +1,11 @@
 const WebSocket = require('faye-websocket').Client;
 
 function connect() {
+  console.log('opening connection');
   const conn = new WebSocket("ws://" + process.env.HOST + ":" + process.env.PORT + "/showdown/websocket");
 
   conn.onopen = function() {
-
+    console.log('connection open');
   };
 
   conn.onerror = function(error) {
