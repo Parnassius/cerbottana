@@ -15,7 +15,6 @@ conn.onclose = function(close) {
 };
 
 conn.onmessage = function(message) {
-  console.log('message: ' + message.data);
   Parser.parse(message.data);
 };
 
