@@ -1,3 +1,4 @@
+const fs = require('fs');
 const request = require('request');
 
 global.Parser = {
@@ -13,7 +14,7 @@ global.Parser = {
       case 'challstr':
         let challstr = parts.slice(2).join('|');
 
-        request.post('http://play.pokemonshowdown.com/action.php', {
+        request.post('https://play.pokemonshowdown.com/action.php', {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           },
@@ -39,6 +40,9 @@ global.Parser = {
         break;
       case 'updateuser':
         if (parts[2] !== process.env.USERNAME) return;
+        if (typeof process.env.AVATAR !== 'undefined') {
+          Chat.sendMessage(null, '/avatar ' + process.env.AVATAR);
+        }
         let rooms = (process.env.ROOMS + ',' + process.env.PRIVATE_ROOMS).replace(/^,|,$/g, '').split(',');
         for (let i = 0; i < rooms.length; i++) {
           Chat.sendMessage(null, '/join ' + rooms[i]);
@@ -77,6 +81,15 @@ global.Parser = {
       return;
     }
 
-    this.commands[command](user, room, message.indexOf(' ') + 1);
+    this.commands[command](user, room, message.substr(command.length + 2).trim());
   }
 };
+
+let loadCommands = function() {
+  let files = fs.readdirSync('./commands');
+  for (var i = 0; i < files.length; i++) {
+    require('./commands/' + files[i]);
+  }
+}
+
+loadCommands();
