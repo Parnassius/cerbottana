@@ -48,6 +48,18 @@ global.Parser = {
           Chat.sendMessage(null, '/join ' + rooms[i]);
         }
         break;
+      case 'J':
+      case 'j':
+        this.addUser(parts[2]);
+        break;
+      case 'L':
+      case 'l':
+        //
+        break;
+      case 'N':
+      case 'n':
+        this.addUser(parts[2]);
+        break;
       case 'pm':
         if (toId(parts[2]) === toId(process.env.USERNAME)) return;
         this.parseMessage(parts[2], null, parts.splice(4).join('|').trim());
@@ -60,9 +72,34 @@ global.Parser = {
         if (toId(parts[3]) === toId(process.env.USERNAME)) return;
         this.parseMessage(parts[3], roomid, parts.splice(4).join('|').trim());
         break;
+      case 'init':
+        this.addUsers(parts[6].trim().split(',').slice(1));
+        break;
+      case 'queryresponse':
+        this.parseQueryresponse(parts[2], parts[3]);
+        break;
     }
   },
-  parseMessage(user, room, message) {
+  addUser: function(user) {
+    databaseRequest('adduser', {
+      userid: toId(user),
+      nome: user.substr(1)
+    }, function(body) {
+      if (body.needs_avatar === 1) {
+        Chat.sendMessage(null, '/cmd userdetails ' + user);
+      }
+    });
+  },
+  addUsers: function(users) {
+    let self = this;
+    let interval = setInterval(function() {
+      if (users.length === 0) {
+        return clearInterval(interval);
+      }
+      self.addUser(users.shift());
+    }, 1000);
+  },
+  parseMessage: function(user, room, message) {
     if (message[0] === process.env.COMMAND_CHARACTER) {
       this.parseCommand(user, room, message.trim());
     } else if (room) {
@@ -71,7 +108,7 @@ global.Parser = {
       Chat.sendPM(user, "I'm a bot");
     }
   },
-  parseCommand(user, room, message) {
+  parseCommand: function(user, room, message) {
     let command = message.split(' ')[0].substr(1).toLowerCase();
 
     if (typeof this.commands[command] === 'string') {
@@ -92,6 +129,29 @@ global.Parser = {
       } else {
         Chat.sendMessage(room, result.msg);
       }
+    }
+  },
+  parseQueryresponse: function(cmd, data) {
+    switch (cmd) {
+      case 'userdetails':
+        try {
+          data = JSON.parse(data);
+        } catch(e) {}
+        if (typeof data === 'object' && data.avatar) {
+          let userid = data.userid;
+          let avatar = data.avatar;
+          let customavatar = 'N';
+          if (avatar[0] === '#') {
+            customavatar = 'S';
+            avatar = avatar.substr(1);
+          }
+          databaseRequest('setavatar', {
+            userid: userid,
+            avatar: avatar,
+            customavatar: customavatar
+          });
+        }
+        break;
     }
   }
 };

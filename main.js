@@ -1,3 +1,5 @@
+const request = require('request');
+
 process.on('uncaughtException', function(err) {
   console.log('uncaughtException: ' + err.stack);
 });
@@ -19,6 +21,24 @@ global.toId = function(text) {
 
 global.isVoice = function(user) {
   return "+*%@★#&~".indexOf(user[0]) !== -1;
+}
+
+global.databaseRequest = function(action, params, callback) {
+  request.post(process.env.DATABASE_API_URL, {
+    form: Object.assign({
+      key: process.env.DATABASE_API_KEY,
+      action: action
+    }, params)
+  }, function(err, res, body) {
+    if (!err && res.statusCode === 200) {
+      try {
+        body = JSON.parse(body);
+      } catch (e) {}
+      if (typeof body === 'object' && typeof callback === 'function') {
+        callback(body);
+      }
+    }
+  });
 }
 
 require('./chat.js');

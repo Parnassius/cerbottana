@@ -3,6 +3,9 @@ const THROTTLE_DELAY = 300;
 global.Chat = {
   lastMessage: 0,
   sendQueue: [],
+  sendHTMLBox: function(room, message) {
+    this.sendMessage(room, '/addhtmlbox ' + message);
+  },
   sendMessage: function(room, message) {
     this.send((room || '') + '|' + message);
   },
