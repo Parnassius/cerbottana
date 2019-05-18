@@ -72,9 +72,13 @@ global.Parser = {
     }
   },
   parseCommand(user, room, message) {
-    const command = message.split(' ')[0].substr(1);
+    let command = message.split(' ')[0].substr(1).toLowerCase();
 
-    if (!this.commands[command]) {
+    if (typeof this.commands[command] === 'string') {
+      command = this.commands[command];
+    }
+
+    if (typeof this.commands[command] !== 'function') {
       if (!room) {
         Chat.sendPM(user, 'Invalid command');
       }
