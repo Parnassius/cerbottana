@@ -140,15 +140,12 @@ global.Parser = {
         if (typeof data === 'object' && data.avatar) {
           let userid = data.userid;
           let avatar = data.avatar;
-          let customavatar = 'N';
-          if (avatar[0] === '#') {
-            customavatar = 'S';
-            avatar = avatar.substr(1);
+          if (avatarIDs[avatar]) {
+            avatar = avatarIDs[avatar];
           }
           databaseRequest('setavatar', {
             userid: userid,
-            avatar: avatar,
-            customavatar: customavatar
+            avatar: avatar
           });
         }
         break;
