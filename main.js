@@ -12,6 +12,11 @@ String.prototype.removeAccents = function() {
   text = text.replace(/ì/g, 'i');
   text = text.replace(/ò/g, 'o');
   text = text.replace(/ù/g, 'u');
+  text = text.replace(/À/g, 'A');
+  text = text.replace(/È|É/g, 'E');
+  text = text.replace(/Ì/g, 'I');
+  text = text.replace(/Ò/g, 'O');
+  text = text.replace(/Ù/g, 'U');
   return text;
 };
 
@@ -19,9 +24,13 @@ global.toId = function(text) {
   return text.toLowerCase().replace(/[^a-z0-9]/g, '');
 };
 
+global.isPrivate = function(room) {
+  return process.env.PRIVATE_ROOMS.split(',').indexOf(room) !== -1;
+};
+
 global.isVoice = function(user) {
   return "+*%@★#&~".indexOf(user[0]) !== -1;
-}
+};
 
 global.databaseRequest = function(action, params, callback) {
   request.post(process.env.DATABASE_API_URL, {
@@ -39,7 +48,7 @@ global.databaseRequest = function(action, params, callback) {
       }
     }
   });
-}
+};
 
 global.avatarIDs = {
   1: 'lucas',
