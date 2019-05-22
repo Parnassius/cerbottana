@@ -47,7 +47,10 @@ Parser.commands.setprofile = function(user, room, arg) {
 };
 
 Parser.commands.token = function(user, room, arg) {
-  const allowedUsers = ['parnassius'];
+  const allowedUsers = [
+    'aethernum',
+    'parnassius'
+  ];
 
   if (allowedUsers.indexOf(toId(user)) === -1) return false;
 
