@@ -123,7 +123,7 @@ global.Parser = {
     }
 
     const result = this.commands[command](user, room, message.substr(command.length + 2).trim());
-    if (result !== false) {
+    if (result) {
       if (room === null || result.pm) {
         Chat.sendPM(user, result.msg);
       } else {

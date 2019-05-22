@@ -1,10 +1,5 @@
 const request = require('request');
 
-process.on('uncaughtException', function(err) {
-  console.log('uncaughtException: ' + err.stack);
-});
-
-
 String.prototype.removeAccents = function() {
   var text = this;
   text = text.replace(/à/g, 'a');
