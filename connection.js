@@ -9,11 +9,11 @@ const connect = function() {
   };
 
   conn.onerror = function(error) {
-    connect();
+    setTimeout(connect, 15 * 1000);
   };
 
   conn.onclose = function(close) {
-    connect();
+    setTimeout(connect, 15 * 1000);
   };
 
   conn.onmessage = function(message) {
