@@ -1,5 +1,4 @@
 Parser.commands.profile = function(user, room, arg) {
-  return false;
   if (room === null || !isVoice(user)) return false;
 
   if (arg.trim() === '') {
