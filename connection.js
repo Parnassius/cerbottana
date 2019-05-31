@@ -7,11 +7,11 @@ conn.onopen = function() {
 };
 
 conn.onerror = function(error) {
-  process.exit(1);
+  restartBot();
 };
 
 conn.onclose = function(close) {
-  process.exit(1);
+  restartBot();
 };
 
 conn.onmessage = function(message) {

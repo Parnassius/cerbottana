@@ -1,3 +1,15 @@
+process.on('uncaughtException', function(err, origin) {
+  Connection.close();
+  databaseRequest('logerror', {
+    err: err.stack.toString()
+  }, function() {
+    restartBot();
+  });
+  setTimeout(function() {
+    restartBot();
+  }, 15 * 1000);
+});
+
 const request = require('request');
 
 require('./utils.js');

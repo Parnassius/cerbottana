@@ -1,5 +1,16 @@
 const request = require('request');
 
+global.restartBot = function() {
+  console.log('Restarting');
+  request.delete('https://api.heroku.com/apps/cerbottana/dynos', {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.heroku+json; version=3',
+      'Authorization': 'Bearer ' + process.env.HEROKU_TOKEN
+    }
+  });
+};
+
 String.prototype.removeAccents = function() {
   var text = this;
   text = text.replace(/à/g, 'a');
