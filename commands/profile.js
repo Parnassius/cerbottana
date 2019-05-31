@@ -64,13 +64,17 @@ Parser.commands.profile = function(user, room, arg) {
       html += '</div>';
       html += '<div style="display: table-cell; width: 100%; vertical-align: top">';
         html += '<b>' + body.nome + '</b><br>';
-        for (let i = 0; i < body.elitefour.length; i++) {
+        for (let i = 0; i < body.seasonal.length; i++) {
+          let title = 'Vincitore ' + body.seasonal[i].seasonal + ' ' + body.seasonal[i].anno;
+          html += '<img src="' + body.seasonal[i].immagine + '" width="12" height="12" title="' + title + '" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0; background: ' + (body.seasonal[i].sfondo) + '">';
+        }
+        for (let i = 0; i < Math.min(body.elitefour.length, 10); i++) {
           let title = body.elitefour[i].tier + ':';
           title += ' dal ' + dateFormat(body.elitefour[i].data);
           if (body.elitefour[i].datafine !== null) {
             title += ' al ' + dateFormat(body.elitefour[i].datafine);
           }
-          html += '<img src="' + body.elitefour[i].immagine + '" width="12" height="12" title="' + title + '" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0' + (body.elitefour[i].datafine !== null ? '; opacity: .5' : '') + '">';
+          html += '<img src="' + body.elitefour[i].immagine + '" width="12" height="12" title="' + title + '" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0; background: ' + (body.elitefour[i].sfondo) + (body.elitefour[i].datafine !== null ? '; opacity: .5' : '') + '">';
         }
         if (body.descrizione.trim() !== '') {
           html += '<hr style="margin: 4px 0">';
@@ -99,16 +103,4 @@ Parser.commands.setprofile = function(user, room, arg) {
   });
 
   return {msg: 'Salvato'};
-};
-
-Parser.commands.token = function(user, room, arg) {
-  const allowedUsers = [
-    'aethernum',
-    'parnassius'
-  ];
-
-  if (allowedUsers.indexOf(toId(user)) === -1) return false;
-
-  let token = Server.createToken();
-  return {msg: process.env.DATABASE_API_URL + 'dashboard.php?token=' + token, pm: true};
 };
