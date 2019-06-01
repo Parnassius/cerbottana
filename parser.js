@@ -89,6 +89,14 @@ global.Parser = {
         Chat.sendMessage(null, '/cmd userdetails ' + user);
       }
     });
+
+    if (process.env.ADMINISTRATORS.split(',').indexOf(toId(user)) !== -1) {
+      databaseRequest('getunapprovedprofiles', {}, function(body) {
+        if (body.num) {
+          Chat.sendPM(user, 'Ci sono ' + body.num + ' profili in attesa di approvazione. Usa .token per approvarli o rifiutarli.');
+        }
+      });
+    }
   },
   addUsers: function(users) {
     let self = this;

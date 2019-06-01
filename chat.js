@@ -10,7 +10,7 @@ global.Chat = {
     this.send((room || '') + '|' + message);
   },
   sendPM: function(user, message) {
-    this.send('|/w ' + user + ', ' + message);
+    this.send('|/w ' + toId(user) + ', ' + message);
   },
   send: function(message) {
     this.sendQueue.push(message);
