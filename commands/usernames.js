@@ -22,7 +22,7 @@ Parser.commands.cobse = 'consecutio';
 Parser.commands.conse = 'consecutio';
 Parser.commands.consecutio = function(user, room, arg) {
   if (room !== null && !isVoice(user)) return false;
-  let text = 'opss' + ['', 's', 'ss', 'sss'][Math.floor(Math.random() * 4)];
+  const text = 'opss' + ['', 's', 'ss', 'sss'][Math.floor(Math.random() * 4)];
   return {msg: text + ' ho lasciato il pc acceso tutta notte'};
 };
 
@@ -56,9 +56,9 @@ Parser.commands.howkings = function(user, room, arg) {
 Parser.commands.infli = 'inflikted';
 Parser.commands.inflikted = function(user, room, arg) {
   if (room !== null && !isVoice(user)) return false;
-  let text = "INFLIKTED".split("").sort(function(a, b) {
+  const text = 'INFLIKTED'.split('').sort(function(a, b) {
     return Math.random() - 0.5;
-  }).join("");
+  }).join('');
   return {msg: 'ciao ' + text};
 };
 
@@ -96,11 +96,13 @@ Parser.commands.r0spe = function(user, room, arg) {
 Parser.commands.silver = 'silver97';
 Parser.commands.silver97 = function(user, room, arg) {
   if (room !== null && !isVoice(user)) return false;
-  let tiers = [
-    "OU", "Ubers", "UU", "RU", "NU", "PU", "LC", "Monotype", "Anything Goes", "1v1", "ZU", "CAP",
-    "Doubles OU", "Doubles Ubers", "Doubles UU", "VGC"
+  const tiers = [
+    'OU', 'Ubers', 'UU', 'RU', 'NU', 'PU', 'LC', 'Monotype', 'Anything Goes',
+    '1v1', 'ZU', 'CAP', 'Doubles OU', 'Doubles Ubers', 'Doubles UU', 'VGC',
   ];
-  return {msg: 'qualcuno mi passa un team ' + tiers[Math.floor(Math.random() * tiers.length)]};
+  const tier = tiers[Math.floor(Math.random() * tiers.length)];
+  const text = 'qualcuno mi passa un team ' + tier;
+  return {msg: text};
 };
 
 Parser.commands.smilzo = function(user, room, arg) {

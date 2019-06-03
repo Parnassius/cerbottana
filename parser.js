@@ -6,19 +6,19 @@ global.Parser = {
   parse: function(message) {
     if (!message) return;
 
-    let parts = message.split('|');
-    let first = parts[0].split('\n');
-    let roomid = first[0].toLowerCase().replace(/[^a-z0-9-]/g, '') || 'lobby';
+    const parts = message.split('|');
+    const first = parts[0].split('\n');
+    const roomid = first[0].toLowerCase().replace(/[^a-z0-9-]/g, '') || 'lobby';
 
     switch (parts[1]) {
       case 'challstr':
-        let challstr = parts.slice(2).join('|');
+        const challstr = parts.slice(2).join('|');
 
         request.post('https://play.pokemonshowdown.com/action.php', {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: 'act=login&name=' + process.env.USERNAME + '&pass=' + process.env.PASSWORD + '&challstr=' + challstr
+          body: 'act=login&name=' + process.env.USERNAME + '&pass=' + process.env.PASSWORD + '&challstr=' + challstr,
         }, function(err, res, body) {
           if (!err && res.statusCode === 200) {
             if (body[0] === ']') {
@@ -43,7 +43,7 @@ global.Parser = {
         if (typeof process.env.AVATAR !== 'undefined') {
           Chat.sendMessage(null, '/avatar ' + process.env.AVATAR);
         }
-        let rooms = (process.env.ROOMS + ',' + process.env.PRIVATE_ROOMS).replace(/^,|,$/g, '').split(',');
+        const rooms = (process.env.ROOMS + ',' + process.env.PRIVATE_ROOMS).replace(/^,|,$/g, '').split(',');
         for (let i = 0; i < rooms.length; i++) {
           Chat.sendMessage(null, '/join ' + rooms[i]);
         }
@@ -83,7 +83,7 @@ global.Parser = {
   addUser: function(user) {
     databaseRequest('adduser', {
       userid: toId(user),
-      nome: user.substr(1)
+      nome: user.substr(1),
     }, function(body) {
       if (body.needs_avatar === 1) {
         Chat.sendMessage(null, '/cmd userdetails ' + user);
@@ -99,8 +99,8 @@ global.Parser = {
     }
   },
   addUsers: function(users) {
-    let self = this;
-    let interval = setInterval(function() {
+    const self = this;
+    const interval = setInterval(function() {
       if (users.length === 0) {
         return clearInterval(interval);
       }
@@ -113,7 +113,7 @@ global.Parser = {
     } else if (room) {
 
     } else { // pm
-      Chat.sendPM(user, "I'm a bot");
+      Chat.sendPM(user, 'I\'m a bot');
     }
   },
   parseCommand: function(user, room, message) {
@@ -144,28 +144,28 @@ global.Parser = {
       case 'userdetails':
         try {
           data = JSON.parse(data);
-        } catch(e) {}
+        } catch (e) {}
         if (typeof data === 'object' && data.avatar) {
-          let userid = data.userid;
+          const userid = data.userid;
           let avatar = data.avatar;
           if (avatarIDs[avatar]) {
             avatar = avatarIDs[avatar];
           }
           databaseRequest('setavatar', {
             userid: userid,
-            avatar: avatar
+            avatar: avatar,
           });
         }
         break;
     }
-  }
+  },
 };
 
-let loadCommands = function() {
-  let files = fs.readdirSync('./commands');
-  for (var i = 0; i < files.length; i++) {
+const loadCommands = function() {
+  const files = fs.readdirSync('./commands');
+  for (let i = 0; i < files.length; i++) {
     require('./commands/' + files[i]);
   }
-}
+};
 
 loadCommands();

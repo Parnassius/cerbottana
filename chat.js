@@ -18,13 +18,13 @@ global.Chat = {
   },
   processQueue: function() {
     if (this.sendQueue.length === 0) return;
-    let now = Date.now();
+    const now = Date.now();
     if (this.lastMessage + THROTTLE_DELAY < now) {
-      let msg = this.sendQueue.shift();
+      const msg = this.sendQueue.shift();
       Connection.send(msg);
       this.lastMessage = now;
     }
-  }
+  },
 };
 
 setInterval(function() {

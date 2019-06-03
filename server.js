@@ -5,10 +5,10 @@ global.Server = {
   createToken: function() {
     const token = crypto.randomBytes(16).toString('hex');
     databaseRequest('newtoken', {
-      token: token
+      token: token,
     });
     return token;
-  }
+  },
 };
 
 http.createServer(function(req, res) {

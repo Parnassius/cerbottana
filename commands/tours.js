@@ -6,6 +6,7 @@ Parser.commands.leaderboard = function(user, room, arg) {
       return Chat.sendMessage(room, 'Nessun risultato trovato');
     }
 
+    /* eslint-disable indent */
     let html = '<div style="max-height: 250px; overflow-y: auto">';
       html += '<div style="text-align: center"><b><big>';
         html += body[0].descrizione.replace(/</g, '&lt;') + ' ' + body[0].anno + ' - Fase 1';
@@ -47,6 +48,7 @@ Parser.commands.leaderboard = function(user, room, arg) {
         html += '</tbody>';
       html += '</table>';
     html += '</div>';
+    /* eslint-enable indent */
     Chat.sendHTMLBox(room, html);
   });
 

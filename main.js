@@ -1,7 +1,7 @@
 process.on('uncaughtException', function(err, origin) {
   Connection.close();
   databaseRequest('logerror', {
-    err: err.stack.toString()
+    err: err.stack.toString(),
   }, function() {
     restartBot();
   });
@@ -9,8 +9,6 @@ process.on('uncaughtException', function(err, origin) {
     restartBot();
   }, 15 * 1000);
 });
-
-const request = require('request');
 
 require('./utils.js');
 

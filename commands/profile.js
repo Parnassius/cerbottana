@@ -10,9 +10,9 @@ Parser.commands.elitefour = function(user, room, arg) {
   return false;
   if (room !== null && !isVoice(user)) return false;
 
-  let self = this;
+  const self = this;
   databaseRequest('getelitefour', {
-    tier: toId(arg)
+    tier: toId(arg),
   }, function(body) {
     if (body.length === 1) {
       if (room !== null && isVoice(user)) {
@@ -50,8 +50,9 @@ Parser.commands.profile = function(user, room, arg) {
   arg = toId(arg);
 
   databaseRequest('getprofile', {
-    userid: arg
+    userid: arg,
   }, function(body) {
+    /* eslint-disable indent */
     let html = '<div>';
       html += '<div style="display: table-cell; width: 80px; vertical-align: top">';
         html += '<img src="https://play.pokemonshowdown.com/sprites/';
@@ -65,7 +66,7 @@ Parser.commands.profile = function(user, room, arg) {
       html += '<div style="display: table-cell; width: 100%; vertical-align: top">';
         html += '<b>' + body.nome + '</b><br>';
         for (let i = 0; i < body.seasonal.length; i++) {
-          let title = 'Vincitore ' + body.seasonal[i].seasonal + ' ' + body.seasonal[i].anno;
+          const title = 'Vincitore ' + body.seasonal[i].seasonal + ' ' + body.seasonal[i].anno;
           html += '<img src="' + body.seasonal[i].immagine + '" width="12" height="12" title="' + title + '" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0; background: ' + (body.seasonal[i].sfondo) + '">';
         }
         for (let i = 0; i < Math.min(body.elitefour.length, 10); i++) {
@@ -84,6 +85,7 @@ Parser.commands.profile = function(user, room, arg) {
         }
       html += '</div>';
     html += '</div>';
+    /* eslint-enable indent */
     Chat.sendHTMLBox(room, html);
   });
 
@@ -99,7 +101,7 @@ Parser.commands.setprofile = function(user, room, arg) {
 
   databaseRequest('setprofile', {
     userid: toId(user),
-    descrizione: arg
+    descrizione: arg,
   });
 
   return {msg: 'Salvato'};
