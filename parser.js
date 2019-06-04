@@ -91,7 +91,9 @@ global.Parser = {
     });
 
     if (process.env.ADMINISTRATORS.split(',').indexOf(toId(user)) !== -1) {
-      databaseRequest('getunapprovedprofiles', {}, function(body) {
+      databaseRequest('getunapprovedprofiles', {
+        user: toId(user)
+      }, function(body) {
         if (body.num) {
           Chat.sendPM(user, 'Ci sono ' + body.num + ' profili in attesa di approvazione. Usa .token per approvarli o rifiutarli.');
         }
