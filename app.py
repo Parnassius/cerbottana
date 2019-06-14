@@ -1,8 +1,25 @@
 import asyncio
 import os
+import sys
+import time
+import traceback
 
 from connection import Connection
 from server import Server
+
+import utils
+
+def handle_exception(*exc_info):
+  utils.database_request(CONNECTION,
+                         'logerror',
+                         {'err': ''.join(traceback.format_exception(*exc_info))})
+
+  while True:
+    utils.restart_bot(CONNECTION)
+    time.sleep(15)
+
+sys.excepthook = handle_exception
+
 
 if __name__ == '__main__':
   SERVER = Server()
