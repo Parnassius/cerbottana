@@ -1,12 +1,23 @@
 import json
-import time
 import requests
 
 import utils
 
 
 async def add_user(self, user):
-  pass
+  body = utils.database_request(self, 'adduser', {'userid': utils.to_user_id(user),
+                                           'nome': user[1:]})
+  if body:
+    if 'needs_avatar' in body:
+      await self.send_message('', '/cmd userdetails {}'.format(user))
+
+  if utils.to_user_id(user) in self.administrators:
+    body = utils.databaseRequest(self, 'getunapprovedprofiles', {'user': utils.to_user_id(user)})
+    if body:
+      if body['num'] > 0:
+        text = 'Ci sono {} profili in attesa di approvazione.'
+        text += 'Usa .token per approvarli o rifiutarli.'
+        await self.send_pm(user, text.format(body['num']))
 
 async def parse_chat_message(self, room, user, message):
   if message[:len(self.command_character)] == self.command_character:
@@ -126,115 +137,3 @@ async def updatechallenges(self, room, data):
 
 async def queryresponse(self, room, querytype, data):
   await parse_queryresponse(self, querytype, data)
-
-
-
-
-
-
-"""
-elif parts[1] == 'player':
-  #player = parts[2]
-  user = parts[3]
-  #avatar = parts[4]
-  if utils.to_user_id(user) == utils.to_user_id(os.environ['USERNAME']):
-    for i in list(battles.keys()):
-      if 'ended' in battles[i] and battles[i]['ended'] < time.time() - 60:
-        battles.pop(i)
-    battles[roomid] = {}
-
-elif parts[1] == 'teamsize':
-  pass
-
-elif parts[1] == 'gametype':
-  #parts[2] -> singles o doubles o triples
-  if not roomid in battles:
-    continue
-  connection.send_message(roomid, '/timer on')
-  connection.send_message(roomid, 'gl hf')
-
-elif parts[1] == 'gen':
-  pass
-
-elif parts[1] == 'tier':
-  pass
-
-elif parts[1] == 'switch':
-  if not roomid in battles:
-    continue
-
-elif parts[1] == 'request':
-  try:
-    data = json.loads(parts[2])
-  except:
-    continue
-  parse_battle_request(roomid, data)
-
-elif parts[1] == 'win' or parts[1] == 'tie':
-  if not roomid in battles:
-    continue
-  connection.send_message(roomid, 'gg')
-  connection.send_message(roomid, '/leave')
-  battles[roomid]['ended'] = time.time()
-
-
-elif parts[1] == 'tournament':
-  parse_tournament(roomid, '|'.join(parts[2:]))
-"""
-
-
-
-
-
-
-"""
-
-
-
-def parse_tournament(roomid, msg):
-  parts = msg.split('|')
-  if parts[0] == 'create':
-    if parts[1][4:] in battle_tiers:
-      connection.send_message(roomid, '/tour join')
-  elif parts[0] == 'update':
-    data = json.loads(parts[1])
-    if 'challenged' in data:
-      connection.send_message(roomid, '/tour acceptchallenge')
-    elif 'challenges' in data and len(data['challenges']):
-      connection.send_message(roomid, '/tour challenge {user}'.format(user = data['challenges'][0]))
-
-
-def parse_battle_request(roomid, data):
-  rqid = data['rqid']
-  choices = []
-  n = 0
-  if 'wait' in data:
-    return
-  elif 'teamPreview' in data and 'maxTeamSize' in data:
-    n = 0
-    for i in data['side']['pokemon']:
-      n += 1
-      choices.append(n)
-    random.shuffle(choices)
-    team = ''.join(map(str, choices[:data['maxTeamSize']]))
-    choice = 'team {team}'.format(team = team)
-  elif 'active' in data and len(data['active']) and 'moves' in data['active'][0] and len(data['active'][0]['moves']):
-    for i in data['active'][0]['moves']:
-      n += 1
-      if not 'disabled' in i or not i['disabled']:
-        choices.append(n)
-    move = random.choice(choices)
-    choice = 'move {move}'.format(move = move)
-  elif 'side' in data and 'pokemon' in data['side'] and len(data['side']['pokemon']):
-    for i in data['side']['pokemon']:
-      n += 1
-      if not i['active'] and i['condition'] != '0 fnt':
-        choices.append(n)
-    pokemon = random.choice(choices)
-    choice = 'switch {pokemon}'.format(pokemon = pokemon)
-  else:
-    connection.send_message(roomid, 'non so cosa fare')
-    return
-  connection.send_message(roomid, '/choose {choice}|{rqid}'.format(choice = choice, rqid = rqid))
-
-"""

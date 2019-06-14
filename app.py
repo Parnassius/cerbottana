@@ -9,10 +9,12 @@ from server import Server
 
 import utils
 
-def handle_exception(*exc_info):
+def handle_exception(exc_type, exc_value, exc_traceback):
   utils.database_request(CONNECTION,
                          'logerror',
-                         {'err': ''.join(traceback.format_exception(*exc_info))})
+                         {'err': ''.join(traceback.format_exception(exc_type,
+                                                                    exc_value,
+                                                                    exc_traceback))})
 
   while True:
     utils.restart_bot(CONNECTION)
