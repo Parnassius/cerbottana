@@ -102,7 +102,7 @@ async def challstr(self, room, *challstring):
 
 async def updateuser(self, room, username, named, avatar, settings):
   # pylint: disable=too-many-arguments
-  if username != self.username:
+  if utils.to_user_id(username) != utils.to_user_id(self.username):
     return
 
   if avatar != self.avatar:
