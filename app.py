@@ -48,4 +48,5 @@ if __name__ == '__main__':
                                'superstaffbrosbrawl',
                                'challengecup1v1',
                                'hackmonscup'])
+  CONNECTION.set_heroku_token(os.environ['HEROKU_TOKEN'])
   asyncio.get_event_loop().run_until_complete(CONNECTION.open_connection())
