@@ -7,10 +7,6 @@ async def leaderboard(self, room, user, arg):
 
   body = utils.database_request(self, 'getleaderboard', {})
   if body:
-    if not body:
-      await self.send_reply(room, user, 'Nessun risultato trovato')
-      return
-
     html = '<div style="max-height: 250px; overflow-y: auto">'
     html += '  <div style="text-align: center"><b><big>{titolo}</big></b></div>'
     html += '  <hr style="margin-bottom: 0">'
@@ -65,3 +61,6 @@ async def leaderboard(self, room, user, arg):
       punteggio_prev = int(i['punteggio'])
 
     await self.send_htmlbox(room, html.format(titolo=titolo, tbody=tbody))
+
+  else:
+    await self.send_reply(room, user, 'Nessun risultato trovato')
