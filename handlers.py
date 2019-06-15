@@ -12,7 +12,7 @@ async def add_user(self, user):
       await self.send_message('', '/cmd userdetails {}'.format(user))
 
   if utils.to_user_id(user) in self.administrators:
-    body = utils.databaseRequest(self, 'getunapprovedprofiles', {'user': utils.to_user_id(user)})
+    body = utils.database_request(self, 'getunapprovedprofiles', {'user': utils.to_user_id(user)})
     if body:
       if body['num'] > 0:
         text = 'Ci sono {} profili in attesa di approvazione.'

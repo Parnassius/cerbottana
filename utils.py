@@ -46,7 +46,7 @@ def database_request(self, action, params):
                       data={**params,
                             'key': self.database_api_key,
                             'action': action})
-  if req.text == '':
+  if not req.text:
     return None
   return json.loads(req.text)
 
