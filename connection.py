@@ -146,7 +146,7 @@ class Connection:
 
 
   async def open_connection(self):
-    async with websockets.connect(self.url) as websocket:
+    async with websockets.connect(self.url, ping_interval=None) as websocket:
       self.websocket = websocket
       while True:
         message = await websocket.recv()
