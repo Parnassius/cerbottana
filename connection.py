@@ -23,7 +23,7 @@ class Connection:
     self.handlers = {
         'init': handlers.init,
         'title': handlers.title,
-        'userlist': handlers.users,
+        'users': handlers.users,
         'join': handlers.join, 'j': handlers.join, 'J': handlers.join,
         'leave': handlers.leave, 'l': handlers.leave, 'L': handlers.leave,
         'name': handlers.name, 'n': handlers.name, 'N': handlers.name,
