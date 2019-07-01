@@ -5,7 +5,7 @@ import utils
 
 
 async def add_user(self, user):
-  username = user.split('@')[0]
+  username = user[1:].split('@')[0]
   body = utils.database_request(self, 'adduser', {'userid': utils.to_user_id(username),
                                            'nome': username[1:]})
   if body:
@@ -102,7 +102,7 @@ async def challstr(self, room, *challstring):
     await self.send_message('', '/trn {},0,{}'.format(self.username, assertion))
 
 async def updateuser(self, room, user, named, avatar, settings):
-  username = user.split('@')[0]
+  username = user[1:].split('@')[0]
   # pylint: disable=too-many-arguments
   if utils.to_user_id(username) != utils.to_user_id(self.username):
     return
