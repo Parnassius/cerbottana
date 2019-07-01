@@ -5,19 +5,20 @@ import utils
 
 
 async def add_user(self, user):
-  body = utils.database_request(self, 'adduser', {'userid': utils.to_user_id(user),
-                                           'nome': user[1:]})
+  username = user.split('@')[0]
+  body = utils.database_request(self, 'adduser', {'userid': utils.to_user_id(username),
+                                           'nome': username[1:]})
   if body:
     if 'needs_avatar' in body:
-      await self.send_message('', '/cmd userdetails {}'.format(user))
+      await self.send_message('', '/cmd userdetails {}'.format(username))
 
-  if utils.to_user_id(user) in self.administrators:
-    body = utils.database_request(self, 'getunapprovedprofiles', {'user': utils.to_user_id(user)})
+  if utils.to_user_id(username) in self.administrators:
+    body = utils.database_request(self, 'getunapprovedprofiles', {'user': utils.to_user_id(username)})
     if body:
       if body['num'] > 0:
         text = 'Ci sono {} profili in attesa di approvazione.'
         text += 'Usa .token per approvarli o rifiutarli.'
-        await self.send_pm(user, text.format(body['num']))
+        await self.send_pm(username, text.format(body['num']))
 
 async def parse_chat_message(self, room, user, message):
   if message[:len(self.command_character)] == self.command_character:
@@ -100,7 +101,8 @@ async def challstr(self, room, *challstring):
   if assertion:
     await self.send_message('', '/trn {},0,{}'.format(self.username, assertion))
 
-async def updateuser(self, room, username, named, avatar, settings):
+async def updateuser(self, room, user, named, avatar, settings):
+  username = user.split('@')[0]
   # pylint: disable=too-many-arguments
   if utils.to_user_id(username) != utils.to_user_id(self.username):
     return
