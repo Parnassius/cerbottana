@@ -7,7 +7,7 @@ import utils
 async def add_user(self, user):
   username = user[1:].split('@')[0]
   body = utils.database_request(self, 'adduser', {'userid': utils.to_user_id(username),
-                                           'nome': username[1:]})
+                                           'nome': username})
   if body:
     if 'needs_avatar' in body:
       await self.send_message('', '/cmd userdetails {}'.format(username))
