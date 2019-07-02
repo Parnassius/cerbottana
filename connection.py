@@ -1,3 +1,5 @@
+import asyncio
+
 import websockets
 
 import utils
@@ -151,7 +153,7 @@ class Connection:
       while True:
         message = await websocket.recv()
         print('<< {}'.format(message))
-        await self.parse_message(message)
+        asyncio.create_task(self.parse_message(message))
 
   async def parse_message(self, message):
     if not message:
@@ -161,8 +163,6 @@ class Connection:
     if message[0] == '>':
       room = message.split('\n')[0]
     roomid = utils.to_room_id(room)
-
-    #roominit = False
 
     for msg in message.split('\n'):
 

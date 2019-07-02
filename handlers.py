@@ -1,5 +1,5 @@
+import asyncio
 import json
-import time
 import requests
 
 import utils
@@ -54,10 +54,9 @@ async def title(self, room, message):
   pass
 
 async def users(self, room, userlist):
-  return
   for user in userlist.split(',')[1:]:
     await add_user(self, user)
-
+    await asyncio.sleep(5)
 
 
 async def join(self, room, user):
@@ -76,12 +75,12 @@ async def chat(self, room, user, *message):
   await parse_chat_message(self, room, user, '|'.join(message).strip())
 
 async def server_timestamp(self, room, timestamp):
-  self.timestamp = timestamp
+  self.timestamp = int(timestamp)
 
 async def timestampchat(self, room, timestamp, user, *message):
   if utils.to_user_id(user) == utils.to_user_id(self.username):
     return
-  if timestamp <= self.timestamp:
+  if int(timestamp) <= self.timestamp:
     return
   await parse_chat_message(self, room, user, '|'.join(message).strip())
 
