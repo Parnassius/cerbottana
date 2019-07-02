@@ -153,7 +153,7 @@ class Connection:
       while True:
         message = await websocket.recv()
         print('<< {}'.format(message))
-        asyncio.create_task(self.parse_message(message))
+        asyncio.ensure_future(self.parse_message(message))
 
   async def parse_message(self, message):
     if not message:
