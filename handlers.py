@@ -1,4 +1,5 @@
 import json
+import time
 import requests
 
 import utils
@@ -53,8 +54,10 @@ async def title(self, room, message):
   pass
 
 async def users(self, room, userlist):
+  return
   for user in userlist.split(',')[1:]:
     await add_user(self, user)
+
 
 
 async def join(self, room, user):
