@@ -48,7 +48,10 @@ def database_request(self, action, params):
                             'action': action})
   if not req.text:
     return None
-  return json.loads(req.text)
+  try:
+    return json.loads(req.text)
+  except:
+    return None
 
 
 def is_voice(user):

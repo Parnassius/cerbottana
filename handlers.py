@@ -38,7 +38,7 @@ async def parse_queryresponse(self, cmd, data):
   data = json.loads(data)
   if cmd == 'userdetails':
     userid = data['userid']
-    avatar = data['avatar']
+    avatar = str(data['avatar'])
     if avatar in utils.AVATAR_IDS:
       avatar = utils.AVATAR_IDS[avatar]
     utils.database_request(self,
