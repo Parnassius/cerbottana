@@ -17,12 +17,43 @@ async def elitefour(self, room, user, arg):
       else:
         await self.send_pm(user, body[0]['utente'])
     elif len(body) > 1:
-      text = ''
+      if room is None:
+        text = ''
+        for i in body:
+          if text != '':
+            text += ' - '
+          text += '{tier}: {utente}'.format(tier=i['tier'], utente=i['utente'])
+        await self.send_reply(room, user, text)
+        return
+      html = '<table>'
+      html += '  <tr>'
+      html += '    <td style="text-align: center; padding: 5px 0 10px">'
+      html += '      <b><big>Lega Pokémon</big></b>'
+      html += '    </td>'
+      html += '  </tr>'
+      first = True
       for i in body:
-        if text != '':
-          text += ' - '
-        text += '{tier}: {utente}'.format(tier=i['tier'], utente=i['utente'])
-      await self.send_reply(room, user, text)
+        utente = i['utente']
+        html += '  <tr>'
+        html += '    <td>'
+        if utente is None:
+          color = 'inherit'
+        else:
+          color = utils.username_color(utils.to_user_id(utente))
+        html += '{tier}: <b style="color: {color}">{utente}</b><br>'.format(tier=i['tier'],
+                                                                            color=color,
+                                                                            utente=utente)
+        html += '    </td>'
+        html += '  </tr>'
+        if first:
+          html += '  <tr>'
+          html += '    <td colspan="3">'
+          html += '      <hr style="margin:0">'
+          html += '    </td>'
+          html += '  </tr>'
+          first = False
+      html += '</table>'
+      await self.send_htmlbox(room, html)
 
 async def profile(self, room, user, arg):
   # pylint: disable=too-many-locals
