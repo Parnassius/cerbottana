@@ -4,3 +4,4 @@ import plugins.token
 import plugins.tours
 import plugins.translations
 import plugins.usernames
+import plugins.miscellaneous
