@@ -112,6 +112,8 @@ async def updateuser(self, room, user, named, avatar, settings):
   if avatar != self.avatar:
     await self.send_message('', '/avatar {}'.format(self.avatar))
 
+  await self.send_message('', '/status {}'.format(self.statustext))
+
   for public_room in self.rooms:
     await self.send_message('', '/join {}'.format(public_room))
 

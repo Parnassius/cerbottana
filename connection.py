@@ -9,19 +9,22 @@ import plugins
 
 class Connection:
   # pylint: disable=too-many-instance-attributes
-  def __init__(self):
-    self.url = None
-    self.username = None
-    self.password = None
-    self.avatar = None
-    self.rooms = None
-    self.private_rooms = None
-    self.command_character = None
-    self.database_api_url = None
-    self.database_api_key = None
-    self.administrators = None
-    self.battle_tiers = None
-    self.heroku_token = None
+  def __init__(self, url, username, password, avatar, statustext,
+               rooms, private_rooms, command_character, database_api_url, database_api_key,
+               administrators, battle_tiers, heroku_token):
+    self.url = url
+    self.username = username
+    self.password = password
+    self.avatar = avatar
+    self.statustext = statustext
+    self.rooms = rooms
+    self.private_rooms = private_rooms
+    self.command_character = command_character
+    self.database_api_url = database_api_url
+    self.database_api_key = database_api_key
+    self.administrators = administrators
+    self.battle_tiers = battle_tiers
+    self.heroku_token = heroku_token
     self.handlers = {
         'init': handlers.init,
         'title': handlers.title,
@@ -109,43 +112,6 @@ class Connection:
         'volca': plugins.usernames.v0lca}
     self.timestamp = 0
     self.websocket = None
-
-  def set_url(self, url):
-    self.url = url
-
-  def set_username(self, username):
-    self.username = username
-
-  def set_password(self, password):
-    self.password = password
-
-  def set_avatar(self, avatar):
-    self.avatar = avatar
-
-  def set_rooms(self, rooms):
-    self.rooms = rooms
-
-  def set_private_rooms(self, private_rooms):
-    self.private_rooms = private_rooms
-
-  def set_command_character(self, command_character):
-    self.command_character = command_character
-
-  def set_database_api_url(self, database_api_url):
-    self.database_api_url = database_api_url
-
-  def set_database_api_key(self, database_api_key):
-    self.database_api_key = database_api_key
-
-  def set_administrators(self, administrators):
-    self.administrators = administrators
-
-  def set_battle_tiers(self, battle_tiers):
-    self.battle_tiers = battle_tiers
-
-  def set_heroku_token(self, heroku_token):
-    self.heroku_token = heroku_token
-
 
   async def open_connection(self):
     async with websockets.connect(self.url, ping_interval=None) as websocket:
