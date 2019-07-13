@@ -50,7 +50,7 @@ def database_request(self, action, params):
     return None
   try:
     return json.loads(req.text)
-  except:
+  except Exception as ex:
     return None
 
 
