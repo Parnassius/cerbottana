@@ -104,7 +104,7 @@ async def profile(self, room, user, arg):
                                                 anno=i['anno']),
                              sfondo=i['sfondo'],
                              opacity='')
-    title = '{tier}: {dal}{al}'
+    title = '{tier}:{dal}{al}'
     for i in body['elitefour'][:10]:
       if i['datafine'] is not None:
         opacity = '; opacity: .5'
