@@ -53,6 +53,9 @@ class Connection:
         'profile': plugins.profile.profile,
         'setprofile': plugins.profile.setprofile,
 
+        'meme': plugins.shitpost.memes,
+        'memes': plugins.shitpost.memes,
+        'mims': plugins.shitpost.memes,
         'shitpost': plugins.shitpost.shitpost,
 
         'token': plugins.token.token,
