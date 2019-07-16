@@ -121,7 +121,20 @@ async def updateuser(self, room, user, named, avatar, settings):
     await self.send_message('', '/join {}'.format(private_room))
 
 async def formats(self, room, *formatslist):
-  pass
+  tiers = []
+  section = None
+  section_next = False
+  for tier in formatslist:
+    if tier[0] == ',':
+      section_next = True
+      continue
+    if section_next:
+      section = tier
+      section_next = False
+      continue
+    parts = tier.split(',')
+    tiers.append({'name': parts[0], 'section': section})
+  self.tiers = tiers
 
 async def updatesearch(self, room, data):
   data = json.loads(data)

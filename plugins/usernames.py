@@ -98,9 +98,7 @@ async def r0spe(self, room, user, arg):
 async def silver97(self, room, user, arg):
   if room is not None and not utils.is_voice(user):
     return
-  tiers = ['OU', 'Ubers', 'UU', 'RU', 'NU', 'PU', 'LC', 'Monotype', 'Anything Goes',
-           '1v1', 'ZU', 'CAP', 'Doubles OU', 'Doubles Ubers', 'Doubles UU', 'VGC']
-  await self.send_reply(room, user, 'qualcuno mi passa un team {}'.format(random.choice(tiers)))
+  await self.send_reply(room, user, 'qualcuno mi passa un team {}'.format(random.choice(self.tiers)['name']))
 
 async def smilzo(self, room, user, arg):
   if room is not None and not utils.is_voice(user):

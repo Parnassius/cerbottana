@@ -115,6 +115,7 @@ class Connection:
         'volca': plugins.usernames.v0lca}
     self.timestamp = 0
     self.websocket = None
+    self.tiers = None
 
   async def open_connection(self):
     async with websockets.connect(self.url, ping_interval=None) as websocket:
