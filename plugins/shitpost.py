@@ -3,7 +3,7 @@ import random
 import utils
 
 async def shitpost(self, room, user, arg):
-  if room is None or not utils.is_private(self, room):
+  if room is None or not utils.is_voice(user):
     return
 
   message = utils.remove_accents(arg.strip())
@@ -16,6 +16,8 @@ async def shitpost(self, room, user, arg):
   text2 = ''
 
   if message == '':
+    if not utils.is_private(self, room):
+      return
     message = 'SHITPOST'
 
   message = list(message)

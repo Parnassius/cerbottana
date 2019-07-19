@@ -56,6 +56,7 @@ class Connection:
         'meme': plugins.shitpost.memes,
         'memes': plugins.shitpost.memes,
         'mims': plugins.shitpost.memes,
+        'say': plugins.shitpost.shitpost,
         'shitpost': plugins.shitpost.shitpost,
 
         'token': plugins.token.token,
