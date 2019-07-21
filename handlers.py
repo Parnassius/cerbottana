@@ -8,13 +8,15 @@ import utils
 async def add_user(self, user):
   username = user[1:].split('@')[0]
   body = utils.database_request(self, 'adduser', {'userid': utils.to_user_id(username),
-                                           'nome': username})
+                                                  'nome': username})
   if body:
     if 'needs_avatar' in body:
       await self.send_message('', '/cmd userdetails {}'.format(username))
 
   if utils.to_user_id(username) in self.administrators:
-    body = utils.database_request(self, 'getunapprovedprofiles', {'user': utils.to_user_id(username)})
+    body = utils.database_request(self,
+                                  'getunapprovedprofiles',
+                                  {'user': utils.to_user_id(username)})
     if body:
       if body['num'] > 0:
         text = 'Ci sono {} profili in attesa di approvazione.'

@@ -50,7 +50,7 @@ def database_request(self, action, params):
     return None
   try:
     return json.loads(req.text)
-  except Exception as ex:
+  except NameError:
     return None
 
 
@@ -63,8 +63,7 @@ def is_private(self, room):
 
 def username_color(name):
   # pylint: disable=too-many-locals,invalid-name
-  if name in CUSTOM_COLORS:
-    name = CUSTOM_COLORS[name]
+  name = CUSTOM_COLORS.get(name, name)
   md5 = hashlib.md5(name.encode('utf-8')).hexdigest()
 
   h = int(md5[4:8], 16) % 360
@@ -529,7 +528,6 @@ CUSTOM_COLORS = {'theimmortal': 'taco',
                  'macle': 'flogged',
                  'ashiemore': 'poncp',
                  'charles': 'charlescarmichael',
-                 'sigilyph': 'ek6',
                  'spy': 'spydreigon',
                  'kinguu': 'dodmen',
                  'dodmen': 'kinguu',
