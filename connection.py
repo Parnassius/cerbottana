@@ -43,6 +43,9 @@ class Connection:
         'updatechallenges': handlers.updatechallenges,
         'queryresponse': handlers.queryresponse}
     self.commands = {
+        '8ball': plugins.eightball.eightball,
+        'eightball': plugins.eightball.eightball,
+
         'campione': plugins.profile.champion,
         'champion': plugins.profile.champion,
         'e4': plugins.profile.elitefour,
