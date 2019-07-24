@@ -19,7 +19,7 @@ async def add_user(self, user):
                                   {'user': utils.to_user_id(username)})
     if body:
       if body['num'] > 0:
-        text = 'Ci sono {} profili in attesa di approvazione.'
+        text = 'Ci sono {} profili in attesa di approvazione. '
         text += 'Usa .token per approvarli o rifiutarli.'
         await self.send_pm(username, text.format(body['num']))
 
