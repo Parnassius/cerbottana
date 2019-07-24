@@ -36,7 +36,7 @@ async def edgummet(self, room, user, arg):
 async def francyy(self, room, user, arg):
   if room is not None and not utils.is_voice(user):
     return
-  await self.send_reply(room, user, 'ei qualcuno ha qualche codice tcgo??? :3')
+  await self.send_reply(room, user, 'aiuto ho riso irl')
 
 async def haund(self, room, user, arg):
   if room is not None and not utils.is_voice(user):
