@@ -32,7 +32,7 @@ async def shitpost(self, room, user, arg):
       text2 += LETTERS[i][2]
 
   await self.send_htmlbox(room,
-                          '<pre style="margin:0">{}\n{}\n{}</pre>'.format(text0,
+                          '<pre style="margin: 0; overflow-x: auto">{}\n{}\n{}</pre>'.format(text0,
                                                                           text1,
                                                                           text2))
 
