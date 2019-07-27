@@ -46,6 +46,8 @@ class Connection:
         '8ball': plugins.eightball.eightball,
         'eightball': plugins.eightball.eightball,
 
+        'lega': plugins.links.lega,
+
         'campione': plugins.profile.champion,
         'champion': plugins.profile.champion,
         'e4': plugins.profile.elitefour,
