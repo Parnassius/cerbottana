@@ -20,6 +20,9 @@ async def shitpost(self, room, user, arg):
       return
     message = 'SHITPOST'
 
+  if not utils.is_private(self, room) and 'x' in message:
+    message = 'lolno'
+
   message = list(message)
   for i in message:
     if i in LETTERS:
