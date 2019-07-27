@@ -7,7 +7,7 @@ async def shitpost(self, room, user, arg):
     return
 
   message = utils.remove_accents(arg.strip())
-  if len(message) > 25:
+  if len(message) > 50:
     await self.send_reply(room, user, 'Testo troppo lungo')
     return
 
