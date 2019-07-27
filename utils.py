@@ -588,4 +588,5 @@ CUSTOM_COLORS = {'theimmortal': 'taco',
                  'ransei': '54j7o',
                  'snaquaza': 'prrrrrrrrr',
                  'alpha': 'alphawittem',
+                 'asheviere': '54hw4',
                  'cathy': ''}
