@@ -148,6 +148,7 @@ async def updatesearch(self, room, data):
           #await self.send_message('', '/join {}'.format(i))
 
 async def updatechallenges(self, room, data):
+  pass
   data = json.loads(data)
   if 'challengesFrom' in data:
     for i in data['challengesFrom']:
