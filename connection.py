@@ -48,6 +48,9 @@ class Connection:
 
         'lega': plugins.links.lega,
 
+        'location': plugins.locations.location,
+        'locations': plugins.locations.location,
+
         'campione': plugins.profile.champion,
         'champion': plugins.profile.champion,
         'e4': plugins.profile.elitefour,

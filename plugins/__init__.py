@@ -1,5 +1,6 @@
 import plugins.eightball
 import plugins.links
+import plugins.locations
 import plugins.profile
 import plugins.shitpost
 import plugins.token
