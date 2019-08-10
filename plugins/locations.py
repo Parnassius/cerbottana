@@ -40,7 +40,7 @@ async def location(self, room, user, arg):
                                                                                                                                             'min_level': 100,
                                                                                                                                             'max_level': 1,
                                                                                                                                             'rarity': {'base': 0,
-                                                                                                                                                       'conditions': []}}
+                                                                                                                                                       'conditions': {}}}
 
     encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['min_level'] = min(int(encounter['min_level']), encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['min_level'])
     encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['max_level'] = max(int(encounter['max_level']), encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['max_level'])
@@ -51,8 +51,10 @@ async def location(self, room, user, arg):
       condition_names = []
       for condition in encounter_conditions:
         condition_names.append(next((item['name'] for item in ENCOUNTER_CONDITION_VALUE_PROSE if item['encounter_condition_value_id'] == condition['encounter_condition_value_id'] and item['local_language_id'] == '9'), None))
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions'].append({'name': ', '.join(condition_names),
-                                                                                                                                                                    'rarity': int(encounter_slot['rarity'])})
+      condition_name = ', '.join(condition_names)
+      if not condition_name in encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions']:
+        encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions'][condition_name] = 0
+      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions'][condition_name] += int(encounter_slot['rarity'])
     else:
       encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['base'] += int(encounter_slot['rarity'])
 
@@ -76,8 +78,8 @@ async def location(self, room, user, arg):
           levels += '-' + str(encounters[version]['encounters'][encounter]['methods'][method]['max_level'])
         conditions = ''
         for condition in encounters[version]['encounters'][encounter]['methods'][method]['rarity']['conditions']:
-          conditions += conditions_col.format(rarity=condition['rarity'],
-                                              name=condition['name'])
+          conditions += conditions_col.format(rarity=encounters[version]['encounters'][encounter]['methods'][method]['rarity']['conditions'][condition],
+                                              name=condition)
         html += row.format(location=encounters[version]['encounters'][encounter]['location_name'],
                            method=encounters[version]['encounters'][encounter]['methods'][method]['encounter_method_name'],
                            levels=levels,
