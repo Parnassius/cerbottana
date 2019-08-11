@@ -6,7 +6,9 @@ async def location(self, room, user, arg):
   if room is None or not utils.is_voice(user):
     return
 
-  pokemon = next((item for item in POKEMON if item['identifier'] == arg), None)
+  arg = utils.to_user_id(utils.remove_accents(arg.lower()))
+
+  pokemon = next((item for item in POKEMON if utils.to_user_id(item['identifier']) == arg), None)
   if pokemon is None:
     return await self.send_reply(room, user, 'Nessun dato')
 
@@ -87,6 +89,9 @@ async def location(self, room, user, arg):
                            conditions=conditions)
     html += '</tbody></table>'
     html += '</details>'
+
+  if html == '':
+    return await self.send_reply(room, user, 'Nessun dato')
 
   await self.send_htmlbox(room, html)
 
