@@ -146,3 +146,10 @@ async def setprofile(self, room, user, arg):
                           'descrizione': arg})
 
   await self.send_reply(room, user, 'Salvato')
+
+async def updateavatar(self, room, user, arg):
+  if utils.to_user_id(user) not in self.administrators:
+    return
+
+  await self.send_message('', '/cmd userdetails {}'.format(utils.to_user_id(arg)))
+  await self.send_reply(room, user, 'Fatto')

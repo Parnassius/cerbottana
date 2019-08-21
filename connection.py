@@ -60,6 +60,7 @@ class Connection:
         'superquattro': plugins.profile.elitefour,
         'profile': plugins.profile.profile,
         'setprofile': plugins.profile.setprofile,
+        'updateavatar': plugins.profile.updateavatar,
 
         'meme': plugins.shitpost.memes,
         'memes': plugins.shitpost.memes,

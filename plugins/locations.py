@@ -1,6 +1,17 @@
-import csv
-
 import utils
+
+from veekun import ENCOUNTER_CONDITION_VALUE_MAP
+from veekun import ENCOUNTER_CONDITION_VALUE_PROSE
+from veekun import ENCOUNTER_METHOD_PROSE
+from veekun import ENCOUNTER_METHODS
+from veekun import ENCOUNTER_SLOTS
+from veekun import ENCOUNTERS
+from veekun import LOCATION_NAMES
+from veekun import LOCATION_AREA_PROSE
+from veekun import LOCATION_AREAS
+from veekun import POKEMON
+from veekun import VERSION_NAMES
+
 
 async def location(self, room, user, arg):
   if room is None or not utils.is_voice(user):
@@ -94,37 +105,3 @@ async def location(self, room, user, arg):
     return await self.send_reply(room, user, 'Nessun dato')
 
   await self.send_htmlbox(room, html)
-
-
-with open('./data/veekun/encounter_condition_value_map.csv', 'r') as f:
-  ENCOUNTER_CONDITION_VALUE_MAP = list(csv.DictReader(f))
-
-with open('./data/veekun/encounter_condition_value_prose.csv', 'r') as f:
-  ENCOUNTER_CONDITION_VALUE_PROSE = list(csv.DictReader(f))
-
-with open('./data/veekun/encounter_method_prose.csv', 'r') as f:
-  ENCOUNTER_METHOD_PROSE = list(csv.DictReader(f))
-
-with open('./data/veekun/encounter_methods.csv', 'r') as f:
-  ENCOUNTER_METHODS = list(csv.DictReader(f))
-
-with open('./data/veekun/encounter_slots.csv', 'r') as f:
-  ENCOUNTER_SLOTS = list(csv.DictReader(f))
-
-with open('./data/veekun/encounters.csv', 'r') as f:
-  ENCOUNTERS = list(csv.DictReader(f))
-
-with open('./data/veekun/location_names.csv', 'r') as f:
-  LOCATION_NAMES = list(csv.DictReader(f))
-
-with open('./data/veekun/location_area_prose.csv', 'r') as f:
-  LOCATION_AREA_PROSE = list(csv.DictReader(f))
-
-with open('./data/veekun/location_areas.csv', 'r') as f:
-  LOCATION_AREAS = list(csv.DictReader(f))
-
-with open('./data/veekun/pokemon.csv', 'r') as f:
-  POKEMON = list(csv.DictReader(f))
-
-with open('./data/veekun/version_names.csv', 'r') as f:
-  VERSION_NAMES = list(csv.DictReader(f))
