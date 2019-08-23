@@ -155,8 +155,11 @@ class Connection:
         await self.handlers[parts[1]](self, roomid, *parts[2:])
 
 
-  async def send_htmlbox(self, room, message):
-    await self.send_message(room, '/addhtmlbox {}'.format(message))
+  async def send_htmlbox(self, room, user, message):
+    if room is None:
+      await self.send_message(self.rooms[0], '/pminfobox {}, {}'.format(user, message))
+    else:
+      await self.send_message(room, '/addhtmlbox {}'.format(message))
 
   async def send_reply(self, room, user, message):
     if room is None:

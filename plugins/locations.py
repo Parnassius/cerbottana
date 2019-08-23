@@ -14,7 +14,7 @@ from veekun import VERSION_NAMES
 
 
 async def location(self, room, user, arg):
-  if room is None or not utils.is_voice(user):
+  if room is not None and not utils.is_voice(user):
     return
 
   arg = utils.to_user_id(utils.remove_accents(arg.lower()))
@@ -104,4 +104,4 @@ async def location(self, room, user, arg):
   if html == '':
     return await self.send_reply(room, user, 'Nessun dato')
 
-  await self.send_htmlbox(room, html)
+  await self.send_htmlbox(room, user, html)

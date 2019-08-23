@@ -4,7 +4,7 @@ import random
 import utils
 
 async def shitpost(self, room, user, arg):
-  if room is None or not utils.is_voice(user):
+  if room is not None and not utils.is_voice(user):
     return
 
   message = utils.remove_accents(arg.strip())
@@ -35,10 +35,11 @@ async def shitpost(self, room, user, arg):
       text1 += LETTERS[i][1]
       text2 += LETTERS[i][2]
 
+  html = '<pre style="margin: 0; overflow-x: auto">{}<br>{}<br>{}</pre>'
+
   await self.send_htmlbox(room,
-                          '<pre style="margin: 0; overflow-x: auto">{}\n{}\n{}</pre>'.format(text0,
-                                                                          text1,
-                                                                          text2))
+                          user,
+                          html.format(text0, text1, text2))
 
 async def memes(self, room, user, arg):
   if room is None or not utils.is_private(self, room):

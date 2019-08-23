@@ -17,14 +17,6 @@ async def elitefour(self, room, user, arg):
       else:
         await self.send_pm(user, body[0]['utente'])
     elif len(body) > 1:
-      if room is None:
-        text = ''
-        for i in body:
-          if text != '':
-            text += ' - '
-          text += '{tier}: {utente}'.format(tier=i['tier'], utente=i['utente'])
-        await self.send_reply(room, user, text)
-        return
       html = '<table>'
       html += '  <tr>'
       html += '    <td style="text-align: center; padding: 5px 0 10px">'
@@ -53,11 +45,11 @@ async def elitefour(self, room, user, arg):
           html += '  </tr>'
           first = False
       html += '</table>'
-      await self.send_htmlbox(room, html)
+      await self.send_htmlbox(room, user, html)
 
 async def profile(self, room, user, arg):
   # pylint: disable=too-many-locals
-  if room is None or not utils.is_voice(user):
+  if room is not None and not utils.is_voice(user):
     return
 
   if arg.strip() == '':
@@ -124,12 +116,12 @@ async def profile(self, room, user, arg):
 
     descrizione = body['descrizione'].replace('<', '&lt;')
 
-    await self.send_htmlbox(room, html.format(avatar_dir=avatar_dir,
-                                              avatar_name=avatar_name,
-                                              name_color=name_color,
-                                              nome=nome,
-                                              badges=badges,
-                                              descrizione=descrizione))
+    await self.send_htmlbox(room, user, html.format(avatar_dir=avatar_dir,
+                                                    avatar_name=avatar_name,
+                                                    name_color=name_color,
+                                                    nome=nome,
+                                                    badges=badges,
+                                                    descrizione=descrizione))
 
 
 async def setprofile(self, room, user, arg):

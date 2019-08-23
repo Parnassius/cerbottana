@@ -2,7 +2,7 @@ import utils
 
 async def leaderboard(self, room, user, arg):
   # pylint: disable=too-many-locals,too-many-statements
-  if room is None or not utils.is_voice(user):
+  if room is not None and not utils.is_voice(user):
     return
 
   body = utils.database_request(self, 'getleaderboard', {})
@@ -60,7 +60,7 @@ async def leaderboard(self, room, user, arg):
 
       punteggio_prev = int(i['punteggio'])
 
-    await self.send_htmlbox(room, html.format(titolo=titolo, tbody=tbody))
+    await self.send_htmlbox(room, user, html.format(titolo=titolo, tbody=tbody))
 
   else:
     await self.send_reply(room, user, 'Nessun risultato trovato')
