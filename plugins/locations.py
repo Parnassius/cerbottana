@@ -74,7 +74,18 @@ async def location(self, room, user, arg):
 
   versions_sorted = sorted(encounters, key=int)
 
-  row = '<tr><td>{location}</td><td>{method}</td><td>{levels}</td><td style="text-align:right">{rarity}</td><td>{conditions}</td></tr>'
+  trow = '<tr>'
+  trow += '  <td>{location}</td>'
+  trow += '  <td>{method}</td>'
+  trow += '  <td>{levels}</td>'
+  trow += '  <td style="text-align:right">{rarity}</td>'
+  trow += '  <td>{conditions}</td>'
+  trow += '</tr>'
+  trow += '<tr>'
+  trow += '  <td colspan="5">'
+  trow += '    <hr style="margin:0">'
+  trow += '  </td>'
+  trow += '</tr>'
   conditions_col = '+{rarity}% {name}<br>'
   #head = '<tr><th>Location</th>
   head = '<summary><b><big>{version}</big></b></summary>'
@@ -93,11 +104,11 @@ async def location(self, room, user, arg):
         for condition in encounters[version]['encounters'][encounter]['methods'][method]['rarity']['conditions']:
           conditions += conditions_col.format(rarity=encounters[version]['encounters'][encounter]['methods'][method]['rarity']['conditions'][condition],
                                               name=condition)
-        html += row.format(location=encounters[version]['encounters'][encounter]['location_name'],
-                           method=encounters[version]['encounters'][encounter]['methods'][method]['encounter_method_name'],
-                           levels=levels,
-                           rarity=str(encounters[version]['encounters'][encounter]['methods'][method]['rarity']['base']) + '%',
-                           conditions=conditions)
+        html += trow.format(location=encounters[version]['encounters'][encounter]['location_name'],
+                            method=encounters[version]['encounters'][encounter]['methods'][method]['encounter_method_name'],
+                            levels=levels,
+                            rarity=str(encounters[version]['encounters'][encounter]['methods'][method]['rarity']['base']) + '%',
+                            conditions=conditions)
     html += '</tbody></table>'
     html += '</details>'
 
