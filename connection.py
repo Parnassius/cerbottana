@@ -71,6 +71,7 @@ class Connection:
         'token': plugins.token.token,
 
         'leaderboard': plugins.tours.leaderboard,
+        'randpoketour': plugins.tours.randpoketour,
 
         'trad': plugins.translations.trad,
 

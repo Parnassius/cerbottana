@@ -64,3 +64,27 @@ async def leaderboard(self, room, user, arg):
 
   else:
     await self.send_reply(room, user, 'Nessun risultato trovato')
+
+
+async def randpoketour(self, room, user, arg):
+  if room is None or not utils.is_driver(user):
+    return
+
+  if not len(arg.strip()):
+    return await self.send_message(room, 'Inserisci almeno un Pokémon')
+
+  bans = '-OU, -UUBL, -UU, -RUBL, -RU, -NUBL, -NU, -PUBL, -PU, -ZU, -NFE, -LC Uber, -LC'
+  unbans = ''
+  if ',' in arg:
+    sep = ','
+  else:
+    sep = ' '
+  for item in arg.split(sep):
+    unbans += ', +' + item.strip() + '-base'
+
+  await self.send_message(room, '/tour new ou, elimination')
+  await self.send_message(room, '/tour name !RANDPOKE TOUR')
+  await self.send_message(room, '/tour autostart 12')
+  await self.send_message(room, '/tour autodq 1.5')
+  await self.send_message(room, '/tour scouting off')
+  await self.send_message(room, '/tour rules {}{}'.format(bans, unbans))

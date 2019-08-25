@@ -57,6 +57,9 @@ def database_request(self, action, params):
 def is_voice(user):
   return user[0] in '+*%@★#&~'
 
+def is_driver(user):
+  return user[0] in '%@#&~'
+
 def is_private(self, room):
   return room in self.private_rooms
 
