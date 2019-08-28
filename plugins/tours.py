@@ -73,6 +73,22 @@ async def randpoketour(self, room, user, arg):
   if not len(arg.strip()):
     return await self.send_message(room, 'Inserisci almeno un Pokémon')
 
+  megas = ['abomasnow', 'absol', 'aerodactyl', 'aggron', 'alakazam', 'altaria', 'ampharos', 'audino',
+           'banette', 'beedrill', 'blastoise', 'blaziken',
+           'camerupt',
+           'diancie',
+           'gallade', 'garchomp', 'gardevoir', 'gengar', 'glalie', 'gyarados',
+           'heracross', 'houndoom',
+           'kangaskhan',
+           'latias', 'latios', 'lopunny', 'lucario',
+           'manectric', 'mawile', 'medicham', 'metagross',
+           'pidgeot', 'pinsir',
+           'rayquaza',
+           'sableye', 'salamence', 'sceptile', 'scizor', 'sharpedo', 'slowbro', 'steelix', 'swampert',
+           'tyranitar',
+           'venusaur']
+  megas_xy = ['charizard', 'mewtwo']
+
   bans = '-OU, -UUBL, -UU, -RUBL, -RU, -NUBL, -NU, -PUBL, -PU, -ZU, -NFE, -LC Uber, -LC'
   unbans = ''
   if ',' in arg:
@@ -81,6 +97,11 @@ async def randpoketour(self, room, user, arg):
     sep = ' '
   for item in arg.split(sep):
     unbans += ', +' + item.strip() + '-base'
+    if utils.to_user_id(item) in megas:
+      unbans += ', +' + item.strip() + '-Mega-base'
+    if utils.to_user_id(item) in megas_xy:
+      unbans += ', +' + item.strip() + '-Mega-X-base'
+      unbans += ', +' + item.strip() + '-Mega-Y-base'
 
   await self.send_message(room, '/tour new ou, elimination')
   await self.send_message(room, '/tour name !RANDPOKE TOUR')
