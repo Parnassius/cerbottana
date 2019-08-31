@@ -5,6 +5,8 @@ import math
 
 import requests
 
+from room import Room
+
 def restart_bot(self):
   print('Restarting')
   requests.delete('https://api.heroku.com/apps/cerbottana/dynos',
@@ -62,6 +64,16 @@ def is_driver(user):
 
 def is_private(self, room):
   return room in self.private_rooms
+
+
+def can_pminfobox_to(self, user):
+  for room in self.rooms:
+    if user in Room.get(room).users and Room.get(room).roombot:
+      return room
+  for room in self.private_rooms:
+    if user in Room.get(room).users and Room.get(room).roombot:
+      return room
+  return None
 
 
 def username_color(name):

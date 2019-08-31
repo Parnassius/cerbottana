@@ -4,24 +4,36 @@ import requests
 
 import utils
 
+from room import Room
 
-async def add_user(self, user):
+async def add_user(self, room, user, skip_avatar_check=False):
+  rank = user[0]
   username = user[1:].split('@')[0]
-  body = utils.database_request(self, 'adduser', {'userid': utils.to_user_id(username),
+  userid = utils.to_user_id(username)
+
+  Room.get(room).addUser(rank, userid)
+
+  if userid == utils.to_user_id(self.username):
+    Room.get(room).roombot = (rank == '*')
+
+  body = utils.database_request(self, 'adduser', {'userid': userid,
                                                   'nome': username})
   if body:
-    if 'needs_avatar' in body:
+    if not skip_avatar_check and 'needs_avatar' in body:
       await self.send_message('', '/cmd userdetails {}'.format(username))
 
-  if utils.to_user_id(username) in self.administrators:
+  if userid in self.administrators:
     body = utils.database_request(self,
                                   'getunapprovedprofiles',
-                                  {'user': utils.to_user_id(username)})
+                                  {'user': userid})
     if body:
       if body['num'] > 0:
         text = 'Ci sono {} profili in attesa di approvazione. '
         text += 'Usa .token per approvarli o rifiutarli.'
         await self.send_pm(username, text.format(body['num']))
+
+async def remove_user(self, room, user):
+  Room.get(room).removeUser(utils.to_user_id(user))
 
 async def parse_chat_message(self, room, user, message):
   if message[:len(self.command_character)] == self.command_character:
@@ -50,25 +62,27 @@ async def parse_queryresponse(self, cmd, data):
 
 
 async def init(self, room, roomtype):
-  pass
+  if roomtype == 'chat':
+    if not Room.get(room):
+      Room(room)
 
-async def title(self, room, message):
-  pass
+async def title(self, room, roomtitle):
+  Room.get(room).title = roomtitle
 
 async def users(self, room, userlist):
   for user in userlist.split(',')[1:]:
-    await add_user(self, user)
-    await asyncio.sleep(5)
+    await add_user(self, room, user, True)
 
 
 async def join(self, room, user):
-  await add_user(self, user)
+  await add_user(self, room, user)
 
 async def leave(self, room, user):
-  pass
+  await remove_user(self, room, user)
 
 async def name(self, room, user, oldid):
-  await add_user(self, user)
+  await remove_user(self, room, oldid)
+  await add_user(self, room, user)
 
 
 async def chat(self, room, user, *message):

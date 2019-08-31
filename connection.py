@@ -48,6 +48,8 @@ class Connection:
 
         'lega': plugins.links.lega,
 
+        'encounter': plugins.locations.encounter,
+        'encounters': plugins.locations.encounter,
         'location': plugins.locations.location,
         'locations': plugins.locations.location,
 
@@ -156,11 +158,17 @@ class Connection:
         await self.handlers[parts[1]](self, roomid, *parts[2:])
 
 
-  async def send_htmlbox(self, room, user, message):
-    if room is None:
-      await self.send_message(self.rooms[0], '/pminfobox {}, {}'.format(user, message))
-    else:
+  async def send_htmlbox(self, room, user, message, simple_message=''):
+    if room is not None:
       await self.send_message(room, '/addhtmlbox {}'.format(message))
+    else:
+      room = utils.can_pminfobox_to(self, utils.to_user_id(user))
+      if room is not None:
+        await self.send_message(room, '/pminfobox {}, {}'.format(user, message))
+      else:
+        if simple_message == '':
+          simple_message = 'Questo comando è disponibile in PM solo se sei online in una room dove sono Roombot'
+        await self.send_pm(user, simple_message)
 
   async def send_reply(self, room, user, message):
     if room is None:

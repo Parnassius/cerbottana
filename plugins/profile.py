@@ -13,10 +13,11 @@ async def elitefour(self, room, user, arg):
   if body:
     if len(body) == 1:
       if room is not None and utils.is_voice(user):
-        await profile(self, room, user, body[0]['utente'])
+        await profile(self, room, user, body[0]['utente'], True)
       else:
         await self.send_pm(user, body[0]['utente'])
     elif len(body) > 1:
+      simple_message = ''
       html = '<table>'
       html += '  <tr>'
       html += '    <td style="text-align: center; padding: 5px 0 10px">'
@@ -26,6 +27,11 @@ async def elitefour(self, room, user, arg):
       first = True
       for i in body:
         utente = i['utente']
+
+        if not first:
+          simple_message += ' - '
+        simple_message += '{tier}: {utente}'.format(tier=i['tier'], utente=utente)
+
         html += '  <tr>'
         html += '    <td>'
         if utente is None:
@@ -45,15 +51,20 @@ async def elitefour(self, room, user, arg):
           html += '  </tr>'
           first = False
       html += '</table>'
-      await self.send_htmlbox(room, user, html)
+      await self.send_htmlbox(room, user, html, simple_message)
 
-async def profile(self, room, user, arg):
+async def profile(self, room, user, arg, from_elitefour=False):
   # pylint: disable=too-many-locals
   if room is not None and not utils.is_voice(user):
     return
 
   if arg.strip() == '':
     arg = user
+
+  if from_elitefour:
+    simple_message = arg
+  else:
+    simple_message = ''
 
   arg = utils.to_user_id(arg)
 
@@ -116,12 +127,15 @@ async def profile(self, room, user, arg):
 
     descrizione = body['descrizione'].replace('<', '&lt;')
 
-    await self.send_htmlbox(room, user, html.format(avatar_dir=avatar_dir,
-                                                    avatar_name=avatar_name,
-                                                    name_color=name_color,
-                                                    nome=nome,
-                                                    badges=badges,
-                                                    descrizione=descrizione))
+    await self.send_htmlbox(room,
+                            user,
+                            html.format(avatar_dir=avatar_dir,
+                                        avatar_name=avatar_name,
+                                        name_color=name_color,
+                                        nome=nome,
+                                        badges=badges,
+                                        descrizione=descrizione),
+                            simple_message)
 
 
 async def setprofile(self, room, user, arg):

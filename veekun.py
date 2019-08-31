@@ -27,6 +27,9 @@ with open('./data/veekun/location_area_prose.csv', 'r') as f:
 with open('./data/veekun/location_areas.csv', 'r') as f:
   LOCATION_AREAS = list(csv.DictReader(f))
 
+with open('./data/veekun/locations.csv', 'r') as f:
+  LOCATIONS = list(csv.DictReader(f))
+
 with open('./data/veekun/pokemon.csv', 'r') as f:
   POKEMON = list(csv.DictReader(f))
 
