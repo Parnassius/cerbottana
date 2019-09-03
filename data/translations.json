@@ -4403,50 +4403,6 @@
       "it": "Bicicletta"
     },
     {
-      "en": "Storage Key",
-      "it": "Depochiave"
-    },
-    {
-      "en": "Basement Key",
-      "it": "Chiave sotterr."
-    },
-    {
-      "en": "Xtransceiver",
-      "it": "Interpok\u00e9"
-    },
-    {
-      "en": "Xtransceiver",
-      "it": "Interpok\u00e9"
-    },
-    {
-      "en": "DNA Splicers",
-      "it": "Cuneo DNA"
-    },
-    {
-      "en": "DNA Splicers",
-      "it": "Cuneo DNA"
-    },
-    {
-      "en": "Dropped Item",
-      "it": "Oggetto perso"
-    },
-    {
-      "en": "Dropped Item",
-      "it": "Oggetto perso"
-    },
-    {
-      "en": "Holo Caster",
-      "it": "Holovox"
-    },
-    {
-      "en": "Bike",
-      "it": "Bicicletta"
-    },
-    {
-      "en": "Holo Caster",
-      "it": "Holovox"
-    },
-    {
       "en": "Basement Key",
       "it": "Chiave sotterr."
     },
@@ -4455,164 +4411,8 @@
       "it": "Chiave magazzino"
     },
     {
-      "en": "S.S. Ticket",
-      "it": "Biglietto Nave"
-    },
-    {
       "en": "Contest Costume",
       "it": "Vestito Live"
-    },
-    {
-      "en": "Meteorite",
-      "it": "Meteorite"
-    },
-    {
-      "en": "Meteorite",
-      "it": "Meteorite"
-    },
-    {
-      "en": "Meteorite",
-      "it": "Meteorite"
-    },
-    {
-      "en": "Normalium Z",
-      "it": "Normium Z"
-    },
-    {
-      "en": "Firium Z",
-      "it": "Pirium Z"
-    },
-    {
-      "en": "Waterium Z",
-      "it": "Idrium Z"
-    },
-    {
-      "en": "Electrium Z",
-      "it": "Electrium Z"
-    },
-    {
-      "en": "Grassium Z",
-      "it": "Herbium Z"
-    },
-    {
-      "en": "Icium Z",
-      "it": "Glacium Z"
-    },
-    {
-      "en": "Fightinium Z",
-      "it": "Luctium Z"
-    },
-    {
-      "en": "Poisonium Z",
-      "it": "Venenium Z"
-    },
-    {
-      "en": "Groundium Z",
-      "it": "Terrium Z"
-    },
-    {
-      "en": "Flyinium Z",
-      "it": "Volantium Z"
-    },
-    {
-      "en": "Psychium Z",
-      "it": "Psichium Z"
-    },
-    {
-      "en": "Buginium Z",
-      "it": "Insectium Z"
-    },
-    {
-      "en": "Rockium Z",
-      "it": "Petrium Z"
-    },
-    {
-      "en": "Ghostium Z",
-      "it": "Spectrium Z"
-    },
-    {
-      "en": "Dragonium Z",
-      "it": "Draconium Z"
-    },
-    {
-      "en": "Darkinium Z",
-      "it": "Obscurium Z"
-    },
-    {
-      "en": "Steelium Z",
-      "it": "Metallium Z"
-    },
-    {
-      "en": "Fairium Z",
-      "it": "Follectium Z"
-    },
-    {
-      "en": "Pikanium Z",
-      "it": "Pikacium Z"
-    },
-    {
-      "en": "Decidium Z",
-      "it": "Deciduenium Z"
-    },
-    {
-      "en": "Incinium Z",
-      "it": "Incineronium Z"
-    },
-    {
-      "en": "Primarium Z",
-      "it": "Primarinium Z"
-    },
-    {
-      "en": "Tapunium Z",
-      "it": "Tapium Z"
-    },
-    {
-      "en": "Marshadium Z",
-      "it": "Marshadium Z"
-    },
-    {
-      "en": "Aloraichium Z",
-      "it": "Aloraicium Z"
-    },
-    {
-      "en": "Snorlium Z",
-      "it": "Snorlactium Z"
-    },
-    {
-      "en": "Eevium Z",
-      "it": "Eevium Z"
-    },
-    {
-      "en": "Mewnium Z",
-      "it": "Mewnium Z"
-    },
-    {
-      "en": "Pikashunium Z",
-      "it": "Ashpikacium Z"
-    },
-    {
-      "en": "Solganium Z",
-      "it": "Solgaleium Z"
-    },
-    {
-      "en": "Lunalium Z",
-      "it": "Lunalium Z"
-    },
-    {
-      "en": "Ultranecrozium Z",
-      "it": "Ultranecrozium Z"
-    },
-    {
-      "en": "Mimikium Z",
-      "it": "Mimikyum Z"
-    },
-    {
-      "en": "Lycanium Z",
-      "it": "Lycanrochium Z"
-    },
-    {
-      "en": "Kommonium Z",
-      "it": "Kommonium Z"
     },
     {
       "en": "Solganium Z",
@@ -4677,14 +4477,6 @@
     {
       "en": "Surge Badge",
       "it": "Medaglia Tonante"
-    },
-    {
-      "en": "N-Solarizer",
-      "it": "Necrosolix"
-    },
-    {
-      "en": "N-Lunarizer",
-      "it": "Necrolunix"
     },
     {
       "en": "N-Solarizer",
@@ -7237,20 +7029,8 @@
       "it": "Carica Travolgente"
     },
     {
-      "en": "Breakneck Blitz",
-      "it": "Carica Travolgente"
-    },
-    {
       "en": "All-Out Pummeling",
       "it": "Iperscarica Furiosa"
-    },
-    {
-      "en": "All-Out Pummeling",
-      "it": "Iperscarica Furiosa"
-    },
-    {
-      "en": "Supersonic Skystrike",
-      "it": "Picchiata Devastante"
     },
     {
       "en": "Supersonic Skystrike",
@@ -7261,20 +7041,8 @@
       "it": "Acidiluvio Corrosivo"
     },
     {
-      "en": "Acid Downpour",
-      "it": "Acidiluvio Corrosivo"
-    },
-    {
       "en": "Tectonic Rage",
       "it": "Furore della Terra"
-    },
-    {
-      "en": "Tectonic Rage",
-      "it": "Furore della Terra"
-    },
-    {
-      "en": "Continental Crush",
-      "it": "Gigamacigno Polverizzante"
     },
     {
       "en": "Continental Crush",
@@ -7285,20 +7053,8 @@
       "it": "Bozzolo Fatale"
     },
     {
-      "en": "Savage Spin-Out",
-      "it": "Bozzolo Fatale"
-    },
-    {
       "en": "Never-Ending Nightmare",
       "it": "Abbraccio Spettrale"
-    },
-    {
-      "en": "Never-Ending Nightmare",
-      "it": "Abbraccio Spettrale"
-    },
-    {
-      "en": "Corkscrew Crash",
-      "it": "Spirale Perforante"
     },
     {
       "en": "Corkscrew Crash",
@@ -7309,20 +7065,8 @@
       "it": "Fiammobomba Detonante"
     },
     {
-      "en": "Inferno Overdrive",
-      "it": "Fiammobomba Detonante"
-    },
-    {
       "en": "Hydro Vortex",
       "it": "Idrovortice Abissale"
-    },
-    {
-      "en": "Hydro Vortex",
-      "it": "Idrovortice Abissale"
-    },
-    {
-      "en": "Bloom Doom",
-      "it": "Floriscoppio Sfolgorante"
     },
     {
       "en": "Bloom Doom",
@@ -7333,20 +7077,8 @@
       "it": "Gigascarica Folgorante"
     },
     {
-      "en": "Gigavolt Havoc",
-      "it": "Gigascarica Folgorante"
-    },
-    {
       "en": "Shattered Psyche",
       "it": "Impatto Psicocinetico"
-    },
-    {
-      "en": "Shattered Psyche",
-      "it": "Impatto Psicocinetico"
-    },
-    {
-      "en": "Subzero Slammer",
-      "it": "Criodistruzione Polare"
     },
     {
       "en": "Subzero Slammer",
@@ -7357,20 +7089,8 @@
       "it": "Dragoschianto Finale"
     },
     {
-      "en": "Devastating Drake",
-      "it": "Dragoschianto Finale"
-    },
-    {
       "en": "Black Hole Eclipse",
       "it": "Buco Nero del Non Ritorno"
-    },
-    {
-      "en": "Black Hole Eclipse",
-      "it": "Buco Nero del Non Ritorno"
-    },
-    {
-      "en": "Twinkle Tackle",
-      "it": "Astroimpatto Fatato"
     },
     {
       "en": "Twinkle Tackle",
