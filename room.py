@@ -14,8 +14,9 @@ class Room:
     else:
       return False
 
-  def addUser(self, rank, user):
-    self.users[user] = {'rank': rank}
+  def addUser(self, userid, rank, username):
+    self.users[userid] = {'rank': rank,
+                        'username': username}
 
   def removeUser(self, user):
     self.users.pop(user, None)

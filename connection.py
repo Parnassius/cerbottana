@@ -53,6 +53,8 @@ class Connection:
         'location': plugins.locations.location,
         'locations': plugins.locations.location,
 
+        'randomuser': plugins.misc.randomuser,
+
         'campione': plugins.profile.champion,
         'champion': plugins.profile.champion,
         'e4': plugins.profile.elitefour,
