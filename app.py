@@ -4,6 +4,8 @@ import sys
 import time
 import traceback
 
+import veekun
+
 from connection import Connection
 from server import Server
 
@@ -24,6 +26,8 @@ sys.excepthook = handle_exception
 
 
 if __name__ == '__main__':
+  veekun.csv_to_sqlite()
+
   SERVER = Server()
   SERVER.listen()
 

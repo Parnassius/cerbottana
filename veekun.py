@@ -1,37 +1,143 @@
 import csv
+import sqlite3
 
-with open('./data/veekun/encounter_condition_value_map.csv', 'r') as f:
-  ENCOUNTER_CONDITION_VALUE_MAP = list(csv.DictReader(f))
 
-with open('./data/veekun/encounter_condition_value_prose.csv', 'r') as f:
-  ENCOUNTER_CONDITION_VALUE_PROSE = list(csv.DictReader(f))
+def csv_to_sqlite():
+  create_stmt = 'CREATE TABLE {table} ({columns}, {keys});'
+  insert_stmt = 'INSERT INTO {table} ({columns}) VALUES ({values});'
 
-with open('./data/veekun/encounter_method_prose.csv', 'r') as f:
-  ENCOUNTER_METHOD_PROSE = list(csv.DictReader(f))
+  tables = [{'name': 'encounter_condition_value_map',
+             'columns': {'encounter_id': 'INTEGER',
+                         'encounter_condition_value_id': 'INTEGER'},
+             'keys': ['PRIMARY KEY (encounter_id, encounter_condition_value_id)']},
+            {'name': 'encounter_condition_value_prose',
+             'columns': {'encounter_condition_value_id': 'INTEGER',
+                         'local_language_id': 'INTEGER',
+                         'name': 'TEXT'},
+             'keys': ['PRIMARY KEY (encounter_condition_value_id, local_language_id)']},
+            {'name': 'encounter_method_prose',
+             'columns': {'encounter_method_id': 'INTEGER',
+                         'local_language_id': 'INTEGER',
+                         'name': 'TEXT'},
+             'keys': ['PRIMARY KEY (encounter_method_id, local_language_id)']},
+            {'name': 'encounter_methods',
+             'columns': {'id': 'INTEGER',
+                         'identifier': 'TEXT',
+                         'order': 'INTEGER'},
+             'keys': ['PRIMARY KEY (id)']},
+            {'name': 'encounter_slots',
+             'columns': {'id': 'INTEGER',
+                         'version_group_id': 'INTEGER',
+                         'encounter_method_id': 'INTEGER',
+                         'slot': 'INTEGER',
+                         'rarity': 'INTEGER'},
+             'keys': ['PRIMARY KEY (id)']},
+            {'name': 'encounters',
+             'columns': {'id': 'INTEGER',
+                         'version_id': 'INTEGER',
+                         'location_area_id': 'INTEGER',
+                         'encounter_slot_id': 'INTEGER',
+                         'pokemon_id': 'INTEGER',
+                         'min_level': 'INTEGER',
+                         'max_level': 'INTEGER'},
+             'keys': ['PRIMARY KEY (id)']},
+            {'name': 'location_names',
+             'columns': {'location_id': 'INTEGER',
+                         'local_language_id': 'INTEGER',
+                         'name': 'TEXT',
+                         'subtitle': 'TEXT'},
+             'keys': ['PRIMARY KEY (location_id, local_language_id)']},
+            {'name': 'location_area_prose',
+             'columns': {'location_area_id': 'INTEGER',
+                         'local_language_id': 'INTEGER',
+                         'name': 'TEXT'},
+             'keys': ['PRIMARY KEY (location_area_id, local_language_id)']},
+            {'name': 'location_areas',
+             'columns': {'id': 'INTEGER',
+                         'location_id': 'INTEGER',
+                         'game_index': 'INTEGER',
+                         'identifier': 'TEXT'},
+             'keys': ['PRIMARY KEY (id)']},
+            {'name': 'locations',
+             'columns': {'id': 'INTEGER',
+                         'region_id': 'INTEGER',
+                         'identifier': 'TEXT'},
+             'keys': ['PRIMARY KEY (id)']},
+            {'name': 'pokemon',
+             'columns': {'id': 'INTEGER',
+                         'identifier': 'TEXT',
+                         'species_id': 'INTEGER',
+                         'height': 'INTEGER',
+                         'weight': 'INTEGER',
+                         'base_experience': 'INTEGER',
+                         'order': 'INTEGER',
+                         'is_default': 'INTEGER'},
+             'keys': ['PRIMARY KEY (id)']},
+            {'name': 'pokemon_form_names',
+             'columns': {'pokemon_form_id': 'INTEGER',
+                         'local_language_id': 'INTEGER',
+                         'form_name': 'INTEGER',
+                         'pokemon_name': 'INTEGER'},
+             'keys': ['PRIMARY KEY (pokemon_form_id, local_language_id)']},
+            {'name': 'pokemon_forms',
+             'columns': {'id': 'INTEGER',
+                         'identifier': 'TEXT',
+                         'form_identifier': 'TEXT',
+                         'pokemon_id': 'INTEGER',
+                         'introduced_in_version_group_id': 'INTEGER',
+                         'is_default': 'INTEGER',
+                         'is_battle_only': 'INTEGER',
+                         'is_mega': 'INTEGER',
+                         'form_order': 'INTEGER',
+                         'order': 'INTEGER'},
+             'keys': ['PRIMARY KEY (id)']},
+            {'name': 'pokemon_species',
+             'columns': {'id': 'INTEGER',
+                         'identifier': 'TEXT',
+                         'generation_id': 'INTEGER',
+                         'evolves_from_species_id': 'INTEGER',
+                         'evolution_chain_id': 'INTEGER',
+                         'color_id': 'INTEGER',
+                         'shape_id': 'INTEGER',
+                         'habitat_id': 'INTEGER',
+                         'gender_rate': 'INTEGER',
+                         'capture_rate': 'INTEGER',
+                         'base_happiness': 'INTEGER',
+                         'is_baby': 'INTEGER',
+                         'hatch_counter': 'INTEGER',
+                         'has_gender_differences': 'INTEGER',
+                         'growth_rate_id': 'INTEGER',
+                         'forms_switchable': 'INTEGER',
+                         'order': 'INTEGER',
+                         'conquest_order': 'INTEGER'},
+             'keys': ['PRIMARY KEY (id)']},
+            {'name': 'pokemon_species_names',
+             'columns': {'pokemon_species_id': 'INTEGER',
+                         'local_language_id': 'INTEGER',
+                         'name': 'TEXT',
+                         'genus': 'TEXT'},
+             'keys': ['PRIMARY KEY (pokemon_species_id, local_language_id)']},
+            {'name': 'version_names',
+             'columns': {'version_id': 'INTEGER',
+                         'local_language_id': 'INTEGER',
+                         'name': 'TEXT'},
+             'keys': ['PRIMARY KEY (version_id, local_language_id)']}]
 
-with open('./data/veekun/encounter_methods.csv', 'r') as f:
-  ENCOUNTER_METHODS = list(csv.DictReader(f))
+  for table in tables:
+    cur.execute(create_stmt.format(table=table['name'],
+                                   columns=', '.join(['`' + i + '` ' + table['columns'][i] for i in table['columns']]),
+                                   keys=', '.join(table['keys'])))
+    with open('./data/veekun/' + table['name'] + '.csv','r') as f:
+      data = csv.DictReader(f)
+      keys = data.fieldnames
+      values = [list(i.values()) for i in data]
+      cur.executemany(insert_stmt.format(table=table['name'],
+                                         columns='`' + '`, `'.join(keys) + '`',
+                                         values=', '.join(list('?' * len(keys)))), values)
+      if 'identifier' in table['columns']:
+        cur.execute('UPDATE {table} SET identifier = REPLACE(identifier, "-", "")'.format(table=table['name']))
+      conn.commit()
 
-with open('./data/veekun/encounter_slots.csv', 'r') as f:
-  ENCOUNTER_SLOTS = list(csv.DictReader(f))
-
-with open('./data/veekun/encounters.csv', 'r') as f:
-  ENCOUNTERS = list(csv.DictReader(f))
-
-with open('./data/veekun/location_names.csv', 'r') as f:
-  LOCATION_NAMES = list(csv.DictReader(f))
-
-with open('./data/veekun/location_area_prose.csv', 'r') as f:
-  LOCATION_AREA_PROSE = list(csv.DictReader(f))
-
-with open('./data/veekun/location_areas.csv', 'r') as f:
-  LOCATION_AREAS = list(csv.DictReader(f))
-
-with open('./data/veekun/locations.csv', 'r') as f:
-  LOCATIONS = list(csv.DictReader(f))
-
-with open('./data/veekun/pokemon.csv', 'r') as f:
-  POKEMON = list(csv.DictReader(f))
-
-with open('./data/veekun/version_names.csv', 'r') as f:
-  VERSION_NAMES = list(csv.DictReader(f))
+conn = sqlite3.connect(':memory:')
+conn.row_factory = sqlite3.Row
+cur = conn.cursor()

@@ -1,17 +1,6 @@
 import utils
 
-from veekun import ENCOUNTER_CONDITION_VALUE_MAP
-from veekun import ENCOUNTER_CONDITION_VALUE_PROSE
-from veekun import ENCOUNTER_METHOD_PROSE
-from veekun import ENCOUNTER_METHODS
-from veekun import ENCOUNTER_SLOTS
-from veekun import ENCOUNTERS
-from veekun import LOCATION_NAMES
-from veekun import LOCATION_AREA_PROSE
-from veekun import LOCATION_AREAS
-from veekun import LOCATIONS
-from veekun import POKEMON
-from veekun import VERSION_NAMES
+from veekun import cur
 
 
 async def location(self, room, user, arg):
@@ -19,64 +8,44 @@ async def location(self, room, user, arg):
     return
 
   arg = utils.to_user_id(utils.remove_accents(arg.lower()))
-
-  pokemon = next((item for item in POKEMON if utils.to_user_id(item['identifier']) == arg), None)
-  if pokemon is None:
-    return await self.send_reply(room, user, 'Nessun dato')
-
-  raw_encounters = list(filter(lambda encounter: encounter['pokemon_id'] == pokemon['id'], ENCOUNTERS))
-
-  encounters = {}
-
-  for encounter in raw_encounters:
-
-    if not encounter['version_id'] in encounters:
-      version_name = next((item['name'] for item in VERSION_NAMES if item['version_id'] == encounter['version_id'] and item['local_language_id'] == '9'), None)
-      encounters[encounter['version_id']] = {'version_name': version_name,
-                                             'encounters': {}}
-
-    if not encounter['location_area_id'] in encounters[encounter['version_id']]['encounters']:
-      location_area_name = next((item['name'] for item in LOCATION_AREA_PROSE if item['location_area_id'] == encounter['location_area_id'] and item['local_language_id'] == '9'), '')
-      location_id = next((item['location_id'] for item in LOCATION_AREAS if item['id'] == encounter['location_area_id']), None)
-      location_name = next(({'name': item['name'], 'subtitle': item['subtitle']} for item in LOCATION_NAMES if item['location_id'] == location_id and item['local_language_id'] == '9'), {'name': '', 'subtitle': ''})
-      location_name_complete = location_name['name']
-      if len(location_name['subtitle']):
-        location_name_complete += ' - ' + location_name['subtitle']
-      if len(location_area_name):
-        location_name_complete += ' (' + location_area_name + ')'
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']] = {'location_name': location_name_complete,
-                                                                                          'methods': {}}
-
-    encounter_slot = next(({'encounter_method_id': item['encounter_method_id'], 'rarity': item['rarity']} for item in ENCOUNTER_SLOTS if item['id'] == encounter['encounter_slot_id']), None)
-    if not encounter_slot['encounter_method_id'] in encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods']:
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']] = {'encounter_method_name': next((item['name'] for item in ENCOUNTER_METHOD_PROSE if item['encounter_method_id'] == encounter_slot['encounter_method_id'] and item['local_language_id'] == '9'), None),
-                                                                                                                                            'encounter_method_order': next((item['order'] for item in ENCOUNTER_METHODS if item['id'] == encounter_slot['encounter_method_id']), None),
-                                                                                                                                            'min_level': 100,
-                                                                                                                                            'max_level': 1,
-                                                                                                                                            'rarity': {'base': 0,
-                                                                                                                                                       'conditions': {}}}
-
-    encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['min_level'] = min(int(encounter['min_level']), encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['min_level'])
-    encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['max_level'] = max(int(encounter['max_level']), encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['max_level'])
-
-    encounter_conditions = sorted(list(filter(lambda condition: condition['encounter_id'] == encounter['id'], ENCOUNTER_CONDITION_VALUE_MAP)), key=lambda k: k['encounter_condition_value_id'])
-
-    if len(encounter_conditions):
-      condition_names = []
-      for condition in encounter_conditions:
-        condition_names.append(next((item['name'] for item in ENCOUNTER_CONDITION_VALUE_PROSE if item['encounter_condition_value_id'] == condition['encounter_condition_value_id'] and item['local_language_id'] == '9'), None))
-      condition_name = ', '.join(condition_names)
-      if not condition_name in encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions']:
-        encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions'][condition_name] = 0
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions'][condition_name] += int(encounter_slot['rarity'])
-    else:
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['base'] += int(encounter_slot['rarity'])
-
-
-  versions_sorted = sorted(encounters, key=int)
+  sql = '''SELECT b.version_id, MIN(b.min_level) AS min_level, MAX(b.max_level) AS max_level,
+           b.version, b.location_area_id, b.location_area, b.location_name, b.location_subtitle,
+           SUM(CASE WHEN b.encounter_condition IS NULL THEN b.rarity ELSE 0 END) AS rarity,
+           b.encounter_method_id, b.encounter_method,
+           IFNULL(GROUP_CONCAT('+' || b.rarity || '% ' || b.encounter_condition, '<br>'), '') AS conditions
+           FROM (SELECT a.version_id, MIN(a.min_level) AS min_level, MAX(a.max_level) AS max_level,
+                 a.version, a.location_area_id, a.location_area, a.location_name, a.location_subtitle,
+                 SUM(a.rarity) AS rarity,
+                 a.encounter_method_id, a.encounter_method, a.encounter_condition
+                 FROM (SELECT encounters.version_id, encounters.min_level, encounters.max_level,
+                       encounters.version_id, version_names.name AS version,
+                       location_areas.id AS location_area_id, IFNULL(location_area_prose.name, '') AS location_area,
+                       IFNULL(location_names.name, '') AS location_name,
+                       IFNULL(location_names.subtitle, '') AS location_subtitle,
+                       encounter_slots.rarity,
+                       encounter_methods.id AS encounter_method_id,
+                       IFNULL(encounter_method_prose.name, '') AS encounter_method,
+                       GROUP_CONCAT(encounter_condition_value_prose.name, ', ') AS encounter_condition
+                       FROM pokemon_species
+                       LEFT JOIN pokemon ON pokemon.species_id = pokemon_species.id
+                       LEFT JOIN encounters ON encounters.pokemon_id = pokemon.id
+                       LEFT JOIN version_names ON version_names.version_id = encounters.version_id AND version_names.local_language_id = 9
+                       JOIN location_areas ON location_areas.id = encounters.location_area_id
+                       LEFT JOIN location_area_prose ON location_area_prose.location_area_id = location_areas.id AND location_area_prose.local_language_id = 9
+                       LEFT JOIN location_names ON location_names.location_id = location_areas.location_id AND location_names.local_language_id = 9
+                       JOIN encounter_slots ON encounter_slots.id = encounters.encounter_slot_id
+                       JOIN encounter_methods ON encounter_methods.id = encounter_slots.encounter_method_id
+                       LEFT JOIN encounter_method_prose ON encounter_method_prose.encounter_method_id = encounter_methods.id AND  encounter_method_prose.local_language_id = 9
+                       LEFT JOIN encounter_condition_value_map ON encounter_condition_value_map.encounter_id = encounters.id
+                       LEFT JOIN encounter_condition_value_prose ON encounter_condition_value_prose.encounter_condition_value_id = encounter_condition_value_map.encounter_condition_value_id AND encounter_condition_value_prose.local_language_id = 9
+                       WHERE pokemon_species.identifier = ?
+                       GROUP BY encounters.id) AS a
+                 GROUP BY version_id, location_area_id, encounter_method_id, encounter_condition) AS b
+           GROUP BY version_id, location_area_id, encounter_method_id
+           ORDER BY version_id, location_area_id, encounter_method_id'''
 
   trow = '<tr>'
-  trow += '  <td>{location}</td>'
+  trow += '  <td>{location_name}</td>'
   trow += '  <td>{method}</td>'
   trow += '  <td>{levels}</td>'
   trow += '  <td style="text-align:right">{rarity}</td>'
@@ -88,32 +57,37 @@ async def location(self, room, user, arg):
   trow += '  </td>'
   trow += '</tr>'
   conditions_col = '+{rarity}% {name}<br>'
-  #head = '<tr><th>Location</th>
-  head = '<summary><b><big>{version}</big></b></summary>'
+  head = ''
   html = ''
-  for version in versions_sorted:
-    html += '<details>' + head.format(version=encounters[version]['version_name'])
-    html += '<table style="width:100%"><tbody>'
-    encounters_sorted = sorted(encounters[version]['encounters'], key=int)
-    for encounter in encounters_sorted:
-      methods_sorted = sorted(encounters[version]['encounters'][encounter]['methods'], key=int)
-      for method in methods_sorted:
-        levels = 'L' + str(encounters[version]['encounters'][encounter]['methods'][method]['min_level'])
-        if encounters[version]['encounters'][encounter]['methods'][method]['min_level'] < encounters[version]['encounters'][encounter]['methods'][method]['max_level']:
-          levels += '-' + str(encounters[version]['encounters'][encounter]['methods'][method]['max_level'])
-        conditions = ''
-        for condition in encounters[version]['encounters'][encounter]['methods'][method]['rarity']['conditions']:
-          conditions += conditions_col.format(rarity=encounters[version]['encounters'][encounter]['methods'][method]['rarity']['conditions'][condition],
-                                              name=condition)
-        html += trow.format(location=encounters[version]['encounters'][encounter]['location_name'],
-                            method=encounters[version]['encounters'][encounter]['methods'][method]['encounter_method_name'],
-                            levels=levels,
-                            rarity=str(encounters[version]['encounters'][encounter]['methods'][method]['rarity']['base']) + '%',
-                            conditions=conditions)
+
+  current_version_id = 0
+  for row in cur.execute(sql, [arg]):
+    if current_version_id != row['version_id']:
+      if current_version_id != 0:
+        html += '</tbody></table>'
+        html += '</details>'
+      html += '<details><summary><b><big>{version}</big></b></summary>'.format(version=row['version'])
+      html += '<table style="width:100%"><tbody>'
+      current_version_id = row['version_id']
+
+    location_name = row['location_name']
+    if len(row['location_subtitle']):
+      location_name += ' - ' + row['location_subtitle']
+    if len(row['location_area']):
+      location_name += ' (' + row['location_area'] + ')'
+    levels = 'L' + str(row['min_level'])
+    if row['min_level'] < row['max_level']:
+      levels += '-' + str(row['max_level'])
+    html += trow.format(location_name=location_name,
+                        method=row['encounter_method'],
+                        levels=levels,
+                        rarity=str(row['rarity']) + '%',
+                        conditions=row['conditions'])
+  if current_version_id != 0:
     html += '</tbody></table>'
     html += '</details>'
 
-  if html == '':
+  if not len(html):
     return await self.send_reply(room, user, 'Nessun dato')
 
   await self.send_htmlbox(room, user, html)
@@ -124,66 +98,48 @@ async def encounter(self, room, user, arg):
     return
 
   arg = utils.to_user_id(utils.remove_accents(arg.lower()))
-
-  location = next((item for item in LOCATIONS if utils.to_user_id(item['identifier']) == arg), None)
-  if location is None:
-    return await self.send_reply(room, user, 'Nessun dato')
-
-  location_areas = list(item['id'] for item in LOCATION_AREAS if item['location_id'] == location['id'])
-
-  raw_encounters = list(filter(lambda encounter: encounter['location_area_id'] in location_areas, ENCOUNTERS))
-
-  encounters = {}
-
-  for encounter in raw_encounters:
-
-    if not encounter['version_id'] in encounters:
-      version_name = next((item['name'] for item in VERSION_NAMES if item['version_id'] == encounter['version_id'] and item['local_language_id'] == '9'), None)
-      encounters[encounter['version_id']] = {'version_name': version_name,
-                                             'encounters': {}}
-
-    if not encounter['location_area_id'] in encounters[encounter['version_id']]['encounters']:
-      location_area_name = next((item['name'] for item in LOCATION_AREA_PROSE if item['location_area_id'] == encounter['location_area_id'] and item['local_language_id'] == '9'), '')
-      if len(location_area_name):
-        location_area_name = ' (' + location_area_name + ')'
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']] = {'area_name': location_area_name,
-                                                                                          'pokemon': {}}
-
-    if not encounter['pokemon_id'] in encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon']:
-      pokemon_name = next((item['identifier'] for item in POKEMON if item['id'] == encounter['pokemon_id']), '')
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']] = {'pokemon_name': pokemon_name,
-                                                                                                                              'methods': {}}
-
-    encounter_slot = next(({'encounter_method_id': item['encounter_method_id'], 'rarity': item['rarity']} for item in ENCOUNTER_SLOTS if item['id'] == encounter['encounter_slot_id']), None)
-    if not encounter_slot['encounter_method_id'] in encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods']:
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods'][encounter_slot['encounter_method_id']] = {'encounter_method_name': next((item['name'] for item in ENCOUNTER_METHOD_PROSE if item['encounter_method_id'] == encounter_slot['encounter_method_id'] and item['local_language_id'] == '9'), None),
-                                                                                                                                            'encounter_method_order': next((item['order'] for item in ENCOUNTER_METHODS if item['id'] == encounter_slot['encounter_method_id']), None),
-                                                                                                                                            'min_level': 100,
-                                                                                                                                            'max_level': 1,
-                                                                                                                                            'rarity': {'base': 0,
-                                                                                                                                                       'conditions': {}}}
-
-    encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods'][encounter_slot['encounter_method_id']]['min_level'] = min(int(encounter['min_level']), encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods'][encounter_slot['encounter_method_id']]['min_level'])
-    encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods'][encounter_slot['encounter_method_id']]['max_level'] = max(int(encounter['max_level']), encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods'][encounter_slot['encounter_method_id']]['max_level'])
-
-    encounter_conditions = sorted(list(filter(lambda condition: condition['encounter_id'] == encounter['id'], ENCOUNTER_CONDITION_VALUE_MAP)), key=lambda k: k['encounter_condition_value_id'])
-
-    if len(encounter_conditions):
-      condition_names = []
-      for condition in encounter_conditions:
-        condition_names.append(next((item['name'] for item in ENCOUNTER_CONDITION_VALUE_PROSE if item['encounter_condition_value_id'] == condition['encounter_condition_value_id'] and item['local_language_id'] == '9'), None))
-      condition_name = ', '.join(condition_names)
-      if not condition_name in encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions']:
-        encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions'][condition_name] = 0
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['conditions'][condition_name] += int(encounter_slot['rarity'])
-    else:
-      encounters[encounter['version_id']]['encounters'][encounter['location_area_id']]['pokemon'][encounter['pokemon_id']]['methods'][encounter_slot['encounter_method_id']]['rarity']['base'] += int(encounter_slot['rarity'])
-
-
-  versions_sorted = sorted(encounters, key=int)
+  sql = '''SELECT b.version_id, MIN(b.min_level) AS min_level, MAX(b.max_level) AS max_level,
+           b.version, b.pokemon_id, b.pokemon, b.location_area_id, b.location_area, b.location_name, b.location_subtitle,
+           SUM(CASE WHEN b.encounter_condition IS NULL THEN b.rarity ELSE 0 END) AS rarity,
+           b.encounter_method_id, b.encounter_method,
+           IFNULL(GROUP_CONCAT('+' || b.rarity || '% ' || b.encounter_condition, '<br>'), '') AS conditions
+           FROM (SELECT a.version_id, MIN(a.min_level) AS min_level, MAX(a.max_level) AS max_level,
+                 a.version, a.pokemon_id, a.pokemon, a.location_area_id, a.location_area, a.location_name, a.location_subtitle,
+                 SUM(a.rarity) AS rarity,
+                 a.encounter_method_id, a.encounter_method, a.encounter_condition
+                 FROM (SELECT encounters.id AS encounter_id, encounters.version_id,
+                       encounters.min_level, encounters.max_level,
+                       encounters.version_id, version_names.name AS version,
+                       pokemon.id AS pokemon_id, pokemon_species_names.name AS pokemon,
+                       location_areas.id AS location_area_id, IFNULL(location_area_prose.name, '') AS location_area,
+                       IFNULL(location_names.name, '') AS location_name,
+                       IFNULL(location_names.subtitle, '') AS location_subtitle,
+                       encounter_slots.rarity,
+                       encounter_methods.id AS encounter_method_id,
+                       IFNULL(encounter_method_prose.name, '') AS encounter_method,
+                       GROUP_CONCAT(encounter_condition_value_prose.name, ', ') AS encounter_condition
+                       FROM locations
+                       JOIN location_areas ON location_areas.location_id = locations.id
+                       LEFT JOIN encounters ON encounters.location_area_id = location_areas.id
+                       LEFT JOIN version_names ON version_names.version_id = encounters.version_id AND version_names.local_language_id = 9
+                       LEFT JOIN pokemon ON pokemon.id = encounters.pokemon_id
+                       JOIN pokemon_species ON pokemon_species.id = pokemon.species_id
+                       LEFT JOIN pokemon_species_names ON pokemon_species_names.pokemon_species_id = pokemon_species.id AND pokemon_species_names.local_language_id = 9
+                       LEFT JOIN location_area_prose ON location_area_prose.location_area_id = location_areas.id AND location_area_prose.local_language_id = 9
+                       LEFT JOIN location_names ON location_names.location_id = location_areas.location_id AND location_names.local_language_id = 9
+                       JOIN encounter_slots ON encounter_slots.id = encounters.encounter_slot_id
+                       JOIN encounter_methods ON encounter_methods.id = encounter_slots.encounter_method_id
+                       LEFT JOIN encounter_method_prose ON encounter_method_prose.encounter_method_id = encounter_methods.id AND  encounter_method_prose.local_language_id = 9
+                       LEFT JOIN encounter_condition_value_map ON encounter_condition_value_map.encounter_id = encounters.id
+                       LEFT JOIN encounter_condition_value_prose ON encounter_condition_value_prose.encounter_condition_value_id = encounter_condition_value_map.encounter_condition_value_id AND encounter_condition_value_prose.local_language_id = 9
+                       WHERE locations.identifier = ?
+                       GROUP BY encounters.id) AS a
+                 GROUP BY version_id, pokemon_id, encounter_method_id, encounter_condition) AS b
+           GROUP BY version_id, pokemon_id, encounter_method_id
+           ORDER BY version_id, pokemon_id, encounter_method_id'''
 
   trow = '<tr>'
-  trow += '  <td>{pokemon}{area}</td>'
+  trow += '  <td>{pokemon}{location_area}</td>'
   trow += '  <td>{method}</td>'
   trow += '  <td>{levels}</td>'
   trow += '  <td style="text-align:right">{rarity}</td>'
@@ -195,35 +151,37 @@ async def encounter(self, room, user, arg):
   trow += '  </td>'
   trow += '</tr>'
   conditions_col = '+{rarity}% {name}<br>'
-  #head = '<tr><th>Location</th>
-  head = '<summary><b><big>{version}</big></b></summary>'
+  head = ''
   html = ''
-  for version in versions_sorted:
-    html += '<details>' + head.format(version=encounters[version]['version_name'])
-    html += '<table style="width:100%"><tbody>'
-    encounters_sorted = sorted(encounters[version]['encounters'], key=int)
-    for encounter in encounters_sorted:
-      pokemon_sorted = sorted(encounters[version]['encounters'][encounter]['pokemon'], key=int)
-      for pokemon in pokemon_sorted:
-        methods_sorted = sorted(encounters[version]['encounters'][encounter]['pokemon'][pokemon]['methods'], key=int)
-        for method in methods_sorted:
-          levels = 'L' + str(encounters[version]['encounters'][encounter]['pokemon'][pokemon]['methods'][method]['min_level'])
-          if encounters[version]['encounters'][encounter]['pokemon'][pokemon]['methods'][method]['min_level'] < encounters[version]['encounters'][encounter]['pokemon'][pokemon]['methods'][method]['max_level']:
-            levels += '-' + str(encounters[version]['encounters'][encounter]['pokemon'][pokemon]['methods'][method]['max_level'])
-          conditions = ''
-          for condition in encounters[version]['encounters'][encounter]['pokemon'][pokemon]['methods'][method]['rarity']['conditions']:
-            conditions += conditions_col.format(rarity=encounters[version]['encounters'][encounter]['pokemon'][pokemon]['methods'][method]['rarity']['conditions'][condition],
-                                                name=condition)
-          html += trow.format(pokemon=encounters[version]['encounters'][encounter]['pokemon'][pokemon]['pokemon_name'],
-                              area=encounters[version]['encounters'][encounter]['area_name'],
-                              method=encounters[version]['encounters'][encounter]['pokemon'][pokemon]['methods'][method]['encounter_method_name'],
-                              levels=levels,
-                              rarity=str(encounters[version]['encounters'][encounter]['pokemon'][pokemon]['methods'][method]['rarity']['base']) + '%',
-                              conditions=conditions)
+
+  current_version_id = 0
+  for row in cur.execute(sql, [arg]):
+    if current_version_id != row['version_id']:
+      if current_version_id != 0:
+        html += '</tbody></table>'
+        html += '</details>'
+      html += '<details><summary><b><big>{version}</big></b></summary>'.format(version=row['version'])
+      html += '<table style="width:100%"><tbody>'
+      current_version_id = row['version_id']
+
+    pokemon = row['pokemon']
+    location_area = ''
+    if len(row['location_area']):
+      location_area = ' (' + row['location_area'] + ')'
+    levels = 'L' + str(row['min_level'])
+    if row['min_level'] < row['max_level']:
+      levels += '-' + str(row['max_level'])
+    html += trow.format(pokemon=pokemon,
+                        location_area=location_area,
+                        method=row['encounter_method'],
+                        levels=levels,
+                        rarity=str(row['rarity']) + '%',
+                        conditions=row['conditions'])
+  if current_version_id != 0:
     html += '</tbody></table>'
     html += '</details>'
 
-  if html == '':
-    return await self.send_reply(room, user, 'Nessun datoa')
+  if not len(html):
+    return await self.send_reply(room, user, 'Nessun dato')
 
   await self.send_htmlbox(room, user, html)
