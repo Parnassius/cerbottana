@@ -4,12 +4,12 @@ import threading
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
-  def do_GET(self):
+  def do_GET(self): # pylint: disable=invalid-name
     self.send_response(200)
     self.end_headers()
     self.wfile.write(b'cerbottana')
 
-  def do_HEAD(self):
+  def do_HEAD(self): # pylint: disable=invalid-name
     self.send_response(200)
     self.end_headers()
 

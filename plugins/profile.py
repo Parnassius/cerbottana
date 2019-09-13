@@ -61,10 +61,9 @@ async def profile(self, room, user, arg, from_elitefour=False):
   if arg.strip() == '':
     arg = user
 
+  simple_message = ''
   if from_elitefour:
     simple_message = arg
-  else:
-    simple_message = ''
 
   arg = utils.to_user_id(arg)
 
@@ -109,15 +108,13 @@ async def profile(self, room, user, arg, from_elitefour=False):
                              opacity='')
     title = '{tier}:{dal}{al}'
     for i in body['elitefour'][:10]:
+      opacity = ''
       if i['datafine'] is not None:
         opacity = '; opacity: .5'
-      else:
-        opacity = ''
       dal = ' dal {}'.format(utils.date_format(i['data']))
+      al = ''
       if i['datafine'] is not None:
         al = ' al {}'.format(utils.date_format(i['datafine']))
-      else:
-        al = ''
       badges += badge.format(immagine=i['immagine'],
                              title=title.format(tier=i['tier'],
                                                 dal=dal,

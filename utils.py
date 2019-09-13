@@ -8,11 +8,12 @@ import requests
 from room import Room
 
 def restart_bot(self):
-  print('Restarting')
-  requests.delete('https://api.heroku.com/apps/cerbottana/dynos',
-                  headers={'Content-Type': 'application/json',
-                           'Accept': 'application/vnd.heroku+json; version=3',
-                           'Authorization': 'Bearer {}'.format(self.heroku_token)})
+  if self.heroku_token:
+    print('Restarting')
+    requests.delete('https://api.heroku.com/apps/cerbottana/dynos',
+                    headers={'Content-Type': 'application/json',
+                             'Accept': 'application/vnd.heroku+json; version=3',
+                             'Authorization': 'Bearer {}'.format(self.heroku_token)})
 
 
 def to_user_id(user):

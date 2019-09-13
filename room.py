@@ -8,15 +8,14 @@ class Room:
     self._instances[roomid] = self
 
   @classmethod
-  def get(self, roomid):
-    if roomid in self._instances:
-      return self._instances[roomid]
-    else:
-      return False
+  def get(cls, roomid):
+    if roomid in cls._instances:
+      return cls._instances[roomid]
+    return False
 
-  def addUser(self, userid, rank, username):
+  def add_user(self, userid, rank, username):
     self.users[userid] = {'rank': rank,
-                        'username': username}
+                          'username': username}
 
-  def removeUser(self, user):
+  def remove_user(self, user):
     self.users.pop(user, None)

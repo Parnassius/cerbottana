@@ -1,6 +1,6 @@
 import utils
 
-from veekun import cur
+from veekun import CUR
 
 
 async def location(self, room, user, arg):
@@ -56,12 +56,11 @@ async def location(self, room, user, arg):
   trow += '    <hr style="margin:0">'
   trow += '  </td>'
   trow += '</tr>'
-  conditions_col = '+{rarity}% {name}<br>'
   head = ''
   html = ''
 
   current_version_id = 0
-  for row in cur.execute(sql, [arg]):
+  for row in CUR.execute(sql, [arg]):
     if current_version_id != row['version_id']:
       if current_version_id != 0:
         html += '</tbody></table>'
@@ -71,9 +70,9 @@ async def location(self, room, user, arg):
       current_version_id = row['version_id']
 
     location_name = row['location_name']
-    if len(row['location_subtitle']):
+    if row['location_subtitle']:
       location_name += ' - ' + row['location_subtitle']
-    if len(row['location_area']):
+    if row['location_area']:
       location_name += ' (' + row['location_area'] + ')'
     levels = 'L' + str(row['min_level'])
     if row['min_level'] < row['max_level']:
@@ -87,7 +86,7 @@ async def location(self, room, user, arg):
     html += '</tbody></table>'
     html += '</details>'
 
-  if not len(html):
+  if not html:
     return await self.send_reply(room, user, 'Nessun dato')
 
   await self.send_htmlbox(room, user, html)
@@ -150,12 +149,11 @@ async def encounter(self, room, user, arg):
   trow += '    <hr style="margin:0">'
   trow += '  </td>'
   trow += '</tr>'
-  conditions_col = '+{rarity}% {name}<br>'
   head = ''
   html = ''
 
   current_version_id = 0
-  for row in cur.execute(sql, [arg]):
+  for row in CUR.execute(sql, [arg]):
     if current_version_id != row['version_id']:
       if current_version_id != 0:
         html += '</tbody></table>'
@@ -166,7 +164,7 @@ async def encounter(self, room, user, arg):
 
     pokemon = row['pokemon']
     location_area = ''
-    if len(row['location_area']):
+    if row['location_area']:
       location_area = ' (' + row['location_area'] + ')'
     levels = 'L' + str(row['min_level'])
     if row['min_level'] < row['max_level']:
@@ -181,7 +179,7 @@ async def encounter(self, room, user, arg):
     html += '</tbody></table>'
     html += '</details>'
 
-  if not len(html):
+  if not html:
     return await self.send_reply(room, user, 'Nessun dato')
 
   await self.send_htmlbox(room, user, html)

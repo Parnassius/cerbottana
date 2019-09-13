@@ -45,13 +45,6 @@ if __name__ == '__main__':
                           os.environ['DATABASE_API_URL'],
                           os.environ['DATABASE_API_KEY'],
                           os.environ['ADMINISTRATORS'].split(','),
-                          ['randombattle',
-                           'battlefactory',
-                           'bssfactory',
-                           'monotyperandombattle',
-                           'superstaffbrosbrawl',
-                           'challengecup1v1',
-                           'hackmonscup'],
                           os.environ['HEROKU_TOKEN'])
 
   asyncio.get_event_loop().run_until_complete(CONNECTION.open_connection())

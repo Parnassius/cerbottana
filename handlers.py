@@ -1,4 +1,3 @@
-import asyncio
 import json
 import requests
 
@@ -11,7 +10,7 @@ async def add_user(self, room, user, skip_avatar_check=False):
   username = user[1:].split('@')[0]
   userid = utils.to_user_id(username)
 
-  Room.get(room).addUser(userid, rank, username)
+  Room.get(room).add_user(userid, rank, username)
 
   if userid == utils.to_user_id(self.username):
     Room.get(room).roombot = (rank == '*')
@@ -33,7 +32,7 @@ async def add_user(self, room, user, skip_avatar_check=False):
         await self.send_pm(username, text.format(body['num']))
 
 async def remove_user(self, room, user):
-  Room.get(room).removeUser(utils.to_user_id(user))
+  Room.get(room).remove_user(utils.to_user_id(user))
 
 async def parse_chat_message(self, room, user, message):
   if message[:len(self.command_character)] == self.command_character:
@@ -103,6 +102,8 @@ async def timestampchat(self, room, timestamp, user, *message):
 async def pm(self, room, sender, receiver, *message):
   if utils.to_user_id(sender) == utils.to_user_id(self.username):
     return
+  if utils.to_user_id(receiver) != utils.to_user_id(self.username):
+    return
   await parse_chat_message(self, None, sender, '|'.join(message).strip())
 
 
@@ -120,8 +121,8 @@ async def challstr(self, room, *challstring):
     await self.send_message('', '/trn {},0,{}'.format(self.username, assertion))
 
 async def updateuser(self, room, user, named, avatar, settings):
+  # pylint: disable=too-many-arguments,unused-argument
   username = user.split('@')[0]
-  # pylint: disable=too-many-arguments
   if utils.to_user_id(username) != utils.to_user_id(self.username):
     return
 
@@ -151,25 +152,6 @@ async def formats(self, room, *formatslist):
     parts = tier.split(',')
     tiers.append({'name': parts[0], 'section': section})
   self.tiers = tiers
-
-async def updatesearch(self, room, data):
-  data = json.loads(data)
-  if 'games' in data and data['games'] is not None:
-    for i in data['games']:
-      if i[:7] == 'battle-':
-        pass
-        #if not i in battles:
-          #await self.send_message('', '/join {}'.format(i))
-
-async def updatechallenges(self, room, data):
-  pass
-  data = json.loads(data)
-  if 'challengesFrom' in data:
-    for i in data['challengesFrom']:
-      if data['challengesFrom'][i][4:] in self.battle_tiers:
-        await self.send_message('', '/accept {}'.format(i))
-      else:
-        await self.send_message('', '/reject {}'.format(i))
 
 async def queryresponse(self, room, querytype, data):
   await parse_queryresponse(self, querytype, data)

@@ -98,7 +98,8 @@ async def r0spe(self, room, user, arg):
 async def silver97(self, room, user, arg):
   if room is not None and not utils.is_voice(user):
     return
-  await self.send_reply(room, user, 'qualcuno mi passa un team {}'.format(random.choice(self.tiers)['name']))
+  tier = random.choice(self.tiers)['name']
+  await self.send_reply(room, user, 'qualcuno mi passa un team {}'.format(tier))
 
 async def smilzo(self, room, user, arg):
   if room is not None and not utils.is_voice(user):

@@ -10,8 +10,9 @@ import plugins
 class Connection:
   # pylint: disable=too-many-instance-attributes
   def __init__(self, url, username, password, avatar, statustext,
-               rooms, private_rooms, command_character, database_api_url, database_api_key,
-               administrators, battle_tiers, heroku_token):
+               rooms, private_rooms, command_character,
+               database_api_url, database_api_key, administrators, heroku_token):
+    # pylint: disable=too-many-arguments
     self.url = url
     self.username = username
     self.password = password
@@ -23,7 +24,6 @@ class Connection:
     self.database_api_url = database_api_url
     self.database_api_key = database_api_key
     self.administrators = administrators
-    self.battle_tiers = battle_tiers
     self.heroku_token = heroku_token
     self.handlers = {
         'init': handlers.init,
@@ -39,8 +39,6 @@ class Connection:
         'challstr': handlers.challstr,
         'updateuser': handlers.updateuser,
         'formats': handlers.formats,
-        'updatesearch': handlers.updatesearch,
-        'updatechallenges': handlers.updatechallenges,
         'queryresponse': handlers.queryresponse}
     self.commands = {
         '8ball': plugins.eightball.eightball,
@@ -169,7 +167,8 @@ class Connection:
         await self.send_message(room, '/pminfobox {}, {}'.format(user, message))
       else:
         if simple_message == '':
-          simple_message = 'Questo comando è disponibile in PM solo se sei online in una room dove sono Roombot'
+          simple_message = 'Questo comando è disponibile in PM '
+          simple_message += 'solo se sei online in una room dove sono Roombot'
         await self.send_pm(user, simple_message)
 
   async def send_reply(self, room, user, message):

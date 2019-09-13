@@ -1,5 +1,5 @@
 [BASIC]
-good-names=do_GET,do_HEAD,i,j,pm,al,ex
+good-names=f,i,j,pm,al
 
 [FORMAT]
 indent-string='  '

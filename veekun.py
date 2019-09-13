@@ -5,6 +5,7 @@ import sqlite3
 def csv_to_sqlite():
   create_stmt = 'CREATE TABLE {table} ({columns}, {keys});'
   insert_stmt = 'INSERT INTO {table} ({columns}) VALUES ({values});'
+  update_stmt_identifier = 'UPDATE {table} SET identifier = REPLACE(identifier, "-", "");'
 
   tables = [{'name': 'encounter_condition_value_map',
              'columns': {'encounter_id': 'INTEGER',
@@ -124,20 +125,22 @@ def csv_to_sqlite():
              'keys': ['PRIMARY KEY (version_id, local_language_id)']}]
 
   for table in tables:
-    cur.execute(create_stmt.format(table=table['name'],
-                                   columns=', '.join(['`' + i + '` ' + table['columns'][i] for i in table['columns']]),
-                                   keys=', '.join(table['keys'])))
-    with open('./data/veekun/' + table['name'] + '.csv','r') as f:
+    columns = ', '.join(['`' + i + '` ' + table['columns'][i] for i in table['columns']])
+    keys = ', '.join(table['keys'])
+    CUR.execute(create_stmt.format(table=table['name'],
+                                   columns=columns,
+                                   keys=keys))
+    with open('./data/veekun/' + table['name'] + '.csv', 'r') as f:
       data = csv.DictReader(f)
       keys = data.fieldnames
       values = [list(i.values()) for i in data]
-      cur.executemany(insert_stmt.format(table=table['name'],
+      CUR.executemany(insert_stmt.format(table=table['name'],
                                          columns='`' + '`, `'.join(keys) + '`',
                                          values=', '.join(list('?' * len(keys)))), values)
       if 'identifier' in table['columns']:
-        cur.execute('UPDATE {table} SET identifier = REPLACE(identifier, "-", "")'.format(table=table['name']))
-      conn.commit()
+        CUR.execute(update_stmt_identifier.format(table=table['name']))
+      CONN.commit()
 
-conn = sqlite3.connect(':memory:')
-conn.row_factory = sqlite3.Row
-cur = conn.cursor()
+CONN = sqlite3.connect(':memory:')
+CONN.row_factory = sqlite3.Row
+CUR = CONN.cursor()

@@ -70,23 +70,16 @@ async def randpoketour(self, room, user, arg):
   if room is None or not utils.is_driver(user):
     return
 
-  if not len(arg.strip()):
+  if arg.strip() == '':
     return await self.send_message(room, 'Inserisci almeno un Pokémon')
 
-  megas = ['abomasnow', 'absol', 'aerodactyl', 'aggron', 'alakazam', 'altaria', 'ampharos', 'audino',
-           'banette', 'beedrill', 'blastoise', 'blaziken',
-           'camerupt',
-           'diancie',
-           'gallade', 'garchomp', 'gardevoir', 'gengar', 'glalie', 'gyarados',
-           'heracross', 'houndoom',
-           'kangaskhan',
-           'latias', 'latios', 'lopunny', 'lucario',
-           'manectric', 'mawile', 'medicham', 'metagross',
-           'pidgeot', 'pinsir',
-           'rayquaza',
-           'sableye', 'salamence', 'sceptile', 'scizor', 'sharpedo', 'slowbro', 'steelix', 'swampert',
-           'tyranitar',
-           'venusaur']
+  megas = ['abomasnow', 'absol', 'aerodactyl', 'aggron', 'alakazam', 'altaria', 'ampharos',
+           'audino', 'banette', 'beedrill', 'blastoise', 'blaziken', 'camerupt', 'diancie',
+           'gallade', 'garchomp', 'gardevoir', 'gengar', 'glalie', 'gyarados', 'heracross',
+           'houndoom', 'kangaskhan', 'latias', 'latios', 'lopunny', 'lucario', 'manectric',
+           'mawile', 'medicham', 'metagross', 'pidgeot', 'pinsir', 'rayquaza', 'sableye',
+           'salamence', 'sceptile', 'scizor', 'sharpedo', 'slowbro', 'steelix', 'swampert',
+           'tyranitar', 'venusaur']
   megas_xy = ['charizard', 'mewtwo']
 
   bans = '-OU, -UUBL, -UU, -RUBL, -RU, -NUBL, -NU, -PUBL, -PU, -ZU, -NFE, -LC Uber, -LC'
