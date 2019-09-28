@@ -39,7 +39,8 @@ class Connection:
         'challstr': handlers.challstr,
         'updateuser': handlers.updateuser,
         'formats': handlers.formats,
-        'queryresponse': handlers.queryresponse}
+        'queryresponse': handlers.queryresponse,
+        'tournament': handlers.tournament}
     self.commands = {
         '8ball': plugins.eightball.eightball,
         'eightball': plugins.eightball.eightball,
@@ -142,6 +143,8 @@ class Connection:
     if not message:
       return
 
+    init = False
+
     room = ''
     if message[0] == '>':
       room = message.split('\n')[0]
@@ -154,14 +157,22 @@ class Connection:
 
       parts = msg.split('|')
 
-      if parts[1] in self.handlers:
-        await self.handlers[parts[1]](self, roomid, *parts[2:])
+      command = parts[1]
+
+      if command == 'init':
+        init = True
+
+      if init and command in ['tournament']:
+        return
+
+      if command in self.handlers:
+        await self.handlers[command](self, roomid, *parts[2:])
 
 
   async def send_htmlbox(self, room, user, message, simple_message=''):
     if room is not None:
       await self.send_message(room, '/addhtmlbox {}'.format(message))
-    else:
+    elif user is not None:
       room = utils.can_pminfobox_to(self, utils.to_user_id(user))
       if room is not None:
         await self.send_message(room, '/pminfobox {}, {}'.format(user, message))
