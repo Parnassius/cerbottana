@@ -161,10 +161,15 @@ async def tournament(self, room, command, *params):
   if command == 'create':
     format = params[0]
     if format in utils.SAMPLE_TEAMS:
-      html = '<b><big>Sample teams</big></b>'
       picon = '<span class="picon" style="background: transparent url(&quot;//play.pokemonshowdown.com/sprites/pokemonicons-sheet.png?a6&quot;) no-repeat scroll -{left}px -{top}px"></span>'
+
+      html = '<details>'
+      html += '  <summary><b><big>Sample teams</big></b></summary>'
+      first = True
       for i in utils.SAMPLE_TEAMS[format]:
-        html += '<hr>'
+        if not first:
+          html += '<hr>'
+        first = False
         for num in utils.SAMPLE_TEAMS[format][i]['icons']:
           left = (num % 12) * 40
           top = math.floor(num / 12) * 30
@@ -173,4 +178,5 @@ async def tournament(self, room, command, *params):
         html += '  <summary>' + i + '</summary>'
         html += '  <pre class="textbox" style="margin-top: 0">' + utils.SAMPLE_TEAMS[format][i]['importable'] + '</pre>'
         html += '</details>'
+      html += '</details>'
       await self.send_htmlbox(room, None, html)
