@@ -56,7 +56,6 @@ async def location(self, room, user, arg):
   trow += '    <hr style="margin:0">'
   trow += '  </td>'
   trow += '</tr>'
-  head = ''
   html = ''
 
   current_version_id = 0
@@ -149,7 +148,6 @@ async def encounter(self, room, user, arg):
   trow += '    <hr style="margin:0">'
   trow += '  </td>'
   trow += '</tr>'
-  head = ''
   html = ''
 
   current_version_id = 0
