@@ -58,7 +58,7 @@ def database_request(self, action, params):
 
 
 def is_voice(user):
-  return user[0] in '+*%@★#&~'
+  return user is None or user[0] in '+*%@★#&~'
 
 def is_driver(user):
   return user[0] in '%@#&~'

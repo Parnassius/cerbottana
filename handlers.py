@@ -1,5 +1,4 @@
 import json
-import math
 import requests
 
 import utils
@@ -160,23 +159,4 @@ async def queryresponse(self, room, querytype, data):
 async def tournament(self, room, command, *params):
   if command == 'create':
     format = params[0]
-    if format in utils.SAMPLE_TEAMS:
-      picon = '<span class="picon" style="background: transparent url(&quot;//play.pokemonshowdown.com/sprites/pokemonicons-sheet.png?a6&quot;) no-repeat scroll -{left}px -{top}px"></span>'
-
-      html = '<details>'
-      html += '  <summary><b><big>Sample teams</big></b></summary>'
-      first = True
-      for i in utils.SAMPLE_TEAMS[format]:
-        if not first:
-          html += '<hr>'
-        first = False
-        for num in utils.SAMPLE_TEAMS[format][i]['icons']:
-          left = (num % 12) * 40
-          top = math.floor(num / 12) * 30
-          html += picon.format(left=left, top=top)
-        html += '<details>'
-        html += '  <summary>' + i + '</summary>'
-        html += '  <pre class="textbox" style="margin-top: 0">' + utils.SAMPLE_TEAMS[format][i]['importable'] + '</pre>'
-        html += '</details>'
-      html += '</details>'
-      await self.send_htmlbox(room, None, html)
+    await self.commands['sampleteams'](self, room, None, format)

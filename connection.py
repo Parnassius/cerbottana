@@ -65,6 +65,10 @@ class Connection:
         'setprofile': plugins.profile.setprofile,
         'updateavatar': plugins.profile.updateavatar,
 
+        'sample': plugins.sample_teams.sample_teams,
+        'samples': plugins.sample_teams.sample_teams,
+        'sampleteams': plugins.sample_teams.sample_teams,
+
         'meme': plugins.shitpost.memes,
         'memes': plugins.shitpost.memes,
         'mims': plugins.shitpost.memes,

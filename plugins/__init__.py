@@ -3,6 +3,7 @@ import plugins.links
 import plugins.locations
 import plugins.misc
 import plugins.profile
+import plugins.sample_teams
 import plugins.shitpost
 import plugins.token
 import plugins.tours
