@@ -38,4 +38,4 @@ async def sample_teams(self, room, user, arg):
       html += '  <pre class="textbox" style="margin-top: 0">' + utils.SAMPLE_TEAMS[format][i]['importable'] + '</pre>'
       html += '</details>'
     html += '</details>'
-    await self.send_htmlbox(room, None, html)
+    await self.send_htmlbox(room, user, html)
