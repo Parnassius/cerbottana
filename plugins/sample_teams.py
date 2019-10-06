@@ -3,7 +3,7 @@ import math
 import utils
 
 async def sample_teams(self, room, user, arg):
-  if room is None or not utils.is_voice(user):
+  if room is not None and not utils.is_voice(user):
     return
 
   format = arg
