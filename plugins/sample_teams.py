@@ -3,7 +3,7 @@ import math
 import utils
 
 async def sample_teams(self, room, user, arg):
-  if room is not None and not utils.is_voice(user):
+  if room is None or not utils.is_voice(user):
     return
 
   format = arg
@@ -38,4 +38,4 @@ async def sample_teams(self, room, user, arg):
       html += '  <pre class="textbox" style="margin-top: 0">' + utils.SAMPLE_TEAMS[format][i]['importable'] + '</pre>'
       html += '</details>'
     html += '</details>'
-    await self.send_htmlbox(room, user, html)
+    await self.send_htmlbox(room, None, html)
