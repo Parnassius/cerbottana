@@ -75,6 +75,7 @@ class Connection:
         'say': plugins.shitpost.shitpost,
         'shitpost': plugins.shitpost.shitpost,
 
+        'dashboard': plugins.token.token,
         'token': plugins.token.token,
 
         'leaderboard': plugins.tours.leaderboard,
