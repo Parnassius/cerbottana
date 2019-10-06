@@ -150,6 +150,11 @@ async def setprofile(self, room, user, arg):
 
   await self.send_reply(room, user, 'Salvato')
 
+  message = 'Qualcuno ha aggiornato la sua frase del profilo. '
+  message += 'Usa <button name="send" value="/pm ' + self.username + ', .dashboard">.dashboard</button> per approvarla o rifiutarla'
+  for room in self.rooms:
+    await self.send_rankhtmlbox('%', room, message)
+
 async def updateavatar(self, room, user, arg):
   if utils.to_user_id(user) not in self.administrators:
     return

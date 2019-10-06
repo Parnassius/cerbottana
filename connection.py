@@ -174,6 +174,9 @@ class Connection:
         await self.handlers[command](self, roomid, *parts[2:])
 
 
+  async def send_rankhtmlbox(self, rank, room, message):
+    await self.send_message(room, '/addrankhtmlbox {}, {}'.format(rank, message))
+
   async def send_htmlbox(self, room, user, message, simple_message=''):
     if room is not None:
       await self.send_message(room, '/addhtmlbox {}'.format(message))
