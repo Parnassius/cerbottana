@@ -4,10 +4,11 @@ import utils
 
 from room import Room
 
-def create_token(self):
+def create_token(self, rank):
   token_id = os.urandom(16).hex()
   utils.database_request(self, 'newtoken',
-                         {'token': token_id})
+                         {'token': token_id,
+                          'rank': rank})
   return token_id
 
 async def token(self, room, user, arg):
@@ -20,8 +21,7 @@ async def token(self, room, user, arg):
   else:
     return
 
-  token_id = create_token(self)
+  token_id = create_token(self, rank)
 
   await self.send_pm(user, '{url}dashboard.php?token={token}'.format(url=self.database_api_url,
-                                                                     token=token_id,
-                                                                     rank=rank))
+                                                                     token=token_id))
