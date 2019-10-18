@@ -5,7 +5,7 @@ import websockets
 import utils
 
 import handlers
-import plugins
+from plugins import plugins
 
 class Connection:
   # pylint: disable=too-many-instance-attributes
@@ -41,97 +41,7 @@ class Connection:
         'formats': handlers.formats,
         'queryresponse': handlers.queryresponse,
         'tournament': handlers.tournament}
-    self.commands = {
-        '8ball': plugins.eightball.eightball,
-        'eightball': plugins.eightball.eightball,
-
-        'lega': plugins.links.lega,
-
-        'encounter': plugins.locations.encounter,
-        'encounters': plugins.locations.encounter,
-        'location': plugins.locations.location,
-        'locations': plugins.locations.location,
-
-        'randomuser': plugins.misc.randomuser,
-
-        'campione': plugins.profile.champion,
-        'champion': plugins.profile.champion,
-        'e4': plugins.profile.elitefour,
-        'elite4': plugins.profile.elitefour,
-        'elitefour': plugins.profile.elitefour,
-        'super4': plugins.profile.elitefour,
-        'superquattro': plugins.profile.elitefour,
-        'profile': plugins.profile.profile,
-        'setprofile': plugins.profile.setprofile,
-        'updateavatar': plugins.profile.updateavatar,
-
-        'sample': plugins.sample_teams.sample_teams,
-        'samples': plugins.sample_teams.sample_teams,
-        'sampleteams': plugins.sample_teams.sample_teams,
-
-        'meme': plugins.shitpost.memes,
-        'memes': plugins.shitpost.memes,
-        'mims': plugins.shitpost.memes,
-        'say': plugins.shitpost.shitpost,
-        'shitpost': plugins.shitpost.shitpost,
-
-        'dashboard': plugins.token.token,
-        'token': plugins.token.token,
-
-        'leaderboard': plugins.tours.leaderboard,
-        'randpoketour': plugins.tours.randpoketour,
-
-        'trad': plugins.translations.trad,
-
-        'acher': plugins.usernames.acher,
-        'aeth': plugins.usernames.aethernum,
-        'aethernum': plugins.usernames.aethernum,
-        'eterno': plugins.usernames.aethernum,
-        'alpha': plugins.usernames.alpha,
-        'alphawittem': plugins.usernames.alpha,
-        'wittem': plugins.usernames.alpha,
-        'cinse': plugins.usernames.consecutio,
-        'cobse': plugins.usernames.consecutio,
-        'conse': plugins.usernames.consecutio,
-        'consecutio': plugins.usernames.consecutio,
-        'duck': plugins.usernames.duck,
-        'ed': plugins.usernames.edgummet,
-        'edgummet': plugins.usernames.edgummet,
-        'francy': plugins.usernames.francyy,
-        'francyy': plugins.usernames.francyy,
-        'haund': plugins.usernames.haund,
-        'howkings': plugins.usernames.howkings,
-        'infli': plugins.usernames.inflikted,
-        'inflikted': plugins.usernames.inflikted,
-        'lange': plugins.usernames.lange,
-        'milak': plugins.usernames.milak,
-        'mister': plugins.usernames.mister,
-        'mistercantiere': plugins.usernames.mistercantiere,
-        'azyz': plugins.usernames.oizys,
-        'oizys': plugins.usernames.oizys,
-        'r0spe': plugins.usernames.r0spe,
-        'rospe': plugins.usernames.r0spe,
-        'silver': plugins.usernames.silver97,
-        'silver97': plugins.usernames.silver97,
-        'smilzo': plugins.usernames.smilzo,
-        'spec': plugins.usernames.specn,
-        'specn': plugins.usernames.specn,
-        'cul1': plugins.usernames.swculone,
-        'culone': plugins.usernames.swculone,
-        'kul1': plugins.usernames.swculone,
-        'swcul1': plugins.usernames.swculone,
-        'swculone': plugins.usernames.swculone,
-        'swkul1': plugins.usernames.swculone,
-        'quas': plugins.usernames.thequasar,
-        'quasar': plugins.usernames.thequasar,
-        'thequasar': plugins.usernames.thequasar,
-        '3v': plugins.usernames.trev,
-        'trev': plugins.usernames.trev,
-        'vvv': plugins.usernames.trev,
-        'uselesstrainer': plugins.usernames.uselesstrainer,
-        'usy': plugins.usernames.uselesstrainer,
-        'v0lca': plugins.usernames.v0lca,
-        'volca': plugins.usernames.v0lca}
+    self.commands = plugins
     self.timestamp = 0
     self.websocket = None
     self.tiers = None

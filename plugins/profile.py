@@ -161,3 +161,15 @@ async def updateavatar(self, room, user, arg):
 
   await self.send_message('', '/cmd userdetails {}'.format(utils.to_user_id(arg)))
   await self.send_reply(room, user, 'Fatto')
+
+
+commands = {'campione': champion,
+            'champion': champion,
+            'e4': elitefour,
+            'elite4': elitefour,
+            'elitefour': elitefour,
+            'super4': elitefour,
+            'superquattro': elitefour,
+            'profile': profile,
+            'setprofile': setprofile,
+            'updateavatar': updateavatar}

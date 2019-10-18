@@ -10,3 +10,7 @@ async def eightball(self, room, user, arg):
   if answer[0] == '/':
     answer = '/' + answer
   await self.send_reply(room, user, answer)
+
+
+commands = {'8ball': eightball,
+            'eightball': eightball}

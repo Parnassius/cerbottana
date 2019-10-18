@@ -51,11 +51,6 @@ async def location(self, room, user, arg):
   trow += '  <td style="text-align:right">{rarity}</td>'
   trow += '  <td>{conditions}</td>'
   trow += '</tr>'
-  trow += '<tr>'
-  trow += '  <td colspan="5">'
-  trow += '    <hr style="margin:0">'
-  trow += '  </td>'
-  trow += '</tr>'
   html = ''
 
   current_version_id = 0
@@ -65,7 +60,7 @@ async def location(self, room, user, arg):
         html += '</tbody></table>'
         html += '</details>'
       html += '<details><summary><b><big>{version}</big></b></summary>'.format(version=row['version'])
-      html += '<table style="width:100%"><tbody>'
+      html += '<table><tbody>'
       current_version_id = row['version_id']
 
     location_name = row['location_name']
@@ -88,7 +83,7 @@ async def location(self, room, user, arg):
   if not html:
     return await self.send_reply(room, user, 'Nessun dato')
 
-  await self.send_htmlbox(room, user, html)
+  await self.send_htmlbox(room, user, '<div class="ladder">' + html + '</div>')
 
 
 async def encounter(self, room, user, arg):
@@ -143,11 +138,6 @@ async def encounter(self, room, user, arg):
   trow += '  <td style="text-align:right">{rarity}</td>'
   trow += '  <td>{conditions}</td>'
   trow += '</tr>'
-  trow += '<tr>'
-  trow += '  <td colspan="5">'
-  trow += '    <hr style="margin:0">'
-  trow += '  </td>'
-  trow += '</tr>'
   html = ''
 
   current_version_id = 0
@@ -157,7 +147,7 @@ async def encounter(self, room, user, arg):
         html += '</tbody></table>'
         html += '</details>'
       html += '<details><summary><b><big>{version}</big></b></summary>'.format(version=row['version'])
-      html += '<table style="width:100%"><tbody>'
+      html += '<table><tbody>'
       current_version_id = row['version_id']
 
     pokemon = row['pokemon']
@@ -180,4 +170,10 @@ async def encounter(self, room, user, arg):
   if not html:
     return await self.send_reply(room, user, 'Nessun dato')
 
-  await self.send_htmlbox(room, user, html)
+  await self.send_htmlbox(room, user, '<div class="ladder">' + html + '</div>')
+
+
+commands = {'encounter': encounter,
+            'encounters': encounter,
+            'location': location,
+            'locations': location}

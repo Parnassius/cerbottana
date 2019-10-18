@@ -321,3 +321,10 @@ LETTERS = {'a': ['┌─┐',
 
 with open('./data/memes.json', 'r') as f:
   MEMES = json.load(f)
+
+
+commands = {'meme': memes,
+            'memes': memes,
+            'mims': memes,
+            'say': shitpost,
+            'shitpost': shitpost}

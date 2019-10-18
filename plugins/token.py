@@ -25,3 +25,7 @@ async def token(self, room, user, arg):
 
   await self.send_pm(user, '{url}dashboard.php?token={token}'.format(url=self.database_api_url,
                                                                      token=token_id))
+
+
+commands = {'dashboard': token,
+            'token': token}

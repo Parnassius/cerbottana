@@ -40,3 +40,6 @@ async def trad(self, room, user, arg):
 
 with open('./data/translations.json', 'r') as f:
   TRANSLATIONS = json.load(f)
+
+
+commands = {'trad': trad}

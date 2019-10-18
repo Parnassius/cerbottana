@@ -121,3 +121,7 @@ async def randpoketour(self, room, user, arg):
   await self.send_message(room, '/tour scouting off')
   await self.send_message(room, '/tour rules {},{}'.format(','.join(['-' + i for i in bans]),
                                                           ','.join(['+' + i for i in unbans])))
+
+
+commands = {'leaderboard': leaderboard,
+            'randpoketour': randpoketour}

@@ -1,11 +1,13 @@
-import plugins.eightball
-import plugins.links
-import plugins.locations
-import plugins.misc
-import plugins.profile
-import plugins.sample_teams
-import plugins.shitpost
-import plugins.token
-import plugins.tours
-import plugins.translations
-import plugins.usernames
+from os.path import dirname, basename, isfile, join
+import glob
+import importlib
+
+modules = glob.glob(join(dirname(__file__), '*.py'))
+
+plugins = {}
+
+for f in modules:
+  if isfile(f) and not f.endswith('__init__.py'):
+    name = basename(f)[:-3]
+    m = importlib.import_module('plugins.' + name)
+    plugins.update(m.commands)

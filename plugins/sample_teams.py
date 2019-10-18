@@ -39,3 +39,8 @@ async def sample_teams(self, room, user, arg):
       html += '</details>'
     html += '</details>'
     await self.send_htmlbox(room, None, html)
+
+
+commands = {'sample': sample_teams,
+            'samples': sample_teams,
+            'sampleteams': sample_teams}
