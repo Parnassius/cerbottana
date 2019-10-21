@@ -3,6 +3,8 @@ import json
 import hashlib
 import math
 
+from html import escape
+
 import requests
 
 from room import Room
@@ -43,6 +45,8 @@ def remove_accents(text):
 def date_format(text):
   return '{dd}/{mm}/{yyyy}'.format(dd=text[-2:], mm=text[5:7], yyyy=text[:4])
 
+def html_escape(text):
+  return escape(text).replace('\n', '<br>')
 
 def database_request(self, action, params):
   req = requests.post(self.database_api_url,

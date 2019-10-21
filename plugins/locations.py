@@ -12,7 +12,7 @@ async def location(self, room, user, arg):
            b.version, b.location_area_id, b.location_area, b.location_name, b.location_subtitle,
            SUM(CASE WHEN b.encounter_condition IS NULL THEN b.rarity ELSE 0 END) AS rarity,
            b.encounter_method_id, b.encounter_method,
-           IFNULL(GROUP_CONCAT('+' || b.rarity || '% ' || b.encounter_condition, '<br>'), '') AS conditions
+           IFNULL(GROUP_CONCAT('+' || b.rarity || '% ' || b.encounter_condition, '\n'), '') AS conditions
            FROM (SELECT a.version_id, MIN(a.min_level) AS min_level, MAX(a.max_level) AS max_level,
                  a.version, a.location_area_id, a.location_area, a.location_name, a.location_subtitle,
                  SUM(a.rarity) AS rarity,
@@ -44,13 +44,6 @@ async def location(self, room, user, arg):
            GROUP BY version_id, location_area_id, encounter_method_id
            ORDER BY version_id, location_area_id, encounter_method_id'''
 
-  trow = '<tr>'
-  trow += '  <td>{location_name}</td>'
-  trow += '  <td>{method}</td>'
-  trow += '  <td>{levels}</td>'
-  trow += '  <td style="text-align:right">{rarity}</td>'
-  trow += '  <td>{conditions}</td>'
-  trow += '</tr>'
   html = ''
 
   current_version_id = 0
@@ -59,7 +52,7 @@ async def location(self, room, user, arg):
       if current_version_id != 0:
         html += '</tbody></table>'
         html += '</details>'
-      html += '<details><summary><b><big>{version}</big></b></summary>'.format(version=row['version'])
+      html += '<details><summary><b><big>' + utils.html_escape(row['version']) + '</big></b></summary>'
       html += '<table><tbody>'
       current_version_id = row['version_id']
 
@@ -71,11 +64,16 @@ async def location(self, room, user, arg):
     levels = 'L' + str(row['min_level'])
     if row['min_level'] < row['max_level']:
       levels += '-' + str(row['max_level'])
-    html += trow.format(location_name=location_name,
-                        method=row['encounter_method'],
-                        levels=levels,
-                        rarity=str(row['rarity']) + '%',
-                        conditions=row['conditions'])
+
+    html += '<tr>'
+    html += '  <td>' + utils.html_escape(location_name) + '</td>'
+    html += '  <td>' + utils.html_escape(row['encounter_method']) + '</td>'
+    html += '  <td>' + utils.html_escape(levels) + '</td>'
+    html += '  <td' + (' colspan="2"' if not len(row['conditions']) else '') + '>' + utils.html_escape(str(row['rarity']) + '%') + '</td>'
+    if len(row['conditions']):
+      html += '  <td>' + utils.html_escape(row['conditions']) + '</td>'
+    html += '</tr>'
+
   if current_version_id != 0:
     html += '</tbody></table>'
     html += '</details>'
@@ -95,7 +93,7 @@ async def encounter(self, room, user, arg):
            b.version, b.pokemon_id, b.pokemon, b.location_area_id, b.location_area, b.location_name, b.location_subtitle,
            SUM(CASE WHEN b.encounter_condition IS NULL THEN b.rarity ELSE 0 END) AS rarity,
            b.encounter_method_id, b.encounter_method,
-           IFNULL(GROUP_CONCAT('+' || b.rarity || '% ' || b.encounter_condition, '<br>'), '') AS conditions
+           IFNULL(GROUP_CONCAT('+' || b.rarity || '% ' || b.encounter_condition, '\n'), '') AS conditions
            FROM (SELECT a.version_id, MIN(a.min_level) AS min_level, MAX(a.max_level) AS max_level,
                  a.version, a.pokemon_id, a.pokemon, a.location_area_id, a.location_area, a.location_name, a.location_subtitle,
                  SUM(a.rarity) AS rarity,
@@ -131,13 +129,6 @@ async def encounter(self, room, user, arg):
            GROUP BY version_id, pokemon_id, encounter_method_id
            ORDER BY version_id, pokemon_id, encounter_method_id'''
 
-  trow = '<tr>'
-  trow += '  <td>{pokemon}{location_area}</td>'
-  trow += '  <td>{method}</td>'
-  trow += '  <td>{levels}</td>'
-  trow += '  <td style="text-align:right">{rarity}</td>'
-  trow += '  <td>{conditions}</td>'
-  trow += '</tr>'
   html = ''
 
   current_version_id = 0
@@ -146,7 +137,7 @@ async def encounter(self, room, user, arg):
       if current_version_id != 0:
         html += '</tbody></table>'
         html += '</details>'
-      html += '<details><summary><b><big>{version}</big></b></summary>'.format(version=row['version'])
+      html += '<details><summary><b><big>' + utils.html_escape(row['version']) + '</big></b></summary>'
       html += '<table><tbody>'
       current_version_id = row['version_id']
 
@@ -157,12 +148,16 @@ async def encounter(self, room, user, arg):
     levels = 'L' + str(row['min_level'])
     if row['min_level'] < row['max_level']:
       levels += '-' + str(row['max_level'])
-    html += trow.format(pokemon=pokemon,
-                        location_area=location_area,
-                        method=row['encounter_method'],
-                        levels=levels,
-                        rarity=str(row['rarity']) + '%',
-                        conditions=row['conditions'])
+
+    html += '<tr>'
+    html += '  <td>' + utils.html_escape(pokemon) + utils.html_escape(location_area) + '</td>'
+    html += '  <td>' + utils.html_escape(row['encounter_method']) + '</td>'
+    html += '  <td>' + utils.html_escape(levels) + '</td>'
+    html += '  <td' + (' colspan="2"' if not len(row['conditions']) else '') + '>' + utils.html_escape(str(row['rarity']) + '%') + '</td>'
+    if len(row['conditions']):
+      html += '  <td>' + utils.html_escape(row['conditions']) + '</td>'
+    html += '</tr>'
+
   if current_version_id != 0:
     html += '</tbody></table>'
     html += '</details>'
