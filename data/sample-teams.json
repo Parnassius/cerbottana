@@ -145,6 +145,17 @@
         802
       ]
     },
+    "Mega Mewtwo Y + Arceus-Dark Bulky Offense | Submitted by bigtalk": {
+      "importable": "Mewtwo-Mega-Y @ Mewtwonite Y\nAbility: Pressure\nEVs: 40 Def / 216 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Calm Mind\n- Psystrike\n- Ice Beam\n- Fire Blast\n\nMagearna @ Normalium Z\nAbility: Soul-Heart\nEVs: 252 HP / 4 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk\n- Volt Switch\n- Fleur Cannon\n- Heart Swap\n- Heal Bell\n\nArceus-Dark @ Dread Plate\nAbility: Multitype\nEVs: 252 HP / 160 Def / 96 Spe\nTimid Nature\nIVs: 0 Atk\n- Judgment\n- Ice Beam\n- Recover\n- Toxic\n\nToxapex @ Rocky Helmet\nAbility: Regenerator\nEVs: 252 HP / 252 Def / 4 SpD\nBold Nature\nIVs: 0 Atk\n- Toxic\n- Toxic Spikes\n- Haze\n- Recover\n\nGiratina-Origin @ Griseous Orb\nAbility: Levitate\nEVs: 252 HP / 204 SpA / 52 SpD\nModest Nature\nIVs: 0 Atk\n- Defog\n- Hex\n- Dragon Pulse\n- Will-O-Wisp\n\nGroudon-Primal @ Red Orb\nAbility: Desolate Land\nEVs: 252 HP / 52 SpA / 204 SpD\nQuiet Nature\n- Stealth Rock\n- Precipice Blades\n- Overheat\n- Stone Edge",
+      "icons": [
+        998,
+        801,
+        493,
+        748,
+        869,
+        1025
+      ]
+    },
     "DD Zygarde Bulky Offense | Provided by the Ubers Council": {
       "importable": "Gengar-Mega @ Gengarite\nAbility: Shadow Tag\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Shadow Ball\n- Sludge Wave\n- Hidden Power [Ice]\n- Thunder\n\nGroudon-Primal @ Red Orb\nAbility: Desolate Land\nEVs: 144 HP / 156 Atk / 56 SpD / 152 Spe\nAdamant Nature\n- Stealth Rock\n- Precipice Blades\n- Rock Tomb\n- Swords Dance\n\nArceus-Water @ Splash Plate\nAbility: Multitype\nEVs: 252 HP / 168 Def / 88 Spe\nTimid Nature\nIVs: 0 Atk\n- Judgment\n- Ice Beam\n- Recover\n- Toxic\n\nYveltal @ Choice Scarf\nAbility: Dark Aura\nEVs: 248 HP / 36 SpA / 224 Spe\nTimid Nature\n- Foul Play\n- Oblivion Wing\n- U-turn\n- Defog\n\nZygarde-Complete @ Dragonium Z\nAbility: Power Construct\nEVs: 228 Atk / 48 SpD / 232 Spe\nAdamant Nature\n- Dragon Dance\n- Outrage\n- Thousand Arrows\n- Glare\n\nNecrozma-Dusk-Mane @ Weakness Policy\nAbility: Prism Armor\nEVs: 252 HP / 252 Atk / 4 SpD\nBrave Nature\n- Swords Dance\n- Sunsteel Strike\n- Earthquake\n- Trick Room",
       "icons": [
@@ -450,17 +461,6 @@
         275,
         581,
         558
-      ]
-    },
-    "Combusken+BU Komala Balance by Xayah": {
-      "importable": "Silvally-Ghost @ Ghost Memory\nAbility: RKS System\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\n- Shadow Ball\n- Ice Beam\n- U-turn\n- Defog\n\nCombusken @ Fightinium Z\nAbility: Speed Boost\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Fire Blast\n- Focus Blast\n- Hidden Power [Ice]\n- Protect\n\nKomala @ Leftovers\nAbility: Comatose\nEVs: 252 HP / 160 SpD / 96 Spe\nCareful Nature\n- Knock Off\n- Bulk Up\n- Wish\n- Protect\n\nMareanie @ Eviolite\nAbility: Regenerator\nEVs: 248 HP / 8 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk\n- Scald\n- Sludge Bomb\n- Haze\n- Recover\n\nGolem @ Leftovers\nAbility: Sturdy\nEVs: 252 HP / 32 Atk / 224 Def\nImpish Nature\n- Stealth Rock\n- Toxic\n- Rock Blast\n- Earthquake\n\nSawsbuck @ Choice Scarf\nAbility: Serene Grace\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Double-Edge\n- Jump Kick\n- Horn Leech\n- Headbutt",
-      "icons": [
-        773,
-        256,
-        775,
-        747,
-        76,
-        586
       ]
     },
     "Bulk Up Komala by Broken Phobias": {
