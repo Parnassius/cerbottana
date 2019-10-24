@@ -125,9 +125,9 @@ async def encounter(self, room, user, arg):
                        LEFT JOIN encounter_condition_value_prose ON encounter_condition_value_prose.encounter_condition_value_id = encounter_condition_value_map.encounter_condition_value_id AND encounter_condition_value_prose.local_language_id = 9
                        WHERE locations.identifier = ?
                        GROUP BY encounters.id) AS a
-                 GROUP BY version_id, pokemon_id, encounter_method_id, encounter_condition) AS b
-           GROUP BY version_id, pokemon_id, encounter_method_id
-           ORDER BY version_id, pokemon_id, encounter_method_id'''
+                 GROUP BY version_id, location_area_id, pokemon_id, encounter_method_id, encounter_condition) AS b
+           GROUP BY version_id, location_area_id, pokemon_id, encounter_method_id
+           ORDER BY version_id, location_area_id, encounter_method_id, rarity DESC, pokemon_id'''
 
   html = ''
 
