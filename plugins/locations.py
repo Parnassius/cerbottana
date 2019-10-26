@@ -54,6 +54,12 @@ async def location(self, room, user, arg):
         html += '</details>'
       html += '<details><summary><b><big>' + utils.html_escape(row['version']) + '</big></b></summary>'
       html += '<table><tbody>'
+      html += '<tr>'
+      html += '  <th>Location</th>'
+      html += '  <th>Method</th>'
+      html += '  <th>Level</th>'
+      html += '  <th colspan="2">Rarity</th>'
+      html += '</tr>'
       current_version_id = row['version_id']
 
     location_name = row['location_name']
@@ -132,6 +138,7 @@ async def encounter(self, room, user, arg):
   html = ''
 
   current_version_id = 0
+  current_location_area = None
   for row in CUR.execute(sql, [arg]):
     if current_version_id != row['version_id']:
       if current_version_id != 0:
@@ -140,17 +147,23 @@ async def encounter(self, room, user, arg):
       html += '<details><summary><b><big>' + utils.html_escape(row['version']) + '</big></b></summary>'
       html += '<table><tbody>'
       current_version_id = row['version_id']
+      current_location_area = None
 
-    pokemon = row['pokemon']
-    location_area = ''
-    if row['location_area']:
-      location_area = ' (' + row['location_area'] + ')'
+    if current_location_area != row['location_area']:
+      html += '<tr>'
+      html += '  <th>' + utils.html_escape(row['location_area']) + '</th>'
+      html += '  <th>Method</th>'
+      html += '  <th>Level</th>'
+      html += '  <th colspan="2">Rarity</th>'
+      html += '</tr>'
+      current_location_area = row['location_area']
+
     levels = 'L' + str(row['min_level'])
     if row['min_level'] < row['max_level']:
       levels += '-' + str(row['max_level'])
 
     html += '<tr>'
-    html += '  <td>' + utils.html_escape(pokemon) + utils.html_escape(location_area) + '</td>'
+    html += '  <td>' + utils.html_escape(row['pokemon']) + '</td>'
     html += '  <td>' + utils.html_escape(row['encounter_method']) + '</td>'
     html += '  <td>' + utils.html_escape(levels) + '</td>'
     html += '  <td' + (' colspan="2"' if not len(row['conditions']) else '') + '>' + utils.html_escape(str(row['rarity']) + '%') + '</td>'
