@@ -757,37 +757,37 @@
         786
       ]
     },
-    "Aurumoth Bulky Offense by Jho": {
-      "importable": "Aurumoth @ Iapapa Berry\nAbility: No Guard\nEVs: 40 HP / 172 SpA / 124 SpD / 172 Spe\nModest Nature\nIVs: 0 Atk\n- Quiver Dance\n- Psychic\n- Thunder\n- Focus Blast\n\nHeatran @ Leftovers\nAbility: Flash Fire\nEVs: 252 HP / 188 SpD / 68 Spe\nCalm Nature\nIVs: 0 Atk\n- Magma Storm\n- Earth Power\n- Taunt\n- Toxic\n\nGarchomp @ Rockium Z\nAbility: Rough Skin\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Stone Edge\n- Stealth Rock\n- Earthquake\n- Swords Dance\n\nTornadus-Therian @ Rocky Helmet\nAbility: Regenerator\nEVs: 88 HP / 164 Def / 32 SpA / 8 SpD / 216 Spe\nTimid Nature\n- Hurricane\n- Knock Off\n- U-turn\n- Defog\n\nGreninja @ Choice Scarf\nAbility: Protean\nEVs: 252 SpA / 4 SpD / 252 Spe\nHasty Nature\n- Gunk Shot\n- Ice Beam\n- U-turn\n- Hidden Power [Fire]\n\nMawile-Mega @ Mawilite\nAbility: Intimidate\nEVs: 180 HP / 124 Atk / 204 Spe\nAdamant Nature\n- Play Rough\n- Sucker Punch\n- Knock Off\n- Swords Dance",
-      "icons": [
-        1166,
-        485,
-        445,
-        882,
-        658,
-        1010
-      ]
-    },
-    "Mega Zam + Magearna Bulky Offense by Jordy": {
-      "importable": "Alakazam-Mega @ Alakazite\nAbility: Magic Guard\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Psychic\n- Focus Blast\n- Recover\n- Shadow Ball\n\nGreninja @ Life Orb\nAbility: Protean\nEVs: 132 Atk / 124 SpA / 252 Spe\nHasty Nature\n- Low Kick\n- Extrasensory\n- Ice Beam\n- Spikes\n\nTornadus-Therian @ Rocky Helmet\nAbility: Regenerator\nEVs: 220 HP / 84 Def / 204 Spe\nTimid Nature\n- Hurricane\n- Knock Off\n- U-turn\n- Defog\n\nMagearna @ Wiki Berry\nAbility: Soul-Heart\nEVs: 248 HP / 28 Def / 96 SpA / 132 SpD / 4 Spe\nModest Nature\nIVs: 0 Atk\n- Fleur Cannon\n- Thunderbolt\n- Calm Mind\n- Pain Split\n\nKitsunoh @ Choice Scarf\nAbility: Iron Fist\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Shadow Strike\n- Meteor Mash\n- U-turn\n- Trick\n\nGarchomp @ Rockium Z\nAbility: Rough Skin\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Earthquake\n- Stone Edge\n- Swords Dance\n- Stealth Rock",
-      "icons": [
-        990,
-        658,
-        882,
-        801,
-        1158,
-        445
-      ]
-    },
-    "Kartana + Mega Zam Voltturn by xavgb": {
-      "importable": "Kartana @ Steelium Z\nAbility: Beast Boost\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Leaf Blade\n- Sacred Sword\n- Smart Strike\n\nAlakazam-Mega @ Alakazite\nAbility: Magic Guard\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Psychic\n- Shadow Ball\n- Focus Blast\n- Recover\n\nKrilowatt @ Life Orb\nAbility: Magic Guard\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Thunderbolt\n- Ice Beam\n- Earth Power\n\nFerrothorn @ Leftovers\nAbility: Iron Barbs\nEVs: 252 HP / 28 Def / 228 SpD\nCareful Nature\nIVs: 0 Spe\n- Stealth Rock\n- Leech Seed\n- Gyro Ball\n- Power Whip\n\nTornadus-Therian @ Rocky Helmet\nAbility: Regenerator\nEVs: 220 HP / 84 Def / 204 Spe\nTimid Nature\n- Hurricane\n- Knock Off\n- U-turn\n- Defog\n\nWeavile @ Choice Scarf\nAbility: Pressure\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Knock Off\n- Icicle Crash\n- Punishment\n- Pursuit",
+    "SpD Kommo-o Bulky Offense by Jho": {
+      "importable": "Kartana @ Choice Band\nAbility: Beast Boost\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Leaf Blade\n- Return\n- Sacred Sword\n- Knock Off\n\nKommo-o @ Leftovers\nAbility: Bulletproof\nEVs: 252 HP / 120 SpD / 136 Spe\nCareful Nature\n- Stealth Rock\n- Toxic\n- Protect\n- Drain Punch\n\nTornadus-Therian (M) @ Rocky Helmet\nAbility: Regenerator\nEVs: 248 HP / 68 Def / 192 Spe\nTimid Nature\n- Hurricane\n- U-turn\n- Knock Off\n- Defog\n\nJumbao @ Fairium Z\nAbility: Drought\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Moonblast\n- Hidden Power [Ground]\n- Flame Burst\n- Shore Up\n\nMawile-Mega @ Mawilite\nAbility: Intimidate\nEVs: 60 HP / 220 Atk / 228 Spe\nAdamant Nature\n- Play Rough\n- Knock Off\n- Sucker Punch\n- Swords Dance\n\nGreninja @ Choice Scarf\nAbility: Protean\nEVs: 176 Atk / 80 SpA / 252 Spe\nHasty Nature\n- Ice Beam\n- Gunk Shot\n- U-turn\n- Rock Slide",
       "icons": [
         798,
-        990,
-        1161,
-        598,
+        784,
         882,
-        461
+        1176,
+        1010,
+        658
+      ]
+    },
+    "CM Mega Latias + Tspikes by Jordy": {
+      "importable": "Latias-Mega (F) @ Latiasite\nAbility: Levitate\nEVs: 252 HP / 4 Def / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Stored Power\n- Calm Mind\n- Roost\n- Reflect Type\n\nToxapex @ Black Sludge\nAbility: Regenerator\nEVs: 252 HP / 104 Def / 152 SpD\nBold Nature\nIVs: 0 Atk\n- Scald\n- Recover\n- Baneful Bunker\n- Toxic Spikes\n\nWeavile @ Choice Band\nAbility: Pickpocket\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Icicle Crash\n- Knock Off\n- Pursuit\n- Ice Shard\n\nEquilibra @ Leftovers\nAbility: Bulletproof\nEVs: 252 HP / 72 SpA / 152 SpD / 32 Spe\nCalm Nature\nIVs: 0 Atk\n- Doom Desire\n- Earth Power\n- Rapid Spin\n- Protect\n\nTomohawk @ Fightinium Z\nAbility: Intimidate\nEVs: 252 HP / 40 Def / 152 SpA / 64 Spe\nModest Nature\nIVs: 0 Atk\n- Hurricane\n- Focus Blast\n- Roost\n- Stealth Rock\n\nKartana @ Choice Scarf\nAbility: Beast Boost\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Leaf Blade\n- Sacred Sword\n- Knock Off\n- Giga Impact",
+      "icons": [
+        1022,
+        748,
+        461,
+        1180,
+        1163,
+        798
+      ]
+    },
+    "BandTar + Mega Latios by quziel": {
+      "importable": "Latios-Mega (M) @ Latiosite\nAbility: Levitate\nEVs: 4 Atk / 252 SpA / 252 Spe\nHasty Nature\n- Psychic\n- Earthquake\n- Ice Beam\n- Roost\n\nTyranitar @ Choice Band\nAbility: Sand Stream\nEVs: 40 HP / 252 Atk / 48 SpD / 168 Spe\nAdamant Nature\n- Stone Edge\n- Crunch\n- Pursuit\n- Superpower\n\nHeatran @ Leftovers\nAbility: Flash Fire\nEVs: 252 HP / 200 SpD / 56 Spe\nCalm Nature\nIVs: 0 Atk\n- Magma Storm\n- Earth Power\n- Toxic\n- Stealth Rock\n\nArghonaut @ Leftovers\nAbility: Unaware\nEVs: 252 HP / 180 Def / 76 SpD\nImpish Nature\n- Spikes\n- Recover\n- Foul Play\n- Earthquake\n\nTornadus-Therian @ Fightinium Z\nAbility: Regenerator\nEVs: 4 HP / 252 SpA / 252 Spe\nTimid Nature\n- Hurricane\n- Focus Blast\n- Knock Off\n- Defog\n\nJumbao @ Choice Scarf\nAbility: Trace\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Moonblast\n- Leaf Storm\n- Focus Blast\n- Healing Wish",
+      "icons": [
+        1023,
+        248,
+        485,
+        1157,
+        882,
+        1176
       ]
     }
   }
