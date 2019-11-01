@@ -106,6 +106,11 @@ async def profile(self, room, user, arg, from_elitefour=False):
                                                 anno=i['anno']),
                              sfondo=i['sfondo'],
                              opacity='')
+    for i in body['altrebadge']:
+      badges += badge.format(immagine=i['immagine'],
+                             title=utils.html_escape(i['label']),
+                             sfondo=utils.html_escape(i['sfondo']),
+                             opacity='')
     title = '{tier}:{dal}{al}'
     for i in body['elitefour'][:10]:
       opacity = ''
