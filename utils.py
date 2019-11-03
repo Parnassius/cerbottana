@@ -620,4 +620,5 @@ CUSTOM_COLORS = {'theimmortal': 'taco',
                  'andrew': 'stevensnype',
                  'robyn': 'jediruwu',
                  'birdy': 'cmstrall',
+                 'pirateprincess': '45mbh',
                  'cathy': ''}
