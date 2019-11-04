@@ -85,9 +85,10 @@ class Connection:
 
 
   async def send_rankhtmlbox(self, rank, room, message):
-    await self.send_message(room, '/addrankhtmlbox {}, {}'.format(rank, message))
+    await self.send_message(room, '/addrankhtmlbox {}, {}'.format(rank, message.replace('\n', '<br>')))
 
   async def send_htmlbox(self, room, user, message, simple_message=''):
+    message = message.replace('\n', '<br>')
     if room is not None:
       await self.send_message(room, '/addhtmlbox {}'.format(message))
     elif user is not None:
