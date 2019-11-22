@@ -313,6 +313,17 @@
         207,
         212
       ]
+    },
+    "Bulky Offense by vivalospride": {
+      "importable": "Rotom-Heat @ Leftovers\nAbility: Levitate\nEVs: 236 HP / 24 SpA / 248 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Overheat\n- Pain Split\n- Will-O-Wisp\n\nAltaria-Mega @ Altarianite\nAbility: Pixilate\nHappiness: 0\nEVs: 64 HP / 252 Atk / 192 Spe\nAdamant Nature\n- Dragon Dance\n- Frustration\n- Roost\n- Refresh\n\nTentacruel @ Black Sludge\nAbility: Liquid Ooze\nEVs: 248 HP / 68 Def / 192 Spe\nTimid Nature\nIVs: 0 Atk\n- Scald\n- Rapid Spin\n- Haze\n- Toxic Spikes\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Knock Off\n- Stone Edge\n- Pursuit\n- Earthquake\n\nNecrozma @ Wiki Berry\nAbility: Prism Armor\nEVs: 112 HP / 252 SpA / 144 Spe\nModest Nature\nIVs: 0 Atk\n- Stealth Rock\n- Photon Geyser\n- Heat Wave\n- Signal Beam\n\nScizor @ Buginium Z\nAbility: Technician\nEVs: 248 HP / 148 Atk / 96 SpD / 16 Spe\nAdamant Nature\n- Swords Dance\n- Bullet Punch\n- U-turn\n- Roost",
+      "icons": [
+        866,
+        1016,
+        73,
+        553,
+        800,
+        212
+      ]
     }
   },
   "gen7ru": {
@@ -396,7 +407,7 @@
   },
   "gen7pu": {
     "Carracosta Offense - Squash17 ^_^": {
-      "importable": "Carracosta @ Life Orb\nAbility: Solid Rock\nEVs: 252 Atk / 4 Def / 252 Spe\nAdamant Nature\n- Shell Smash\n- Stone Edge\n- Aqua Jet\n- Liquidation\n\nVictreebel @ Rocky Helmet\nAbility: Chlorophyll\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Strength Sap\n- Leaf Storm\n- Sludge Bomb\n- Hidden Power [Fire]\n\nMudsdale @ Figy Berry\nAbility: Stamina\nEVs: 252 HP / 128 Atk / 128 Def\nAdamant Nature\n- Stealth Rock\n- Earthquake\n- Rock Slide\n- Toxic\n\nDodrio @ Choice Scarf\nAbility: Early Bird\nHappiness: 0\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Brave Bird\n- Pursuit\n- Frustration\n- Jump Kick\n\nHitmonchan @ Assault Vest\nAbility: Iron Fist\nEVs: 240 HP / 72 Atk / 196 Spe\nJolly Nature\n- Rapid Spin\n- Mach Punch\n- Drain Punch\n- Ice Punch\n\nRotom-Frost @ Icium Z\nAbility: Levitate\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Will-O-Wisp\n- Pain Split\n- Blizzard",
+      "importable": "Carracosta @ Life Orb\nAbility: Solid Rock\nEVs: 252 Atk / 4 Def / 252 Spe\nAdamant Nature\n- Shell Smash\n- Stone Edge\n- Aqua Jet\n- Liquidation\n\nVictreebel @ Air Balloon\nAbility: Chlorophyll\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Strength Sap\n- Leaf Storm\n- Sludge Bomb\n- Hidden Power [Fire]\n\nMudsdale @ Figy Berry\nAbility: Stamina\nEVs: 252 HP / 128 Atk / 128 Def\nAdamant Nature\n- Stealth Rock\n- Earthquake\n- Rock Slide\n- Toxic\n\nDodrio @ Choice Scarf\nAbility: Early Bird\nHappiness: 0\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Brave Bird\n- Pursuit\n- Frustration\n- Jump Kick\n\nHitmonchan @ Assault Vest\nAbility: Iron Fist\nEVs: 240 HP / 72 Atk / 196 Spe\nJolly Nature\n- Rapid Spin\n- Mach Punch\n- Drain Punch\n- Ice Punch\n\nRotom-Frost @ Icium Z\nAbility: Levitate\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Will-O-Wisp\n- Pain Split\n- Blizzard",
       "icons": [
         565,
         71,
@@ -418,74 +429,40 @@
       ]
     },
     "Semistall - tlenit1": {
-      "importable": "Aggron @ Rockium Z\nAbility: Rock Head\nEVs: 232 HP / 252 Atk / 24 Spe\nAdamant Nature\n- Toxic\n- Stealth Rock\n- Heavy Slam\n- Head Smash\n\nPoliwrath @ Rocky Helmet\nAbility: Water Absorb\nEVs: 252 HP / 252 Def / 4 SpD\nRelaxed Nature\n- Circle Throw\n- Scald\n- Rest\n- Sleep Talk\n\nSpiritomb @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 252 Def / 4 SpD\nBold Nature\nIVs: 0 Atk\n- Calm Mind\n- Rest\n- Sleep Talk\n- Dark Pulse\n\nSilvally-Dragon @ Dragon Memory\nAbility: RKS System\nEVs: 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Defog\n- Draco Meteor\n- Flamethrower\n- Parting Shot\n\nArticuno @ Leftovers\nAbility: Pressure\nEVs: 248 HP / 204 SpD / 56 Spe\nCalm Nature\nIVs: 0 Atk\n- Roost\n- Heal Bell\n- Freeze-Dry\n- Defog\n\nAudino @ Leftovers\nAbility: Regenerator\nEVs: 252 HP / 4 Atk / 252 SpD\nCareful Nature\n- Knock Off\n- Toxic\n- Protect\n- Wish",
+      "importable": "Torterra @ Grassium Z\nAbility: Shell Armor\nEVs: 252 HP / 4 Atk / 252 Def\nImpish Nature\n- Stealth Rock\n- Synthesis\n- Wood Hammer\n- Stone Edge\n\nPoliwrath @ Rocky Helmet\nAbility: Water Absorb\nEVs: 252 HP / 252 Def / 4 SpD\nRelaxed Nature\n- Circle Throw\n- Scald\n- Rest\n- Sleep Talk\n\nSpiritomb @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 252 Def / 4 SpD\nBold Nature\nIVs: 0 Atk\n- Calm Mind\n- Rest\n- Sleep Talk\n- Dark Pulse\n\nSilvally-Dragon @ Dragon Memory\nAbility: RKS System\nEVs: 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Defog\n- Draco Meteor\n- Flamethrower\n- Parting Shot\n\nArticuno @ Leftovers\nAbility: Pressure\nEVs: 248 HP / 204 SpD / 56 Spe\nCalm Nature\nIVs: 0 Atk\n- Roost\n- Heal Bell\n- Freeze-Dry\n- Defog\n\nAudino @ Leftovers\nAbility: Regenerator\nEVs: 252 HP / 4 Atk / 252 SpD\nCareful Nature\n- Knock Off\n- Toxic\n- Protect\n- Wish",
       "icons": [
-        306,
+        389,
         62,
         442,
         773,
         144,
         531
       ]
-    }
-  },
-  "gen7zu": {
-    "Anti-Meta Bulky Offense by RawMelon": {
-      "importable": "Golem @ Choice Band\nAbility: Sturdy\nEVs: 252 Atk / 4 Def / 252 Spe\nAdamant Nature\n- Earthquake\n- Stone Edge\n- Fire Punch\n- Explosion\n\nMetang @ Eviolite\nAbility: Clear Body\nEVs: 248 HP / 252 Atk / 8 Spe\nAdamant Nature\n- Meteor Mash\n- Earthquake\n- Bullet Punch\n- Stealth Rock\n\nMareanie @ Eviolite\nAbility: Regenerator\nEVs: 252 HP / 252 SpD / 4 Spe\nCalm Nature\nIVs: 0 Atk\n- Scald\n- Recover\n- Toxic Spikes\n- Haze\n\nRotom-Fan @ Iapapa Berry\nAbility: Levitate\nEVs: 248 HP / 44 Def / 216 Spe\nTimid Nature\nIVs: 0 Atk\n- Will-O-Wisp\n- Air Slash\n- Volt Switch\n- Defog\n\nLeafeon @ Normalium Z\nAbility: Leaf Guard\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Celebrate\n- Knock Off\n- Leaf Blade\n- Double-Edge\n\nSilvally @ Choice Scarf\nAbility: RKS System\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Double-Edge\n- U-turn\n- Explosion\n- Crunch",
+    },
+    "Simisear Balance - LordST": {
+      "importable": "Eelektross @ Assault Vest\nAbility: Levitate\nEVs: 248 HP / 252 SpA / 8 SpD\nQuiet Nature\nIVs: 28 Spe\n- Discharge\n- Giga Drain\n- U-turn\n- Flamethrower\n\nMudsdale @ Figy Berry\nAbility: Stamina\nEVs: 248 HP / 176 Def / 84 SpD\nImpish Nature\n- Earthquake\n- Stealth Rock\n- Counter\n- Toxic\n\nMusharna @ Psychium Z\nAbility: Synchronize\nEVs: 252 HP / 4 Def / 252 SpA\nModest Nature\nIVs: 0 Atk\n- Future Sight\n- Dazzling Gleam\n- Thunder Wave\n- Moonlight\n\nCryogonal @ Leftovers\nAbility: Levitate\nEVs: 248 HP / 8 SpA / 52 SpD / 200 Spe\nTimid Nature\nIVs: 0 Atk\n- Rapid Spin\n- Recover\n- Freeze-Dry\n- Hidden Power [Fighting]\n\nSimisear @ Choice Specs\nAbility: Blaze\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Fire Blast\n- Focus Blast\n- Grass Knot\n- Flamethrower\n\nGurdurr @ Eviolite\nAbility: Guts\nEVs: 248 HP / 16 Atk / 200 Def / 44 SpD\nAdamant Nature\n- Bulk Up\n- Mach Punch\n- Drain Punch\n- Knock Off",
       "icons": [
-        76,
-        375,
-        747,
-        864,
+        604,
+        750,
+        518,
+        615,
+        514,
+        533
+      ]
+    },
+    "Leafeon Offense - Megazard": {
+      "importable": "Leafeon @ Normalium Z\nAbility: Leaf Guard\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Celebrate\n- Leaf Blade\n- Double-Edge\n- Synthesis\n\nFerroseed @ Eviolite\nAbility: Iron Barbs\nEVs: 252 HP / 216 Def / 40 SpD\nRelaxed Nature\nIVs: 0 Spe\n- Stealth Rock\n- Protect\n- Gyro Ball\n- Toxic\n\nDodrio @ Choice Band\nAbility: Early Bird\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Brave Bird\n- Return\n- Jump Kick\n- Pursuit\n\nLanturn @ Assault Vest\nAbility: Volt Absorb\nEVs: 172 SpA / 136 SpD / 200 Spe\nModest Nature\nIVs: 0 Atk\n- Scald\n- Volt Switch\n- Ice Beam\n- Hidden Power [Fire]\n\nSilvally-Poison @ Poison Memory\nAbility: RKS System\nEVs: 248 HP / 8 SpA / 252 Spe\nTimid Nature\n- Defog\n- U-turn\n- Poison Fang\n- Flamethrower\n\nMusharna @ Colbur Berry\nAbility: Synchronize\nEVs: 128 HP / 192 SpA / 96 SpD / 92 Spe\nModest Nature\nIVs: 0 Atk\n- Future Sight\n- Moonlight\n- Dazzling Gleam\n- Psychic",
+      "icons": [
         470,
-        773
-      ]
-    },
-    "Mixed Electivire Offense by Aaronboyer": {
-      "importable": "Electivire @ Expert Belt\nAbility: Motor Drive\nEVs: 4 Atk / 252 SpA / 252 Spe\nNaive Nature\n- Thunderbolt\n- Flamethrower\n- Ice Punch\n- Cross Chop\n\nSwanna @ Waterium Z\nAbility: Hydration\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Rain Dance\n- Surf\n- Hurricane\n- Rest\n\nShiftry @ Life Orb\nAbility: Chlorophyll\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Knock Off\n- Seed Bomb\n- Sucker Punch\n\nSilvally-Fighting @ Fighting Memory\nAbility: RKS System\nEVs: 248 HP / 32 Atk / 88 Def / 140 Spe\nJolly Nature\n- U-turn\n- Multi-Attack\n- Toxic\n- Defog\n\nMetang @ Eviolite\nAbility: Clear Body\nEVs: 252 HP / 176 Atk / 80 Def\nAdamant Nature\n- Stealth Rock\n- Meteor Mash\n- Earthquake\n- Toxic\n\nRapidash @ Choice Scarf\nAbility: Flash Fire\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Flare Blitz\n- Wild Charge\n- High Horsepower\n- Megahorn",
-      "icons": [
-        466,
-        581,
-        275,
+        597,
+        85,
+        171,
         773,
-        375,
-        78
-      ]
-    },
-    "Shell Smash Crustle Offense by 85percent": {
-      "importable": "Bronzor @ Eviolite\nAbility: Levitate\nEVs: 252 HP / 252 SpD / 4 Spe\nCalm Nature\nIVs: 0 Atk\n- Toxic\n- Psywave\n- Stealth Rock\n- Rest\n\nSilvally-Dragon @ Dragon Memory\nAbility: RKS System\nEVs: 208 HP / 240 SpA / 60 Spe\nModest Nature\n- Defog\n- Draco Meteor\n- Flamethrower\n- U-turn\n\nElectivire @ Choice Scarf\nAbility: Motor Drive\nEVs: 252 Atk / 4 Def / 252 Spe\nNaive Nature\n- Volt Switch\n- Wild Charge\n- Ice Punch\n- Earthquake\n\nShiftry @ Life Orb\nAbility: Chlorophyll\nEVs: 252 Atk / 4 Def / 252 Spe\nNaughty Nature\n- Swords Dance\n- Knock Off\n- Leaf Storm\n- Sucker Punch\n\nSwanna @ Flyinium Z\nAbility: Big Pecks\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Scald\n- Hurricane\n- Defog\n- Roost\n\nCrustle @ White Herb\nAbility: Sturdy\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Shell Smash\n- X-Scissor\n- Rock Blast\n- Earthquake",
-      "icons": [
-        436,
-        773,
-        466,
-        275,
-        581,
-        558
-      ]
-    },
-    "Bulk Up Komala by Broken Phobias": {
-      "importable": "Komala @ Leftovers\nAbility: Comatose\nEVs: 252 HP / 160 SpD / 96 Spe\nCareful Nature\n- Knock Off\n- Wish\n- Protect\n- Bulk Up\n\nSwanna @ Waterium Z\nAbility: Hydration\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Hurricane\n- Surf\n- Rain Dance\n- Roost\n\nSilvally-Fighting @ Fighting Memory\nAbility: RKS System\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Multi-Attack\n- Swords Dance / Toxic\n- Defog\n- U-turn\n\nGolem @ Leftovers\nAbility: Sturdy\nEVs: 252 HP / 32 Atk / 180 Def / 44 Spe\nImpish Nature\n- Stealth Rock\n- Toxic\n- Earthquake\n- Stone Edge / Rock Blast\n\nElectivire @ Choice Scarf\nAbility: Motor Drive\nEVs: 4 Atk / 252 SpA / 252 Spe\nNaive Nature\n- Volt Switch\n- Flamethrower\n- Ice Punch\n- Earthquake\n\nServine @ Eviolite\nAbility: Contrary\nEVs: 252 HP / 4 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Leaf Storm\n- Synthesis\n- Hidden Power [Ice]\n- Taunt",
-      "icons": [
-        775,
-        581,
-        773,
-        76,
-        466,
-        496
-      ]
-    },
-    "Z-Rain Dance Swanna Offense by Absolute Infinity": {
-      "importable": "Swanna @ Waterium Z\nAbility: Hydration\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Rain Dance\n- Hurricane\n- Surf\n- Roost\n\nCombusken @ Life Orb\nAbility: Speed Boost\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Fire Blast / Flamethrower\n- Focus Blast\n- Hidden Power [Ice]\n- Protect\n\nSilvally-Water @ Water Memory\nAbility: RKS System\nEVs: 200 HP / 124 SpA / 184 Spe\nTimid Nature\nIVs: 0 Atk\n- Defog\n- Ice Beam\n- Thunderbolt\n- Flamethrower\n\nKomala @ Choice Band\nAbility: Comatose\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Return\n- U-turn\n- Knock Off\n- Toxic / Earthquake\n\nElectivire @ Choice Scarf\nAbility: Motor Drive\nEVs: 252 Atk / 4 SpA / 252 Spe\nNaive Nature\n- Volt Switch\n- Wild Charge\n- Earthquake\n- Ice Punch\n\nGolem @ Leftovers\nAbility: Sturdy\nEVs: 252 HP / 16 Def / 240 SpD\nImpish Nature\n- Stealth Rock\n- Earthquake\n- Protect\n- Rock Blast / Stone Edge",
-      "icons": [
-        581,
-        256,
-        773,
-        775,
-        466,
-        76
+        518
       ]
     }
   },
+  "gen7zu": {},
   "gen7lc": {
     "Webs Hyper Offense by Star": {
       "importable": "Surskit @ Focus Sash\nAbility: Swift Swim\nLevel: 5\nEVs: 36 HP / 20 Def / 196 SpA / 20 SpD / 236 Spe\nTimid Nature\nIVs: 0 Atk\n- Sticky Web\n- Scald\n- Icy Wind\n- Protect\n\nmister wax (Bunnelby) @ Life Orb\nAbility: Huge Power\nLevel: 5\nEVs: 228 Atk / 52 Def / 220 Spe\nJolly Nature\nIVs: 23 HP\n- Return\n- Iron Head\n- Quick Attack\n- Substitute\n\nPawniard @ Eviolite\nAbility: Defiant\nLevel: 5\nEVs: 156 Atk / 36 Def / 116 SpD / 196 Spe\nAdamant Nature\n- Stealth Rock\n- Knock Off\n- Iron Head\n- Sucker Punch\n\nGastly @ Life Orb\nAbility: Levitate\nLevel: 5\nEVs: 36 Def / 200 SpA / 200 Spe\nTimid Nature\nIVs: 0 Atk / 30 SpA / 30 Spe\n- Sludge Bomb\n- Psychic\n- Thunderbolt\n- Hidden Power [Fire]\n\nMagnemite @ Berry Juice\nAbility: Sturdy\nLevel: 5\nEVs: 36 Def / 236 SpA / 236 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Flash Cannon\n- Endure\n- Recycle\n\nAbra @ Life Orb\nAbility: Magic Guard\nLevel: 5\nEVs: 240 SpA / 200 Spe\nTimid Nature\n- Psychic\n- Dazzling Gleam\n- Hidden Power [Fire]\n- Substitute",
