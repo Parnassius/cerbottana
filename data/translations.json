@@ -931,6 +931,102 @@
     {
       "en": "Neuroforce",
       "it": "Cerebroforza"
+    },
+    {
+      "en": "Dauntless Shield",
+      "it": "Scudo Saldo"
+    },
+    {
+      "en": "Libero",
+      "it": "Libero"
+    },
+    {
+      "en": "Ball Fetch",
+      "it": "Raccattapalle"
+    },
+    {
+      "en": "Cotton Down",
+      "it": "Lanugine"
+    },
+    {
+      "en": "Propeller Tail",
+      "it": "Elicopinna"
+    },
+    {
+      "en": "Mirror Armor",
+      "it": "Blindospecchio"
+    },
+    {
+      "en": "Gulp Missile",
+      "it": "Inghiottimissile"
+    },
+    {
+      "en": "Stalwart",
+      "it": "Volont\u00e0 di Ferro"
+    },
+    {
+      "en": "Steam Engine",
+      "it": "Vapormacchina"
+    },
+    {
+      "en": "Punk Rock",
+      "it": "Punk Rock"
+    },
+    {
+      "en": "Sand Spit",
+      "it": "Sputasabbia"
+    },
+    {
+      "en": "Ice Scales",
+      "it": "Geloscaglie"
+    },
+    {
+      "en": "Ripen",
+      "it": "Maturazione"
+    },
+    {
+      "en": "Ice Face",
+      "it": "Gelofaccia"
+    },
+    {
+      "en": "Power Spot",
+      "it": "Fonte Energetica"
+    },
+    {
+      "en": "Mimicry",
+      "it": "Mimetismo"
+    },
+    {
+      "en": "Screen Cleaner",
+      "it": "Annullabarriere"
+    },
+    {
+      "en": "Steely Spirit",
+      "it": "Spiritoferreo"
+    },
+    {
+      "en": "Perish Body",
+      "it": "Ultimotocco"
+    },
+    {
+      "en": "Wandering Spirit",
+      "it": "Anima Errante"
+    },
+    {
+      "en": "Gorilla Tactics",
+      "it": "Vigorilla"
+    },
+    {
+      "en": "Neutralizing Gas",
+      "it": "Gas Reagente"
+    },
+    {
+      "en": "Pastel Veil",
+      "it": "Pastelvelo"
+    },
+    {
+      "en": "Hunger Switch",
+      "it": "Pancialterna"
     }
   ],
   "item": [
@@ -7379,6 +7475,378 @@
     {
       "en": "Clangorous Soulblaze",
       "it": "Dracofonia Divampante"
+    },
+    {
+      "en": "Splishy Splash",
+      "it": "Surfasplash"
+    },
+    {
+      "en": "Floaty Fall",
+      "it": "Piombaflap"
+    },
+    {
+      "en": "Pika Papow",
+      "it": "Pikasaetta"
+    },
+    {
+      "en": "Bouncy Bubble",
+      "it": "Bollaslurp"
+    },
+    {
+      "en": "Buzzy Buzz",
+      "it": "Elettrozap"
+    },
+    {
+      "en": "Sizzly Slide",
+      "it": "Fiammabam"
+    },
+    {
+      "en": "Glitzy Glow",
+      "it": "Auraswoosh"
+    },
+    {
+      "en": "Baddy Bad",
+      "it": "Zona Buiabuia"
+    },
+    {
+      "en": "Sappy Seed",
+      "it": "Bombafrush"
+    },
+    {
+      "en": "Freezy Frost",
+      "it": "Scricchiagelo"
+    },
+    {
+      "en": "Sparkly Swirl",
+      "it": "Sbrilluccibufera"
+    },
+    {
+      "en": "Veevee Volley",
+      "it": "Eeveempatto"
+    },
+    {
+      "en": "Double Iron Bash",
+      "it": "Pugni Corazzati"
+    },
+    {
+      "en": "Max Guard",
+      "it": "Dynabarriera"
+    },
+    {
+      "en": "Dynamax Cannon",
+      "it": "Cannone Dynamax"
+    },
+    {
+      "en": "Snipe Shot",
+      "it": "Tiromirato"
+    },
+    {
+      "en": "Jaw Lock",
+      "it": "Morsostretto"
+    },
+    {
+      "en": "Stuff Cheeks",
+      "it": "Riempiguance"
+    },
+    {
+      "en": "No Retreat",
+      "it": "Spalle al Muro"
+    },
+    {
+      "en": "Tar Shot",
+      "it": "Colpocatrame"
+    },
+    {
+      "en": "Magic Powder",
+      "it": "Magipolvere"
+    },
+    {
+      "en": "Dragon Darts",
+      "it": "Dragofrecce"
+    },
+    {
+      "en": "Teatime",
+      "it": "Ora del T\u00e8"
+    },
+    {
+      "en": "Octolock",
+      "it": "Tentacolock"
+    },
+    {
+      "en": "Bolt Beak",
+      "it": "Beccoshock"
+    },
+    {
+      "en": "Fishious Rend",
+      "it": "Branchiomorso"
+    },
+    {
+      "en": "Court Change",
+      "it": "Cambiocampo"
+    },
+    {
+      "en": "Max Flare",
+      "it": "Dynafiammata"
+    },
+    {
+      "en": "Max Flutterby",
+      "it": "Dynainsetto"
+    },
+    {
+      "en": "Max Lightning",
+      "it": "Dynasaetta"
+    },
+    {
+      "en": "Max Strike",
+      "it": "Dynattacco"
+    },
+    {
+      "en": "Max Knuckle",
+      "it": "Dynapugno"
+    },
+    {
+      "en": "Max Phantasm",
+      "it": "Dynavuoto"
+    },
+    {
+      "en": "Max Hailstorm",
+      "it": "Dynagelo"
+    },
+    {
+      "en": "Max Ooze",
+      "it": "Dynacorrosione"
+    },
+    {
+      "en": "Max Geyser",
+      "it": "Dynaflusso"
+    },
+    {
+      "en": "Max Airstream",
+      "it": "Dynajet"
+    },
+    {
+      "en": "Max Starfall",
+      "it": "Dynafata"
+    },
+    {
+      "en": "Max Wyrmwind",
+      "it": "Dynadragone"
+    },
+    {
+      "en": "Max Mindstorm",
+      "it": "Dynapsiche"
+    },
+    {
+      "en": "Max Rockfall",
+      "it": "Dynamacigno"
+    },
+    {
+      "en": "Max Quake",
+      "it": "Dynasisma"
+    },
+    {
+      "en": "Max Darkness",
+      "it": "Dynatenebre"
+    },
+    {
+      "en": "Max Overgrowth",
+      "it": "Dynaflora"
+    },
+    {
+      "en": "Max Steelspike",
+      "it": "Dynametallo"
+    },
+    {
+      "en": "Clangorous Soul",
+      "it": "Dracofonia"
+    },
+    {
+      "en": "Body Press",
+      "it": "Schiacciacorpo"
+    },
+    {
+      "en": "Decorate",
+      "it": "Decorazione"
+    },
+    {
+      "en": "Drum Beating",
+      "it": "Tamburattacco"
+    },
+    {
+      "en": "Snap Trap",
+      "it": "Tagliola"
+    },
+    {
+      "en": "Pyro Ball",
+      "it": "Palla Infuocata"
+    },
+    {
+      "en": "Behemoth Blade",
+      "it": "Taglio Maestoso"
+    },
+    {
+      "en": "Behemoth Bash",
+      "it": "Colpo Maestoso"
+    },
+    {
+      "en": "Aura Wheel",
+      "it": "Ruota d\u2019Aura"
+    },
+    {
+      "en": "Breaking Swipe",
+      "it": "Vastoimpatto"
+    },
+    {
+      "en": "Branch Poke",
+      "it": "Ramostoccata"
+    },
+    {
+      "en": "Overdrive",
+      "it": "Overdrive"
+    },
+    {
+      "en": "Apple Acid",
+      "it": "Acido Malico"
+    },
+    {
+      "en": "Grav Apple",
+      "it": "Forza G"
+    },
+    {
+      "en": "Spirit Break",
+      "it": "Frantumanima"
+    },
+    {
+      "en": "Strange Steam",
+      "it": "Vapore Incantato"
+    },
+    {
+      "en": "Life Dew",
+      "it": "Goccia Vitale"
+    },
+    {
+      "en": "Obstruct",
+      "it": "Sbarramento"
+    },
+    {
+      "en": "False Surrender",
+      "it": "Supplicolpo"
+    },
+    {
+      "en": "Meteor Assault",
+      "it": "Sfolgorassalto"
+    },
+    {
+      "en": "Eternabeam",
+      "it": "Raggio Infinito"
+    },
+    {
+      "en": "Steel Beam",
+      "it": "Raggio d\u2019Acciaio"
+    },
+    {
+      "en": "G-Max Wildfire",
+      "it": "Gigavampa"
+    },
+    {
+      "en": "G-Max Befuddle",
+      "it": "Gigastupore"
+    },
+    {
+      "en": "G-Max Volt Crash",
+      "it": "Gigapikafolgori"
+    },
+    {
+      "en": "G-Max Gold Rush",
+      "it": "Gigamonete"
+    },
+    {
+      "en": "G-Max Chi Strike",
+      "it": "Gigapugnointuito"
+    },
+    {
+      "en": "G-Max Terror",
+      "it": "Gigaillusione"
+    },
+    {
+      "en": "G-Max Resonance",
+      "it": "Gigamelodia"
+    },
+    {
+      "en": "G-Max Cuddle",
+      "it": "Gigabbraccio"
+    },
+    {
+      "en": "G-Max Replenish",
+      "it": "Gigarinnovamento"
+    },
+    {
+      "en": "G-Max Malodor",
+      "it": "Gigafetore"
+    },
+    {
+      "en": "G-Max Stonesurge",
+      "it": "Gigarocciagetto"
+    },
+    {
+      "en": "G-Max Wind Rage",
+      "it": "Gigaciclone"
+    },
+    {
+      "en": "G-Max Stun Shock",
+      "it": "Gigatoxiscossa"
+    },
+    {
+      "en": "G-Max Finale",
+      "it": "Gigagranfinale"
+    },
+    {
+      "en": "G-Max Depletion",
+      "it": "Gigalogoramento"
+    },
+    {
+      "en": "G-Max Gravitas",
+      "it": "Gigagravitoforza"
+    },
+    {
+      "en": "G-Max Volcalith",
+      "it": "Gigalapilli"
+    },
+    {
+      "en": "G-Max Sandblast",
+      "it": "Gigavortisabbia"
+    },
+    {
+      "en": "G-Max Snooze",
+      "it": "Gigatorpore"
+    },
+    {
+      "en": "G-Max Tartness",
+      "it": "Gigattaccoacido"
+    },
+    {
+      "en": "G-Max Sweetness",
+      "it": "Gigambrosia"
+    },
+    {
+      "en": "G-Max Smite",
+      "it": "Gigacastigo"
+    },
+    {
+      "en": "G-Max Steelsurge",
+      "it": "Gigaferroaculei"
+    },
+    {
+      "en": "G-Max Meltdown",
+      "it": "Gigaliquefazione"
+    },
+    {
+      "en": "G-Max Foam Burst",
+      "it": "Gigaschiuma"
+    },
+    {
+      "en": "G-Max Centiferno",
+      "it": "Gigamillefiamme"
     },
     {
       "en": "Shadow Rush",
