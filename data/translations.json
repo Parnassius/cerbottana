@@ -1124,7 +1124,7 @@
     },
     {
       "en": "Full Restore",
-      "it": "Ricarica Totale"
+      "it": "Ricarica totale"
     },
     {
       "en": "Max Potion",
@@ -1140,7 +1140,7 @@
     },
     {
       "en": "Full Heal",
-      "it": "Cura Totale"
+      "it": "Cura totale"
     },
     {
       "en": "Revive",
@@ -1232,7 +1232,7 @@
     },
     {
       "en": "Rare Candy",
-      "it": "Caramella Rara"
+      "it": "Caramella rara"
     },
     {
       "en": "PP Up",
@@ -1344,7 +1344,7 @@
     },
     {
       "en": "Escape Rope",
-      "it": "Fune di Fuga"
+      "it": "Fune di fuga"
     },
     {
       "en": "Repel",
@@ -1444,7 +1444,7 @@
     },
     {
       "en": "Old Amber",
-      "it": "Ambra Antica"
+      "it": "Ambra antica"
     },
     {
       "en": "Armor Fossil",
@@ -4637,6 +4637,1346 @@
     {
       "en": "Roto Catch",
       "it": "Acchiappa\u2019n\u2019roll"
+    },
+    {
+      "en": "Autograph",
+      "it": "Autografo"
+    },
+    {
+      "en": "Pok\u00e9mon Box Link",
+      "it": "Box Pok\u00e9mon"
+    },
+    {
+      "en": "Medicine Pocket",
+      "it": "Tasca rimedi"
+    },
+    {
+      "en": "TM Case",
+      "it": "Porta MT"
+    },
+    {
+      "en": "Candy Jar",
+      "it": "Portacaramelle"
+    },
+    {
+      "en": "Power-Up Pocket",
+      "it": "Tasca potenziam."
+    },
+    {
+      "en": "Clothing Trunk",
+      "it": "Valigia vestiti"
+    },
+    {
+      "en": "Catching Pocket",
+      "it": "Tasca cattura"
+    },
+    {
+      "en": "Battle Pocket",
+      "it": "Tasca lotta"
+    },
+    {
+      "en": "Exp. Share",
+      "it": "Condividi esp."
+    },
+    {
+      "en": "Upgrade",
+      "it": "Upgrade"
+    },
+    {
+      "en": "Leek",
+      "it": "Gambo"
+    },
+    {
+      "en": "Town Map",
+      "it": "Mappa citt\u00e0"
+    },
+    {
+      "en": "S.S. Ticket",
+      "it": "Biglietto nave"
+    },
+    {
+      "en": "Secret Key",
+      "it": "Chiave segreta"
+    },
+    {
+      "en": "Dowsing Machine",
+      "it": "Ricerca strum."
+    },
+    {
+      "en": "Health Feather",
+      "it": "Piumsalute"
+    },
+    {
+      "en": "Muscle Feather",
+      "it": "Piumpotenza"
+    },
+    {
+      "en": "Resist Feather",
+      "it": "Piumtutela"
+    },
+    {
+      "en": "Genius Feather",
+      "it": "Piumingegno"
+    },
+    {
+      "en": "Clever Feather",
+      "it": "Piumintuito"
+    },
+    {
+      "en": "Swift Feather",
+      "it": "Piumreazione"
+    },
+    {
+      "en": "Pretty Feather",
+      "it": "Piumabella"
+    },
+    {
+      "en": "Adventure Guide",
+      "it": "Guida Avventura"
+    },
+    {
+      "en": "Silver Razz Berry",
+      "it": "Baccalampon argentata"
+    },
+    {
+      "en": "Golden Razz Berry",
+      "it": "Baccalampon dorata"
+    },
+    {
+      "en": "Silver Nanab Berry",
+      "it": "Baccabana argentata"
+    },
+    {
+      "en": "Golden Nanab Berry",
+      "it": "Baccabana dorata"
+    },
+    {
+      "en": "Silver Pinap Berry",
+      "it": "Baccananas argentata"
+    },
+    {
+      "en": "Golden Pinap Berry",
+      "it": "Baccananas dorata"
+    },
+    {
+      "en": "Gold Teeth",
+      "it": "Denti d\u2019oro"
+    },
+    {
+      "en": "Lift Key",
+      "it": "Chiave ascensore"
+    },
+    {
+      "en": "Stretchy Spring",
+      "it": "Molla elastica"
+    },
+    {
+      "en": "Chalky Stone",
+      "it": "Gessetto"
+    },
+    {
+      "en": "Marble",
+      "it": "Biglia"
+    },
+    {
+      "en": "Lone Earring",
+      "it": "Orecchino"
+    },
+    {
+      "en": "Beach Glass",
+      "it": "Vetro marino"
+    },
+    {
+      "en": "Gold Leaf",
+      "it": "Fogliadoro"
+    },
+    {
+      "en": "Silver Leaf",
+      "it": "Fogliargento"
+    },
+    {
+      "en": "Polished Mud Ball",
+      "it": "Pallina di fango"
+    },
+    {
+      "en": "Tropical Shell",
+      "it": "Tropiconchiglia"
+    },
+    {
+      "en": "Leaf Letter",
+      "it": "Foglialettera"
+    },
+    {
+      "en": "Small Bouquet",
+      "it": "Bouquet"
+    },
+    {
+      "en": "Lure",
+      "it": "Profumo invito"
+    },
+    {
+      "en": "Super Lure",
+      "it": "Superprofumo"
+    },
+    {
+      "en": "Max Lure",
+      "it": "Profumo Max"
+    },
+    {
+      "en": "Pewter Crunchies",
+      "it": "Plumbeosalatini"
+    },
+    {
+      "en": "Ilima Normalium Z",
+      "it": "Normium Z Liam"
+    },
+    {
+      "en": "Health Candy",
+      "it": "Caramella vitalit\u00e0 S"
+    },
+    {
+      "en": "Mighty Candy",
+      "it": "Caramella potenza S"
+    },
+    {
+      "en": "Tough Candy",
+      "it": "Caramella protezione S"
+    },
+    {
+      "en": "Smart Candy",
+      "it": "Caramella acume S"
+    },
+    {
+      "en": "Courage Candy",
+      "it": "Caramella intuito S"
+    },
+    {
+      "en": "Quick Candy",
+      "it": "Caramella rapidit\u00e0 S"
+    },
+    {
+      "en": "Health Candy L",
+      "it": "Caramella vitalit\u00e0 M"
+    },
+    {
+      "en": "Mighty Candy L",
+      "it": "Caramella potenza M"
+    },
+    {
+      "en": "Tough Candy L",
+      "it": "Caramella protezione M"
+    },
+    {
+      "en": "Smart Candy L",
+      "it": "Caramella acume M"
+    },
+    {
+      "en": "Courage Candy L",
+      "it": "Caramella intuito M"
+    },
+    {
+      "en": "Quick Candy L",
+      "it": "Caramella rapidit\u00e0 M"
+    },
+    {
+      "en": "Health Candy XL",
+      "it": "Caramella vitalit\u00e0 L"
+    },
+    {
+      "en": "Mighty Candy XL",
+      "it": "Caramella potenza L"
+    },
+    {
+      "en": "Tough Candy XL",
+      "it": "Caramella protezione L"
+    },
+    {
+      "en": "Smart Candy XL",
+      "it": "Caramella acume L"
+    },
+    {
+      "en": "Courage Candy XL",
+      "it": "Caramella intuito L"
+    },
+    {
+      "en": "Quick Candy XL",
+      "it": "Caramella rapidit\u00e0 L"
+    },
+    {
+      "en": "Bulbasaur Candy",
+      "it": "Caramella Bulbasaur"
+    },
+    {
+      "en": "Charmander Candy",
+      "it": "Caramella Charmander"
+    },
+    {
+      "en": "Squirtle Candy",
+      "it": "Caramella Squirtle"
+    },
+    {
+      "en": "Caterpie Candy",
+      "it": "Caramella Caterpie"
+    },
+    {
+      "en": "Weedle Candy",
+      "it": "Caramella Weedle"
+    },
+    {
+      "en": "Pidgey Candy",
+      "it": "Caramella Pidgey"
+    },
+    {
+      "en": "Rattata Candy",
+      "it": "Caramella Rattata"
+    },
+    {
+      "en": "Spearow Candy",
+      "it": "Caramella Spearow"
+    },
+    {
+      "en": "Ekans Candy",
+      "it": "Caramella Ekans"
+    },
+    {
+      "en": "Pikachu Candy",
+      "it": "Caramella Pikachu"
+    },
+    {
+      "en": "Sandshrew Candy",
+      "it": "Caramella Sandshrew"
+    },
+    {
+      "en": "Nidoran\u2640 Candy",
+      "it": "Caramella Nidoran\u2640"
+    },
+    {
+      "en": "Nidoran\u2642 Candy",
+      "it": "Caramella Nidoran\u2642"
+    },
+    {
+      "en": "Clefairy Candy",
+      "it": "Caramella Clefairy"
+    },
+    {
+      "en": "Vulpix Candy",
+      "it": "Caramella Vulpix"
+    },
+    {
+      "en": "Jigglypuff Candy",
+      "it": "Caramella Jigglypuff"
+    },
+    {
+      "en": "Zubat Candy",
+      "it": "Caramella Zubat"
+    },
+    {
+      "en": "Oddish Candy",
+      "it": "Caramella Oddish"
+    },
+    {
+      "en": "Paras Candy",
+      "it": "Caramella Paras"
+    },
+    {
+      "en": "Venonat Candy",
+      "it": "Caramella Venonat"
+    },
+    {
+      "en": "Diglett Candy",
+      "it": "Caramella Diglett"
+    },
+    {
+      "en": "Meowth Candy",
+      "it": "Caramella Meowth"
+    },
+    {
+      "en": "Psyduck Candy",
+      "it": "Caramella Psyduck"
+    },
+    {
+      "en": "Mankey Candy",
+      "it": "Caramella Mankey"
+    },
+    {
+      "en": "Growlithe Candy",
+      "it": "Caramella Growlithe"
+    },
+    {
+      "en": "Poliwag Candy",
+      "it": "Caramella Poliwag"
+    },
+    {
+      "en": "Abra Candy",
+      "it": "Caramella Abra"
+    },
+    {
+      "en": "Machop Candy",
+      "it": "Caramella Machop"
+    },
+    {
+      "en": "Bellsprout Candy",
+      "it": "Caramella Bellsprout"
+    },
+    {
+      "en": "Tentacool Candy",
+      "it": "Caramella Tentacool"
+    },
+    {
+      "en": "Geodude Candy",
+      "it": "Caramella Geodude"
+    },
+    {
+      "en": "Ponyta Candy",
+      "it": "Caramella Ponyta"
+    },
+    {
+      "en": "Slowpoke Candy",
+      "it": "Caramella Slowpoke"
+    },
+    {
+      "en": "Magnemite Candy",
+      "it": "Caramella Magnemite"
+    },
+    {
+      "en": "Farfetch\u2019d Candy",
+      "it": "Caramella Farfetch\u2019d"
+    },
+    {
+      "en": "Doduo Candy",
+      "it": "Caramella Doduo"
+    },
+    {
+      "en": "Seel Candy",
+      "it": "Caramella Seel"
+    },
+    {
+      "en": "Grimer Candy",
+      "it": "Caramella Grimer"
+    },
+    {
+      "en": "Shellder Candy",
+      "it": "Caramella Shellder"
+    },
+    {
+      "en": "Gastly Candy",
+      "it": "Caramella Gastly"
+    },
+    {
+      "en": "Onix Candy",
+      "it": "Caramella Onix"
+    },
+    {
+      "en": "Drowzee Candy",
+      "it": "Caramella Drowzee"
+    },
+    {
+      "en": "Krabby Candy",
+      "it": "Caramella Krabby"
+    },
+    {
+      "en": "Voltorb Candy",
+      "it": "Caramella Voltorb"
+    },
+    {
+      "en": "Exeggcute Candy",
+      "it": "Caramella Exeggcute"
+    },
+    {
+      "en": "Cubone Candy",
+      "it": "Caramella Cubone"
+    },
+    {
+      "en": "Hitmonlee Candy",
+      "it": "Caramella Hitmonlee"
+    },
+    {
+      "en": "Hitmonchan Candy",
+      "it": "Caramella Hitmonchan"
+    },
+    {
+      "en": "Lickitung Candy",
+      "it": "Caramella Lickitung"
+    },
+    {
+      "en": "Koffing Candy",
+      "it": "Caramella Koffing"
+    },
+    {
+      "en": "Rhyhorn Candy",
+      "it": "Caramella Rhyhorn"
+    },
+    {
+      "en": "Chansey Candy",
+      "it": "Caramella Chansey"
+    },
+    {
+      "en": "Tangela Candy",
+      "it": "Caramella Tangela"
+    },
+    {
+      "en": "Kangaskhan Candy",
+      "it": "Caramella Kangaskhan"
+    },
+    {
+      "en": "Horsea Candy",
+      "it": "Caramella Horsea"
+    },
+    {
+      "en": "Goldeen Candy",
+      "it": "Caramella Goldeen"
+    },
+    {
+      "en": "Staryu Candy",
+      "it": "Caramella Staryu"
+    },
+    {
+      "en": "Mr. Mime Candy",
+      "it": "Caramella Mr. Mime"
+    },
+    {
+      "en": "Scyther Candy",
+      "it": "Caramella Scyther"
+    },
+    {
+      "en": "Jynx Candy",
+      "it": "Caramella Jynx"
+    },
+    {
+      "en": "Electabuzz Candy",
+      "it": "Caramella Electabuzz"
+    },
+    {
+      "en": "Pinsir Candy",
+      "it": "Caramella Pinsir"
+    },
+    {
+      "en": "Tauros Candy",
+      "it": "Caramella Tauros"
+    },
+    {
+      "en": "Magikarp Candy",
+      "it": "Caramella Magikarp"
+    },
+    {
+      "en": "Lapras Candy",
+      "it": "Caramella Lapras"
+    },
+    {
+      "en": "Ditto Candy",
+      "it": "Caramella Ditto"
+    },
+    {
+      "en": "Eevee Candy",
+      "it": "Caramella Eevee"
+    },
+    {
+      "en": "Porygon Candy",
+      "it": "Caramella Porygon"
+    },
+    {
+      "en": "Omanyte Candy",
+      "it": "Caramella Omanyte"
+    },
+    {
+      "en": "Kabuto Candy",
+      "it": "Caramella Kabuto"
+    },
+    {
+      "en": "Aerodactyl Candy",
+      "it": "Caramella Aerodactyl"
+    },
+    {
+      "en": "Snorlax Candy",
+      "it": "Caramella Snorlax"
+    },
+    {
+      "en": "Articuno Candy",
+      "it": "Caramella Articuno"
+    },
+    {
+      "en": "Zapdos Candy",
+      "it": "Caramella Zapdos"
+    },
+    {
+      "en": "Moltres Candy",
+      "it": "Caramella Moltres"
+    },
+    {
+      "en": "Dratini Candy",
+      "it": "Caramella Dratini"
+    },
+    {
+      "en": "Mewtwo Candy",
+      "it": "Caramella Mewtwo"
+    },
+    {
+      "en": "Mew Candy",
+      "it": "Caramella Mew"
+    },
+    {
+      "en": "Meltan Candy",
+      "it": "Caramella Meltan"
+    },
+    {
+      "en": "Magmar Candy",
+      "it": "Caramella Magmar"
+    },
+    {
+      "en": "Endorsement",
+      "it": "Referenze"
+    },
+    {
+      "en": "Wishing Star",
+      "it": "Desiostella"
+    },
+    {
+      "en": "Dynamax Band",
+      "it": "Polsino Dynamax"
+    },
+    {
+      "en": "Rotom Bike",
+      "it": "Bici Rotom"
+    },
+    {
+      "en": "Sausages",
+      "it": "Salsicce"
+    },
+    {
+      "en": "Bob\u2019s Food Tin",
+      "it": "Lattina Gustavo"
+    },
+    {
+      "en": "Bach\u2019s Food Tin",
+      "it": "Scatoletta Bach"
+    },
+    {
+      "en": "Tin of Beans",
+      "it": "Lattina fagioli"
+    },
+    {
+      "en": "Bread",
+      "it": "Pan carr\u00e9"
+    },
+    {
+      "en": "Pasta",
+      "it": "Pasta"
+    },
+    {
+      "en": "Mixed Mushrooms",
+      "it": "Funghi"
+    },
+    {
+      "en": "Smoke-Poke Tail",
+      "it": "Coda affumicata"
+    },
+    {
+      "en": "Large Leek",
+      "it": "Grosso porro"
+    },
+    {
+      "en": "Fancy Apple",
+      "it": "Mela prelibata"
+    },
+    {
+      "en": "Brittle Bones",
+      "it": "Ossi sottili"
+    },
+    {
+      "en": "Pack of Potatoes",
+      "it": "Patate"
+    },
+    {
+      "en": "Pungent Root",
+      "it": "Erbe acquatiche"
+    },
+    {
+      "en": "Salad Mix",
+      "it": "Verdure"
+    },
+    {
+      "en": "Fried Food",
+      "it": "Fritto misto"
+    },
+    {
+      "en": "Boiled Egg",
+      "it": "Uovo sodo"
+    },
+    {
+      "en": "Camping Gear",
+      "it": "Kit da campeggio"
+    },
+    {
+      "en": "Rusted Sword",
+      "it": "Spada rovinata"
+    },
+    {
+      "en": "Rusted Shield",
+      "it": "Scudo rovinato"
+    },
+    {
+      "en": "Fossilized Bird",
+      "it": "Ornitofossile"
+    },
+    {
+      "en": "Fossilized Fish",
+      "it": "Ittiofossile"
+    },
+    {
+      "en": "Fossilized Drake",
+      "it": "Dracofossile"
+    },
+    {
+      "en": "Fossilized Dino",
+      "it": "Plesiofossile"
+    },
+    {
+      "en": "Strawberry Sweet",
+      "it": "Bonbonfragola"
+    },
+    {
+      "en": "Love Sweet",
+      "it": "Bonboncuore"
+    },
+    {
+      "en": "Berry Sweet",
+      "it": "Bonbonbosco"
+    },
+    {
+      "en": "Clover Sweet",
+      "it": "Bonbonfoglio"
+    },
+    {
+      "en": "Flower Sweet",
+      "it": "Bonbonfiore"
+    },
+    {
+      "en": "Star Sweet",
+      "it": "Bonbonstella"
+    },
+    {
+      "en": "Ribbon Sweet",
+      "it": "Bonbonfiocco"
+    },
+    {
+      "en": "Sweet Apple",
+      "it": "Dolcepomo"
+    },
+    {
+      "en": "Tart Apple",
+      "it": "Aspropomo"
+    },
+    {
+      "en": "Throat Spray",
+      "it": "Spray gola"
+    },
+    {
+      "en": "Eject Pack",
+      "it": "Zainofuga"
+    },
+    {
+      "en": "Heavy-Duty Boots",
+      "it": "Scarponi robusti"
+    },
+    {
+      "en": "Blunder Policy",
+      "it": "Fiascopolizza"
+    },
+    {
+      "en": "Room Service",
+      "it": "Distorservizio"
+    },
+    {
+      "en": "Utility Umbrella",
+      "it": "Superombrello"
+    },
+    {
+      "en": "Exp. Candy XS",
+      "it": "Caram. Esp. XS"
+    },
+    {
+      "en": "Exp. Candy S",
+      "it": "Caram. Esp. S"
+    },
+    {
+      "en": "Exp. Candy M",
+      "it": "Caram. Esp. M"
+    },
+    {
+      "en": "Exp. Candy L",
+      "it": "Caram. Esp. L"
+    },
+    {
+      "en": "Exp. Candy XL",
+      "it": "Caram. Esp. XL"
+    },
+    {
+      "en": "Dynamax Candy",
+      "it": "Caram. Dynamax"
+    },
+    {
+      "en": "TR00",
+      "it": "DT00"
+    },
+    {
+      "en": "TR01",
+      "it": "DT01"
+    },
+    {
+      "en": "TR02",
+      "it": "DT02"
+    },
+    {
+      "en": "TR03",
+      "it": "DT03"
+    },
+    {
+      "en": "TR04",
+      "it": "DT04"
+    },
+    {
+      "en": "TR05",
+      "it": "DT05"
+    },
+    {
+      "en": "TR06",
+      "it": "DT06"
+    },
+    {
+      "en": "TR07",
+      "it": "DT07"
+    },
+    {
+      "en": "TR08",
+      "it": "DT08"
+    },
+    {
+      "en": "TR09",
+      "it": "DT09"
+    },
+    {
+      "en": "TR10",
+      "it": "DT10"
+    },
+    {
+      "en": "TR11",
+      "it": "DT11"
+    },
+    {
+      "en": "TR12",
+      "it": "DT12"
+    },
+    {
+      "en": "TR13",
+      "it": "DT13"
+    },
+    {
+      "en": "TR14",
+      "it": "DT14"
+    },
+    {
+      "en": "TR15",
+      "it": "DT15"
+    },
+    {
+      "en": "TR16",
+      "it": "DT16"
+    },
+    {
+      "en": "TR17",
+      "it": "DT17"
+    },
+    {
+      "en": "TR18",
+      "it": "DT18"
+    },
+    {
+      "en": "TR19",
+      "it": "DT19"
+    },
+    {
+      "en": "TR20",
+      "it": "DT20"
+    },
+    {
+      "en": "TR21",
+      "it": "DT21"
+    },
+    {
+      "en": "TR22",
+      "it": "DT22"
+    },
+    {
+      "en": "TR23",
+      "it": "DT23"
+    },
+    {
+      "en": "TR24",
+      "it": "DT24"
+    },
+    {
+      "en": "TR25",
+      "it": "DT25"
+    },
+    {
+      "en": "TR26",
+      "it": "DT26"
+    },
+    {
+      "en": "TR27",
+      "it": "DT27"
+    },
+    {
+      "en": "TR28",
+      "it": "DT28"
+    },
+    {
+      "en": "TR29",
+      "it": "DT29"
+    },
+    {
+      "en": "TR30",
+      "it": "DT30"
+    },
+    {
+      "en": "TR31",
+      "it": "DT31"
+    },
+    {
+      "en": "TR32",
+      "it": "DT32"
+    },
+    {
+      "en": "TR33",
+      "it": "DT33"
+    },
+    {
+      "en": "TR34",
+      "it": "DT34"
+    },
+    {
+      "en": "TR35",
+      "it": "DT35"
+    },
+    {
+      "en": "TR36",
+      "it": "DT36"
+    },
+    {
+      "en": "TR37",
+      "it": "DT37"
+    },
+    {
+      "en": "TR38",
+      "it": "DT38"
+    },
+    {
+      "en": "TR39",
+      "it": "DT39"
+    },
+    {
+      "en": "TR40",
+      "it": "DT40"
+    },
+    {
+      "en": "TR41",
+      "it": "DT41"
+    },
+    {
+      "en": "TR42",
+      "it": "DT42"
+    },
+    {
+      "en": "TR43",
+      "it": "DT43"
+    },
+    {
+      "en": "TR44",
+      "it": "DT44"
+    },
+    {
+      "en": "TR45",
+      "it": "DT45"
+    },
+    {
+      "en": "TR46",
+      "it": "DT46"
+    },
+    {
+      "en": "TR47",
+      "it": "DT47"
+    },
+    {
+      "en": "TR48",
+      "it": "DT48"
+    },
+    {
+      "en": "TR49",
+      "it": "DT49"
+    },
+    {
+      "en": "TR50",
+      "it": "DT50"
+    },
+    {
+      "en": "TR51",
+      "it": "DT51"
+    },
+    {
+      "en": "TR52",
+      "it": "DT52"
+    },
+    {
+      "en": "TR53",
+      "it": "DT53"
+    },
+    {
+      "en": "TR54",
+      "it": "DT54"
+    },
+    {
+      "en": "TR55",
+      "it": "DT55"
+    },
+    {
+      "en": "TR56",
+      "it": "DT56"
+    },
+    {
+      "en": "TR57",
+      "it": "DT57"
+    },
+    {
+      "en": "TR58",
+      "it": "DT58"
+    },
+    {
+      "en": "TR59",
+      "it": "DT59"
+    },
+    {
+      "en": "TR60",
+      "it": "DT60"
+    },
+    {
+      "en": "TR61",
+      "it": "DT61"
+    },
+    {
+      "en": "TR62",
+      "it": "DT62"
+    },
+    {
+      "en": "TR63",
+      "it": "DT63"
+    },
+    {
+      "en": "TR64",
+      "it": "DT64"
+    },
+    {
+      "en": "TR65",
+      "it": "DT65"
+    },
+    {
+      "en": "TR66",
+      "it": "DT66"
+    },
+    {
+      "en": "TR67",
+      "it": "DT67"
+    },
+    {
+      "en": "TR68",
+      "it": "DT68"
+    },
+    {
+      "en": "TR69",
+      "it": "DT69"
+    },
+    {
+      "en": "TR70",
+      "it": "DT70"
+    },
+    {
+      "en": "TR71",
+      "it": "DT71"
+    },
+    {
+      "en": "TR72",
+      "it": "DT72"
+    },
+    {
+      "en": "TR73",
+      "it": "DT73"
+    },
+    {
+      "en": "TR74",
+      "it": "DT74"
+    },
+    {
+      "en": "TR75",
+      "it": "DT75"
+    },
+    {
+      "en": "TR76",
+      "it": "DT76"
+    },
+    {
+      "en": "TR77",
+      "it": "DT77"
+    },
+    {
+      "en": "TR78",
+      "it": "DT78"
+    },
+    {
+      "en": "TR79",
+      "it": "DT79"
+    },
+    {
+      "en": "TR80",
+      "it": "DT80"
+    },
+    {
+      "en": "TR81",
+      "it": "DT81"
+    },
+    {
+      "en": "TR82",
+      "it": "DT82"
+    },
+    {
+      "en": "TR83",
+      "it": "DT83"
+    },
+    {
+      "en": "TR84",
+      "it": "DT84"
+    },
+    {
+      "en": "TR85",
+      "it": "DT85"
+    },
+    {
+      "en": "TR86",
+      "it": "DT86"
+    },
+    {
+      "en": "TR87",
+      "it": "DT87"
+    },
+    {
+      "en": "TR88",
+      "it": "DT88"
+    },
+    {
+      "en": "TR89",
+      "it": "DT89"
+    },
+    {
+      "en": "TR90",
+      "it": "DT90"
+    },
+    {
+      "en": "TR91",
+      "it": "DT91"
+    },
+    {
+      "en": "TR92",
+      "it": "DT92"
+    },
+    {
+      "en": "TR93",
+      "it": "DT93"
+    },
+    {
+      "en": "TR94",
+      "it": "DT94"
+    },
+    {
+      "en": "TR95",
+      "it": "DT95"
+    },
+    {
+      "en": "TR96",
+      "it": "DT96"
+    },
+    {
+      "en": "TR97",
+      "it": "DT97"
+    },
+    {
+      "en": "TR98",
+      "it": "DT98"
+    },
+    {
+      "en": "TR99",
+      "it": "DT99"
+    },
+    {
+      "en": "TM00",
+      "it": "MT00"
+    },
+    {
+      "en": "Lonely Mint",
+      "it": "Menta Schiva"
+    },
+    {
+      "en": "Adamant Mint",
+      "it": "Menta Decisa"
+    },
+    {
+      "en": "Naughty Mint",
+      "it": "Menta Birbona"
+    },
+    {
+      "en": "Brave Mint",
+      "it": "Menta Audace"
+    },
+    {
+      "en": "Bold Mint",
+      "it": "Menta Sicura"
+    },
+    {
+      "en": "Impish Mint",
+      "it": "Menta Scaltra"
+    },
+    {
+      "en": "Lax Mint",
+      "it": "Menta Fiacca"
+    },
+    {
+      "en": "Relaxed Mint",
+      "it": "Menta Placida"
+    },
+    {
+      "en": "Modest Mint",
+      "it": "Menta Modesta"
+    },
+    {
+      "en": "Mild Mint",
+      "it": "Menta Mite"
+    },
+    {
+      "en": "Rash Mint",
+      "it": "Menta Ardente"
+    },
+    {
+      "en": "Quiet Mint",
+      "it": "Menta Quieta"
+    },
+    {
+      "en": "Calm Mint",
+      "it": "Menta Calma"
+    },
+    {
+      "en": "Gentle Mint",
+      "it": "Menta Gentile"
+    },
+    {
+      "en": "Careful Mint",
+      "it": "Menta Cauta"
+    },
+    {
+      "en": "Sassy Mint",
+      "it": "Menta Vivace"
+    },
+    {
+      "en": "Timid Mint",
+      "it": "Menta Timida"
+    },
+    {
+      "en": "Hasty Mint",
+      "it": "Menta Lesta"
+    },
+    {
+      "en": "Jolly Mint",
+      "it": "Menta Allegra"
+    },
+    {
+      "en": "Naive Mint",
+      "it": "Menta Ingenua"
+    },
+    {
+      "en": "Serious Mint",
+      "it": "Menta Seria"
+    },
+    {
+      "en": "Wishing Piece",
+      "it": "Desioblocco"
+    },
+    {
+      "en": "Cracked Pot",
+      "it": "Teiera rotta"
+    },
+    {
+      "en": "Chipped Pot",
+      "it": "Teiera crepata"
+    },
+    {
+      "en": "Hi-tech Earbuds",
+      "it": "Supertappi"
+    },
+    {
+      "en": "Fruit Bunch",
+      "it": "Frutti"
+    },
+    {
+      "en": "Moomoo Cheese",
+      "it": "Formaggio Mumu"
+    },
+    {
+      "en": "Spice Mix",
+      "it": "Spezie assortite"
+    },
+    {
+      "en": "Fresh Cream",
+      "it": "Panna da cucina"
+    },
+    {
+      "en": "Packaged Curry",
+      "it": "Curry precotto"
+    },
+    {
+      "en": "Coconut Milk",
+      "it": "Latte di cocco"
+    },
+    {
+      "en": "Instant Noodles",
+      "it": "Noodle precotti"
+    },
+    {
+      "en": "Precooked Burger",
+      "it": "Hamburger"
+    },
+    {
+      "en": "Gigantamix",
+      "it": "Gigaspezia"
+    },
+    {
+      "en": "Wishing Chip",
+      "it": "Desioframmento"
+    },
+    {
+      "en": "Catching Charm",
+      "it": "Catturamuleto"
+    },
+    {
+      "en": "Old Letter",
+      "it": "Vecchia lettera"
+    },
+    {
+      "en": "Band Autograph",
+      "it": "Autografo band"
+    },
+    {
+      "en": "Sonia\u2019s Book",
+      "it": "Libro di Sonia"
+    },
+    {
+      "en": "Rotom Catalog",
+      "it": "Catalogo Rotom"
     }
   ],
   "move": [
