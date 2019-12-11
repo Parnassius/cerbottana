@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+  <a href="/">&laquo; indietro</a>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Utente</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rs %}
+        <tr>
+          <td>{{ row.nome }}</td>
+          <td>{{ row.data|format_date }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

@@ -2,34 +2,21 @@ import asyncio
 import os
 import sys
 import time
-import traceback
+import threading
 
 import veekun
 
+from server import SERVER
+
 from connection import Connection
-from server import Server
 
 import utils
-
-def handle_exception(exc_type, exc_value, exc_traceback):
-  utils.database_request(CONNECTION,
-                         'logerror',
-                         {'err': ''.join(traceback.format_exception(exc_type,
-                                                                    exc_value,
-                                                                    exc_traceback))})
-
-  while True:
-    utils.restart_bot(CONNECTION)
-    time.sleep(15)
-
-sys.excepthook = handle_exception
 
 
 if __name__ == '__main__':
   veekun.csv_to_sqlite()
 
-  SERVER = Server()
-  SERVER.listen()
+  threading.Thread(target=SERVER.serve_forever).start()
 
   CONNECTION = Connection(('wss' if os.environ['SHOWDOWN_PORT'] == '443' else 'ws') +
                           '://' + os.environ['SHOWDOWN_HOST'] +
@@ -42,9 +29,6 @@ if __name__ == '__main__':
                           os.environ['ROOMS'].split(','),
                           os.environ['PRIVATE_ROOMS'].split(','),
                           os.environ['COMMAND_CHARACTER'],
-                          os.environ['DATABASE_API_URL'],
-                          os.environ['DATABASE_API_KEY'],
-                          os.environ['ADMINISTRATORS'].split(','),
-                          os.environ['HEROKU_TOKEN'])
+                          os.environ['ADMINISTRATORS'].split(','))
 
   asyncio.get_event_loop().run_until_complete(CONNECTION.open_connection())

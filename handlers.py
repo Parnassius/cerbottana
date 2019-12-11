@@ -5,6 +5,8 @@ import utils
 
 from room import Room
 
+import database
+
 async def add_user(self, room, user, skip_avatar_check=False):
   rank = user[0]
   username = user[1:].split('@')[0]
@@ -15,21 +17,15 @@ async def add_user(self, room, user, skip_avatar_check=False):
   if userid == utils.to_user_id(self.username):
     Room.get(room).roombot = (rank == '*')
 
-  body = utils.database_request(self, 'adduser', {'userid': userid,
-                                                  'nome': username})
-  if body:
-    if not skip_avatar_check and 'needs_avatar' in body:
-      await self.send_message('', '/cmd userdetails {}'.format(username))
+  db = database.open_db()
+  sql = "INSERT INTO utenti (userid, nome) VALUES (?, ?) "
+  sql += " ON CONFLICT (userid) DO UPDATE SET nome = excluded.nome"
+  db.execute(sql, [userid, username])
+  db.connection.commit()
+  db.connection.close()
 
-  if userid in self.administrators:
-    body = utils.database_request(self,
-                                  'getunapprovedprofiles',
-                                  {'user': userid})
-    if body:
-      if body['num'] > 0:
-        text = 'Ci sono {} profili in attesa di approvazione. '
-        text += 'Usa .token per approvarli o rifiutarli.'
-        await self.send_pm(username, text.format(body['num']))
+  if not skip_avatar_check:
+    await self.send_message('', '/cmd userdetails {}'.format(username))
 
 async def remove_user(self, room, user):
   Room.get(room).remove_user(utils.to_user_id(user))
@@ -54,10 +50,13 @@ async def parse_queryresponse(self, cmd, data):
     avatar = str(data['avatar'])
     if avatar in utils.AVATAR_IDS:
       avatar = utils.AVATAR_IDS[avatar]
-    utils.database_request(self,
-                           'setavatar',
-                           {'userid': userid, 'avatar': avatar})
 
+    db = database.open_db()
+    sql = "INSERT INTO utenti (userid, avatar) VALUES (?, ?) "
+    sql += " ON CONFLICT (userid) DO UPDATE SET avatar = excluded.avatar"
+    db.execute(sql, [userid, avatar])
+    db.connection.commit()
+    db.connection.close()
 
 
 async def init(self, room, roomtype):

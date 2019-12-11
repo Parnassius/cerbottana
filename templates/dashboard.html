@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+  {% if descrizioni_daapprovare %}
+    <form action="" method="POST">
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Utente</th>
+            <th>Descrizione attuale</th>
+            <th>Nuova descrizione</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in descrizioni_daapprovare %}
+            <tr>
+              <td>{{ row.nome }}</td>
+              <td>{{ row.descrizione }}</td>
+              <td>{{ row.descrizione_daapprovare }}</td>
+              <td style="width: 1px; white-space: nowrap">
+                <button name="approva" value="{{ row.id }},{{ row.descrizione_daapprovare }}">
+                  Approva
+                </button>
+                <button name="rifiuta" value="{{ row.id }},{{ row.descrizione_daapprovare }}">
+                  Rifiuta
+                </button>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </form>
+
+    <hr>
+  {% endif %}
+
+
+  {% if seasonal %}
+    <form action="seasonal" method="GET">
+
+      <button type="submit">
+        Inserisci risultati {{ seasonal.descrizione }} ANNO - Fase 1
+      </button>
+
+    </form>
+
+    <hr>
+  {% endif %}
+
+
+  <form action="profilo" method="GET">
+
+    <label for="userid">Cerca utente</label>
+    <input type="text" id="userid" name="userid" maxlength="25">
+
+    <button type="submit">Cerca</button>
+
+  </form>
+
+  <hr>
+
+
+  <form action="elitefour" method="GET">
+
+    <table class="table">
+      <tbody>
+        {% for row in elitefour_tiers %}
+          <tr>
+            <th>{{ row.descrizione }}</th>
+            <td>{{ row.utente }}</td>
+            <td style="width: 1px">
+              <button name="tier" value="{{ row.id }}">
+                Dettagli
+              </button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </form>
+
+  <hr>
+
+
+  <form action="eightball" method="GET">
+
+    <button type="submit">
+      Gestisci risposte .8ball
+    </button>
+
+  </form>
+{% endblock %}

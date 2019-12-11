@@ -5,17 +5,7 @@ import math
 
 from html import escape
 
-import requests
-
 from room import Room
-
-def restart_bot(self):
-  if self.heroku_token:
-    print('Restarting')
-    requests.delete('https://api.heroku.com/apps/cerbottana/dynos',
-                    headers={'Content-Type': 'application/json',
-                             'Accept': 'application/vnd.heroku+json; version=3',
-                             'Authorization': 'Bearer {}'.format(self.heroku_token)})
 
 
 def to_user_id(user):
@@ -47,19 +37,6 @@ def date_format(text):
 
 def html_escape(text):
   return escape(text).replace('\n', '<br>')
-
-def database_request(self, action, params):
-  req = requests.post(self.database_api_url,
-                      data={**params,
-                            'key': self.database_api_key,
-                            'action': action})
-  if not req.text:
-    return None
-  try:
-    return json.loads(req.text)
-  except NameError:
-    return None
-
 
 def is_voice(user):
   return user is None or user[0] in '+*%@★#&~'

@@ -4,11 +4,17 @@ import utils
 
 from room import Room
 
+import database
+
 def create_token(self, rank):
   token_id = os.urandom(16).hex()
-  utils.database_request(self, 'newtoken',
-                         {'token': token_id,
-                          'rank': rank})
+
+  db = database.open_db()
+  sql = "INSERT INTO tokens (token, rank, scadenza) VALUES (?, ?, DATETIME('now', '+1 minute'))"
+  db.execute(sql, [token_id, rank])
+  db.connection.commit()
+  db.connection.close()
+
   return token_id
 
 async def token(self, room, user, arg):
@@ -23,8 +29,8 @@ async def token(self, room, user, arg):
 
   token_id = create_token(self, rank)
 
-  await self.send_pm(user, '{url}dashboard.php?token={token}'.format(url=self.database_api_url,
-                                                                     token=token_id))
+  await self.send_pm(user, '{url}?token={token}'.format(url=os.environ['DOMAIN'],
+                                                        token=token_id))
 
 
 commands = {'dashboard': token,
