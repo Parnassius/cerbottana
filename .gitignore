@@ -1,1 +1,4 @@
 __pycache__/
+/database.sqlite
+/server.key
+/server.crt

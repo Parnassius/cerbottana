@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+  <a href="dashboard.php">&laquo; indietro</a>
+
+  {% if request.method == 'POST' %}
+    <div class="alert alert-green">Salvato</div>
+  {% endif %}
+
+  <form action="" method="POST">
+    <textarea name="risposte" rows="{{ rs|length + 1 }}?>" style="height: auto">
+      {%- for row in rs -%}
+        {{- row.risposta + '\n' -}}
+      {%- endfor -%}
+    </textarea>
+    <button type="submit">Salva</button>
+  </form>
+
+{% endblock %}

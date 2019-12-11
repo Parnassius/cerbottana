@@ -8,11 +8,8 @@ import handlers
 from plugins import plugins
 
 class Connection:
-  # pylint: disable=too-many-instance-attributes
   def __init__(self, url, username, password, avatar, statustext,
-               rooms, private_rooms, command_character,
-               database_api_url, database_api_key, administrators, heroku_token):
-    # pylint: disable=too-many-arguments
+               rooms, private_rooms, command_character, administrators):
     self.url = url
     self.username = username
     self.password = password
@@ -21,10 +18,7 @@ class Connection:
     self.rooms = rooms
     self.private_rooms = private_rooms
     self.command_character = command_character
-    self.database_api_url = database_api_url
-    self.database_api_key = database_api_key
     self.administrators = administrators
-    self.heroku_token = heroku_token
     self.handlers = {
         'init': handlers.init,
         'title': handlers.title,

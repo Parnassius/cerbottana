@@ -1,5 +1,7 @@
 import utils
 
+import database
+
 async def champion(self, room, user, arg):
   await elitefour(self, room, user, 'ou')
 
@@ -7,9 +9,21 @@ async def elitefour(self, room, user, arg):
   if room is not None and not utils.is_voice(user):
     return
 
-  body = utils.database_request(self,
-                                'getelitefour',
-                                {'tier': utils.to_user_id(arg)})
+  tier = utils.to_user_id(arg)
+
+  params = []
+
+  db = database.open_db()
+  sql = "SELECT t.descrizione AS tier, "
+  sql += " (SELECT (SELECT nome FROM utenti WHERE id = e.utente) FROM elitefour AS e WHERE tier = t.id ORDER BY data DESC LIMIT 1) AS utente "
+  sql += " FROM elitefour_tiers AS t "
+  if tier:
+    sql += " WHERE (',' || t.keywords || ',') LIKE ('%,' || ? || ',%') "
+    params.append(tier)
+  sql += " ORDER BY t.ordine"
+  body = db.execute(sql, params).fetchall()
+  db.connection.close()
+
   if body:
     if len(body) == 1:
       if room is not None and utils.is_voice(user):
@@ -67,10 +81,34 @@ async def profile(self, room, user, arg, from_elitefour=False):
 
   arg = utils.to_user_id(arg)
 
-  body = utils.database_request(self,
-                                'getprofile',
-                                {'userid': arg})
+  db = database.open_db()
+  sql = 'SELECT * FROM utenti WHERE userid = ?'
+  body = db.execute(sql, [arg]).fetchone()
+
   if body:
+    body = dict(body)
+
+    sql = "SELECT t.descrizione AS tier, t.immagine, t.sfondo, e.data, "
+    sql += " (SELECT data FROM elitefour "
+    sql += " WHERE tier = e.tier AND data >= e.data AND (CASE WHEN data = e.data THEN id > e.id ELSE TRUE END) "
+    sql += " ORDER BY data LIMIT 1) AS datafine "
+    sql += " FROM elitefour AS e "
+    sql += " LEFT JOIN elitefour_tiers AS t ON t.id = e.tier "
+    sql += " WHERE e.utente = ? ORDER BY e.data DESC LIMIT 10"
+    body['elitefour'] = db.execute(sql, [body['id']]).fetchall()
+
+    sql = "SELECT s.descrizione AS seasonal, v.anno, s.immagine, s.sfondo "
+    sql += " FROM seasonal_vincitori AS v "
+    sql += " LEFT JOIN seasonals AS s ON s.id = v.seasonal "
+    sql += " WHERE v.utente = ? ORDER BY v.anno DESC, s.ordine DESC"
+    body['seasonal'] = db.execute(sql, [body['id']]).fetchall()
+
+    sql = "SELECT immagine, sfondo, label "
+    sql += " FROM altre_badge "
+    sql += " WHERE utente = ? ORDER BY id"
+    body['altrebadge'] = db.execute(sql, [body['id']]).fetchall()
+
+
     html = '<div>'
     html += '  <div style="display: table-cell; width: 80px; vertical-align: top">'
     html += '    <img src="https://play.pokemonshowdown.com/sprites/{avatar_dir}/{avatar_name}.png"'
@@ -112,7 +150,7 @@ async def profile(self, room, user, arg, from_elitefour=False):
                              sfondo=utils.html_escape(i['sfondo']),
                              opacity='')
     title = '{tier}:{dal}{al}'
-    for i in body['elitefour'][:10]:
+    for i in body['elitefour']:
       opacity = ''
       if i['datafine'] is not None:
         opacity = '; opacity: .5'
@@ -139,6 +177,8 @@ async def profile(self, room, user, arg, from_elitefour=False):
                                         descrizione=descrizione),
                             simple_message)
 
+  db.connection.close()
+
 
 async def setprofile(self, room, user, arg):
   if room is not None and not utils.is_voice(user):
@@ -148,10 +188,12 @@ async def setprofile(self, room, user, arg):
     await self.send_reply(room, user, 'Errore: lunghezza massima 200 caratteri')
     return
 
-  utils.database_request(self,
-                         'setprofile',
-                         {'userid': utils.to_user_id(user),
-                          'descrizione': arg})
+  db = database.open_db()
+  sql = "INSERT INTO utenti (userid, descrizione_daapprovare) VALUES (?, ?) "
+  sql += " ON CONFLICT (userid) DO UPDATE SET descrizione_daapprovare = excluded.descrizione_daapprovare"
+  db.execute(sql, [utils.to_user_id(user), arg])
+  db.connection.commit()
+  db.connection.close()
 
   await self.send_reply(room, user, 'Salvato')
 

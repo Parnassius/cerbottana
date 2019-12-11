@@ -1,11 +1,26 @@
 import utils
 
+import database
+
 async def leaderboard(self, room, user, arg):
   # pylint: disable=too-many-locals,too-many-statements
   if room is not None and not utils.is_voice(user):
     return
 
-  body = utils.database_request(self, 'getleaderboard', {})
+  db = database.open_db()
+
+  sql = "SELECT s.descrizione, r.anno, SUM(r.punteggio) AS punteggio, u.nome AS utente "
+  sql += " FROM seasonals AS s "
+  sql += " JOIN seasonal_results AS r "
+  sql += " ON r.seasonal = s.id AND r.anno = STRFTIME('%Y', DATE()) "
+  sql += " LEFT JOIN utenti AS u "
+  sql += " ON u.id = r.utente "
+  sql += " WHERE (',' || s.mesi || ',') LIKE ('%,' || STRFTIME('%m', DATE()) || ',%') "
+  sql += " GROUP BY r.utente ORDER BY punteggio DESC, utente"
+  body = db.execute(sql).fetchall()
+
+  db.connection.close()
+
   if body:
     html = '<div style="max-height: 250px; overflow-y: auto">'
     html += '  <div style="text-align: center"><b><big>{titolo}</big></b></div>'
