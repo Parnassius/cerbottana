@@ -1,7 +1,5 @@
 import asyncio
 import os
-import sys
-import time
 import threading
 
 import veekun
@@ -9,8 +7,6 @@ import veekun
 from server import SERVER
 
 from connection import Connection
-
-import utils
 
 
 if __name__ == '__main__':
