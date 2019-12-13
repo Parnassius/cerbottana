@@ -23,7 +23,6 @@ class Room:
     self.users[userid] = {'rank': rank,
                           'username': username}
     if utils.is_driver(rank):
-      print('nomodsonline none ' + self.roomid)
       self.no_mods_online = None
 
   def remove_user(self, userid):
@@ -33,5 +32,4 @@ class Room:
         for rank in {self.users[i]['rank'] for i in self.users}:
           if utils.is_driver(rank):
             return
-          print('nomodsonline time ' + self.roomid)
           self.no_mods_online = time()
