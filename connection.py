@@ -1,11 +1,16 @@
 import asyncio
-
 import websockets
+from datetime import datetime
+from time import time
+import pytz
+import re
 
 import utils
 
 import handlers
 from plugins import plugins
+
+from room import Room
 
 class Connection:
   def __init__(self, url, username, password, avatar, statustext,
@@ -59,7 +64,20 @@ class Connection:
       room = message.split('\n')[0]
     roomid = utils.to_room_id(room)
 
+    if roomid in self.rooms:
+      await self.try_modchat(roomid)
+
     for msg in message.split('\n'):
+
+      if roomid in self.rooms:
+        match = re.match('^\(.+ set modchat to (.*)\)$', msg)
+        if not match:
+          match = re.match('^\|error\|Modchat is already set to (.*)\.$', msg)
+
+        if match and len(match.group(1)) == 1:
+          modchat_room = Room.get(roomid)
+          if modchat_room is not None:
+            modchat_room.modchat = utils.is_voice(match.group(1))
 
       if not msg or msg[0] != '|':
         continue
@@ -76,6 +94,18 @@ class Connection:
 
       if command in self.handlers:
         await self.handlers[command](self, roomid, *parts[2:])
+
+
+  async def try_modchat(self, roomid):
+    room = Room.get(roomid)
+    if room and not room.modchat and room.no_mods_online:
+      tz = pytz.timezone('Europe/Rome')
+      timestamp = datetime.now(tz)
+      minutes = timestamp.hour * 60 + timestamp.minute
+      # 00:30 - 08:00
+      if minutes >= 30 and minutes < 8 * 60 and room.no_mods_online + (15 * 60) < time():
+        await self.send_message(roomid, '/modchat +')
+
 
 
   async def send_rankhtmlbox(self, rank, room, message):
