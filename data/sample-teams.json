@@ -462,7 +462,30 @@
       ]
     }
   },
-  "gen7zu": {},
+  "gen7zu": {
+    "Pursuit Trap+Egg by Ho3nConfirm3d": {
+      "importable": "Exeggutor @ Choice Specs\nAbility: Chlorophyll\nEVs: 252 SpA / 4 SpD / 252 Spe\nModest Nature\nIVs: 0 Atk\n- Psychic\n- Leaf Storm\n- Giga Drain\n- Sleep Powder\n\nSilvally-Dark @ Dark Memory\nAbility: RKS System\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Multi-Attack\n- U-turn\n- Defog\n- Pursuit\n\nGolem @ Leftovers\nAbility: Sturdy\nEVs: 252 HP / 136 Atk / 56 Def / 48 Spe\nImpish Nature\n- Stealth Rock\n- Earthquake\n- Stone Edge\n- Sucker Punch\n\nMareanie @ Eviolite\nAbility: Regenerator\nEVs: 248 HP / 200 Def / 60 SpD\nImpish Nature\n- Scald\n- Knock Off\n- Recover\n- Toxic Spikes\n\nCombusken @ Firium Z\nAbility: Speed Boost\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Flare Blitz\n- Sky Uppercut\n- Protect\n- Swords Dance\n\nRotom-Fan @ Choice Scarf\nAbility: Levitate\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Air Slash\n- Volt Switch\n- Trick\n- Will-O-Wisp",
+      "icons": [
+        103,
+        773,
+        76,
+        747,
+        256,
+        864
+      ]
+    },
+    "Crustle Swanna Bulky Offense by sketchy ecchi": {
+      "importable": "Bronzor @ Eviolite\nAbility: Levitate\nEVs: 252 HP / 248 SpD / 8 Spe\nCalm Nature\nIVs: 0 Atk\n- Stealth Rock\n- Toxic\n- Psywave\n- Rest\n\nSilvally-Water\u2800 (Silvally-Dragon) @ Dragon Memory\nAbility: RKS System\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\n- Draco Meteor\n- Thunderbolt\n- U-turn\n- Defog\n\nCrustle @ Figy Berry\nAbility: Sturdy\nEVs: 252 Atk / 4 Def / 252 Spe\nAdamant Nature\nIVs: 30 HP\n- Shell Smash\n- Stone Edge\n- X-Scissor\n- Earthquake\n\nSwanna @ Flyinium Z\nAbility: Big Pecks\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Mirror Move\n- Brave Bird\n- Liquidation\n- Aqua Jet\n\nSimisage @ Life Orb\nAbility: Overgrow\nEVs: 4 Atk / 252 SpA / 252 Spe\nNaive Nature\nIVs: 29 HP\n- Leaf Storm\n- Superpower\n- Knock Off\n- Hidden Power [Ice]\n\nElectivire @ Choice Scarf\nAbility: Motor Drive\nEVs: 252 Atk / 4 SpA / 252 Spe\nNaive Nature\n- Wild Charge\n- Earthquake\n- Ice Punch\n- Volt Switch",
+      "icons": [
+        436,
+        773,
+        558,
+        581,
+        512,
+        466
+      ]
+    }
+  },
   "gen7lc": {
     "Webs Hyper Offense by Star": {
       "importable": "Surskit @ Focus Sash\nAbility: Swift Swim\nLevel: 5\nEVs: 36 HP / 20 Def / 196 SpA / 20 SpD / 236 Spe\nTimid Nature\nIVs: 0 Atk\n- Sticky Web\n- Scald\n- Icy Wind\n- Protect\n\nmister wax (Bunnelby) @ Life Orb\nAbility: Huge Power\nLevel: 5\nEVs: 228 Atk / 52 Def / 220 Spe\nJolly Nature\nIVs: 23 HP\n- Return\n- Iron Head\n- Quick Attack\n- Substitute\n\nPawniard @ Eviolite\nAbility: Defiant\nLevel: 5\nEVs: 156 Atk / 36 Def / 116 SpD / 196 Spe\nAdamant Nature\n- Stealth Rock\n- Knock Off\n- Iron Head\n- Sucker Punch\n\nGastly @ Life Orb\nAbility: Levitate\nLevel: 5\nEVs: 36 Def / 200 SpA / 200 Spe\nTimid Nature\nIVs: 0 Atk / 30 SpA / 30 Spe\n- Sludge Bomb\n- Psychic\n- Thunderbolt\n- Hidden Power [Fire]\n\nMagnemite @ Berry Juice\nAbility: Sturdy\nLevel: 5\nEVs: 36 Def / 236 SpA / 236 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Flash Cannon\n- Endure\n- Recycle\n\nAbra @ Life Orb\nAbility: Magic Guard\nLevel: 5\nEVs: 240 SpA / 200 Spe\nTimid Nature\n- Psychic\n- Dazzling Gleam\n- Hidden Power [Fire]\n- Substitute",
