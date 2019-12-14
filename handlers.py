@@ -11,8 +11,9 @@ async def add_user(self, room, user, skip_avatar_check=False):
   rank = user[0]
   username = user[1:].split('@')[0]
   userid = utils.to_user_id(username)
+  idle = user[-2:] == '@!'
 
-  Room.get(room).add_user(userid, rank, username)
+  Room.get(room).add_user(userid, rank, username, idle)
 
   if userid == utils.to_user_id(self.username):
     Room.get(room).roombot = (rank == '*')

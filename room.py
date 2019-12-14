@@ -19,17 +19,18 @@ class Room:
       return cls._instances[roomid]
     return False
 
-  def add_user(self, userid, rank, username):
+  def add_user(self, userid, rank, username, idle):
     self.users[userid] = {'rank': rank,
-                          'username': username}
-    if utils.is_driver(rank):
+                          'username': username,
+                          'idle': idle}
+    if not idle and utils.is_driver(rank):
       self.no_mods_online = None
 
   def remove_user(self, userid):
     user = self.users.pop(userid, None)
     if user is not None:
       if utils.is_driver(user['rank']):
-        for rank in {self.users[i]['rank'] for i in self.users}:
+        for rank in {self.users[i]['rank'] for i in self.users if not self.users[i]['idle']}:
           if utils.is_driver(rank):
             return
           self.no_mods_online = time()

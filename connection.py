@@ -112,7 +112,7 @@ class Connection:
       timestamp = datetime.now(tz)
       minutes = timestamp.hour * 60 + timestamp.minute
       # 00:30 - 08:00
-      if minutes >= 30 and minutes < 8 * 60 and room.no_mods_online + (15 * 60) < time():
+      if minutes >= 30 and minutes < 8 * 60 and room.no_mods_online + (1 * 60) < time():
         await self.send_message(roomid, '/modchat +')
 
 
