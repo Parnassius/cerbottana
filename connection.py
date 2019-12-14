@@ -1,4 +1,5 @@
 import asyncio
+import os
 import websockets
 from datetime import datetime
 from time import time
@@ -42,16 +43,24 @@ class Connection:
         'tournament': handlers.tournament}
     self.commands = plugins
     self.timestamp = 0
+    self.loop = None
     self.websocket = None
     self.tiers = None
 
-  async def open_connection(self):
+  def open_connection(self):
+    self.loop = asyncio.new_event_loop()
+    self.loop.run_until_complete(self.start_websocket())
+
+  async def start_websocket(self):
     async with websockets.connect(self.url, ping_interval=None) as websocket:
       self.websocket = websocket
-      while True:
-        message = await websocket.recv()
-        print('<< {}'.format(message))
-        asyncio.ensure_future(self.parse_message(message))
+      try:
+        while True:
+          message = await websocket.recv()
+          print('<< {}'.format(message))
+          asyncio.ensure_future(self.parse_message(message))
+      except:
+        return
 
   async def parse_message(self, message):
     if not message:
@@ -140,3 +149,17 @@ class Connection:
   async def send(self, message):
     print('>> {}'.format(message))
     await self.websocket.send(message)
+
+
+CONNECTION = Connection(('wss' if os.environ['SHOWDOWN_PORT'] == '443' else 'ws') +
+                          '://' + os.environ['SHOWDOWN_HOST'] +
+                          ':' + os.environ['SHOWDOWN_PORT'] +
+                          '/showdown/websocket',
+                          os.environ['USERNAME'],
+                          os.environ['PASSWORD'],
+                          os.environ['AVATAR'],
+                          os.environ['STATUSTEXT'],
+                          os.environ['ROOMS'].split(','),
+                          os.environ['PRIVATE_ROOMS'].split(','),
+                          os.environ['COMMAND_CHARACTER'],
+                          os.environ['ADMINISTRATORS'].split(','))

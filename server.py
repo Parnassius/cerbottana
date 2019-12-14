@@ -1,13 +1,13 @@
+from gevent import monkey
+monkey.patch_all()
+
 from flask import Flask, render_template, session, abort, request, g
 from gevent.pywsgi import WSGIServer
-from gevent import monkey
 import os
 from datetime import date
 
 import database
 import utils
-
-monkey.patch_all()
 
 app = Flask(__name__)
 
