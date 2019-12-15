@@ -41,4 +41,4 @@ class Room:
     for rank in {self.users[i]['rank'] for i in self.users if not self.users[i]['idle']}:
       if utils.is_driver(rank):
         return
-      self.no_mods_online = time()
+    self.no_mods_online = time()
