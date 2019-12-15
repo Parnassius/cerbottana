@@ -13,6 +13,8 @@ from plugins import plugins
 
 from room import Room
 
+from server import SERVER
+
 class Connection:
   def __init__(self, url, username, password, avatar, statustext,
                rooms, private_rooms, command_character, administrators):
@@ -52,15 +54,15 @@ class Connection:
     self.loop.run_until_complete(self.start_websocket())
 
   async def start_websocket(self):
-    async with websockets.connect(self.url, ping_interval=None) as websocket:
-      self.websocket = websocket
-      try:
+    try:
+      async with websockets.connect(self.url, ping_interval=None) as websocket:
+        self.websocket = websocket
         while True:
           message = await websocket.recv()
           print('<< {}'.format(message))
           asyncio.ensure_future(self.parse_message(message))
-      except:
-        return
+    except (websockets.exceptions.ConnectionClosed, OSError):
+      SERVER.stop()
 
   async def parse_message(self, message):
     if not message:
