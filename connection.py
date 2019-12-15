@@ -83,10 +83,10 @@ class Connection:
         if not match:
           match = re.match('^\|error\|Modchat is already set to (.*)\.$', msg)
 
-        if match and len(match.group(1)) == 1:
+        if match:
           modchat_room = Room.get(roomid)
           if modchat_room is not None:
-            modchat_room.modchat = utils.is_voice(match.group(1))
+            modchat_room.modchat = len(match.group(1)) == 1 and utils.is_voice(match.group(1))
 
       if not msg or msg[0] != '|':
         continue
@@ -112,7 +112,7 @@ class Connection:
       timestamp = datetime.now(tz)
       minutes = timestamp.hour * 60 + timestamp.minute
       # 00:30 - 08:00
-      if minutes >= 30 and minutes < 8 * 60 and room.no_mods_online + (1 * 60) < time():
+      if minutes >= 30 and minutes < 18 * 60 and room.no_mods_online + (7 * 60) < time():
         await self.send_message(roomid, '/modchat +')
 
 

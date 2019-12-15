@@ -23,14 +23,22 @@ class Room:
     self.users[userid] = {'rank': rank,
                           'username': username,
                           'idle': idle}
-    if not idle and utils.is_driver(rank):
-      self.no_mods_online = None
+    if utils.is_driver(rank):
+      if not idle:
+        self.no_mods_online = None
+      else:
+        self.check_no_mods_online()
 
   def remove_user(self, userid):
     user = self.users.pop(userid, None)
     if user is not None:
       if utils.is_driver(user['rank']):
-        for rank in {self.users[i]['rank'] for i in self.users if not self.users[i]['idle']}:
-          if utils.is_driver(rank):
-            return
-          self.no_mods_online = time()
+        self.check_no_mods_online()
+
+  def check_no_mods_online(self):
+    if self.no_mods_online:
+      return
+    for rank in {self.users[i]['rank'] for i in self.users if not self.users[i]['idle']}:
+      if utils.is_driver(rank):
+        return
+      self.no_mods_online = time()
