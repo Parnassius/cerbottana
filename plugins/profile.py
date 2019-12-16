@@ -202,13 +202,6 @@ async def setprofile(self, room, user, arg):
   for room in self.rooms:
     await self.send_rankhtmlbox('%', room, message)
 
-async def updateavatar(self, room, user, arg):
-  if utils.to_user_id(user) not in self.administrators:
-    return
-
-  await self.send_message('', '/cmd userdetails {}'.format(utils.to_user_id(arg)))
-  await self.send_reply(room, user, 'Fatto')
-
 
 commands = {'campione': champion,
             'champion': champion,
@@ -218,5 +211,4 @@ commands = {'campione': champion,
             'super4': elitefour,
             'superquattro': elitefour,
             'profile': profile,
-            'setprofile': setprofile,
-            'updateavatar': updateavatar}
+            'setprofile': setprofile}
