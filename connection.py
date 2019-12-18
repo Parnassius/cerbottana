@@ -47,6 +47,7 @@ class Connection:
     self.timestamp = 0
     self.loop = None
     self.websocket = None
+    self.connection_start = None
     self.tiers = None
 
   def open_connection(self):
@@ -57,6 +58,7 @@ class Connection:
     try:
       async with websockets.connect(self.url, ping_interval=None) as websocket:
         self.websocket = websocket
+        self.connection_start = time()
         while True:
           message = await websocket.recv()
           print('<< {}'.format(message))
