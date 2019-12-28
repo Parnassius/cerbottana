@@ -1,10 +1,11 @@
 import asyncio
 import os
-import websockets
 from datetime import datetime
 from time import time
-import pytz
 import re
+
+import pytz
+import websockets
 
 import utils
 
@@ -83,9 +84,9 @@ class Connection:
     for msg in message.split('\n'):
 
       if roomid in self.rooms:
-        match = re.match('^\(.+ set modchat to (.*)\)$', msg)
+        match = re.match(r'^\(.+ set modchat to (.*)\)$', msg)
         if not match:
-          match = re.match('^\|error\|Modchat is already set to (.*)\.$', msg)
+          match = re.match(r'^\|error\|Modchat is already set to (.*)\.$', msg)
 
         if match:
           modchat_room = Room.get(roomid)
@@ -116,7 +117,7 @@ class Connection:
       timestamp = datetime.now(tz)
       minutes = timestamp.hour * 60 + timestamp.minute
       # 00:30 - 08:00
-      if minutes >= 30 and minutes < 8 * 60 and room.no_mods_online + (7 * 60) < time():
+      if 30 <= minutes < 8 * 60 and room.no_mods_online + (7 * 60) < time():
         await self.send_message(roomid, '/modchat +')
 
 
@@ -156,14 +157,14 @@ class Connection:
 
 
 CONNECTION = Connection(('wss' if os.environ['SHOWDOWN_PORT'] == '443' else 'ws') +
-                          '://' + os.environ['SHOWDOWN_HOST'] +
-                          ':' + os.environ['SHOWDOWN_PORT'] +
-                          '/showdown/websocket',
-                          os.environ['USERNAME'],
-                          os.environ['PASSWORD'],
-                          os.environ['AVATAR'],
-                          os.environ['STATUSTEXT'],
-                          os.environ['ROOMS'].split(','),
-                          os.environ['PRIVATE_ROOMS'].split(','),
-                          os.environ['COMMAND_CHARACTER'],
-                          os.environ['ADMINISTRATORS'].split(','))
+                        '://' + os.environ['SHOWDOWN_HOST'] +
+                        ':' + os.environ['SHOWDOWN_PORT'] +
+                        '/showdown/websocket',
+                        os.environ['USERNAME'],
+                        os.environ['PASSWORD'],
+                        os.environ['AVATAR'],
+                        os.environ['STATUSTEXT'],
+                        os.environ['ROOMS'].split(','),
+                        os.environ['PRIVATE_ROOMS'].split(','),
+                        os.environ['COMMAND_CHARACTER'],
+                        os.environ['ADMINISTRATORS'].split(','))

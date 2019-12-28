@@ -1,25 +1,27 @@
-from gevent import monkey
-monkey.patch_all()
-
-from flask import Flask, render_template, session, abort, request, g
-from gevent.pywsgi import WSGIServer
 import os
 from datetime import date
+
+from flask import Flask, render_template, session, abort, request, g
+from gevent import monkey
+from gevent.pywsgi import WSGIServer
 
 import database
 import utils
 
-app = Flask(__name__)
 
-app.secret_key = os.environ['FLASK_SECRET_KEY']
+monkey.patch_all()
+
+APP = Flask(__name__)
+
+APP.secret_key = os.environ['FLASK_SECRET_KEY']
 
 
-@app.template_filter('format_date')
+@APP.template_filter('format_date')
 def format_date(value):
   return date.fromisoformat(value).strftime('%d/%m/%Y')
 
 
-@app.before_request
+@APP.before_request
 def before():
   g.db = database.open_db()
 
@@ -36,7 +38,7 @@ def before():
   if 'user' not in session:
     abort(401)
 
-@app.after_request
+@APP.after_request
 def after(res):
   db = g.pop('db', None)
 
@@ -45,7 +47,7 @@ def after(res):
   return res
 
 
-@app.route('/', methods=('GET', 'POST'))
+@APP.route('/', methods=('GET', 'POST'))
 def dashboard():
 
   if request.method == 'POST':
@@ -80,7 +82,7 @@ def dashboard():
                          seasonal=seasonal)
 
 
-@app.route('/profilo', methods=('GET', 'POST'))
+@APP.route('/profilo', methods=('GET', 'POST'))
 def profilo():
 
   userid = utils.to_user_id(request.args.get('userid', ''))
@@ -123,7 +125,7 @@ def profilo():
                          today=date.today())
 
 
-@app.route('/elitefour')
+@APP.route('/elitefour')
 def elitefour():
 
   tier = request.args.get('tier')
@@ -139,7 +141,7 @@ def elitefour():
                          rs=rs)
 
 
-@app.route('/eightball', methods=('GET', 'POST'))
+@APP.route('/eightball', methods=('GET', 'POST'))
 def eightball():
 
   if request.method == 'POST':
@@ -161,4 +163,4 @@ def eightball():
                          rs=rs)
 
 
-SERVER = WSGIServer(('0.0.0.0', int(os.environ['PORT'])), app, keyfile='server.key', certfile='server.crt')
+SERVER = WSGIServer(('0.0.0.0', int(os.environ['PORT'])), APP, keyfile='server.key', certfile='server.crt')

@@ -158,5 +158,5 @@ async def queryresponse(self, room, querytype, data):
 
 async def tournament(self, room, command, *params):
   if command == 'create':
-    format = params[0]
-    await self.commands['sampleteams'](self, room, None, format)
+    tour_format = params[0]
+    await self.commands['sampleteams'](self, room, None, tour_format)
