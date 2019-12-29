@@ -13,11 +13,11 @@ async def sample_teams(self, room, user, arg):
              'dou': 'doublesou',
              'bh': 'balancedhackmons'}
 
-  if format in aliases:
-    format = aliases[format]
-
   if format[:3] != 'gen':
     format = 'gen8' + format
+
+  if format[4:] in aliases:
+    format = format[:4] + aliases[format[4:]]
 
   if format in utils.SAMPLE_TEAMS:
     picon = '<span class="picon" style="background: transparent url(&quot;//play.pokemonshowdown.com/sprites/pokemonicons-sheet.png?g8&quot;) no-repeat scroll -{left}px -{top}px"></span>'
