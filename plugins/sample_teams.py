@@ -17,10 +17,10 @@ async def sample_teams(self, room, user, arg):
     format = aliases[format]
 
   if format[:3] != 'gen':
-    format = 'gen7' + format
+    format = 'gen8' + format
 
   if format in utils.SAMPLE_TEAMS:
-    picon = '<span class="picon" style="background: transparent url(&quot;//play.pokemonshowdown.com/sprites/pokemonicons-sheet.png?a6&quot;) no-repeat scroll -{left}px -{top}px"></span>'
+    picon = '<span class="picon" style="background: transparent url(&quot;//play.pokemonshowdown.com/sprites/pokemonicons-sheet.png?g8&quot;) no-repeat scroll -{left}px -{top}px"></span>'
 
     html = '<details>'
     html += '  <summary><b><big>Sample teams</big></b></summary>'
