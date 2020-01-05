@@ -597,4 +597,5 @@ CUSTOM_COLORS = {'theimmortal': 'taco',
                  'robyn': 'jediruwu',
                  'birdy': 'cmstrall',
                  'pirateprincess': '45mbh',
+                 'tempering': 'tempho',
                  'cathy': ''}
