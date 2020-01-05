@@ -34,6 +34,52 @@
       ]
     }
   },
+  "gen8ubers": {
+    "Borderless | Provided by Minority": {
+      "importable": "Zacian-Crowned @ Rusted Sword\nAbility: Intrepid Sword\nEVs: 252 Atk / 4 Def / 252 Spe\nAdamant Nature\n- Substitute\n- Fire Fang\n- Psychic Fangs\n- Play Rough\n\nHippowdon @ Leftovers\nAbility: Sand Stream\nEVs: 248 HP / 252 Def / 8 SpD\nImpish Nature\n- Stealth Rock\n- Whirlwind\n- Slack Off\n- Earthquake\n\nExcadrill @ Life Orb\nAbility: Sand Rush\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Rapid Spin\n- Rock Slide\n- Iron Head\n- Earthquake\n\nEternatus @ Life Orb\nAbility: Pressure\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Agility\n- Recover\n- Flamethrower\n- Dynamax Cannon\n\nGyarados @ Leftovers\nAbility: Moxie\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Dragon Dance\n- Substitute\n- Earthquake\n- Waterfall\n\nDitto @ Choice Scarf\nAbility: Imposter\nEVs: 248 HP / 8 Atk / 252 Def\nRelaxed Nature\nIVs: 0 Spe\n- Transform",
+      "icons": [
+        1094,
+        450,
+        530,
+        890,
+        130,
+        132
+      ]
+    },
+    "Choice Scarf Darmanitan + Corviknight Sand Bulky Offense | Provided by absdaddy": {
+      "importable": "Corviknight (M) @ Rocky Helmet\nAbility: Pressure\nEVs: 248 HP / 252 Def / 8 SpD\nImpish Nature\n- Iron Defense\n- Body Press\n- Roost\n- U-turn\n\nDarmanitan-Galar (M) @ Choice Scarf\nAbility: Gorilla Tactics\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Flare Blitz\n- Icicle Crash\n- Earthquake\n- U-turn\n\nZacian-Crowned @ Rusted Sword\nAbility: Intrepid Sword\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Behemoth Blade\n- Play Rough\n- Wild Charge\n- Psychic Fangs\n\nExcadrill (M) @ Life Orb\nAbility: Sand Rush\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Swords Dance\n- Earthquake\n- Rock Slide\n- Rapid Spin\n\nTyranitar (M) @ Leftovers\nAbility: Sand Stream\nEVs: 252 HP / 220 SpD / 36 Spe\nAdamant Nature\n- Crunch\n- Stealth Rock\n- Thunder Wave\n- Earthquake\n\nEternatus @ Haban Berry\nAbility: Pressure\nEVs: 4 Def / 252 SpA / 252 Spe\nModest Nature\nIVs: 0 Atk\n- Recover\n- Flamethrower\n- Dynamax Cannon\n- Sludge Wave",
+      "icons": [
+        823,
+        1076,
+        1094,
+        530,
+        248,
+        890
+      ]
+    },
+    "Trick Room Hatterene Bulky Offense | Provided by Cynara": {
+      "importable": "Ditto @ Choice Scarf\nAbility: Imposter\nEVs: 248 HP / 8 Atk / 252 Def\nRelaxed Nature\nIVs: 0 Spe\n- Transform\n\nQuagsire @ Shed Shell\nAbility: Unaware\nEVs: 248 HP / 8 Atk / 252 Def\nRelaxed Nature\n- Earthquake\n- Scald\n- Toxic\n- Recover\n\nTyranitar @ Dread Plate\nAbility: Sand Stream\nEVs: 248 HP / 8 SpA / 252 SpD\nSassy Nature\n- Stealth Rock\n- Payback\n- Earthquake\n- Fire Blast\n\nCorviknight @ Rocky Helmet\nAbility: Pressure\nEVs: 248 HP / 8 Atk / 252 Def\nImpish Nature\n- Body Press\n- U-turn\n- Roost\n- Defog\n\nHatterene-Gmax (F) @ Life Orb\nAbility: Magic Bounce\nEVs: 252 HP / 252 SpA / 4 SpD\nQuiet Nature\nIVs: 0 Atk / 0 Spe\n- Trick Room\n- Dazzling Gleam\n- Psychic\n- Mystical Fire\n\nZacian-Crowned @ Rusted Sword\nAbility: Intrepid Sword\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Behemoth Blade\n- Play Rough\n- Psychic Fangs\n- Fire Fang",
+      "icons": [
+        132,
+        195,
+        248,
+        823,
+        1175,
+        1094
+      ]
+    },
+    "Gothitelle + U-Turn Corviknight | Provided by the Viability Rankings Council": {
+      "importable": "Quagsire @ Shed Shell\nAbility: Unaware\nEVs: 248 HP / 8 Atk / 252 Def\nRelaxed Nature\n- Scald\n- Earthquake\n- Recover\n- Toxic\n\nTyranitar @ Leftovers\nAbility: Sand Stream\nEVs: 252 HP / 8 Atk / 212 SpD / 36 Spe\nCareful Nature\n- Stealth Rock\n- Crunch\n- Earthquake\n- Thunder Wave\n\nGothitelle @ Leftovers\nAbility: Shadow Tag\nEVs: 248 HP / 8 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk\n- Stored Power\n- Cosmic Power\n- Rest\n- Nasty Plot\n\nCorviknight @ Rocky Helmet\nAbility: Pressure\nEVs: 248 HP / 8 Atk / 252 Def\nImpish Nature\n- U-turn\n- Body Press\n- Roost\n- Defog\n\nZacian-Crowned @ Rusted Sword\nAbility: Intrepid Sword\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Play Rough\n- Psychic Fangs\n- Fire Fang\n- Protect\n\nEternatus @ Life Orb\nAbility: Pressure\nEVs: 200 HP / 252 SpA / 56 Spe\nModest Nature\nIVs: 0 Atk\n- Agility\n- Dynamax Cannon\n- Flamethrower\n- Recover",
+      "icons": [
+        195,
+        248,
+        576,
+        823,
+        1094,
+        890
+      ]
+    }
+  },
   "gen7anythinggoes": {
     "Click on the sprites to access the importable. Teams may have edits from the Anything Goes Resources Council. Screens HO by pichus": {
       "importable": "Rayquaza-Mega @ Life Orb\nAbility: Delta Stream\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Dragon Ascent\n- V-create\n- Extreme Speed\n- Dragon Dance\n\nDeoxys-Speed @ Light Clay\nAbility: Pressure\nEVs: 208 HP / 84 Def / 216 Spe\nTimid Nature\nIVs: 0 Atk\n- Reflect\n- Light Screen\n- Stealth Rock\n- Taunt\n\nNaganadel @ Dragonium Z\nAbility: Beast Boost\nShiny: Yes\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Nasty Plot\n- Draco Meteor\n- Sludge Wave\n- Fire Blast\n\nXerneas @ Power Herb\nAbility: Fairy Aura\nEVs: 96 Def / 252 SpA / 160 Spe\nModest Nature\nIVs: 0 Atk\n- Geomancy\n- Moonblast\n- Psyshock\n- Focus Blast\n\nArceus @ Chople Berry\nAbility: Multitype\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Swords Dance\n- Facade\n- Extreme Speed\n- Shadow Claw\n\nNecrozma-Dusk-Mane @ Weakness Policy\nAbility: Prism Armor\nEVs: 248 Atk / 8 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Swords Dance\n- Rock Polish\n- Sunsteel Strike\n- Earthquake",
