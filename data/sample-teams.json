@@ -522,6 +522,28 @@
     }
   },
   "gen7zu": {
+    "Standard Stall by DurzaOffTopic": {
+      "importable": "Avalugg @ Leftovers\nAbility: Sturdy\nEVs: 252 HP / 252 Def / 4 SpD\nImpish Nature\n- Rapid Spin\n- Recover\n- Avalanche\n- Toxic\n\nLickilicky @ Leftovers\nAbility: Oblivious\nEVs: 248 HP / 8 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk\n- Wish\n- Protect\n- Toxic\n- Heal Bell\n\nDusclops @ Eviolite\nAbility: Pressure\nEVs: 252 HP / 164 Def / 92 SpD\nBold Nature\n- Toxic\n- Seismic Toss\n- Rest\n- Sleep Talk\n\nPyukumuku @ Leftovers / Poisonium Z\nAbility: Unaware\nEVs: 248 HP / 252 Def / 8 SpD\nBold Nature\nIVs: 0 Atk\n- Recover\n- Block\n- Toxic\n- Rest\n\nHippopotas (M) @ Eviolite\nAbility: Sand Stream\nEVs: 252 HP / 252 Def / 4 SpD\nImpish Nature\n- Stealth Rock\n- Earthquake\n- Toxic\n- Slack Off\n\nAltaria @ Firium Z / Leftovers\nAbility: Natural Cure\nEVs: 252 HP / 160 Def / 96 Spe\nBold Nature\nIVs: 0 Atk\n- Defog\n- Roost\n- Toxic\n- Flamethrower / Dragon Pulse",
+      "icons": [
+        713,
+        463,
+        356,
+        771,
+        449,
+        334
+      ]
+    },
+    "Volt-Turn HO by DurzaOffTopic": {
+      "importable": "Ninjask @ Groundium Z\nAbility: Speed Boost\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Swords Dance\n- Dig\n- Leech Life\n- U-turn\n\nMr. Mime @ Choice Specs\nAbility: Soundproof\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Psyshock\n- Dazzling Gleam\n- Focus Blast\n- Healing Wish\n\nKomala @ Assault Vest\nAbility: Comatose\nEVs: 160 HP / 252 Atk / 96 Spe\nAdamant Nature\n- Return\n- Knock Off\n- Rapid Spin\n- U-turn\n\nSilvally-Dragon @ Dragon Memory\nAbility: RKS System\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\n- Draco Meteor\n- Defog\n- U-turn\n- Flamethrower\n\nGolem @ Leftovers\nAbility: Sturdy\nEVs: 252 HP / 216 Atk / 40 Spe\nAdamant Nature\n- Stealth Rock\n- Smack Down\n- Earthquake\n- Sucker Punch\n\nElectivire @ Choice Scarf\nAbility: Motor Drive\nEVs: 252 Atk / 4 SpA / 252 Spe\nHasty Nature\n- Volt Switch\n- Wild Charge\n- Earthquake\n- Ice Punch",
+      "icons": [
+        291,
+        122,
+        775,
+        773,
+        76,
+        466
+      ]
+    },
     "Pursuit Trap+Egg by Ho3nConfirm3d": {
       "importable": "Exeggutor @ Choice Specs\nAbility: Chlorophyll\nEVs: 252 SpA / 4 SpD / 252 Spe\nModest Nature\nIVs: 0 Atk\n- Psychic\n- Leaf Storm\n- Giga Drain\n- Sleep Powder\n\nSilvally-Dark @ Dark Memory\nAbility: RKS System\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Multi-Attack\n- U-turn\n- Defog\n- Pursuit\n\nGolem @ Leftovers\nAbility: Sturdy\nEVs: 252 HP / 136 Atk / 56 Def / 48 Spe\nImpish Nature\n- Stealth Rock\n- Earthquake\n- Stone Edge\n- Sucker Punch\n\nMareanie @ Eviolite\nAbility: Regenerator\nEVs: 248 HP / 200 Def / 60 SpD\nImpish Nature\n- Scald\n- Knock Off\n- Recover\n- Toxic Spikes\n\nCombusken @ Firium Z\nAbility: Speed Boost\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Flare Blitz\n- Sky Uppercut\n- Protect\n- Swords Dance\n\nRotom-Fan @ Choice Scarf\nAbility: Levitate\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Air Slash\n- Volt Switch\n- Trick\n- Will-O-Wisp",
       "icons": [
