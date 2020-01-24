@@ -1,36 +1,36 @@
 {
   "gen8ou": {
-    "Substitute Hydreigon + Clefable Balance by Jordy": {
-      "importable": "Hydreigon @ Leftovers\nAbility: Levitate\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Dark Pulse\n- Flash Cannon\n- Substitute\n- Nasty Plot\n\nClefable @ Life Orb\nAbility: Magic Guard\nEVs: 252 SpA / 4 SpD / 252 Spe\nModest Nature\nIVs: 0 Atk\n- Moonblast\n- Flamethrower\n- Thunderbolt\n- Moonlight\n\nSeismitoad @ Leftovers\nAbility: Water Absorb\nEVs: 252 HP / 232 Def / 24 Spe\nRelaxed Nature\n- Scald\n- Earthquake\n- Stealth Rock\n- Toxic\n\nDitto @ Choice Scarf\nAbility: Imposter\nEVs: 252 HP / 4 Atk / 252 Def\nRelaxed Nature\nIVs: 0 Spe\n- Transform\n\nCorviknight @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 236 SpD / 20 Spe\nCareful Nature\n- Brave Bird\n- Taunt\n- Bulk Up\n- Roost\n\nMandibuzz (F) @ Heavy-Duty Boots\nAbility: Overcoat\nEVs: 252 HP / 32 Atk / 224 SpD\nCareful Nature\nIVs: 30 Spe\n- Knock Off\n- Roost\n- Defog\n- U-turn",
+    "by Finchinator": {
+      "importable": "Conkeldurr @ Flame Orb\nAbility: Guts\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Drain Punch\n- Close Combat\n- Earthquake\n- Mach Punch\n\nSeismitoad @ Leftovers\nAbility: Water Absorb\nEVs: 248 HP / 216 Def / 44 SpD\nRelaxed Nature\n- Stealth Rock\n- Scald\n- Earthquake\n- Toxic\n\nCorviknight @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 4 Def / 252 SpD\nCareful Nature\nIVs: 30 Spe\n- Iron Head\n- Roost\n- U-turn\n- Defog\n\nHydreigon @ Life Orb\nAbility: Levitate\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Nasty Plot\n- Draco Meteor\n- Flash Cannon\n- Dark Pulse\n\nRotom-Heat @ Choice Scarf\nAbility: Levitate\nEVs: 88 HP / 200 SpA / 4 SpD / 216 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Overheat\n- Trick\n- Thunderbolt\n\nClefable @ Leftovers\nAbility: Magic Guard\nEVs: 252 HP / 152 Def / 104 SpD\nBold Nature\nIVs: 0 Atk\n- Wish\n- Moonblast\n- Thunder Wave\n- Protect",
       "icons": [
+        534,
+        537,
+        823,
         635,
-        36,
-        537,
-        132,
-        823,
-        630
-      ]
-    },
-    "Choice Band Galarian Darmanitan Bulky Offense by xtra$hine": {
-      "importable": "Darmanitan-Galar @ Choice Band\nAbility: Gorilla Tactics\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Icicle Crash\n- U-turn\n- Flare Blitz\n- Earthquake\n\nCorviknight @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 220 SpD / 36 Spe\nCareful Nature\n- Taunt\n- Roost\n- U-turn\n- Defog\n\nDitto @ Choice Scarf\nAbility: Imposter\nEVs: 252 HP / 4 Atk / 252 Def\nRelaxed Nature\nIVs: 0 Atk / 0 Spe\n- Transform\n\nSeismitoad @ Leftovers\nAbility: Water Absorb\nEVs: 252 HP / 252 Def / 4 Spe\nImpish Nature\n- Earthquake\n- Toxic\n- Protect\n- Stealth Rock\n\nDragapult @ Choice Specs\nAbility: Infiltrator\nEVs: 4 Def / 252 SpA / 252 Spe\nModest Nature\nIVs: 0 Atk\n- Shadow Ball\n- Thunderbolt\n- Draco Meteor\n- Flamethrower\n\nClefable @ Life Orb\nAbility: Magic Guard\nEVs: 32 HP / 252 SpA / 224 Spe\nModest Nature\nIVs: 0 Atk\n- Moonblast\n- Thunderbolt\n- Flamethrower\n- Moonlight",
-      "icons": [
-        1076,
-        823,
-        132,
-        537,
-        887,
+        950,
         36
       ]
     },
-    "Screens Hyper Offense by lyd": {
-      "importable": "Grimmsnarl (M) @ Light Clay\nAbility: Prankster\nEVs: 92 HP / 252 Atk / 164 Spe\nAdamant Nature\n- Spirit Break\n- Reflect\n- Light Screen\n- Taunt\n\nExcadrill @ Focus Sash\nAbility: Mold Breaker\nEVs: 4 HP / 252 Atk / 252 Spe\nNaive Nature\n- Steel Beam\n- Earthquake\n- Stealth Rock\n- Rapid Spin\n\nAegislash @ Air Balloon\nAbility: Stance Change\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Shadow Claw\n- Close Combat\n- Swords Dance\n- Autotomize\n\nKommo-o @ Throat Spray\nAbility: Bulletproof\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Flamethrower\n- Clanging Scales\n- Flash Cannon\n- Clangorous Soul\n\nHawlucha @ White Herb\nAbility: Unburden\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Close Combat\n- Brave Bird\n- Dig\n- Swords Dance\n\nGyarados @ Heavy-Duty Boots\nAbility: Moxie\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Waterfall\n- Bounce\n- Substitute\n- Dragon Dance",
+    "by Jordy": {
+      "importable": "Dragapult @ Choice Specs\nAbility: Infiltrator\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\n- Shadow Ball\n- Draco Meteor\n- Flamethrower\n- U-turn\n\nDugtrio @ Choice Band\nAbility: Arena Trap\nEVs: 232 Atk / 24 SpD / 252 Spe\nJolly Nature\n- Earthquake\n- Stone Edge\n- Sucker Punch\n- Reversal\n\nCorviknight @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 4 Def / 252 SpD\nCareful Nature\nIVs: 29 Spe\n- Brave Bird\n- Roost\n- Defog\n- U-turn\n\nClefable @ Leftovers\nAbility: Magic Guard\nEVs: 252 HP / 4 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk\n- Moonblast\n- Wish\n- Protect\n- Stealth Rock\n\nToxapex @ Black Sludge\nAbility: Regenerator\nEVs: 252 HP / 252 Def / 4 SpD\nBold Nature\nIVs: 0 Atk\n- Scald\n- Recover\n- Baneful Bunker\n- Haze\n\nAegislash @ Choice Band\nAbility: Stance Change\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Iron Head\n- Shadow Claw\n- Close Combat\n- Shadow Sneak",
       "icons": [
-        861,
-        530,
-        681,
-        784,
-        701,
-        130
+        887,
+        51,
+        823,
+        36,
+        748,
+        681
+      ]
+    },
+    "by robjr": {
+      "importable": "Gengar @ Choice Specs\nAbility: Cursed Body\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Shadow Ball\n- Sludge Wave\n- Thunderbolt\n- Trick\n\nHydreigon @ Choice Scarf\nAbility: Levitate\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\n- Draco Meteor\n- Dark Pulse\n- Flash Cannon\n- U-turn\n\nSeismitoad @ Leftovers\nAbility: Water Absorb\nEVs: 252 HP / 232 Def / 24 Spe\nRelaxed Nature\n- Stealth Rock\n- Scald\n- Earthquake\n- Toxic\n\nClefable @ Life Orb\nAbility: Magic Guard\nEVs: 252 HP / 120 Def / 136 Spe\nBold Nature\nIVs: 0 Atk\n- Calm Mind\n- Moonblast\n- Thunder\n- Moonlight\n\nMandibuzz (F) @ Heavy-Duty Boots\nAbility: Overcoat\nEVs: 176 HP / 236 SpD / 96 Spe\nCareful Nature\n- Knock Off\n- Roost\n- U-turn\n- Defog\n\nRotom-Heat @ Heavy-Duty Boots\nAbility: Levitate\nEVs: 228 HP / 64 SpA / 216 Spe\nTimid Nature\nIVs: 0 Atk\n- Will-O-Wisp\n- Nasty Plot\n- Overheat\n- Volt Switch",
+      "icons": [
+        94,
+        635,
+        537,
+        36,
+        630,
+        950
       ]
     }
   },
@@ -77,6 +77,17 @@
         823,
         1094,
         890
+      ]
+    },
+    "Agility Eternatus Balance | Provided by Terracotta": {
+      "importable": "Quagsire @ Shed Shell\nAbility: Unaware\nEVs: 252 HP / 4 Atk / 252 Def\nImpish Nature\n- Stockpile\n- Scald\n- Earthquake\n- Recover\n\nReuniclus @ Assault Vest\nAbility: Regenerator\nEVs: 248 HP / 176 SpA / 84 SpD\nModest Nature\nIVs: 0 Atk\n- Psychic\n- Shadow Ball\n- Grass Knot\n- Thunder\n\nClefable @ Life Orb\nAbility: Magic Guard\nEVs: 196 HP / 252 SpA / 60 Spe\nModest Nature\nIVs: 0 Atk\n- Stealth Rock\n- Moonblast\n- Fire Blast\n- Moonlight\n\nRotom-Heat @ Choice Scarf\nAbility: Levitate\nEVs: 116 HP / 168 SpA / 224 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Overheat\n- Will-O-Wisp\n- Trick\n\nEternatus @ Life Orb\nAbility: Pressure\nEVs: 164 HP / 252 SpA / 92 Spe\nModest Nature\nIVs: 0 Atk\n- Agility\n- Flamethrower\n- Dynamax Cannon\n- Recover\n\nMandibuzz @ Heavy-Duty Boots\nAbility: Overcoat\nEVs: 252 HP / 56 Def / 200 SpD\nCareful Nature\n- Knock Off\n- Roost\n- Defog\n- U-turn",
+      "icons": [
+        195,
+        579,
+        36,
+        950,
+        890,
+        630
       ]
     }
   },
