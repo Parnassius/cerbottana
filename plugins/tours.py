@@ -62,10 +62,6 @@ async def randpoketour(self, room, user, arg):
       allow_megas = False
       name += ' (no mega)'
       continue
-    if utils.to_user_id(item) in ['1v1', '1vs1']:
-      rules.append('[Gen 8] 1v1')
-      name += ' (1v1)'
-      continue
     unbans.append(item.strip() + '-base')
 
   if allow_megas:
