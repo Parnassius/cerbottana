@@ -46,6 +46,7 @@ class Connection:
         'tournament': handlers.tournament}
     self.commands = plugins
     self.timestamp = 0
+    self.lastmessage = 0
     self.loop = None
     self.websocket = None
     self.connection_start = None
@@ -153,6 +154,10 @@ class Connection:
 
   async def send(self, message):
     print('>> {}'.format(message))
+    now = time()
+    if now - self.lastmessage < 0.1:
+      await asyncio.sleep(0.1)
+    self.lastmessage = now
     await self.websocket.send(message)
 
 
