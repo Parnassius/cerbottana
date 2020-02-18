@@ -4,11 +4,11 @@ from veekun import CUR
 
 
 async def location(self, room, user, arg):
-  if room is not None and not utils.is_voice(user):
-    return
+    if room is not None and not utils.is_voice(user):
+        return
 
-  arg = utils.to_user_id(utils.remove_accents(arg.lower()))
-  sql = '''SELECT b.version_id, MIN(b.min_level) AS min_level, MAX(b.max_level) AS max_level,
+    arg = utils.to_user_id(utils.remove_accents(arg.lower()))
+    sql = """SELECT b.version_id, MIN(b.min_level) AS min_level, MAX(b.max_level) AS max_level,
            b.version, b.location_area_id, b.location_area, b.location_name, b.location_subtitle,
            SUM(CASE WHEN b.encounter_condition IS NULL THEN b.rarity ELSE 0 END) AS rarity,
            b.encounter_method_id, b.encounter_method,
@@ -42,60 +42,70 @@ async def location(self, room, user, arg):
                        GROUP BY encounters.id) AS a
                  GROUP BY version_id, location_area_id, encounter_method_id, encounter_condition) AS b
            GROUP BY version_id, location_area_id, encounter_method_id
-           ORDER BY version_id, location_area_id, encounter_method_id'''
+           ORDER BY version_id, location_area_id, encounter_method_id"""
 
-  html = ''
+    html = ""
 
-  current_version_id = 0
-  for row in CUR.execute(sql, [arg]):
-    if current_version_id != row['version_id']:
-      if current_version_id != 0:
-        html += '</tbody></table>'
-        html += '</details>'
-      html += '<details><summary><b><big>' + utils.html_escape(row['version']) + '</big></b></summary>'
-      html += '<table><tbody>'
-      html += '<tr>'
-      html += '  <th>Location</th>'
-      html += '  <th>Method</th>'
-      html += '  <th>Level</th>'
-      html += '  <th colspan="2">Rarity</th>'
-      html += '</tr>'
-      current_version_id = row['version_id']
+    current_version_id = 0
+    for row in CUR.execute(sql, [arg]):
+        if current_version_id != row["version_id"]:
+            if current_version_id != 0:
+                html += "</tbody></table>"
+                html += "</details>"
+            html += (
+                "<details><summary><b><big>"
+                + utils.html_escape(row["version"])
+                + "</big></b></summary>"
+            )
+            html += "<table><tbody>"
+            html += "<tr>"
+            html += "  <th>Location</th>"
+            html += "  <th>Method</th>"
+            html += "  <th>Level</th>"
+            html += '  <th colspan="2">Rarity</th>'
+            html += "</tr>"
+            current_version_id = row["version_id"]
 
-    location_name = row['location_name']
-    if row['location_subtitle']:
-      location_name += ' - ' + row['location_subtitle']
-    if row['location_area']:
-      location_name += ' (' + row['location_area'] + ')'
-    levels = 'L' + str(row['min_level'])
-    if row['min_level'] < row['max_level']:
-      levels += '-' + str(row['max_level'])
+        location_name = row["location_name"]
+        if row["location_subtitle"]:
+            location_name += " - " + row["location_subtitle"]
+        if row["location_area"]:
+            location_name += " (" + row["location_area"] + ")"
+        levels = "L" + str(row["min_level"])
+        if row["min_level"] < row["max_level"]:
+            levels += "-" + str(row["max_level"])
 
-    html += '<tr>'
-    html += '  <td>' + utils.html_escape(location_name) + '</td>'
-    html += '  <td>' + utils.html_escape(row['encounter_method']) + '</td>'
-    html += '  <td>' + utils.html_escape(levels) + '</td>'
-    html += '  <td' + (' colspan="2"' if not len(row['conditions']) else '') + '>' + utils.html_escape(str(row['rarity']) + '%') + '</td>'
-    if len(row['conditions']):
-      html += '  <td>' + utils.html_escape(row['conditions']) + '</td>'
-    html += '</tr>'
+        html += "<tr>"
+        html += "  <td>" + utils.html_escape(location_name) + "</td>"
+        html += "  <td>" + utils.html_escape(row["encounter_method"]) + "</td>"
+        html += "  <td>" + utils.html_escape(levels) + "</td>"
+        html += (
+            "  <td"
+            + (' colspan="2"' if not len(row["conditions"]) else "")
+            + ">"
+            + utils.html_escape(str(row["rarity"]) + "%")
+            + "</td>"
+        )
+        if len(row["conditions"]):
+            html += "  <td>" + utils.html_escape(row["conditions"]) + "</td>"
+        html += "</tr>"
 
-  if current_version_id != 0:
-    html += '</tbody></table>'
-    html += '</details>'
+    if current_version_id != 0:
+        html += "</tbody></table>"
+        html += "</details>"
 
-  if not html:
-    return await self.send_reply(room, user, 'Nessun dato')
+    if not html:
+        return await self.send_reply(room, user, "Nessun dato")
 
-  await self.send_htmlbox(room, user, '<div class="ladder">' + html + '</div>')
+    await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
 
 
 async def encounter(self, room, user, arg):
-  if room is not None and not utils.is_voice(user):
-    return
+    if room is not None and not utils.is_voice(user):
+        return
 
-  arg = utils.to_user_id(utils.remove_accents(arg.lower()))
-  sql = '''SELECT b.version_id, MIN(b.min_level) AS min_level, MAX(b.max_level) AS max_level,
+    arg = utils.to_user_id(utils.remove_accents(arg.lower()))
+    sql = """SELECT b.version_id, MIN(b.min_level) AS min_level, MAX(b.max_level) AS max_level,
            b.version, b.pokemon_id, b.pokemon, b.location_area_id, b.location_area, b.location_name, b.location_subtitle,
            SUM(CASE WHEN b.encounter_condition IS NULL THEN b.rarity ELSE 0 END) AS rarity,
            b.encounter_method_id, b.encounter_method,
@@ -133,55 +143,67 @@ async def encounter(self, room, user, arg):
                        GROUP BY encounters.id) AS a
                  GROUP BY version_id, location_area_id, pokemon_id, encounter_method_id, encounter_condition) AS b
            GROUP BY version_id, location_area_id, pokemon_id, encounter_method_id
-           ORDER BY version_id, location_area_id, encounter_method_id, rarity DESC, pokemon_id'''
+           ORDER BY version_id, location_area_id, encounter_method_id, rarity DESC, pokemon_id"""
 
-  html = ''
+    html = ""
 
-  current_version_id = 0
-  current_location_area = None
-  for row in CUR.execute(sql, [arg]):
-    if current_version_id != row['version_id']:
-      if current_version_id != 0:
-        html += '</tbody></table>'
-        html += '</details>'
-      html += '<details><summary><b><big>' + utils.html_escape(row['version']) + '</big></b></summary>'
-      html += '<table><tbody>'
-      current_version_id = row['version_id']
-      current_location_area = None
+    current_version_id = 0
+    current_location_area = None
+    for row in CUR.execute(sql, [arg]):
+        if current_version_id != row["version_id"]:
+            if current_version_id != 0:
+                html += "</tbody></table>"
+                html += "</details>"
+            html += (
+                "<details><summary><b><big>"
+                + utils.html_escape(row["version"])
+                + "</big></b></summary>"
+            )
+            html += "<table><tbody>"
+            current_version_id = row["version_id"]
+            current_location_area = None
 
-    if current_location_area != row['location_area']:
-      html += '<tr>'
-      html += '  <th>' + utils.html_escape(row['location_area']) + '</th>'
-      html += '  <th>Method</th>'
-      html += '  <th>Level</th>'
-      html += '  <th colspan="2">Rarity</th>'
-      html += '</tr>'
-      current_location_area = row['location_area']
+        if current_location_area != row["location_area"]:
+            html += "<tr>"
+            html += "  <th>" + utils.html_escape(row["location_area"]) + "</th>"
+            html += "  <th>Method</th>"
+            html += "  <th>Level</th>"
+            html += '  <th colspan="2">Rarity</th>'
+            html += "</tr>"
+            current_location_area = row["location_area"]
 
-    levels = 'L' + str(row['min_level'])
-    if row['min_level'] < row['max_level']:
-      levels += '-' + str(row['max_level'])
+        levels = "L" + str(row["min_level"])
+        if row["min_level"] < row["max_level"]:
+            levels += "-" + str(row["max_level"])
 
-    html += '<tr>'
-    html += '  <td>' + utils.html_escape(row['pokemon']) + '</td>'
-    html += '  <td>' + utils.html_escape(row['encounter_method']) + '</td>'
-    html += '  <td>' + utils.html_escape(levels) + '</td>'
-    html += '  <td' + (' colspan="2"' if not len(row['conditions']) else '') + '>' + utils.html_escape(str(row['rarity']) + '%') + '</td>'
-    if len(row['conditions']):
-      html += '  <td>' + utils.html_escape(row['conditions']) + '</td>'
-    html += '</tr>'
+        html += "<tr>"
+        html += "  <td>" + utils.html_escape(row["pokemon"]) + "</td>"
+        html += "  <td>" + utils.html_escape(row["encounter_method"]) + "</td>"
+        html += "  <td>" + utils.html_escape(levels) + "</td>"
+        html += (
+            "  <td"
+            + (' colspan="2"' if not len(row["conditions"]) else "")
+            + ">"
+            + utils.html_escape(str(row["rarity"]) + "%")
+            + "</td>"
+        )
+        if len(row["conditions"]):
+            html += "  <td>" + utils.html_escape(row["conditions"]) + "</td>"
+        html += "</tr>"
 
-  if current_version_id != 0:
-    html += '</tbody></table>'
-    html += '</details>'
+    if current_version_id != 0:
+        html += "</tbody></table>"
+        html += "</details>"
 
-  if not html:
-    return await self.send_reply(room, user, 'Nessun dato')
+    if not html:
+        return await self.send_reply(room, user, "Nessun dato")
 
-  await self.send_htmlbox(room, user, '<div class="ladder">' + html + '</div>')
+    await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
 
 
-commands = {'encounter': encounter,
-            'encounters': encounter,
-            'location': location,
-            'locations': location}
+commands = {
+    "encounter": encounter,
+    "encounters": encounter,
+    "location": location,
+    "locations": location,
+}

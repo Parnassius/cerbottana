@@ -4,25 +4,25 @@ from veekun import CUR
 
 
 async def learnset(self, room, user, arg):
-  if room is not None and not utils.is_voice(user):
-    return
+    if room is not None and not utils.is_voice(user):
+        return
 
-  arg = arg.split(',')
-  if len(arg) < 2:
-    return
+    arg = arg.split(",")
+    if len(arg) < 2:
+        return
 
-  pokemon = utils.to_user_id(utils.remove_accents(arg[0].lower()))
-  version_group = utils.to_user_id(utils.remove_accents(arg[1].lower()))
+    pokemon = utils.to_user_id(utils.remove_accents(arg[0].lower()))
+    version_group = utils.to_user_id(utils.remove_accents(arg[1].lower()))
 
-  sql = 'SELECT id FROM version_groups WHERE identifier = ?'
-  version_group_id = CUR.execute(sql, [version_group]).fetchone()
-  if version_group_id is None:
-    sql = 'SELECT version_group_id FROM versions WHERE identifier = ?'
+    sql = "SELECT id FROM version_groups WHERE identifier = ?"
     version_group_id = CUR.execute(sql, [version_group]).fetchone()
     if version_group_id is None:
-      return
-  version_group_id = version_group_id[0]
-  sql = '''SELECT pokemon_moves.version_group_id, pokemon_moves.pokemon_move_method_id,
+        sql = "SELECT version_group_id FROM versions WHERE identifier = ?"
+        version_group_id = CUR.execute(sql, [version_group]).fetchone()
+        if version_group_id is None:
+            return
+    version_group_id = version_group_id[0]
+    sql = """SELECT pokemon_moves.version_group_id, pokemon_moves.pokemon_move_method_id,
            (SELECT GROUP_CONCAT(IFNULL(version_names.name, ''), '/')
             FROM versions
             LEFT JOIN version_names ON version_names.version_id = versions.id AND version_names.local_language_id = 9
@@ -42,49 +42,57 @@ async def learnset(self, room, user, arg):
            LEFT JOIN machines ON machines.move_id = moves.id AND pokemon_move_methods.id = 4 AND machines.version_group_id = version_groups.id
            LEFT JOIN item_names ON item_names.item_id = machines.item_id AND item_names.local_language_id = 9
            WHERE pokemon_species.identifier = ? AND version_groups.id = ?
-           ORDER BY pokemon_moves.pokemon_move_method_id, pokemon_moves.level, machines.machine_number, move_names.name'''
+           ORDER BY pokemon_moves.pokemon_move_method_id, pokemon_moves.level, machines.machine_number, move_names.name"""
 
-  html = ''
+    html = ""
 
-  print(version_group_id)
+    print(version_group_id)
 
-  current_move_method_id = 0
-  for row in CUR.execute(sql, [pokemon, version_group_id]):
-    if current_move_method_id != row['pokemon_move_method_id']:
-      if current_move_method_id != 0:
-        html += '</tbody></table>'
-        html += '</details>'
-      html += '<details><summary><b><big>' + utils.html_escape(row['method_name']) + '</big></b></summary>'
-      html += '<table style="margin: 5px 0"><tbody>'
-      html += '<tr>'
-      html += '  <th>Move</th>'
-      if row['pokemon_move_method_id'] == 1: # level-up
-        html += '  <th>Level</th>'
-      elif row['pokemon_move_method_id'] == 2: # egg
-        pass
-      elif row['pokemon_move_method_id'] == 4: # machine
-        html += '  <th>Machine</th>'
-      html += '</tr>'
-      current_move_method_id = row['pokemon_move_method_id']
+    current_move_method_id = 0
+    for row in CUR.execute(sql, [pokemon, version_group_id]):
+        if current_move_method_id != row["pokemon_move_method_id"]:
+            if current_move_method_id != 0:
+                html += "</tbody></table>"
+                html += "</details>"
+            html += (
+                "<details><summary><b><big>"
+                + utils.html_escape(row["method_name"])
+                + "</big></b></summary>"
+            )
+            html += '<table style="margin: 5px 0"><tbody>'
+            html += "<tr>"
+            html += "  <th>Move</th>"
+            if row["pokemon_move_method_id"] == 1:  # level-up
+                html += "  <th>Level</th>"
+            elif row["pokemon_move_method_id"] == 2:  # egg
+                pass
+            elif row["pokemon_move_method_id"] == 4:  # machine
+                html += "  <th>Machine</th>"
+            html += "</tr>"
+            current_move_method_id = row["pokemon_move_method_id"]
 
-    html += '<tr>'
-    html += '  <td>' + utils.html_escape(row['move_name']) + '</td>'
-    if current_move_method_id == 1: # level-up
-      html += '  <td style="text-align: right">' + utils.html_escape(str(row['level'])) + '</td>'
-    elif current_move_method_id == 2: # egg
-      pass
-    elif current_move_method_id == 4: # machine
-      html += '  <td>' + utils.html_escape(row['machine']) + '</td>'
-    html += '</tr>'
+        html += "<tr>"
+        html += "  <td>" + utils.html_escape(row["move_name"]) + "</td>"
+        if current_move_method_id == 1:  # level-up
+            html += (
+                '  <td style="text-align: right">'
+                + utils.html_escape(str(row["level"]))
+                + "</td>"
+            )
+        elif current_move_method_id == 2:  # egg
+            pass
+        elif current_move_method_id == 4:  # machine
+            html += "  <td>" + utils.html_escape(row["machine"]) + "</td>"
+        html += "</tr>"
 
-  if current_move_method_id != 0:
-    html += '</tbody></table>'
-    html += '</details>'
+    if current_move_method_id != 0:
+        html += "</tbody></table>"
+        html += "</details>"
 
-  if not html:
-    return await self.send_reply(room, user, 'Nessun dato')
+    if not html:
+        return await self.send_reply(room, user, "Nessun dato")
 
-  await self.send_htmlbox(room, user, '<div class="ladder">' + html + '</div>')
+    await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
 
 
-commands = {'learnset': learnset}
+commands = {"learnset": learnset}
