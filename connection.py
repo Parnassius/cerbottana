@@ -111,11 +111,9 @@ class Connection:
                     )
 
                 if match:
-                    modchat_room = Room.get(roomid)
-                    if modchat_room is not None:
-                        modchat_room.modchat = len(
-                            match.group(1)
-                        ) == 1 and utils.is_voice(match.group(1))
+                    Room.get(roomid).modchat = len(
+                        match.group(1)
+                    ) == 1 and utils.is_voice(match.group(1))
 
             if not msg or msg[0] != "|":
                 continue

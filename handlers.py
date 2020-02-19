@@ -8,16 +8,18 @@ from room import Room
 import database
 
 
-async def add_user(self, room, user, skip_avatar_check=False):
+async def add_user(self, roomid, user, skip_avatar_check=False):
     rank = user[0]
     username = user[1:].split("@")[0]
     userid = utils.to_user_id(username)
     idle = user[-2:] == "@!"
 
-    Room.get(room).add_user(userid, rank, username, idle)
+    room = Room.get(roomid)
+
+    room.add_user(userid, rank, username, idle)
 
     if userid == utils.to_user_id(self.username):
-        Room.get(room).roombot = rank == "*"
+        room.roombot = rank == "*"
 
     db = database.open_db()
     sql = "INSERT INTO utenti (userid, nome) VALUES (?, ?) "
@@ -26,15 +28,15 @@ async def add_user(self, room, user, skip_avatar_check=False):
     db.connection.commit()
     db.connection.close()
 
-    if not skip_avatar_check:
+    if not skip_avatar_check or rank != " ":
         await self.send_message("", "/cmd userdetails {}".format(username))
 
 
-async def remove_user(self, room, user):
-    Room.get(room).remove_user(utils.to_user_id(user))
+async def remove_user(self, roomid, user):
+    Room.get(roomid).remove_user(utils.to_user_id(user))
 
 
-async def parse_chat_message(self, room, user, message):
+async def parse_chat_message(self, roomid, user, message):
     if message[: len(self.command_character)] == self.command_character:
         command = message.split(" ")[0][len(self.command_character) :].lower()
 
@@ -42,11 +44,11 @@ async def parse_chat_message(self, room, user, message):
             message = message[
                 (len(self.command_character) + len(command) + 1) :
             ].strip()
-            await self.commands[command](self, room, user, message)
-        elif room is None:
+            await self.commands[command](self, roomid, user, message)
+        elif roomid is None:
             await self.send_pm(user, "Invalid command")
 
-    elif room is None:
+    elif roomid is None:
         await self.send_pm(user, "I'm a bot")
 
 
@@ -65,54 +67,58 @@ async def parse_queryresponse(self, cmd, data):
         db.connection.commit()
         db.connection.close()
 
-
-async def init(self, room, roomtype):
-    if roomtype == "chat":
-        if not Room.get(room):
-            Room(room)
-
-
-async def title(self, room, roomtitle):
-    Room.get(room).title = roomtitle
+        global_rank = data["group"]
+        for roomid in data["rooms"]:
+            room = Room.get(utils.to_room_id(roomid))
+            room_rank = roomid[0] if utils.is_voice(roomid[0]) else " "
+            room.set_global_and_room_rank(userid, global_rank, room_rank)
 
 
-async def users(self, room, userlist):
+async def init(self, roomid, roomtype):
+    pass
+
+
+async def title(self, roomid, roomtitle):
+    Room.get(roomid).title = roomtitle
+
+
+async def users(self, roomid, userlist):
     for user in userlist.split(",")[1:]:
-        await add_user(self, room, user, True)
+        await add_user(self, roomid, user, True)
 
 
-async def join(self, room, user):
-    await add_user(self, room, user)
+async def join(self, roomid, user):
+    await add_user(self, roomid, user)
 
 
-async def leave(self, room, user):
-    await remove_user(self, room, user)
+async def leave(self, roomid, user):
+    await remove_user(self, roomid, user)
 
 
-async def name(self, room, user, oldid):
-    await remove_user(self, room, oldid)
-    await add_user(self, room, user)
+async def name(self, roomid, user, oldid):
+    await remove_user(self, roomid, oldid)
+    await add_user(self, roomid, user)
 
 
-async def chat(self, room, user, *message):
+async def chat(self, roomid, user, *message):
     if utils.to_user_id(user) == utils.to_user_id(self.username):
         return
-    await parse_chat_message(self, room, user, "|".join(message).strip())
+    await parse_chat_message(self, roomid, user, "|".join(message).strip())
 
 
-async def server_timestamp(self, room, timestamp):
+async def server_timestamp(self, roomid, timestamp):
     self.timestamp = int(timestamp)
 
 
-async def timestampchat(self, room, timestamp, user, *message):
+async def timestampchat(self, roomid, timestamp, user, *message):
     if utils.to_user_id(user) == utils.to_user_id(self.username):
         return
     if int(timestamp) <= self.timestamp:
         return
-    await parse_chat_message(self, room, user, "|".join(message).strip())
+    await parse_chat_message(self, roomid, user, "|".join(message).strip())
 
 
-async def pm(self, room, sender, receiver, *message):
+async def pm(self, roomid, sender, receiver, *message):
     if utils.to_user_id(sender) == utils.to_user_id(self.username):
         return
     if utils.to_user_id(receiver) != utils.to_user_id(self.username):
@@ -120,7 +126,7 @@ async def pm(self, room, sender, receiver, *message):
     await parse_chat_message(self, None, sender, "|".join(message).strip())
 
 
-async def challstr(self, room, *challstring):
+async def challstr(self, roomid, *challstring):
     challstring = "|".join(challstring)
 
     payload = {
@@ -136,7 +142,7 @@ async def challstr(self, room, *challstring):
         await self.send_message("", "/trn {},0,{}".format(self.username, assertion))
 
 
-async def updateuser(self, room, user, named, avatar, settings):
+async def updateuser(self, roomid, user, named, avatar, settings):
     # pylint: disable=too-many-arguments,unused-argument
     username = user.split("@")[0]
     if utils.to_user_id(username) != utils.to_user_id(self.username):
@@ -154,7 +160,7 @@ async def updateuser(self, room, user, named, avatar, settings):
         await self.send_message("", "/join {}".format(private_room))
 
 
-async def formats(self, room, *formatslist):
+async def formats(self, roomid, *formatslist):
     tiers = []
     section = None
     section_next = False
@@ -171,11 +177,11 @@ async def formats(self, room, *formatslist):
     self.tiers = tiers
 
 
-async def queryresponse(self, room, querytype, data):
+async def queryresponse(self, roomid, querytype, data):
     await parse_queryresponse(self, querytype, data)
 
 
-async def tournament(self, room, command, *params):
+async def tournament(self, roomid, command, *params):
     if command == "create":
         tour_format = params[0]
-        await self.commands["sampleteams"](self, room, None, tour_format)
+        await self.commands["sampleteams"](self, roomid, None, tour_format)

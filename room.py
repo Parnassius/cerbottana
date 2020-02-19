@@ -16,12 +16,18 @@ class Room:
 
     @classmethod
     def get(cls, roomid):
-        if roomid in cls._instances:
-            return cls._instances[roomid]
-        return False
+        if roomid not in cls._instances:
+            Room(roomid)
+        return cls._instances[roomid]
 
     def add_user(self, userid, rank, username, idle):
-        self.users[userid] = {"rank": rank, "username": username, "idle": idle}
+        self.users[userid] = {
+            "rank": rank,
+            "global_rank": None,
+            "room_rank": None,
+            "username": username,
+            "idle": idle,
+        }
         if utils.is_driver(rank):
             if not idle:
                 self.no_mods_online = None
@@ -34,12 +40,18 @@ class Room:
             if utils.is_driver(user["rank"]):
                 self.check_no_mods_online()
 
+    def set_global_and_room_rank(self, userid, global_rank, room_rank):
+        if userid in self.users:
+            self.users[userid]["global_rank"] = global_rank
+            self.users[userid]["room_rank"] = room_rank
+
     def check_no_mods_online(self):
         if self.no_mods_online:
             return
-        for rank in {
-            self.users[i]["rank"] for i in self.users if not self.users[i]["idle"]
-        }:
+        for user in self.users:
+            if self.users[user]["idle"]:
+                continue
+            rank = self.users[user]["room_rank"] or self.users[user]["rank"]
             if utils.is_driver(rank):
                 return
         self.no_mods_online = time()
