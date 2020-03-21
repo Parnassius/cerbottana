@@ -605,5 +605,7 @@ CUSTOM_COLORS = {
     "birdy": "cmstrall",
     "pirateprincess": "45mbh",
     "tempering": "tempho",
+    "chazm": "chazmicsupanova",
+    "arsenal": "558ru",
     "cathy": "",
 }
