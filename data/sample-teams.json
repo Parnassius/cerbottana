@@ -476,6 +476,17 @@
     }
   },
   "gen7pu": {
+    "Simisear Balance - LordST": {
+      "importable": "Eelektross @ Assault Vest\nAbility: Levitate\nEVs: 248 HP / 252 SpA / 8 SpD\nQuiet Nature\nIVs: 28 Spe\n- Discharge\n- Giga Drain\n- U-turn\n- Flamethrower\n\nMudsdale @ Figy Berry\nAbility: Stamina\nEVs: 248 HP / 176 Def / 84 SpD\nImpish Nature\n- Earthquake\n- Stealth Rock\n- Counter\n- Toxic\n\nMusharna @ Psychium Z\nAbility: Synchronize\nEVs: 252 HP / 4 Def / 252 SpA\nModest Nature\nIVs: 0 Atk\n- Future Sight\n- Dazzling Gleam\n- Thunder Wave\n- Moonlight\n\nCryogonal @ Leftovers\nAbility: Levitate\nEVs: 248 HP / 8 SpA / 52 SpD / 200 Spe\nTimid Nature\nIVs: 0 Atk\n- Rapid Spin\n- Recover\n- Freeze-Dry\n- Hidden Power [Fighting]\n\nSimisear @ Choice Specs\nAbility: Blaze\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Fire Blast\n- Focus Blast\n- Grass Knot\n- Flamethrower\n\nGurdurr @ Eviolite\nAbility: Guts\nEVs: 248 HP / 16 Atk / 200 Def / 44 SpD\nAdamant Nature\n- Bulk Up\n- Mach Punch\n- Drain Punch\n- Knock Off",
+      "icons": [
+        604,
+        750,
+        518,
+        615,
+        514,
+        533
+      ]
+    },
     "Carracosta Offense - Squash17 ^_^": {
       "importable": "Carracosta @ Life Orb\nAbility: Solid Rock\nEVs: 252 Atk / 4 Def / 252 Spe\nAdamant Nature\n- Shell Smash\n- Stone Edge\n- Aqua Jet\n- Liquidation\n\nVictreebel @ Air Balloon\nAbility: Chlorophyll\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Strength Sap\n- Leaf Storm\n- Sludge Bomb\n- Hidden Power [Fire]\n\nMudsdale @ Figy Berry\nAbility: Stamina\nEVs: 252 HP / 128 Atk / 128 Def\nAdamant Nature\n- Stealth Rock\n- Earthquake\n- Rock Slide\n- Toxic\n\nDodrio @ Choice Scarf\nAbility: Early Bird\nHappiness: 0\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Brave Bird\n- Pursuit\n- Frustration\n- Jump Kick\n\nHitmonchan @ Assault Vest\nAbility: Iron Fist\nEVs: 240 HP / 72 Atk / 196 Spe\nJolly Nature\n- Rapid Spin\n- Mach Punch\n- Drain Punch\n- Ice Punch\n\nRotom-Frost @ Icium Z\nAbility: Levitate\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Will-O-Wisp\n- Pain Split\n- Blizzard",
       "icons": [
@@ -498,26 +509,15 @@
         1029
       ]
     },
-    "Semistall - tlenit1": {
-      "importable": "Torterra @ Grassium Z\nAbility: Shell Armor\nEVs: 252 HP / 4 Atk / 252 Def\nImpish Nature\n- Stealth Rock\n- Synthesis\n- Wood Hammer\n- Stone Edge\n\nPoliwrath @ Rocky Helmet\nAbility: Water Absorb\nEVs: 252 HP / 252 Def / 4 SpD\nRelaxed Nature\n- Circle Throw\n- Scald\n- Rest\n- Sleep Talk\n\nSpiritomb @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 252 Def / 4 SpD\nBold Nature\nIVs: 0 Atk\n- Calm Mind\n- Rest\n- Sleep Talk\n- Dark Pulse\n\nSilvally-Dragon @ Dragon Memory\nAbility: RKS System\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Defog\n- Draco Meteor\n- Flamethrower\n- Parting Shot\n\nArticuno @ Leftovers\nAbility: Pressure\nEVs: 248 HP / 204 SpD / 56 Spe\nCalm Nature\nIVs: 0 Atk\n- Roost\n- Heal Bell\n- Freeze-Dry\n- Defog\n\nAudino @ Leftovers\nAbility: Regenerator\nEVs: 252 HP / 4 Def / 252 SpD\nCareful Nature\n- Knock Off\n- Toxic\n- Protect\n- Wish",
+    "Torterra Balance - Kt\u00fctverde": {
+      "importable": "Torterra @ Lum Berry\nAbility: Overgrow\nEVs: 248 HP / 108 SpD / 152 Spe\nCareful Nature\n- Stealth Rock\n- Wood Hammer\n- Earthquake\n- Synthesis\n\nJellicent @ Colbur Berry\nAbility: Cursed Body\nEVs: 252 HP / 212 Def / 44 Spe\nBold Nature\nIVs: 0 Atk\n- Will-O-Wisp\n- Hex\n- Taunt\n- Recover\n\nPrimeape @ Choice Band\nAbility: Defiant\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Close Combat\n- U-turn\n- Ice Punch\n- Seed Bomb\n\nAltaria @ Dragonium Z\nAbility: Natural Cure\nEVs: 172 HP / 84 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Draco Meteor\n- Fire Blast\n- Defog\n- Roost\n\nSandslash-Alola @ Choice Scarf\nAbility: Slush Rush\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Icicle Crash\n- Earthquake\n- Iron Head\n- Rapid Spin\n\nEelektross @ Assault Vest\nAbility: Levitate\nEVs: 228 HP / 80 Atk / 200 SpD\nBrave Nature\n- U-turn\n- Knock Off\n- Drain Punch\n- Discharge",
       "icons": [
         389,
-        62,
-        442,
-        773,
-        144,
-        531
-      ]
-    },
-    "Simisear Balance - LordST": {
-      "importable": "Eelektross @ Assault Vest\nAbility: Levitate\nEVs: 248 HP / 252 SpA / 8 SpD\nQuiet Nature\nIVs: 28 Spe\n- Discharge\n- Giga Drain\n- U-turn\n- Flamethrower\n\nMudsdale @ Figy Berry\nAbility: Stamina\nEVs: 248 HP / 176 Def / 84 SpD\nImpish Nature\n- Earthquake\n- Stealth Rock\n- Counter\n- Toxic\n\nMusharna @ Psychium Z\nAbility: Synchronize\nEVs: 252 HP / 4 Def / 252 SpA\nModest Nature\nIVs: 0 Atk\n- Future Sight\n- Dazzling Gleam\n- Thunder Wave\n- Moonlight\n\nCryogonal @ Leftovers\nAbility: Levitate\nEVs: 248 HP / 8 SpA / 52 SpD / 200 Spe\nTimid Nature\nIVs: 0 Atk\n- Rapid Spin\n- Recover\n- Freeze-Dry\n- Hidden Power [Fighting]\n\nSimisear @ Choice Specs\nAbility: Blaze\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Fire Blast\n- Focus Blast\n- Grass Knot\n- Flamethrower\n\nGurdurr @ Eviolite\nAbility: Guts\nEVs: 248 HP / 16 Atk / 200 Def / 44 SpD\nAdamant Nature\n- Bulk Up\n- Mach Punch\n- Drain Punch\n- Knock Off",
-      "icons": [
-        604,
-        750,
-        518,
-        615,
-        514,
-        533
+        593,
+        57,
+        334,
+        1023,
+        604
       ]
     },
     "Leafeon Offense - Megazard": {
@@ -529,6 +529,17 @@
         171,
         773,
         518
+      ]
+    },
+    "U-Turn Offense - tlenit1": {
+      "importable": "Drampa @ Choice Specs\nAbility: Sap Sipper\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Hyper Voice\n- Draco Meteor\n- Fire Blast\n- Energy Ball\n\nOricorio-Sensu @ Colbur Berry\nAbility: Dancer\nEVs: 156 HP / 100 SpA / 252 Spe\nTimid Nature\n- U-turn\n- Roost\n- Revelation Dance\n- Hurricane\n\nPrimeape @ Choice Scarf\nAbility: Defiant\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Close Combat\n- Gunk Shot\n- U-turn\n- Stone Edge\n\nSilvally-Fairy @ Fairy Memory\nAbility: RKS System\nEVs: 248 Atk / 8 SpA / 252 Spe\nJolly Nature\n- Flamethrower\n- U-turn\n- Defog\n- Multi-Attack\n\nRegirock @ Leftovers\nAbility: Clear Body\nEVs: 244 HP / 180 Def / 76 SpD / 8 Spe\nImpish Nature\n- Drain Punch\n- Rock Slide\n- Toxic\n- Stealth Rock\n\nSimisear @ Grassium Z\nAbility: Gluttony\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Fire Blast\n- Nasty Plot\n- Grass Knot\n- Focus Blast",
+      "icons": [
+        780,
+        1042,
+        57,
+        773,
+        377,
+        514
       ]
     }
   },
