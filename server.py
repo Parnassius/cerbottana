@@ -17,7 +17,7 @@ APP.secret_key = os.environ["FLASK_SECRET_KEY"]
 
 
 @APP.template_filter("format_date")
-def format_date(value):
+def format_date(value: str) -> str:
     return date.fromisoformat(value).strftime("%d/%m/%Y")
 
 

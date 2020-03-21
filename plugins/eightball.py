@@ -5,7 +5,7 @@ import utils
 import database
 
 
-async def eightball(self, room, user, arg):
+async def eightball(self, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
 

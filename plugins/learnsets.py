@@ -3,16 +3,16 @@ import utils
 from veekun import CUR
 
 
-async def learnset(self, room, user, arg):
+async def learnset(self, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
 
-    arg = arg.split(",")
-    if len(arg) < 2:
+    args = arg.split(",")
+    if len(args) < 2:
         return
 
-    pokemon = utils.to_user_id(utils.remove_accents(arg[0].lower()))
-    version_group = utils.to_user_id(utils.remove_accents(arg[1].lower()))
+    pokemon = utils.to_user_id(utils.remove_accents(args[0].lower()))
+    version_group = utils.to_user_id(utils.remove_accents(args[1].lower()))
 
     sql = "SELECT id FROM version_groups WHERE identifier = ?"
     version_group_id = CUR.execute(sql, [version_group]).fetchone()
@@ -45,8 +45,6 @@ async def learnset(self, room, user, arg):
            ORDER BY pokemon_moves.pokemon_move_method_id, pokemon_moves.level, machines.machine_number, move_names.name"""
 
     html = ""
-
-    print(version_group_id)
 
     current_move_method_id = 0
     for row in CUR.execute(sql, [pokemon, version_group_id]):

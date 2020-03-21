@@ -7,7 +7,7 @@ from room import Room
 import database
 
 
-def create_token(self, rank):
+def create_token(self, rank: str) -> str:
     token_id = os.urandom(16).hex()
 
     db = database.open_db()
@@ -19,7 +19,7 @@ def create_token(self, rank):
     return token_id
 
 
-async def token(self, room, user, arg):
+async def token(self, room: str, user: str, arg: str) -> None:
     userid = utils.to_user_id(user)
     for room in self.rooms:
         users = Room.get(room).users

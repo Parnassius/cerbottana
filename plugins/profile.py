@@ -3,11 +3,11 @@ import utils
 import database
 
 
-async def champion(self, room, user, arg):
+async def champion(self, room: str, user: str, arg: str) -> None:
     await elitefour(self, room, user, "ou")
 
 
-async def elitefour(self, room, user, arg):
+async def elitefour(self, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
 
@@ -72,7 +72,9 @@ async def elitefour(self, room, user, arg):
             await self.send_htmlbox(room, user, html, simple_message)
 
 
-async def profile(self, room, user, arg, from_elitefour=False):
+async def profile(
+    self, room: str, user: str, arg: str, from_elitefour: bool = False
+) -> None:
     # pylint: disable=too-many-locals
     if room is not None and not utils.is_voice(user):
         return
@@ -191,7 +193,7 @@ async def profile(self, room, user, arg, from_elitefour=False):
     db.connection.close()
 
 
-async def setprofile(self, room, user, arg):
+async def setprofile(self, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
 

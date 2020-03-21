@@ -1,3 +1,5 @@
+from typing import Optional, List
+
 import asyncio
 import os
 from datetime import datetime
@@ -20,16 +22,16 @@ from server import SERVER
 class Connection:
     def __init__(
         self,
-        url,
-        username,
-        password,
-        avatar,
-        statustext,
-        rooms,
-        private_rooms,
-        command_character,
-        administrators,
-    ):
+        url: str,
+        username: str,
+        password: str,
+        avatar: str,
+        statustext: str,
+        rooms: List[str],
+        private_rooms: List[str],
+        command_character: str,
+        administrators: List[str],
+    ) -> None:
         self.url = url
         self.username = username
         self.password = password
@@ -64,30 +66,30 @@ class Connection:
             "tournament": handlers.tournament,
         }
         self.commands = plugins
-        self.timestamp = 0
-        self.lastmessage = 0
-        self.loop = None
+        self.timestamp: float = 0
+        self.lastmessage: float = 0
+        self.loop: Optional[asyncio.AbstractEventLoop] = None
         self.websocket = None
-        self.connection_start = None
+        self.connection_start: Optional[float] = None
         self.tiers = None
 
-    def open_connection(self):
+    def open_connection(self) -> None:
         self.loop = asyncio.new_event_loop()
         self.loop.run_until_complete(self.start_websocket())
 
-    async def start_websocket(self):
+    async def start_websocket(self) -> None:
         try:
             async with websockets.connect(self.url, ping_interval=None) as websocket:
                 self.websocket = websocket
                 self.connection_start = time()
                 while True:
-                    message = await websocket.recv()
+                    message: str = await websocket.recv()
                     print("<< {}".format(message))
                     asyncio.ensure_future(self.parse_message(message))
         except (websockets.exceptions.ConnectionClosed, OSError):
             SERVER.stop()
 
-    async def parse_message(self, message):
+    async def parse_message(self, message: str) -> None:
         if not message:
             return
 
@@ -131,7 +133,7 @@ class Connection:
             if command in self.handlers:
                 await self.handlers[command](self, roomid, *parts[2:])
 
-    async def try_modchat(self, roomid):
+    async def try_modchat(self, roomid: str) -> None:
         room = Room.get(roomid)
         if room and not room.modchat and room.no_mods_online:
             tz = pytz.timezone("Europe/Rome")
@@ -141,12 +143,14 @@ class Connection:
             if 30 <= minutes < 8 * 60 and room.no_mods_online + (7 * 60) < time():
                 await self.send_message(roomid, "/modchat +")
 
-    async def send_rankhtmlbox(self, rank, room, message):
+    async def send_rankhtmlbox(self, rank: str, room: str, message: str) -> None:
         await self.send_message(
             room, "/addrankhtmlbox {}, {}".format(rank, message.replace("\n", "<br>"))
         )
 
-    async def send_htmlbox(self, room, user, message, simple_message=""):
+    async def send_htmlbox(
+        self, room: str, user: str, message: str, simple_message: str = ""
+    ):
         message = message.replace("\n", "<br>")
         if room is not None:
             await self.send_message(room, "/addhtmlbox {}".format(message))
@@ -160,19 +164,19 @@ class Connection:
                     simple_message += "solo se sei online in una room dove sono Roombot"
                 await self.send_pm(user, simple_message)
 
-    async def send_reply(self, room, user, message):
+    async def send_reply(self, room: Optional[str], user: str, message: str) -> None:
         if room is None:
             await self.send_pm(user, message)
         else:
             await self.send_message(room, message)
 
-    async def send_message(self, room, message):
+    async def send_message(self, room: str, message: str) -> None:
         await self.send("{}|{}".format(room, message))
 
-    async def send_pm(self, user, message):
+    async def send_pm(self, user: str, message: str):
         await self.send("|/w {}, {}".format(utils.to_user_id(user), message))
 
-    async def send(self, message):
+    async def send(self, message: str) -> None:
         print(">> {}".format(message))
         now = time()
         if now - self.lastmessage < 0.1:

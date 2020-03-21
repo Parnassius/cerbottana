@@ -1,3 +1,5 @@
+from typing import Optional
+
 import re
 import json
 import hashlib
@@ -8,19 +10,19 @@ from html import escape
 from room import Room
 
 
-def to_user_id(user):
+def to_user_id(user: str) -> str:
     userid = re.sub(r"[^a-z0-9]", "", user.lower())
     return userid
 
 
-def to_room_id(room):
+def to_room_id(room: str) -> str:
     roomid = re.sub(r"[^a-z0-9-]", "", room.lower())
     if not roomid:
         roomid = "lobby"
     return roomid
 
 
-def remove_accents(text):
+def remove_accents(text: str) -> str:
     text = re.sub(r"à", "a", text)
     text = re.sub(r"è|é", "e", text)
     text = re.sub(r"ì", "i", text)
@@ -34,27 +36,27 @@ def remove_accents(text):
     return text
 
 
-def date_format(text):
+def date_format(text: str) -> str:
     return "{dd}/{mm}/{yyyy}".format(dd=text[-2:], mm=text[5:7], yyyy=text[:4])
 
 
-def html_escape(text):
+def html_escape(text: str) -> str:
     return escape(text).replace("\n", "<br>")
 
 
-def is_voice(user):
+def is_voice(user: str) -> bool:
     return user is None or user[0] in "+*%@★#&~"
 
 
-def is_driver(user):
+def is_driver(user: str) -> bool:
     return user[0] in "%@#&~"
 
 
-def is_private(self, room):
+def is_private(self, room: str) -> bool:
     return room in self.private_rooms
 
 
-def can_pminfobox_to(self, user):
+def can_pminfobox_to(self, user: str) -> Optional[str]:
     for room in self.rooms:
         if user in Room.get(room).users and Room.get(room).roombot:
             return room
@@ -64,19 +66,22 @@ def can_pminfobox_to(self, user):
     return None
 
 
-def username_color(name):
+def username_color(name: str) -> str:
     # pylint: disable=too-many-locals,invalid-name
     name = CUSTOM_COLORS.get(name, name)
     md5 = hashlib.md5(name.encode("utf-8")).hexdigest()
 
-    h = int(md5[4:8], 16) % 360
-    s = int(md5[:4], 16) % 50 + 40
-    l = math.floor(int(md5[8:12], 16) % 20 + 30)
+    h: float = int(md5[4:8], 16) % 360
+    s: float = int(md5[:4], 16) % 50 + 40
+    l: float = math.floor(int(md5[8:12], 16) % 20 + 30)
 
-    c = (100 - abs(2 * l - 100)) * s / 100 / 100
-    x = c * (1 - abs((h / 60) % 2 - 1))
-    m = l / 100 - c / 2
+    c: float = (100 - abs(2 * l - 100)) * s / 100 / 100
+    x: float = c * (1 - abs((h / 60) % 2 - 1))
+    m: float = l / 100 - c / 2
 
+    r1: float
+    g1: float
+    b1: float
     if math.floor(h / 60) == 1:
         r1 = x
         g1 = c

@@ -3,7 +3,7 @@ import utils
 from veekun import CUR
 
 
-async def location(self, room, user, arg):
+async def location(self, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
 
@@ -100,7 +100,7 @@ async def location(self, room, user, arg):
     await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
 
 
-async def encounter(self, room, user, arg):
+async def encounter(self, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
 

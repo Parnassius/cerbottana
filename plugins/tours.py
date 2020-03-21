@@ -1,3 +1,5 @@
+from typing import Optional
+
 import utils
 
 import database
@@ -5,25 +7,25 @@ import database
 
 async def create_tour(
     self,
-    room,
+    room: str,
     *,
-    formatid="customgame",
-    generator="elimination",
-    playercap="",
-    generatormod="",
-    name="",
-    autostart=2,
-    autodq=1.5,
-    allow_scouting=False,
+    formatid: str = "customgame",
+    generator: str = "elimination",
+    playercap: Optional[int] = None,
+    generatormod: str = "",
+    name: str = "",
+    autostart: float = 2,
+    autodq: float = 1.5,
+    allow_scouting: bool = False,
     rules=[]
-):
+) -> None:
     tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
     await self.send_message(
         room,
         tournew.format(
             formatid=formatid,
             generator=generator,
-            playercap=playercap,
+            playercap=str(playercap) if playercap else "",
             generatormod=generatormod,
             name=name,
         ),
@@ -38,7 +40,7 @@ async def create_tour(
         await self.send_message(room, "/tour rules {}".format(",".join(rules)))
 
 
-async def randpoketour(self, room, user, arg):
+async def randpoketour(self, room: str, user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
 

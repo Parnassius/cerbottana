@@ -4,7 +4,7 @@ import random
 import utils
 
 
-async def shitpost(self, room, user, arg):
+async def shitpost(self, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
 
@@ -25,7 +25,6 @@ async def shitpost(self, room, user, arg):
     if not utils.is_private(self, room) and ("x" in message or "X" in message):
         message = "lolno"
 
-    message = list(message)
     for i in message:
         if i in LETTERS:
             if text0 != "":
@@ -41,7 +40,7 @@ async def shitpost(self, room, user, arg):
     await self.send_htmlbox(room, user, html.format(text0, text1, text2))
 
 
-async def memes(self, room, user, arg):
+async def memes(self, room: str, user: str, arg: str) -> None:
     if room is None or not utils.is_private(self, room):
         return
 
