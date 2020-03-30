@@ -612,5 +612,7 @@ CUSTOM_COLORS = {
     "tempering": "tempho",
     "chazm": "chazmicsupanova",
     "arsenal": "558ru",
+    "celestial": "cvpux4zn",
+    "luigi": "luifi",
     "cathy": "",
 }
