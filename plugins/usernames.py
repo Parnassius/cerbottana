@@ -77,6 +77,12 @@ async def lange(self, room, user, arg):
     await self.send_reply(room, user, "Haund mi traduci questo post?")
 
 
+async def megagr(self, room, user, arg):
+    if room is not None and not utils.is_voice(user):
+        return
+    await self.send_reply(room, user, "GRRRRRR")
+
+
 async def milak(self, room, user, arg):
     if room is not None and not utils.is_voice(user):
         return
@@ -178,6 +184,8 @@ commands = {
     "infli": inflikted,
     "inflikted": inflikted,
     "lange": lange,
+    "megagr": megagr,
+    "gr": megagr,
     "milak": milak,
     "mister": mister,
     "mistercantiere": mistercantiere,
