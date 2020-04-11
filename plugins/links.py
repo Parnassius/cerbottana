@@ -4,7 +4,7 @@ import utils
 async def avatars(self, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
-    await self.send_reply(room, user, "https://www.smogon.com/forums/threads/3646930/")
+    await self.send_reply(room, user, "https://play.pokemonshowdown.com/sprites/trainers/")
 
 
 async def lega(self, room: str, user: str, arg: str) -> None:
