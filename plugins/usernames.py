@@ -156,6 +156,12 @@ async def trev(self, room, user, arg):
     await self.send_reply(room, user, "gioco di merda")
 
 
+async def ultrasuca(self, room, user, arg):
+    if room is not None and not utils.is_voice(user):
+        return
+    await self.send_reply(room, user, "%Ultrasuca left")
+
+
 async def uselesstrainer(self, room, user, arg):
     if room is not None and not utils.is_voice(user):
         return
@@ -217,6 +223,7 @@ commands = {
     "3v": trev,
     "trev": trev,
     "vvv": trev,
+    "ultrasuca": ultrasuca,
     "uselesstrainer": uselesstrainer,
     "usy": uselesstrainer,
     "v0lca": v0lca,
