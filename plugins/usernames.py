@@ -12,7 +12,7 @@ async def acher(self, room, user, arg):
 async def aethernum(self, room, user, arg):
     if room is not None and not utils.is_voice(user):
         return
-    await self.send_reply(room, user, "__eterno__ indeciso")
+    await self.send_reply(room, user, "__eterno__ indeciso :^)")
 
 
 async def alpha(self, room, user, arg):
