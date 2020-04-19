@@ -54,14 +54,16 @@ def dashboard():
     if request.method == "POST":
 
         if "approva" in request.form:
+            parts = request.form["approva"].split(",")
             sql = "UPDATE utenti SET descrizione = descrizione_daapprovare, descrizione_daapprovare = '' "
             sql += " WHERE id = ? AND descrizione_daapprovare = ?"
-            g.db.execute(sql, request.form["approva"].split(","))
+            g.db.execute(sql, [parts[0], ",".join(parts[1:])])
 
         if "rifiuta" in request.form:
+            parts = request.form["rifiuta"].split(",")
             sql = "UPDATE utenti SET descrizione_daapprovare = '' "
             sql += " WHERE id = ? AND descrizione_daapprovare = ?"
-            g.db.execute(sql, request.form["rifiuta"].split(","))
+            g.db.execute(sql, [parts[0], ",".join(parts[1:])])
 
         g.db.connection.commit()
 
