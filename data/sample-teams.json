@@ -1,29 +1,40 @@
 {
   "gen8ou": {
     "by Jordy": {
-      "importable": "Melmetal @ Choice Band\nAbility: Iron Fist\nEVs: 148 HP / 252 Atk / 108 Spe\nAdamant Nature\n- Double Iron Bash\n- Earthquake\n- Thunder Punch\n- Superpower\n\nClefable @ Leftovers\nAbility: Magic Guard\nEVs: 252 HP / 4 Def / 252 SpD\nSassy Nature\nIVs: 0 Atk / 0 Spe\n- Moonblast\n- Wish\n- Protect\n- Teleport\n\nSeismitoad @ Leftovers\nAbility: Water Absorb\nEVs: 252 HP / 244 Def / 12 Spe\nRelaxed Nature\n- Earth Power\n- Knock Off\n- Stealth Rock\n- Scald\n\nMandibuzz (F) @ Heavy-Duty Boots\nAbility: Overcoat\nEVs: 252 HP / 16 Def / 144 SpD / 96 Spe\nImpish Nature\n- Foul Play\n- Roost\n- Defog\n- Brave Bird\n\nZeraora @ Leftovers\nAbility: Volt Absorb\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Bulk Up\n- Plasma Fists\n- Close Combat\n- Knock Off\n\nKyurem @ Choice Specs\nAbility: Pressure\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Ice Beam\n- Draco Meteor\n- Earth Power\n- Freeze-Dry",
+      "importable": "Clefable @ Leftovers\nAbility: Magic Guard\nEVs: 252 HP / 4 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk / 7 Spe\n- Moonblast\n- Wish\n- Protect\n- Teleport\n\nHydreigon @ Choice Scarf\nAbility: Levitate\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\n- Dark Pulse\n- Draco Meteor\n- U-turn\n- Thunder Wave\n\nDragapult @ Spell Tag\nAbility: Infiltrator\nEVs: 252 SpA / 4 SpD / 252 Spe\nModest Nature\n- Hex\n- Draco Meteor\n- U-turn\n- Thunder Wave\n\nCorviknight @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 132 Def / 124 SpD\nImpish Nature\nIVs: 30 Spe\n- Iron Head\n- Roost\n- Defog\n- Body Press\n\nSeismitoad @ Leftovers\nAbility: Water Absorb\nEVs: 252 HP / 252 Def / 4 Spe\nRelaxed Nature\n- Earthquake\n- Knock Off\n- Stealth Rock\n- Scald\n\nRotom-Heat @ Heavy-Duty Boots\nAbility: Levitate\nEVs: 248 HP / 44 SpD / 216 Spe\nTimid Nature\nIVs: 0 Atk\n- Nasty Plot\n- Overheat\n- Discharge\n- Toxic",
       "icons": [
-        809,
+        36,
+        635,
+        887,
+        823,
+        537,
+        950
+      ]
+    },
+    "by talah": {
+      "importable": "Clefable @ Leftovers\nAbility: Magic Guard\nEVs: 252 HP / 36 Def / 220 SpD\nSassy Nature\nIVs: 0 Atk / 0 Spe\n- Moonblast\n- Wish\n- Protect\n- Teleport\n\nSeismitoad (M) @ Leftovers\nAbility: Water Absorb\nEVs: 252 HP / 252 Def / 4 SpD\nBold Nature\n- Stealth Rock\n- Scald\n- Earth Power\n- Knock Off\n\nAegislash @ Choice Specs\nAbility: Stance Change\nEVs: 4 HP / 252 SpA / 252 Spe\nModest Nature\n- Shadow Ball\n- Flash Cannon\n- Shadow Sneak\n- Sacred Sword\n\nIncineroar (M) @ Heavy-Duty Boots\nAbility: Intimidate\nEVs: 252 HP / 96 Def / 148 SpD / 12 Spe\nCareful Nature\n- Will-O-Wisp\n- Knock Off\n- Flare Blitz\n- Parting Shot\n\nZeraora @ Magnet\nAbility: Volt Absorb\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Plasma Fists\n- Knock Off\n- Close Combat\n- Grass Knot\n\nCorviknight (M) @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 252 Def / 4 SpD\nRelaxed Nature\nIVs: 0 Spe\n- Defog\n- Body Press\n- U-turn\n- Roost",
+      "icons": [
         36,
         537,
-        630,
+        681,
+        727,
         807,
-        646
+        823
       ]
     },
     "by Finchinator": {
-      "importable": "Melmetal @ Protective Pads\nAbility: Iron Fist\nEVs: 240 Atk / 136 SpD / 132 Spe\nAdamant Nature\n- Double Iron Bash\n- Thunder Punch\n- Superpower\n- Thunder Wave\n\nClefable @ Leftovers\nAbility: Magic Guard\nEVs: 252 HP / 4 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk / 7 Spe\n- Wish\n- Moonblast\n- Teleport\n- Protect\n\nFerrothorn @ Rocky Helmet\nAbility: Iron Barbs\nEVs: 252 HP / 252 Def / 4 SpD\nImpish Nature\n- Stealth Rock\n- Body Press\n- Knock Off\n- Toxic\n\nMandibuzz (F) @ Heavy-Duty Boots\nAbility: Overcoat\nEVs: 252 HP / 80 Def / 176 Spe\nJolly Nature\n- Brave Bird\n- Foul Play\n- Roost\n- Defog\n\nRotom-Heat @ Heavy-Duty Boots\nAbility: Levitate\nEVs: 248 HP / 92 Def / 168 Spe\nBold Nature\nIVs: 0 Atk\n- Nasty Plot\n- Overheat\n- Discharge\n- Toxic\n\nZeraora @ Leftovers\nAbility: Volt Absorb\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Bulk Up\n- Plasma Fists\n- Knock Off\n- Close Combat",
+      "importable": "Dracovish @ Choice Band\nAbility: Strong Jaw\nEVs: 32 HP / 252 Atk / 4 SpD / 220 Spe\nAdamant Nature\n- Fishious Rend\n- Crunch\n- Psychic Fangs\n- Outrage\n\nClefable @ Leftovers\nAbility: Magic Guard\nEVs: 252 HP / 4 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk / 7 Spe\n- Wish\n- Moonblast\n- Teleport\n- Protect\n\nCorviknight @ Leftovers\nAbility: Pressure\nEVs: 252 HP / 160 Def / 16 SpD / 80 Spe\nImpish Nature\n- Brave Bird\n- Body Press\n- Roost\n- Defog\n\nSeismitoad @ Leftovers\nAbility: Water Absorb\nEVs: 248 HP / 236 Def / 24 Spe\nBold Nature\n- Stealth Rock\n- Scald\n- Earth Power\n- Knock Off\n\nHydreigon @ Choice Scarf\nAbility: Levitate\nEVs: 4 Atk / 252 SpA / 252 Spe\nHasty Nature\n- Draco Meteor\n- Dark Pulse\n- Head Smash\n- U-turn\n\nAegislash @ Choice Specs\nAbility: Stance Change\nEVs: 252 SpA / 4 SpD / 252 Spe\nModest Nature\n- Shadow Ball\n- Flash Cannon\n- Toxic\n- Shadow Sneak",
       "icons": [
-        809,
+        882,
         36,
-        598,
-        630,
-        950,
-        807
+        823,
+        537,
+        635,
+        681
       ]
     },
     "originally by FLCL , later edited by p2": {
-      "importable": "Hippowdon @ Rocky Helmet\nAbility: Sand Stream\nEVs: 252 HP / 252 Def / 4 SpD\nImpish Nature\n- Stealth Rock\n- Earthquake\n- Whirlwind\n- Slack Off\n\nFerrothorn @ Rocky Helmet\nAbility: Iron Barbs\nEVs: 252 HP / 252 Def / 4 SpD\nImpish Nature\n- Leech Seed\n- Knock Off\n- Body Press\n- Spikes\n\nExcadrill @ Leftovers\nAbility: Sand Rush\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Earthquake\n- Iron Head\n- Rapid Spin\n\nRotom-Heat @ Heavy-Duty Boots\nAbility: Levitate\nEVs: 248 HP / 48 SpD / 212 Spe\nTimid Nature\nIVs: 0 Atk\n- Toxic\n- Overheat\n- Discharge\n- Nasty Plot\n\nTerrakion @ Life Orb\nAbility: Justified\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Close Combat\n- Stone Edge\n- Earthquake\n\nClefable @ Leftovers\nAbility: Magic Guard\nEVs: 252 HP / 4 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk\n- Wish\n- Protect\n- Moonblast\n- Teleport",
+      "importable": "Hippowdon @ Rocky Helmet\nAbility: Sand Stream\nEVs: 252 HP / 252 Def / 4 SpD\nImpish Nature\n- Stealth Rock\n- Earthquake\n- Whirlwind\n- Slack Off\n\nFerrothorn @ Leftovers\nAbility: Iron Barbs\nEVs: 252 HP / 252 Def / 4 SpD\nImpish Nature\n- Leech Seed\n- Knock Off\n- Body Press\n- Spikes\n\nExcadrill @ Leftovers\nAbility: Sand Rush\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Earthquake\n- Iron Head\n- Rapid Spin\n\nRotom-Heat @ Heavy-Duty Boots\nAbility: Levitate\nEVs: 248 HP / 48 SpD / 212 Spe\nTimid Nature\nIVs: 0 Atk\n- Toxic\n- Overheat\n- Discharge\n- Nasty Plot\n\nTerrakion @ Life Orb\nAbility: Justified\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Close Combat\n- Stone Edge\n- Earthquake\n\nClefable @ Leftovers\nAbility: Magic Guard\nEVs: 252 HP / 4 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk\n- Wish\n- Protect\n- Moonblast\n- Teleport",
       "icons": [
         450,
         598,
@@ -35,110 +46,44 @@
     }
   },
   "gen8ubers": {
-    "Borderless | Provided by Minority": {
-      "importable": "Zacian-Crowned @ Rusted Sword\nAbility: Intrepid Sword\nEVs: 252 Atk / 4 Def / 252 Spe\nAdamant Nature\n- Substitute\n- Fire Fang\n- Psychic Fangs\n- Play Rough\n\nHippowdon @ Leftovers\nAbility: Sand Stream\nEVs: 248 HP / 252 Def / 8 SpD\nImpish Nature\n- Stealth Rock\n- Whirlwind\n- Slack Off\n- Earthquake\n\nExcadrill @ Life Orb\nAbility: Sand Rush\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Rapid Spin\n- Rock Slide\n- Iron Head\n- Earthquake\n\nEternatus @ Life Orb\nAbility: Pressure\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Agility\n- Recover\n- Flamethrower\n- Dynamax Cannon\n\nGyarados @ Leftovers\nAbility: Moxie\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Dragon Dance\n- Substitute\n- Earthquake\n- Waterfall\n\nDitto @ Choice Scarf\nAbility: Imposter\nEVs: 248 HP / 8 Atk / 252 Def\nRelaxed Nature\nIVs: 0 Spe\n- Transform",
+    "Reshiram Sand Offense | Provided by the Ubers Viability Council": {
+      "importable": "Tyranitar @ Leftovers\nAbility: Sand Stream\nEVs: 252 HP / 4 SpA / 252 SpD\nCalm Nature\nIVs: 0 Atk\n- Stealth Rock\n- Snarl\n- Thunder Wave\n- Rest\n\nExcadrill @ Life Orb\nAbility: Sand Rush\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Earthquake\n- Rock Slide\n- Shadow Claw\n\nReshiram @ Life Orb\nAbility: Turboblaze\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Blue Flare\n- Draco Meteor\n- Focus Blast\n- Roost\n\nLunala @ Leftovers\nAbility: Shadow Shield\nEVs: 252 HP / 56 SpD / 200 Spe\nTimid Nature\nIVs: 0 Atk\n- Will-O-Wisp\n- Hex\n- Roost\n- Defog\n\nCorviknight @ Rocky Helmet\nAbility: Pressure\nEVs: 248 HP / 8 Atk / 252 Def\nImpish Nature\n- Brave Bird\n- Body Press\n- Roost\n- Iron Defense\n\nZacian-Crowned @ Rusted Sword\nAbility: Intrepid Sword\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Play Rough\n- Fire Fang\n- Psychic Fangs",
       "icons": [
-        1094,
-        450,
-        530,
-        890,
-        130,
-        132
-      ]
-    },
-    "Choice Scarf Darmanitan + Corviknight Sand Bulky Offense | Provided by absdaddy": {
-      "importable": "Corviknight (M) @ Rocky Helmet\nAbility: Pressure\nEVs: 248 HP / 252 Def / 8 SpD\nImpish Nature\n- Iron Defense\n- Body Press\n- Roost\n- U-turn\n\nDarmanitan-Galar (M) @ Choice Scarf\nAbility: Gorilla Tactics\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Flare Blitz\n- Icicle Crash\n- Earthquake\n- U-turn\n\nZacian-Crowned @ Rusted Sword\nAbility: Intrepid Sword\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Behemoth Blade\n- Play Rough\n- Wild Charge\n- Psychic Fangs\n\nExcadrill (M) @ Life Orb\nAbility: Sand Rush\nEVs: 252 Atk / 4 SpD / 252 Spe\nAdamant Nature\n- Swords Dance\n- Earthquake\n- Rock Slide\n- Rapid Spin\n\nTyranitar (M) @ Leftovers\nAbility: Sand Stream\nEVs: 252 HP / 220 SpD / 36 Spe\nAdamant Nature\n- Crunch\n- Stealth Rock\n- Thunder Wave\n- Earthquake\n\nEternatus @ Haban Berry\nAbility: Pressure\nEVs: 4 Def / 252 SpA / 252 Spe\nModest Nature\nIVs: 0 Atk\n- Recover\n- Flamethrower\n- Dynamax Cannon\n- Sludge Wave",
-      "icons": [
-        823,
-        1076,
-        1094,
-        530,
         248,
-        890
-      ]
-    },
-    "Trick Room Hatterene Bulky Offense | Provided by Cynara": {
-      "importable": "Ditto @ Choice Scarf\nAbility: Imposter\nEVs: 248 HP / 8 Atk / 252 Def\nRelaxed Nature\nIVs: 0 Spe\n- Transform\n\nQuagsire @ Shed Shell\nAbility: Unaware\nEVs: 248 HP / 8 Atk / 252 Def\nRelaxed Nature\n- Earthquake\n- Scald\n- Toxic\n- Recover\n\nTyranitar @ Dread Plate\nAbility: Sand Stream\nEVs: 248 HP / 8 SpA / 252 SpD\nSassy Nature\n- Stealth Rock\n- Payback\n- Earthquake\n- Fire Blast\n\nCorviknight @ Rocky Helmet\nAbility: Pressure\nEVs: 248 HP / 8 Atk / 252 Def\nImpish Nature\n- Body Press\n- U-turn\n- Roost\n- Defog\n\nHatterene-Gmax (F) @ Life Orb\nAbility: Magic Bounce\nEVs: 252 HP / 252 SpA / 4 SpD\nQuiet Nature\nIVs: 0 Atk / 0 Spe\n- Trick Room\n- Dazzling Gleam\n- Psychic\n- Mystical Fire\n\nZacian-Crowned @ Rusted Sword\nAbility: Intrepid Sword\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Behemoth Blade\n- Play Rough\n- Psychic Fangs\n- Fire Fang",
-      "icons": [
-        132,
-        195,
-        248,
+        530,
+        643,
+        792,
         823,
-        1175,
         1094
-      ]
-    },
-    "Gothitelle + U-Turn Corviknight | Provided by the Viability Rankings Council": {
-      "importable": "Quagsire @ Shed Shell\nAbility: Unaware\nEVs: 248 HP / 8 Atk / 252 Def\nRelaxed Nature\n- Scald\n- Earthquake\n- Recover\n- Toxic\n\nTyranitar @ Leftovers\nAbility: Sand Stream\nEVs: 252 HP / 8 Atk / 212 SpD / 36 Spe\nCareful Nature\n- Stealth Rock\n- Crunch\n- Earthquake\n- Thunder Wave\n\nGothitelle @ Leftovers\nAbility: Shadow Tag\nEVs: 248 HP / 8 Def / 252 SpD\nCalm Nature\nIVs: 0 Atk\n- Stored Power\n- Cosmic Power\n- Rest\n- Nasty Plot\n\nCorviknight @ Rocky Helmet\nAbility: Pressure\nEVs: 248 HP / 8 Atk / 252 Def\nImpish Nature\n- U-turn\n- Body Press\n- Roost\n- Defog\n\nZacian-Crowned @ Rusted Sword\nAbility: Intrepid Sword\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Play Rough\n- Psychic Fangs\n- Fire Fang\n- Protect\n\nEternatus @ Life Orb\nAbility: Pressure\nEVs: 200 HP / 252 SpA / 56 Spe\nModest Nature\nIVs: 0 Atk\n- Agility\n- Dynamax Cannon\n- Flamethrower\n- Recover",
-      "icons": [
-        195,
-        248,
-        576,
-        823,
-        1094,
-        890
-      ]
-    },
-    "Agility Eternatus Balance | Provided by Terracotta": {
-      "importable": "Quagsire @ Shed Shell\nAbility: Unaware\nEVs: 252 HP / 4 Atk / 252 Def\nImpish Nature\n- Stockpile\n- Scald\n- Earthquake\n- Recover\n\nReuniclus @ Assault Vest\nAbility: Regenerator\nEVs: 248 HP / 176 SpA / 84 SpD\nModest Nature\nIVs: 0 Atk\n- Psychic\n- Shadow Ball\n- Grass Knot\n- Thunder\n\nClefable @ Life Orb\nAbility: Magic Guard\nEVs: 196 HP / 252 SpA / 60 Spe\nModest Nature\nIVs: 0 Atk\n- Stealth Rock\n- Moonblast\n- Fire Blast\n- Moonlight\n\nRotom-Heat @ Choice Scarf\nAbility: Levitate\nEVs: 116 HP / 168 SpA / 224 Spe\nTimid Nature\nIVs: 0 Atk\n- Volt Switch\n- Overheat\n- Will-O-Wisp\n- Trick\n\nEternatus @ Life Orb\nAbility: Pressure\nEVs: 164 HP / 252 SpA / 92 Spe\nModest Nature\nIVs: 0 Atk\n- Agility\n- Flamethrower\n- Dynamax Cannon\n- Recover\n\nMandibuzz @ Heavy-Duty Boots\nAbility: Overcoat\nEVs: 252 HP / 56 Def / 200 SpD\nCareful Nature\n- Knock Off\n- Roost\n- Defog\n- U-turn",
-      "icons": [
-        195,
-        579,
-        36,
-        950,
-        890,
-        630
       ]
     }
   },
   "gen8uu": {
-    "Psychic Terrain Offense by Amane Misa and vivalospride": {
-      "importable": "Froslass (F) @ Focus Sash\nAbility: Cursed Body\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Icy Wind\n- Destiny Bond\n- Spikes\n- Taunt\n\nRotom-Frost @ Salac Berry\nAbility: Levitate\nEVs: 12 HP / 244 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Thunderbolt\n- Blizzard\n- Substitute\n- Nasty Plot\n\nHaxorus @ Lum Berry\nAbility: Mold Breaker\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Dragon Dance\n- Outrage\n- Earthquake\n- First Impression\n\nBarbaracle @ Focus Sash\nAbility: Tough Claws\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Stealth Rock\n- Shell Smash\n- Stone Edge\n- Liquidation\n\nPolteageist @ White Herb\nAbility: Weak Armor\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Shell Smash\n- Shadow Ball\n- Stored Power\n- Giga Drain\n\nIndeedee (M) @ Terrain Extender\nAbility: Psychic Surge\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Calm Mind\n- Psychic\n- Dazzling Gleam\n- Mystical Fire",
+    "Vileplume Bulky Offense by Lilburr": {
+      "importable": "Mushrooms (Vileplume) @ Black Sludge\nAbility: Effect Spore\nEVs: 252 HP / 172 Def / 84 Spe\nBold Nature\nIVs: 0 Atk\n- Giga Drain\n- Sludge Bomb\n- Strength Sap\n- Leech Seed\n\nVitamins (Incineroar) @ Heavy-Duty Boots\nAbility: Intimidate\nEVs: 252 HP / 52 SpA / 204 SpD\nSassy Nature\n- Knock Off\n- Overheat\n- Toxic\n- Parting Shot\n\nFossil (Rhyperior) @ Leftovers\nAbility: Solid Rock\nEVs: 240 HP / 16 Atk / 252 SpD\nAdamant Nature\n- Stealth Rock\n- Earthquake\n- Stone Edge\n- Toxic\n\nTOKYO NEON (Noivern) @ Heavy-Duty Boots\nAbility: Infiltrator\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Draco Meteor\n- Flamethrower\n- Defog\n- Roost\n\nMilk (Cobalion) @ Occa Berry\nAbility: Justified\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Close Combat\n- Iron Head\n- Thunder Wave\n\nSummoning 101 (Sylveon) @ Choice Specs\nAbility: Pixilate\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Hyper Voice\n- Mystical Fire\n- Psyshock\n- Heal Bell",
       "icons": [
-        478,
-        949,
-        612,
-        689,
-        855,
-        876
-      ]
-    },
-    "Spikes Bulky Offense by Sage": {
-      "importable": "Gardevoir @ Choice Specs\nAbility: Trace\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Psychic\n- Moonblast\n- Mystical Fire\n- Trick\n\nFlygon @ Choice Scarf\nAbility: Levitate\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Earthquake\n- Outrage\n- Stone Edge\n- U-turn\n\nRoserade @ Life Orb\nAbility: Natural Cure\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Leaf Storm\n- Sludge Bomb\n- Sleep Powder\n- Rest\n\nGigalith @ Leftovers\nAbility: Sand Stream\nEVs: 252 HP / 80 Atk / 176 SpD\nAdamant Nature\n- Stealth Rock\n- Stone Edge\n- Earthquake\n- Heavy Slam\n\nDoublade @ Eviolite\nAbility: No Guard\nEVs: 252 HP / 252 Atk / 4 SpD\nAdamant Nature\n- Swords Dance\n- Iron Head\n- Shadow Sneak\n- Close Combat\n\nGolisopod @ Heavy-Duty Boots\nAbility: Emergency Exit\nEVs: 192 HP / 252 Atk / 64 Spe\nAdamant Nature\n- Spikes\n- First Impression\n- Leech Life\n- Liquidation",
-      "icons": [
-        282,
-        330,
-        407,
-        526,
-        680,
-        768
-      ]
-    },
-    "Sticky Web Offense by Datsplashtho": {
-      "importable": "Gardevoir @ Choice Scarf\nAbility: Trace\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Psychic\n- Moonblast\n- Mystical Fire\n- Healing Wish\n\nMamoswine @ Life Orb\nAbility: Thick Fat\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Stealth Rock\n- Ice Shard\n- Icicle Crash\n- Earthquake\n\nCobalion @ Shuca Berry\nAbility: Justified\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Close Combat\n- Iron Head\n- Stone Edge\n\nIncineroar @ Heavy-Duty Boots\nAbility: Intimidate\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Flare Blitz\n- Knock Off\n- Close Combat\n\nAraquanid @ Heavy-Duty Boots\nAbility: Water Bubble\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Sticky Web\n- Liquidation\n- Leech Life\n- Toxic\n\nToxtricity @ Choice Specs\nAbility: Punk Rock\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Overdrive\n- Sludge Bomb\n- Boomburst\n- Volt Switch",
-      "icons": [
-        282,
-        473,
-        638,
+        45,
         727,
-        752,
-        849
+        464,
+        715,
+        638,
+        700
+      ]
+    },
+    "Gastrodon + Escavalier Balance by Lilburr and Expulso": {
+      "importable": "Gigalith @ Leftovers\nAbility: Sand Stream\nEVs: 252 HP / 252 SpD / 4 Spe\nCareful Nature\n- Stealth Rock\n- Stone Edge\n- Earthquake\n- Toxic\n\nGastrodon @ Leftovers\nAbility: Storm Drain\nEVs: 252 HP / 252 Def / 4 Spe\nBold Nature\n- Scald\n- Earthquake\n- Toxic\n- Recover\n\nEscavalier @ Leftovers\nAbility: Overcoat\nEVs: 252 HP / 16 Atk / 116 Def / 80 SpD / 44 Spe\nAdamant Nature\n- Megahorn\n- Iron Head\n- Knock Off\n- Close Combat\n\nSylveon @ Leftovers\nAbility: Pixilate\nEVs: 248 HP / 252 Def / 8 Spe\nBold Nature\nIVs: 0 Atk\n- Hyper Voice\n- Wish\n- Protect\n- Heal Bell\n\nNoivern @ Heavy-Duty Boots\nAbility: Infiltrator\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Draco Meteor\n- Flamethrower\n- Defog\n- Roost\n\nPangoro @ Choice Band\nAbility: Scrappy\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Close Combat\n- Knock Off\n- Iron Head\n- Bullet Punch",
+      "icons": [
+        526,
+        423,
+        589,
+        700,
+        715,
+        675
       ]
     }
   },
   "gen8ru": {},
   "gen8lc": {
-    "Choice Band Rufflet by The Amuse": {
-      "importable": "Rufflet (M) @ Choice Band\nAbility: Hustle\nLevel: 5\nEVs: 252 Atk / 36 Def / 196 Spe\nJolly Nature\n- Brave Bird\n- Aerial Ace\n- U-turn\n- Sleep Talk\n\nDiglett @ Eviolite\nAbility: Arena Trap\nLevel: 5\nEVs: 36 HP / 156 Atk / 76 Def / 236 Spe\nJolly Nature\n- Earthquake\n- Rock Slide\n- Earth Power\n- Sucker Punch\n\nTimburr @ Eviolite\nAbility: Guts\nLevel: 5\nEVs: 196 Atk / 156 Def / 156 SpD\nAdamant Nature\n- Drain Punch\n- Knock Off\n- Mach Punch\n- Defog\n\nMareanie @ Eviolite\nAbility: Regenerator\nLevel: 5\nEVs: 116 HP / 100 Def / 12 SpA / 20 SpD / 236 Spe\nTimid Nature\nIVs: 0 Atk\n- Sludge Bomb\n- Scald\n- Iron Defense\n- Recover\n\nPawniard @ Eviolite\nAbility: Defiant\nLevel: 5\nEVs: 156 Atk / 36 Def / 116 SpD / 196 Spe\nJolly Nature\n- Knock Off\n- Iron Head\n- Sucker Punch\n- Stealth Rock\n\nPonyta @ Eviolite\nAbility: Flame Body\nLevel: 5\nEVs: 76 Atk / 156 Def / 76 SpD / 196 Spe\nJolly Nature\n- Flare Blitz\n- Flame Charge\n- Will-O-Wisp\n- Morning Sun",
-      "icons": [
-        627,
-        50,
-        532,
-        747,
-        624,
-        77
-      ]
-    },
     "Manual Sun by Corporal Levi": {
       "importable": "Bulbasaur @ Eviolite\nAbility: Chlorophyll\nLevel: 5\nEVs: 236 SpA / 236 Spe\nTimid Nature\nIVs: 0 Atk\n- Giga Drain\n- Sludge Bomb\n- Weather Ball\n- Growth\n\nOddish @ Eviolite\nAbility: Chlorophyll\nLevel: 5\nEVs: 156 HP / 236 Def / 76 SpD / 36 Spe\nBold Nature\nIVs: 0 Atk\n- Strength Sap\n- Sleep Powder\n- Sludge Bomb\n- Giga Drain\n\nDiglett @ Heat Rock\nAbility: Arena Trap\nLevel: 5\nEVs: 116 HP / 156 Atk / 236 Spe\nJolly Nature\n- Sunny Day\n- Memento\n- Earthquake\n- Final Gambit\n\nPonyta @ Berry Juice\nAbility: Flash Fire\nLevel: 5\nEVs: 236 Atk / 76 Def / 196 Spe\nJolly Nature\n- Flare Blitz\n- Sunny Day\n- Will-O-Wisp\n- High Horsepower\n\nDrilbur @ Berry Juice\nAbility: Mold Breaker\nLevel: 5\nEVs: 36 HP / 236 Atk / 212 Spe\nJolly Nature\n- Rapid Spin\n- Earthquake\n- Rock Slide\n- Swords Dance\n\nPawniard @ Eviolite\nAbility: Defiant\nLevel: 5\nEVs: 156 Atk / 36 Def / 116 SpD / 196 Spe\nJolly Nature\n- Stealth Rock\n- Knock Off\n- Iron Head\n- Sucker Punch",
       "icons": [
@@ -149,20 +94,20 @@
         529,
         624
       ]
+    },
+    "PonyPinch by Vhue": {
+      "importable": "Ponyta @ Eviolite\nAbility: Flame Body\nShiny: Yes\nEVs: 76 Atk / 156 Def / 76 SpD / 196 Spe\nJolly Nature\n- Flare Blitz\n- High Horsepower\n- Will-O-Wisp\n- Morning Sun\n\nPawniard @ Eviolite\nAbility: Defiant\nLevel: 5\nEVs: 156 Atk / 36 Def / 116 SpD / 196 Spe\nJolly Nature\n- Knock Off\n- Iron Head\n- Sucker Punch\n- Stealth Rock\n\nVullaby (F) @ Berry Juice\nAbility: Weak Armor\nLevel: 5\nEVs: 236 Atk / 76 Def / 196 Spe\nAdamant Nature\n- Knock Off\n- Brave Bird\n- Heat Wave\n- Defog\n\nOddish @ Eviolite\nAbility: Chlorophyll\nLevel: 5\nEVs: 76 HP / 236 Def / 76 SpD / 116 Spe\nBold Nature\nIVs: 0 Atk\n- Sleep Powder\n- Giga Drain\n- Sludge Bomb\n- Strength Sap\n\nTrapinch @ Eviolite\nAbility: Arena Trap\nLevel: 5\nEVs: 156 HP / 36 Atk / 236 Def / 76 SpD\nRelaxed Nature\n- Earthquake\n- First Impression\n- Quick Attack\n- Giga Drain\n\nCorphish @ Eviolite\nAbility: Adaptability\nLevel: 5\nEVs: 196 Atk / 76 Def / 236 Spe\nAdamant Nature\n- Crabhammer\n- Dragon Dance\n- Knock Off\n- Aqua Jet",
+      "icons": [
+        77,
+        624,
+        629,
+        43,
+        328,
+        341
+      ]
     }
   },
   "gen8nationaldex": {
-    "Volcarona Stall by Funbot28": {
-      "importable": "Alomomola @ Leftovers\nAbility: Regenerator\nEVs: 40 HP / 252 Def / 216 SpD\nBold Nature\nIVs: 0 Atk\n- Scald\n- Toxic\n- Wish\n- Protect\n\nChansey (F) @ Eviolite\nAbility: Natural Cure\nEVs: 248 HP / 252 Def / 8 SpD\nBold Nature\n- Stealth Rock\n- Toxic\n- Seismic Toss\n- Soft-Boiled\n\nVolcarona @ Heavy-Duty Boots\nAbility: Flame Body\nEVs: 252 HP / 192 Def / 64 Spe\nBold Nature\nIVs: 0 Atk\n- Flamethrower\n- Defog\n- Roost\n- Toxic\n\nSableye-Mega @ Sablenite\nAbility: Prankster\nEVs: 248 HP / 8 Def / 252 SpD\nCareful Nature\n- Knock Off\n- Will-O-Wisp\n- Recover\n- Protect\n\nSkarmory @ Shed Shell\nAbility: Sturdy\nEVs: 252 HP / 252 Def / 4 SpD\nBold Nature\nIVs: 0 Atk\n- Roost\n- Spikes\n- Whirlwind\n- Toxic\n\nClefable @ Leftovers\nAbility: Unaware\nEVs: 252 HP / 252 Def / 4 SpD\nBold Nature\nIVs: 0 Atk\n- Moonblast\n- Wish\n- Protect\n- Heal Bell",
-      "icons": [
-        594,
-        113,
-        637,
-        1129,
-        227,
-        36
-      ]
-    },
     "NP Hydreigon Bulky Offense by Funbot28": {
       "importable": "Hydreigon @ Darkinium Z\nAbility: Levitate\nEVs: 224 SpA / 32 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Nasty Plot\n- Dark Pulse\n- Earth Power\n- Roost\n\nTangrowth @ Rocky Helmet\nAbility: Regenerator\nEVs: 252 HP / 248 Def / 8 SpD\nRelaxed Nature\n- Giga Drain\n- Sleep Powder\n- Hidden Power [Ice]\n- Knock Off\n\nHeatran @ Leftovers\nAbility: Flash Fire\nEVs: 252 HP / 176 SpD / 80 Spe\nCalm Nature\nIVs: 0 Atk\n- Lava Plume\n- Toxic\n- Protect\n- Stealth Rock\n\nTapu Fini @ Leftovers\nAbility: Misty Surge\nEVs: 248 HP / 8 Def / 12 SpA / 48 SpD / 192 Spe\nBold Nature\nIVs: 0 Atk\n- Scald\n- Moonblast\n- Defog\n- Taunt\n\nDarmanitan-Galar @ Choice Scarf\nAbility: Gorilla Tactics\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Icicle Crash\n- U-turn\n- Flare Blitz\n- Earthquake\n\nMetagross-Mega @ Metagrossite\nAbility: Tough Claws\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Meteor Mash\n- Thunder Punch\n- Hammer Arm\n- Bullet Punch",
       "icons": [
@@ -172,6 +117,72 @@
         788,
         1076,
         1141
+      ]
+    },
+    "Manaphy Rain Offense by Guardsweeper": {
+      "importable": "Pelipper @ Damp Rock\nAbility: Drizzle\nEVs: 248 HP / 36 Def / 224 SpD\nBold Nature\n- Scald\n- U-turn\n- Roost\n- Hurricane\n\nSwampert-Mega @ Swampertite\nAbility: Swift Swim\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Waterfall\n- Earthquake\n- Ice Punch\n- Stealth Rock\n\nTornadus-Therian (M) @ Metronome\nAbility: Regenerator\nEVs: 4 HP / 252 SpA / 252 Spe\nTimid Nature\n- Hurricane\n- Knock Off\n- U-turn\n- Defog\n\nFerrothorn @ Leftovers\nAbility: Iron Barbs\nEVs: 252 HP / 4 Def / 252 SpD\nCareful Nature\n- Spikes\n- Leech Seed\n- Toxic\n- Power Whip\n\nGreninja-Ash (M) @ Choice Specs\nAbility: Battle Bond\nEVs: 4 Def / 252 SpA / 252 Spe\nTimid Nature\n- Surf\n- Dark Pulse\n- Water Shuriken\n- Ice Beam\n\nManaphy @ Waterium Z\nAbility: Hydration\nShiny: Yes\nEVs: 192 HP / 240 SpA / 76 Spe\nModest Nature\nIVs: 0 Atk\n- Tail Glow\n- Surf\n- Psychic\n- Rest",
+      "icons": [
+        279,
+        1127,
+        966,
+        598,
+        1037,
+        490
+      ]
+    },
+    "Sand Balance by Jordy": {
+      "importable": "Ferrothorn @ Leftovers\nAbility: Iron Barbs\nEVs: 252 HP / 4 Def / 252 SpD\nCareful Nature\n- Power Whip\n- Knock Off\n- Leech Seed\n- Spikes\n\nGliscor @ Toxic Orb\nAbility: Poison Heal\nEVs: 244 HP / 24 Atk / 36 Def / 184 SpD / 20 Spe\nJolly Nature\n- Earthquake\n- Roost\n- Swords Dance\n- Facade\n\nSlowbro @ Psychium Z\nAbility: Regenerator\nEVs: 252 HP / 212 Def / 44 Spe\nBold Nature\nIVs: 0 Atk\n- Scald\n- Slack Off\n- Calm Mind\n- Future Sight\n\nTyranitar-Mega @ Tyranitarite\nAbility: Sand Stream\nEVs: 212 HP / 128 Atk / 168 Spe\nAdamant Nature\n- Stone Edge\n- Earthquake\n- Pursuit\n- Stealth Rock\n\nTornadus-Therian (M) @ Heavy-Duty Boots\nAbility: Regenerator\nEVs: 244 HP / 60 Def / 204 Spe\nTimid Nature\n- Hurricane\n- Knock Off\n- U-turn\n- Defog\n\nExcadrill @ Leftovers\nAbility: Sand Rush\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Earthquake\n- Iron Head\n- Toxic\n- Swords Dance",
+      "icons": [
+        598,
+        472,
+        80,
+        1124,
+        966,
+        530
+      ]
+    },
+    "Melmetal Stall by HoodedZack": {
+      "importable": "Foxy's Pirate Cove (Sableye-Mega) (M) @ Sablenite\nAbility: Prankster\nEVs: 248 HP / 8 Def / 252 SpD\nCareful Nature\n- Knock Off\n- Will-O-Wisp\n- Recover\n- Protect\n\nThe Children (Chansey) @ Eviolite\nAbility: Natural Cure\nEVs: 248 HP / 252 Def / 8 SpD\nBold Nature\n- Seismic Toss\n- Heal Bell\n- Soft-Boiled\n- Stealth Rock\n\nChica (Zapdos) @ Heavy-Duty Boots\nAbility: Static\nShiny: Yes\nEVs: 248 HP / 240 Def / 20 Spe\nBold Nature\n- Discharge\n- Heat Wave\n- Defog\n- Roost\n\nTHE MAN (Alomomola) (M) @ Leftovers\nAbility: Regenerator\nShiny: Yes\nEVs: 40 HP / 252 Def / 216 SpD\nBold Nature\nIVs: 0 Atk\n- Scald\n- Toxic\n- Protect\n- Wish\n\nIT'S BEEN SO LONG (Clefable) @ Leftovers\nAbility: Unaware\nEVs: 252 HP / 252 Def / 4 SpD\nBold Nature\nIVs: 0 Atk\n- Moonblast\n- Wish\n- Protect\n- Calm Mind\n\nEnnard (Melmetal) @ Leftovers\nAbility: Iron Fist\nEVs: 240 HP / 4 Def / 252 SpD / 12 Spe\nImpish Nature\n- Acid Armor\n- Substitute\n- Double Iron Bash\n- Body Press",
+      "icons": [
+        1129,
+        113,
+        145,
+        594,
+        36,
+        809
+      ]
+    },
+    "SD Garchomp + Mega Metagross Bulky Offense by Guardsweeper": {
+      "importable": "Metagross-Mega @ Metagrossite\nAbility: Tough Claws\nShiny: Yes\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Meteor Mash\n- Zen Headbutt\n- Thunder Punch\n- Toxic\n\nGarchomp @ Rockium Z\nAbility: Rough Skin\nShiny: Yes\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Swords Dance\n- Earthquake\n- Stone Edge\n- Stealth Rock\n\nTangrowth @ Rocky Helmet\nAbility: Regenerator\nShiny: Yes\nEVs: 252 HP / 252 Def / 4 SpD\nRelaxed Nature\n- Giga Drain\n- Knock Off\n- Hidden Power [Ice]\n- Sleep Powder\n\nTapu Fini @ Leftovers\nAbility: Misty Surge\nShiny: Yes\nEVs: 252 HP / 12 SpA / 52 SpD / 192 Spe\nCalm Nature\nIVs: 0 Atk\n- Moonblast\n- Scald\n- Taunt\n- Defog\n\nRotom-Heat @ Heavy-Duty Boots\nAbility: Levitate\nShiny: Yes\nEVs: 252 HP / 72 Def / 184 Spe\nBold Nature\nIVs: 0 Atk\n- Nasty Plot\n- Overheat\n- Volt Switch\n- Toxic\n\nDarmanitan-Galar @ Choice Scarf\nAbility: Gorilla Tactics\nShiny: Yes\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Icicle Crash\n- U-turn\n- Flare Blitz\n- Earthquake",
+      "icons": [
+        1141,
+        445,
+        465,
+        788,
+        950,
+        1076
+      ]
+    },
+    "Metagross + NP Hydreigon Bulky Offense by Jordy": {
+      "importable": "Metagross-Mega @ Metagrossite\nAbility: Tough Claws\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Meteor Mash\n- Zen Headbutt\n- Thunder Punch\n- Earthquake\n\nTornadus-Therian (M) @ Heavy-Duty Boots\nAbility: Regenerator\nEVs: 244 HP / 60 Def / 204 Spe\nTimid Nature\n- Hurricane\n- Knock Off\n- U-turn\n- Defog\n\nHippowdon @ Rocky Helmet\nAbility: Sand Stream\nEVs: 252 HP / 120 Def / 136 SpD\nImpish Nature\n- Earthquake\n- Slack Off\n- Stealth Rock\n- Toxic\n\nToxapex @ Black Sludge\nAbility: Regenerator\nEVs: 252 HP / 252 Def / 4 SpD\nRelaxed Nature\n- Scald\n- Recover\n- Haze\n- Knock Off\n\nHydreigon @ Groundium Z\nAbility: Levitate\nEVs: 244 SpA / 32 SpD / 232 Spe\nTimid Nature\nIVs: 0 Atk\n- Dark Pulse\n- Earth Power\n- Roost\n- Nasty Plot\n\nDarmanitan-Galar @ Choice Scarf\nAbility: Gorilla Tactics\nEVs: 252 Atk / 4 Def / 252 Spe\nJolly Nature\n- Icicle Crash\n- Flare Blitz\n- U-turn\n- Earthquake",
+      "icons": [
+        1141,
+        966,
+        450,
+        748,
+        635,
+        1076
+      ]
+    },
+    "\"The Brokens\" Bulky Offense by Jho": {
+      "importable": "Darmanitan-Galar @ Choice Scarf\nAbility: Gorilla Tactics\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Icicle Crash\n- U-turn\n- Flare Blitz\n- Earthquake\n\nTapu Fini @ Leftovers\nAbility: Misty Surge\nEVs: 248 HP / 12 SpA / 56 SpD / 192 Spe\nCalm Nature\n- Moonblast\n- Scald\n- Knock Off\n- Defog\n\nGreninja @ Choice Specs\nAbility: Battle Bond\nEVs: 4 HP / 252 SpA / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Hydro Pump\n- Dark Pulse\n- Water Shuriken\n- Spikes\n\nMetagross-Mega @ Metagrossite\nAbility: Tough Claws\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Meteor Mash\n- Zen Headbutt\n- Thunder Punch\n- Earthquake\n\nTangrowth @ Rocky Helmet\nAbility: Regenerator\nEVs: 252 HP / 252 Def / 4 Spe\nRelaxed Nature\n- Giga Drain\n- Knock Off\n- Hidden Power [Ice]\n- Sleep Powder\n\nGarchomp @ Rockium Z\nAbility: Rough Skin\nEVs: 252 Atk / 4 SpD / 252 Spe\nJolly Nature\n- Stone Edge\n- Earthquake\n- Stealth Rock\n- Swords Dance",
+      "icons": [
+        1076,
+        788,
+        658,
+        1141,
+        465,
+        445
       ]
     }
   },
