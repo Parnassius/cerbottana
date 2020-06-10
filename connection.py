@@ -16,8 +16,6 @@ from plugins import plugins
 
 from room import Room
 
-from server import SERVER
-
 
 class Connection:
     def __init__(
@@ -86,8 +84,8 @@ class Connection:
                     message: str = await websocket.recv()
                     print("<< {}".format(message))
                     asyncio.ensure_future(self.parse_message(message))
-        except (websockets.exceptions.ConnectionClosed, OSError):
-            SERVER.stop()
+        except:
+            pass
 
     async def parse_message(self, message: str) -> None:
         if not message:

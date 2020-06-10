@@ -2,26 +2,27 @@ import os
 from datetime import date
 
 from flask import Flask, render_template, session, abort, request, g
-from gevent import monkey
-from gevent.pywsgi import WSGIServer
+from waitress import serve
 
 import database
 import utils
 
-
-monkey.patch_all()
-
-APP = Flask(__name__)
-
-APP.secret_key = os.environ["FLASK_SECRET_KEY"]
+class Server(Flask):
+    def serve_forever(self):
+        serve(self, listen='*:{}'.format(os.environ["PORT"]))
 
 
-@APP.template_filter("format_date")
+SERVER = Server(__name__)
+
+SERVER.secret_key = os.environ["FLASK_SECRET_KEY"]
+
+
+@SERVER.template_filter("format_date")
 def format_date(value: str) -> str:
     return date.fromisoformat(value).strftime("%d/%m/%Y")
 
 
-@APP.before_request
+@SERVER.before_request
 def before():
     g.db = database.open_db()
 
@@ -39,7 +40,7 @@ def before():
         abort(401)
 
 
-@APP.after_request
+@SERVER.after_request
 def after(res):
     db = g.pop("db", None)
 
@@ -48,7 +49,7 @@ def after(res):
     return res
 
 
-@APP.route("/", methods=("GET", "POST"))
+@SERVER.route("/", methods=("GET", "POST"))
 def dashboard():
 
     if request.method == "POST":
@@ -86,7 +87,7 @@ def dashboard():
     )
 
 
-@APP.route("/profilo", methods=("GET", "POST"))
+@SERVER.route("/profilo", methods=("GET", "POST"))
 def profilo():
 
     userid = utils.to_user_id(request.args.get("userid", ""))
@@ -133,7 +134,7 @@ def profilo():
     )
 
 
-@APP.route("/elitefour")
+@SERVER.route("/elitefour")
 def elitefour():
 
     tier = request.args.get("tier")
@@ -148,7 +149,7 @@ def elitefour():
     return render_template("elitefour.html", rs=rs)
 
 
-@APP.route("/eightball", methods=("GET", "POST"))
+@SERVER.route("/eightball", methods=("GET", "POST"))
 def eightball():
 
     if request.method == "POST":
@@ -176,11 +177,3 @@ def eightball():
     rs = g.db.execute(sql).fetchall()
 
     return render_template("eightball.html", rs=rs)
-
-
-SERVER = WSGIServer(
-    ("0.0.0.0", int(os.environ["PORT"])),
-    APP,
-    keyfile="server.key",
-    certfile="server.crt",
-)
