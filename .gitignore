@@ -1,5 +1,4 @@
 __pycache__/
-/.env
+/.mypy_cache
+/.venv
 /database.sqlite
-/server.key
-/server.crt
