@@ -1,7 +1,9 @@
 import json
-import requests
 
 import utils
+
+import urllib.request
+import urllib.parse
 
 from room import Room
 
@@ -135,8 +137,19 @@ async def challstr(self, roomid, *challstring):
         "pass": self.password,
         "challstr": challstring,
     }
-    req = requests.post("https://play.pokemonshowdown.com/action.php", data=payload)
-    assertion = json.loads(req.text[1:])["assertion"]
+
+    payload = "act=login&name={username}&pass={password}&challstr={challstr}".format(
+        username=self.username, password=self.password, challstr=challstring
+    ).encode()
+
+    req = urllib.request.Request(
+        "https://play.pokemonshowdown.com/action.php",
+        payload,
+        {"User-Agent": "Mozilla"},
+    )
+    resp = urllib.request.urlopen(req)
+
+    assertion = json.loads(resp.read().decode("utf-8")[1:])["assertion"]
 
     if assertion:
         await self.send_message("", "/trn {},0,{}".format(self.username, assertion))
