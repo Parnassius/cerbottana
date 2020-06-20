@@ -7,9 +7,10 @@ from waitress import serve
 import database
 import utils
 
+
 class Server(Flask):
     def serve_forever(self):
-        serve(self, listen='*:{}'.format(os.environ["PORT"]))
+        serve(self, listen="*:{}".format(os.environ["PORT"]))
 
 
 SERVER = Server(__name__)
