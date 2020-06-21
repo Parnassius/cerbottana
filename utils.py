@@ -129,10 +129,6 @@ def username_color(name: str) -> str:
     return "hsl({h},{s}%,{l}%)".format(h=h, s=s, l=l)
 
 
-with open("./data/sample-teams.json", "r") as f:
-    SAMPLE_TEAMS = json.load(f)
-
-
 AVATAR_IDS = {
     "1": "lucas",
     "2": "dawn",
