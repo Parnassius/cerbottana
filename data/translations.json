@@ -1031,6 +1031,14 @@
     {
       "en": "Hunger Switch",
       "it": "Pancialterna"
+    },
+    {
+      "en": "Quick Draw",
+      "it": "Colpolesto"
+    },
+    {
+      "en": "Unseen Fist",
+      "it": "Pugni Invisibili"
     }
   ],
   "item": [
@@ -5977,6 +5985,42 @@
     {
       "en": "Rotom Catalog",
       "it": "Catalogo Rotom"
+    },
+    {
+      "en": "Max Honey",
+      "it": "Mielemax"
+    },
+    {
+      "en": "Max Mushrooms",
+      "it": "Fungomax"
+    },
+    {
+      "en": "Galarica Twig",
+      "it": "Ramo Galarnoce"
+    },
+    {
+      "en": "Galarica Cuff",
+      "it": "Fascia Galarnoce"
+    },
+    {
+      "en": "Style Card",
+      "it": "Tessera chic"
+    },
+    {
+      "en": "Armor Pass",
+      "it": "Pass Armatura"
+    },
+    {
+      "en": "Exp. Charm",
+      "it": "Esperienzamuleto"
+    },
+    {
+      "en": "Armorite Ore",
+      "it": "Rocciarmatura"
+    },
+    {
+      "en": "Mark Charm",
+      "it": "Emblemamuleto"
     }
   ],
   "move": [
@@ -9093,6 +9137,94 @@
       "it": "Raggio d\u2019Acciaio"
     },
     {
+      "en": "Expanding Force",
+      "it": "Vastenergia"
+    },
+    {
+      "en": "Steel Roller",
+      "it": "Ferrorullo"
+    },
+    {
+      "en": "Scale Shot",
+      "it": "Squamacolpo"
+    },
+    {
+      "en": "Meteor Beam",
+      "it": "Raggiometeora"
+    },
+    {
+      "en": "Shell Side Arm",
+      "it": "Armaguscio"
+    },
+    {
+      "en": "Misty Explosion",
+      "it": "Nebbioscoppio"
+    },
+    {
+      "en": "Grassy Glide",
+      "it": "Erboscivolata"
+    },
+    {
+      "en": "Rising Voltage",
+      "it": "Elettroimpennata"
+    },
+    {
+      "en": "Terrain Pulse",
+      "it": "Campopulsar"
+    },
+    {
+      "en": "Skitter Smack",
+      "it": "Strisciacolpo"
+    },
+    {
+      "en": "Burning Jealousy",
+      "it": "Fiamminvidia"
+    },
+    {
+      "en": "Lash Out",
+      "it": "Sfogarabbia"
+    },
+    {
+      "en": "Poltergeist",
+      "it": "Poltergeist"
+    },
+    {
+      "en": "Corrosive Gas",
+      "it": "Gas Corrosivo"
+    },
+    {
+      "en": "Coaching",
+      "it": "Coaching"
+    },
+    {
+      "en": "Flip Turn",
+      "it": "Virata"
+    },
+    {
+      "en": "Triple Axel",
+      "it": "Triplo Axel"
+    },
+    {
+      "en": "Dual Wingbeat",
+      "it": "Doppia Ala"
+    },
+    {
+      "en": "Scorching Sands",
+      "it": "Sabbiardente"
+    },
+    {
+      "en": "Jungle Healing",
+      "it": "Giunglacura"
+    },
+    {
+      "en": "Wicked Blow",
+      "it": "Pugnotenebra"
+    },
+    {
+      "en": "Surging Strikes",
+      "it": "Idroraffica"
+    },
+    {
       "en": "G-Max Wildfire",
       "it": "Gigavampa"
     },
@@ -9195,6 +9327,34 @@
     {
       "en": "G-Max Centiferno",
       "it": "Gigamillefiamme"
+    },
+    {
+      "en": "G-Max Vine Lash",
+      "it": "Gigasferzata"
+    },
+    {
+      "en": "G-Max Cannonade",
+      "it": "Gigacannonata"
+    },
+    {
+      "en": "G-Max Drum Solo",
+      "it": "Gigarullio"
+    },
+    {
+      "en": "G-Max Fireball",
+      "it": "Gigafiammopalla"
+    },
+    {
+      "en": "G-Max Hydrosnipe",
+      "it": "Gigasparomirato"
+    },
+    {
+      "en": "G-Max One Blow",
+      "it": "Gigasingolcolpo"
+    },
+    {
+      "en": "G-Max Rapid Flow",
+      "it": "Gigapluricolpo"
     },
     {
       "en": "Shadow Rush",
