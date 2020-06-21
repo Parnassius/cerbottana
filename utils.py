@@ -596,7 +596,7 @@ CUSTOM_COLORS = {
     "yogibears": "bwahahahahahahahaha",
     "tjay": "teej19",
     "explodingdaisies": "85kgt",
-    "flare": "ploiyhgr",
+    "flare": "nsyncluvr67",
     "tenshi": "tenshinagae",
     "pre": "0km",
     "ransei": "54j7o",
@@ -618,5 +618,9 @@ CUSTOM_COLORS = {
     "faku": "ifaku",
     "pablo": "arrested",
     "facu": "facundoooooooo",
+    "gimmick": "gimm1ck",
+    "pichus": "up1gat8f",
+    "pigeons": "pigeonsvgc",
+    "clefable": "147x0",
     "cathy": "",
 }
