@@ -1,4 +1,6 @@
 import random
+from datetime import datetime
+import pytz
 
 import utils
 
@@ -113,6 +115,19 @@ async def oizys(self, room, user, arg):
     await self.send_reply(room, user, "no")
 
 
+async def plat0(self, room, user, arg):
+    if room is not None and not utils.is_voice(user):
+        return
+    text = "oh {} non mi spoilerare".format(
+        random.choice(["basta", "senti", "smettila"])
+    )
+    tz = pytz.timezone("Europe/Rome")
+    timestamp = datetime.now(tz)
+    if 3 <= timestamp.hour <= 5:
+        text += ", che mi sono appena svegliato"
+    await self.send_reply(room, user, text)
+
+
 async def r0spe(self, room, user, arg):
     if room is not None and not utils.is_voice(user):
         return
@@ -204,6 +219,10 @@ commands = {
     "mistercantiere": mistercantiere,
     "azyz": oizys,
     "oizys": oizys,
+    "plat0": plat0,
+    "plato": plat0,
+    "palt0": plat0,
+    "palto": plat0,
     "r0spe": r0spe,
     "rospe": r0spe,
     "silver": silver97,
