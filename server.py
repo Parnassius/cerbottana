@@ -95,8 +95,6 @@ def profilo():
 
     if request.method == "POST":
 
-        print(request.form)
-
         if "descrizione" in request.form:
             sql = "UPDATE utenti SET descrizione = ? WHERE id = ? AND userid = ?"
             g.db.execute(sql, [request.form["descrizione"], request.form["id"], userid])
