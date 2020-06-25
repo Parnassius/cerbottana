@@ -134,6 +134,12 @@ async def r0spe(self, room, user, arg):
     await self.send_reply(room, user, "buondì")
 
 
+async def roiler(self, room, user, arg):
+    if room is not None and not utils.is_voice(user):
+        return
+    await self.send_reply(room, user, "ehm volevo dire")
+
+
 async def silver97(self, room, user, arg):
     if room is not None and not utils.is_voice(user):
         return
@@ -225,6 +231,8 @@ commands = {
     "plato": plat0,
     "r0spe": r0spe,
     "rospe": r0spe,
+    "boiler": roiler,
+    "roiler": roiler,
     "silver": silver97,
     "silver97": silver97,
     "smilzo": smilzo,
