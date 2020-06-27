@@ -1,5 +1,6 @@
 import os
 
+from plugin_loader import plugin_wrapper
 import utils
 
 from room import Room
@@ -19,6 +20,7 @@ def create_token(self, rank: str) -> str:
     return token_id
 
 
+@plugin_wrapper(aliases=["dashboard"])
 async def token(self, room: str, user: str, arg: str) -> None:
     userid = utils.to_user_id(user)
     for room in self.rooms:
@@ -34,6 +36,3 @@ async def token(self, room: str, user: str, arg: str) -> None:
     await self.send_pm(
         user, "{url}?token={token}".format(url=os.environ["DOMAIN"], token=token_id)
     )
-
-
-commands = {"dashboard": token, "token": token}

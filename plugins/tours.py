@@ -1,7 +1,6 @@
+from plugin_loader import plugin_wrapper
 from typing import Optional
-
 import utils
-
 import database
 
 
@@ -40,6 +39,7 @@ async def create_tour(
         await self.send_message(room, "/tour rules {}".format(",".join(rules)))
 
 
+@plugin_wrapper(helpstr="[nome pokemon] Avvia un randpoketour.")
 async def randpoketour(self, room: str, user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
@@ -65,6 +65,3 @@ async def randpoketour(self, room: str, user: str, arg: str) -> None:
     await create_tour(
         self, room, formatid=formatid, name=name, autostart=12, rules=rules
     )
-
-
-commands = {"randpoketour": randpoketour}

@@ -1,12 +1,11 @@
+from plugin_loader import plugin_wrapper
 import utils
 
 import veekun
 
 
+@plugin_wrapper(aliases=["locations"])
 async def location(self, room: str, user: str, arg: str) -> None:
-    if room is not None and not utils.is_voice(user):
-        return
-
     arg = utils.to_user_id(utils.remove_accents(arg.lower()))
     sql = """SELECT b.version_id, MIN(b.min_level) AS min_level, MAX(b.max_level) AS max_level,
            b.version, b.location_area_id, b.location_area, b.location_name, b.location_subtitle,
@@ -104,6 +103,7 @@ async def location(self, room: str, user: str, arg: str) -> None:
     await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
 
 
+@plugin_wrapper(aliases=["encounters"])
 async def encounter(self, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
@@ -207,11 +207,3 @@ async def encounter(self, room: str, user: str, arg: str) -> None:
         return await self.send_reply(room, user, "Nessun dato")
 
     await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
-
-
-commands = {
-    "encounter": encounter,
-    "encounters": encounter,
-    "location": location,
-    "locations": location,
-}

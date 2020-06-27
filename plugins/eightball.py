@@ -1,14 +1,13 @@
 import random
 
+from plugin_loader import plugin_wrapper
 import utils
 
 import database
 
 
+@plugin_wrapper(helpstr="8ball helpstring")
 async def eightball(self, room: str, user: str, arg: str) -> None:
-    if room is not None and not utils.is_voice(user):
-        return
-
     db = database.open_db()
     answers = db.execute("SELECT risposta FROM eight_ball").fetchall()
     db.connection.close()
@@ -16,6 +15,3 @@ async def eightball(self, room: str, user: str, arg: str) -> None:
     if answer[0] == "/":
         answer = "/" + answer
     await self.send_reply(room, user, answer)
-
-
-commands = {"8ball": eightball, "eightball": eightball}

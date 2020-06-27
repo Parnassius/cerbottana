@@ -1,12 +1,11 @@
 from time import time
 
+from plugin_loader import plugin_wrapper
 import utils
 
 
+@plugin_wrapper()
 async def uptime(self, room, user, arg):
-    if room is not None and not utils.is_voice(user):
-        return
-
     s = int(time() - self.connection_start)
     m, s = divmod(s, 60)
     h, m = divmod(m, 60)
@@ -18,6 +17,3 @@ async def uptime(self, room, user, arg):
     seconds = "{} second{}".format(s, "" if s == 1 else "s")
 
     await self.send_reply(room, user, days + hours + minutes + seconds)
-
-
-commands = {"uptime": uptime}

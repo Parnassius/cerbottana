@@ -1,12 +1,11 @@
 import json
 
+from plugin_loader import plugin_wrapper
 import utils
 
 
+@plugin_wrapper(helpstr="Traduce abilità, mosse e strumenti.")
 async def trad(self, room, user, arg):
-    if room is not None and not utils.is_voice(user):
-        return
-
     parola = utils.to_user_id(utils.remove_accents(arg.lower()))
     if parola == "":
         await self.send_reply(room, user, "Cosa devo tradurre?")
@@ -39,6 +38,3 @@ async def trad(self, room, user, arg):
 
 with open("./data/translations.json", "r") as f:
     TRANSLATIONS = json.load(f)
-
-
-commands = {"trad": trad}
