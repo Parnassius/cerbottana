@@ -1,11 +1,10 @@
+import database
 import os
 
 from plugin_loader import plugin_wrapper
 import utils
 
 from room import Room
-
-import database
 
 
 def create_token(self, rank: str) -> str:

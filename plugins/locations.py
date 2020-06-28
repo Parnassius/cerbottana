@@ -1,7 +1,7 @@
+import veekun
+
 from plugin_loader import plugin_wrapper
 import utils
-
-import veekun
 
 
 @plugin_wrapper(aliases=["locations"])

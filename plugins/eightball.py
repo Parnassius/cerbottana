@@ -1,12 +1,11 @@
+import database
 import random
 
 from plugin_loader import plugin_wrapper
 import utils
 
-import database
 
-
-@plugin_wrapper(helpstr="8ball helpstring")
+@plugin_wrapper(aliases=["8ball"], helpstr="Chiedi qualsiasi cosa!")
 async def eightball(self, room: str, user: str, arg: str) -> None:
     db = database.open_db()
     answers = db.execute("SELECT risposta FROM eight_ball").fetchall()

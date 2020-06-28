@@ -1,6 +1,6 @@
-import random
 from datetime import datetime
 import pytz
+import random
 
 from plugin_loader import plugin_wrapper
 import utils
@@ -118,7 +118,7 @@ async def r0spe(self, room, user, arg):
 
 @plugin_wrapper(aliases=["boiler"])
 async def roiler(self, room, user, arg):
-    await self.send_replay(room, user, "ehm volevo dire")
+    await self.send_reply(room, user, "ehm volevo dire")
 
 
 @plugin_wrapper(aliases=["silver"])

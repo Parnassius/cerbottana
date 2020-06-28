@@ -1,7 +1,7 @@
+import database
+
 from plugin_loader import plugin_wrapper
 import utils
-
-import database
 
 
 @plugin_wrapper(aliases=["profilo"], helpstr="Visualizza il tuo profilo.")
