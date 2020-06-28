@@ -248,6 +248,8 @@ def csv_to_sqlite():
                 "has_gender_differences": "INTEGER",
                 "growth_rate_id": "INTEGER",
                 "forms_switchable": "INTEGER",
+                "is_legendary": "INTEGER",
+                "is_mythical": "INTEGER",
                 "order": "INTEGER",
                 "conquest_order": "INTEGER",
             },
