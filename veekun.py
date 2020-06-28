@@ -2,7 +2,14 @@ import csv
 import sqlite3
 
 
+def open_db() -> sqlite3.Cursor:
+    db = sqlite3.connect("./veekun.sqlite")
+    db.row_factory = sqlite3.Row
+    return db.cursor()
+
+
 def csv_to_sqlite():
+    open("./veekun.sqlite", "w").close()
     create_stmt = "CREATE TABLE {table} ({columns}, {keys});"
     insert_stmt = "INSERT INTO {table} ({columns}) VALUES ({values});"
     update_stmt_identifier = (
@@ -295,17 +302,19 @@ def csv_to_sqlite():
         },
     ]
 
+    db = open_db()
+
     for table in tables:
         columns = ", ".join(
             ["`" + i + "` " + table["columns"][i] for i in table["columns"]]
         )
         keys = ", ".join(table["keys"])
-        CUR.execute(create_stmt.format(table=table["name"], columns=columns, keys=keys))
+        db.execute(create_stmt.format(table=table["name"], columns=columns, keys=keys))
         with open("./data/veekun/" + table["name"] + ".csv", "r") as f:
             data = csv.DictReader(f)
             keys = data.fieldnames
             values = [list(i.values()) for i in data]
-            CUR.executemany(
+            db.executemany(
                 insert_stmt.format(
                     table=table["name"],
                     columns="`" + "`, `".join(keys) + "`",
@@ -314,10 +323,5 @@ def csv_to_sqlite():
                 values,
             )
             if "identifier" in table["columns"]:
-                CUR.execute(update_stmt_identifier.format(table=table["name"]))
-            CONN.commit()
-
-
-CONN = sqlite3.connect(":memory:")
-CONN.row_factory = sqlite3.Row
-CUR = CONN.cursor()
+                db.execute(update_stmt_identifier.format(table=table["name"]))
+            db.connection.commit()

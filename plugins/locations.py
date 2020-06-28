@@ -1,6 +1,6 @@
 import utils
 
-from veekun import CUR
+import veekun
 
 
 async def location(self, room: str, user: str, arg: str) -> None:
@@ -44,10 +44,12 @@ async def location(self, room: str, user: str, arg: str) -> None:
            GROUP BY version_id, location_area_id, encounter_method_id
            ORDER BY version_id, location_area_id, encounter_method_id"""
 
+    db = veekun.open_db()
+
     html = ""
 
     current_version_id = 0
-    for row in CUR.execute(sql, [arg]):
+    for row in db.execute(sql, [arg]):
         if current_version_id != row["version_id"]:
             if current_version_id != 0:
                 html += "</tbody></table>"
@@ -93,6 +95,8 @@ async def location(self, room: str, user: str, arg: str) -> None:
     if current_version_id != 0:
         html += "</tbody></table>"
         html += "</details>"
+
+    db.connection.close()
 
     if not html:
         return await self.send_reply(room, user, "Nessun dato")
@@ -145,11 +149,13 @@ async def encounter(self, room: str, user: str, arg: str) -> None:
            GROUP BY version_id, location_area_id, pokemon_id, encounter_method_id
            ORDER BY version_id, location_area_id, encounter_method_id, rarity DESC, pokemon_id"""
 
+    db = veekun.open_db()
+
     html = ""
 
     current_version_id = 0
     current_location_area = None
-    for row in CUR.execute(sql, [arg]):
+    for row in db.execute(sql, [arg]):
         if current_version_id != row["version_id"]:
             if current_version_id != 0:
                 html += "</tbody></table>"
@@ -194,6 +200,8 @@ async def encounter(self, room: str, user: str, arg: str) -> None:
     if current_version_id != 0:
         html += "</tbody></table>"
         html += "</details>"
+
+    db.connection.close()
 
     if not html:
         return await self.send_reply(room, user, "Nessun dato")
