@@ -2,7 +2,6 @@ import database
 import random
 
 from plugin_loader import plugin_wrapper
-import utils
 
 
 @plugin_wrapper(aliases=["8ball"], helpstr="Chiedi qualsiasi cosa!")

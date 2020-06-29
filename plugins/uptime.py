@@ -1,7 +1,6 @@
 from time import time
 
 from plugin_loader import plugin_wrapper
-import utils
 
 
 @plugin_wrapper()

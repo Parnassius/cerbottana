@@ -3,7 +3,6 @@ import pytz
 import random
 
 from plugin_loader import plugin_wrapper
-import utils
 
 
 @plugin_wrapper()

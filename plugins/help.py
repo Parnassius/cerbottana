@@ -1,5 +1,4 @@
 from plugin_loader import Plugin, plugin_wrapper
-import utils
 
 
 @plugin_wrapper(is_unlisted=True)

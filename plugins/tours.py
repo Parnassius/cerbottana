@@ -1,4 +1,3 @@
-import database
 from typing import Optional
 
 from plugin_loader import plugin_wrapper

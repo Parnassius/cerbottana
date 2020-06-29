@@ -1,7 +1,6 @@
 import random
 
 from plugin_loader import plugin_wrapper
-import utils
 
 from room import Room
 
