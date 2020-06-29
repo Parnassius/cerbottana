@@ -1,84 +1,14 @@
-import utils
-
 import database
 
-
-async def champion(self, room: str, user: str, arg: str) -> None:
-    await elitefour(self, room, user, "ou")
-
-
-async def elitefour(self, room: str, user: str, arg: str) -> None:
-    if room is not None and not utils.is_voice(user):
-        return
-
-    tier = utils.to_user_id(arg)
-
-    params = []
-
-    db = database.open_db()
-    sql = "SELECT t.descrizione AS tier, "
-    sql += " (SELECT (SELECT nome FROM utenti WHERE id = e.utente) FROM elitefour AS e WHERE tier = t.id ORDER BY data DESC LIMIT 1) AS utente "
-    sql += " FROM elitefour_tiers AS t "
-    if tier:
-        sql += " WHERE (',' || t.keywords || ',') LIKE ('%,' || ? || ',%') "
-        params.append(tier)
-    sql += " ORDER BY t.ordine"
-    body = db.execute(sql, params).fetchall()
-    db.connection.close()
-
-    if body:
-        if len(body) == 1:
-            if room is not None and utils.is_voice(user):
-                await profile(self, room, user, body[0]["utente"], True)
-            else:
-                await self.send_pm(user, body[0]["utente"])
-        elif len(body) > 1:
-            simple_message = ""
-            html = "<table>"
-            html += "  <tr>"
-            html += '    <td style="text-align: center; padding: 5px 0 10px">'
-            html += "      <b><big>Lega Pokémon</big></b>"
-            html += "    </td>"
-            html += "  </tr>"
-            first = True
-            for i in body:
-                utente = i["utente"]
-
-                if not first:
-                    simple_message += " - "
-                simple_message += "{tier}: {utente}".format(
-                    tier=i["tier"], utente=utente
-                )
-
-                html += "  <tr>"
-                html += "    <td>"
-                if utente is None:
-                    color = "inherit"
-                else:
-                    color = utils.username_color(utils.to_user_id(utente))
-                html += '{tier}: <b style="color: {color}">{utente}</b><br>'.format(
-                    tier=i["tier"], color=color, utente=utente
-                )
-                html += "    </td>"
-                html += "  </tr>"
-                if first:
-                    html += "  <tr>"
-                    html += '    <td colspan="3">'
-                    html += '      <hr style="margin:0">'
-                    html += "    </td>"
-                    html += "  </tr>"
-                    first = False
-            html += "</table>"
-            await self.send_htmlbox(room, user, html, simple_message)
+from plugin_loader import plugin_wrapper
+import utils
 
 
+@plugin_wrapper(aliases=["profilo"], helpstr="Visualizza il tuo profilo.")
 async def profile(
     self, room: str, user: str, arg: str, from_elitefour: bool = False
 ) -> None:
     # pylint: disable=too-many-locals
-    if room is not None and not utils.is_voice(user):
-        return
-
     if arg.strip() == "":
         arg = user
 
@@ -193,10 +123,8 @@ async def profile(
     db.connection.close()
 
 
+@plugin_wrapper(aliases=["setprofilo"], helpstr="Imposta una tua frase personalizzata.")
 async def setprofile(self, room: str, user: str, arg: str) -> None:
-    if room is not None and not utils.is_voice(user):
-        return
-
     if len(arg) > 200:
         await self.send_reply(room, user, "Errore: lunghezza massima 200 caratteri")
         return
@@ -218,16 +146,3 @@ async def setprofile(self, room: str, user: str, arg: str) -> None:
     )
     for room in self.rooms:
         await self.send_rankhtmlbox("%", room, message)
-
-
-commands = {
-    "campione": champion,
-    "champion": champion,
-    "e4": elitefour,
-    "elite4": elitefour,
-    "elitefour": elitefour,
-    "super4": elitefour,
-    "superquattro": elitefour,
-    "profile": profile,
-    "setprofile": setprofile,
-}

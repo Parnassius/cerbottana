@@ -1,12 +1,11 @@
-import utils
-
 import veekun
 
+from plugin_loader import plugin_wrapper
+import utils
 
+
+@plugin_wrapper()
 async def learnset(self, room: str, user: str, arg: str) -> None:
-    if room is not None and not utils.is_voice(user):
-        return
-
     args = arg.split(",")
     if len(args) < 2:
         return
@@ -96,6 +95,3 @@ async def learnset(self, room: str, user: str, arg: str) -> None:
         return await self.send_reply(room, user, "Nessun dato")
 
     await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
-
-
-commands = {"learnset": learnset}

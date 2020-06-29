@@ -1,13 +1,16 @@
 import json
 import random
 
+from plugin_loader import plugin_wrapper
 import utils
 
 
+@plugin_wrapper(
+    aliases=["meme", "memes", "mims", "say"],
+    helpstr="FOR THE MIMMMSSS",
+    is_unlisted=True,
+)
 async def shitpost(self, room: str, user: str, arg: str) -> None:
-    if room is not None and not utils.is_voice(user):
-        return
-
     message = utils.remove_accents(arg.strip())
     if len(message) > 50:
         await self.send_reply(room, user, "Testo troppo lungo")
@@ -505,12 +508,3 @@ LETTERS = {
 
 with open("./data/memes.json", "r") as f:
     MEMES = json.load(f)
-
-
-commands = {
-    "meme": memes,
-    "memes": memes,
-    "mims": memes,
-    "say": shitpost,
-    "shitpost": shitpost,
-}

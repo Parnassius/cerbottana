@@ -1,8 +1,7 @@
 from typing import Optional
 
+from plugin_loader import plugin_wrapper
 import utils
-
-import database
 
 
 async def create_tour(
@@ -40,6 +39,9 @@ async def create_tour(
         await self.send_message(room, "/tour rules {}".format(",".join(rules)))
 
 
+@plugin_wrapper(
+    helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
+)
 async def randpoketour(self, room: str, user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
@@ -65,6 +67,3 @@ async def randpoketour(self, room: str, user: str, arg: str) -> None:
     await create_tour(
         self, room, formatid=formatid, name=name, autostart=12, rules=rules
     )
-
-
-commands = {"randpoketour": randpoketour}

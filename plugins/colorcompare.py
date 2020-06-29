@@ -1,10 +1,11 @@
+from plugin_loader import plugin_wrapper
 import utils
 
 
+@plugin_wrapper(
+    helpstr="<i>nick1, nick2, ...</i> Visualizza i colori dei nickname elencati."
+)
 async def colorcompare(self, room: str, user: str, arg: str) -> None:
-    if room is not None and not utils.is_voice(user):
-        return
-
     if arg == "":
         return
 
@@ -22,7 +23,4 @@ async def colorcompare(self, room: str, user: str, arg: str) -> None:
     html += "</tr>"
     html += "</table>"
 
-    return await self.send_htmlbox(room, user, html)
-
-
-commands = {"colorcompare": colorcompare}
+    await self.send_htmlbox(room, user, html)

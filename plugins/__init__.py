@@ -1,15 +1,17 @@
-from typing import Callable, Dict
+from typing import List, Set
 
 from os.path import dirname, basename, isfile, join
 import glob
 import importlib
 
-modules = glob.glob(join(dirname(__file__), "*.py"))
+from plugin_loader import Plugin
 
-plugins: Dict[str, Callable] = {}
+
+modules = glob.glob(join(dirname(__file__), "*.py"))
 
 for f in modules:
     if isfile(f) and not f.endswith("__init__.py"):
         name = basename(f)[:-3]
-        m = importlib.import_module("plugins." + name)
-        plugins.update(m.commands)  # type: ignore
+        importlib.import_module("plugins." + name)
+
+plugins = Plugin.get_all_commands()
