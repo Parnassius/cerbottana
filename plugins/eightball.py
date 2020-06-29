@@ -1,5 +1,6 @@
-import database
 import random
+
+import database
 
 from plugin_loader import plugin_wrapper
 
