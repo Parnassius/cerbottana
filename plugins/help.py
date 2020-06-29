@@ -17,3 +17,5 @@ async def help(self, room: str, user: str, arg: str) -> None:
         for key in helpstrings:
             html += "<b>{}</b> {}<br>".format(key, helpstrings[key])
         await self.send_htmlbox(room, user, html[:-4])
+    else:
+        await self.send_reply(room, user, "Comando non trovato")
