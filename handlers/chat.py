@@ -1,4 +1,4 @@
-from handler_loader import Handler, handler_wrapper
+from handler_loader import handler_wrapper
 import utils
 
 
