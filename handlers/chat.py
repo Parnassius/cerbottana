@@ -15,7 +15,10 @@ async def parse_chat_message(self, roomid, user, message):
             await self.send_pm(user, "Invalid command")
 
     elif roomid is None:
-        await self.send_pm(user, "I'm a bot")
+        c = f"``{self.command_character}help``"
+        message = f"I'm a bot: type {c} to get a list of available commands. "
+        message += f"Sono un bot: scrivi {c} per ottenere un elenco dei comandi disponibili."
+        await self.send_pm(user, message)
 
 
 @handler_wrapper(["chat", "c"])
