@@ -16,6 +16,7 @@ async def create_tour(
     autostart: float = 2,
     autodq: float = 1.5,
     allow_scouting: bool = False,
+    forcetimer: bool = False,
     rules=[]
 ) -> None:
     tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
@@ -35,6 +36,8 @@ async def create_tour(
         await self.send_message(room, "/tour autodq {}".format(autodq))
     if not allow_scouting:
         await self.send_message(room, "/tour scouting off")
+    if forcetimer:
+        await self.send_message(room, "/tour forcetimer on")
     if rules:
         await self.send_message(room, "/tour rules {}".format(",".join(rules)))
 
@@ -67,3 +70,37 @@ async def randpoketour(self, room: str, user: str, arg: str) -> None:
     await create_tour(
         self, room, formatid=formatid, name=name, autostart=12, rules=rules
     )
+
+
+@plugin_wrapper(
+    aliases=["sibb"],
+    helpstr="Avvia un torneo Super Italian Bros. Brawl",
+    is_unlisted=True,
+)
+async def waffletour(self, room: str, user: str, arg: str) -> None:
+    if room is None or not utils.is_driver(user):
+        return
+
+    name = "Super Italian Bros. Brawl"
+    rules = [
+        "Cancel Mod",
+        "Dynamax Clause",
+        "Endless Battle Clause",
+        "Evasion Moves Clause",
+        "HP Percentage Mod",
+        "Obtainable Formes", # to avoid multiple Mega-Evolutions
+        "Sleep Clause Mod",
+        "Species Clause",
+    ]
+
+    await create_tour(
+        self,
+        room,
+        name=name,
+        autostart=5,
+        autodq=3,
+        forcetimer=True,
+        rules=rules,
+    )
+
+    await self.send_message(room, "!viewfaq sibb")
