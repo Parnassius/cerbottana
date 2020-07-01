@@ -153,7 +153,7 @@ async def trev(self, room, user, arg):
 
 @plugin_wrapper()
 async def ultrasuca(self, room, user, arg):
-    await self.send_reply(room, user, "%Ultrasuca left")
+    await self.send_reply(room, user, "@Ultrasuca left")
 
 
 @plugin_wrapper(aliases=["useless", "usy"])
