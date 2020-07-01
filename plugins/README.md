@@ -16,7 +16,6 @@ The preferred way to inizialize a `Plugin` instance is through the `plugin_wrapp
 Here's the structure of a file with one plugin (every parameter of the decorator is optional): 
 ```python
 from plugin_loader import plugin_wrapper
-import utils
 
 @plugin_wrapper(
     aliases=["other name1", "other name2"],
