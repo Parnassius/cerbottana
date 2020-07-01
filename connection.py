@@ -11,7 +11,7 @@ import websockets
 
 import utils
 
-import handlers
+from handlers import handlers
 from plugins import plugins
 
 from room import Room
@@ -39,30 +39,7 @@ class Connection:
         self.private_rooms = private_rooms
         self.command_character = command_character
         self.administrators = administrators
-        self.handlers = {
-            "init": handlers.init,
-            "title": handlers.title,
-            "users": handlers.users,
-            "join": handlers.join,
-            "j": handlers.join,
-            "J": handlers.join,
-            "leave": handlers.leave,
-            "l": handlers.leave,
-            "L": handlers.leave,
-            "name": handlers.name,
-            "n": handlers.name,
-            "N": handlers.name,
-            "chat": handlers.chat,
-            "c": handlers.chat,
-            ":": handlers.server_timestamp,
-            "c:": handlers.timestampchat,
-            "pm": handlers.pm,
-            "challstr": handlers.challstr,
-            "updateuser": handlers.updateuser,
-            "formats": handlers.formats,
-            "queryresponse": handlers.queryresponse,
-            "tournament": handlers.tournament,
-        }
+        self.handlers = handlers
         self.commands = plugins
         self.timestamp: float = 0
         self.lastmessage: float = 0
@@ -129,7 +106,8 @@ class Connection:
                 return
 
             if command in self.handlers:
-                await self.handlers[command](self, roomid, *parts[2:])
+                for func in self.handlers[command]:
+                    await func(self, roomid, *parts[2:])
 
     async def try_modchat(self, roomid: str) -> None:
         room = Room.get(roomid)

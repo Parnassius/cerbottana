@@ -35,8 +35,6 @@ def before():
         if rank:
             session["user"] = rank["rank"]
 
-    user = session.get("user")
-
     if "user" not in session:
         abort(401)
 
