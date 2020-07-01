@@ -4,11 +4,7 @@ from typing import Callable, Dict, List
 class Handler:
     _instances = dict()  # type: Dict[str, Handler]
 
-    def __init__(
-        self,
-        func: Callable,
-        message_types: List[str],
-    ) -> None:
+    def __init__(self, func: Callable, message_types: List[str]) -> None:
         self.callback = func
         self.message_types = message_types
         self._instances[func.__name__] = self
