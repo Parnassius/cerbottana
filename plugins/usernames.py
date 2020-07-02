@@ -20,6 +20,15 @@ async def alpha(self, room, user, arg):
     await self.send_reply(room, user, "Italian luck jajaja")
 
 
+@plugin_wrapper(aliases=["acii"])
+async def altcauseiminsecure(self, room, user, arg):
+    await self.send_reply(
+        room,
+        user,
+        "A, wi, we. La fortuna viene a me. Wi, we, wa. La fortuna viene qua. A, we, wi. La fortuna non va lì",
+    )
+
+
 @plugin_wrapper(aliases=["cinse", "cobse", "conse"])
 async def consecutio(self, room, user, arg):
     text = "opss{} ho lasciato il pc acceso tutta notte".format(
