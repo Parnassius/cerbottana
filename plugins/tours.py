@@ -88,19 +88,13 @@ async def waffletour(self, room: str, user: str, arg: str) -> None:
         "Endless Battle Clause",
         "Evasion Moves Clause",
         "HP Percentage Mod",
-        "Obtainable Formes", # to avoid multiple Mega-Evolutions
+        "Obtainable Formes",  # to avoid multiple Mega-Evolutions
         "Sleep Clause Mod",
         "Species Clause",
     ]
 
     await create_tour(
-        self,
-        room,
-        name=name,
-        autostart=5,
-        autodq=3,
-        forcetimer=True,
-        rules=rules,
+        self, room, name=name, autostart=5, autodq=3, forcetimer=True, rules=rules
     )
 
     await self.send_message(room, "!viewfaq sibb")
