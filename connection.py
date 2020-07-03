@@ -44,7 +44,7 @@ class Connection:
         self.timestamp: float = 0
         self.lastmessage: float = 0
         self.loop: Optional[asyncio.AbstractEventLoop] = None
-        self.websocket = None
+        self.websocket: Optional[websockets.client.WebSocketClientProtocol] = None
         self.connection_start: Optional[float] = None
         self.tiers = None
 
@@ -158,7 +158,8 @@ class Connection:
         if now - self.lastmessage < 0.1:
             await asyncio.sleep(0.1)
         self.lastmessage = now
-        await self.websocket.send(message)
+        if self.websocket is not None:
+            await self.websocket.send(message)
 
 
 CONNECTION = Connection(

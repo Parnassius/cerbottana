@@ -6,7 +6,7 @@ import utils
 
 
 class Room:
-    _instances = dict()
+    _instances = dict()  # type: Dict[str, Room]
 
     def __init__(self, roomid: str) -> None:
         self.roomid = roomid
