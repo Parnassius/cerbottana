@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from plugin_loader import plugin_wrapper
 import utils
@@ -17,7 +17,7 @@ async def create_tour(
     autodq: float = 1.5,
     allow_scouting: bool = False,
     forcetimer: bool = False,
-    rules=[]
+    rules: List[str] = []
 ) -> None:
     tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
     await self.send_message(

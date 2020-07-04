@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict
 
 import re
 import hashlib
@@ -128,7 +128,7 @@ def username_color(name: str) -> str:
     return "hsl({h},{s}%,{l}%)".format(h=h, s=s, l=l)
 
 
-AVATAR_IDS = {
+AVATAR_IDS: Dict[str, str] = {
     "1": "lucas",
     "2": "dawn",
     "3": "youngster-gen4",
@@ -438,7 +438,7 @@ AVATAR_IDS = {
     "1010": "#1010",
 }
 
-CUSTOM_COLORS = {
+CUSTOM_COLORS: Dict[str, str] = {
     "theimmortal": "taco",
     "bmelts": "testmelts",
     "zarel": "aeo",

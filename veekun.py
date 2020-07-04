@@ -1,3 +1,5 @@
+from typing import Any, List, Dict
+
 import csv
 import sqlite3
 
@@ -8,7 +10,7 @@ def open_db() -> sqlite3.Cursor:
     return db.cursor()
 
 
-def csv_to_sqlite():
+def csv_to_sqlite() -> None:
     open("./veekun.sqlite", "w").close()
     create_stmt = "CREATE TABLE {table} ({columns}, {keys});"
     insert_stmt = "INSERT INTO {table} ({columns}) VALUES ({values});"
@@ -16,7 +18,7 @@ def csv_to_sqlite():
         'UPDATE {table} SET identifier = REPLACE(identifier, "-", "");'
     )
 
-    tables = [
+    tables: List[Dict[str, Any]] = [
         {
             "name": "encounter_condition_value_map",
             "columns": {
@@ -305,11 +307,13 @@ def csv_to_sqlite():
     db = open_db()
 
     for table in tables:
-        columns = ", ".join(
-            ["`" + i + "` " + table["columns"][i] for i in table["columns"]]
+        columns = ["`" + i + "` " + table["columns"][i] for i in table["columns"]]
+        keys = table["keys"]
+        db.execute(
+            create_stmt.format(
+                table=table["name"], columns=", ".join(columns), keys=", ".join(keys)
+            )
         )
-        keys = ", ".join(table["keys"])
-        db.execute(create_stmt.format(table=table["name"], columns=columns, keys=keys))
         with open("./data/veekun/" + table["name"] + ".csv", "r") as f:
             data = csv.DictReader(f)
             keys = data.fieldnames

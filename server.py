@@ -9,7 +9,7 @@ import utils
 
 
 class Server(Flask):
-    def serve_forever(self):
+    def serve_forever(self) -> None:
         serve(self, listen="*:{}".format(os.environ["PORT"]))
 
 

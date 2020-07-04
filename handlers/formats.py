@@ -1,10 +1,12 @@
+from typing import Optional, List, Dict
+
 from handler_loader import handler_wrapper
 
 
 @handler_wrapper(["formats"])
-async def formats(self, roomid, *formatslist):
-    tiers = []
-    section = None
+async def formats(self, roomid: str, *formatslist: str) -> None:
+    tiers: List[Dict[str, Optional[str]]] = []
+    section: Optional[str] = None
     section_next = False
     for tier in formatslist:
         if tier[0] == ",":

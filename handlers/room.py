@@ -8,7 +8,9 @@ from room import Room
 import database
 
 
-async def add_user(self, roomid, user, skip_avatar_check=False):
+async def add_user(
+    self, roomid: str, user: str, skip_avatar_check: bool = False
+) -> None:
     rank = user[0]
     username = user[1:].split("@")[0]
     userid = utils.to_user_id(username)
@@ -32,43 +34,43 @@ async def add_user(self, roomid, user, skip_avatar_check=False):
         await self.send_message("", "/cmd userdetails {}".format(username), False)
 
 
-async def remove_user(self, roomid, user):
+async def remove_user(self, roomid: str, user: str) -> None:
     Room.get(roomid).remove_user(utils.to_user_id(user))
 
 
 @handler_wrapper(["title"])
-async def title(self, roomid, roomtitle):
+async def title(self, roomid: str, roomtitle: str) -> None:
     Room.get(roomid).title = roomtitle
 
 
 @handler_wrapper(["users"])
-async def users(self, roomid, userlist):
+async def users(self, roomid: str, userlist: str) -> None:
     for user in userlist.split(",")[1:]:
         await add_user(self, roomid, user, True)
 
 
 @handler_wrapper(["join", "j", "J"])
-async def join(self, roomid, user):
+async def join(self, roomid: str, user: str) -> None:
     await add_user(self, roomid, user)
 
 
 @handler_wrapper(["leave", "l", "L"])
-async def leave(self, roomid, user):
+async def leave(self, roomid: str, user: str) -> None:
     await remove_user(self, roomid, user)
 
 
 @handler_wrapper(["name", "n", "N"])
-async def name(self, roomid, user, oldid):
+async def name(self, roomid: str, user: str, oldid: str) -> None:
     await remove_user(self, roomid, oldid)
     await add_user(self, roomid, user)
 
 
 @handler_wrapper(["queryresponse"])
-async def queryresponse(self, roomid, querytype, data):
+async def queryresponse(self, roomid: str, querytype: str, querydata: str) -> None:
     if querytype != "userdetails":
         return
 
-    data = json.loads(data)
+    data = json.loads(querydata)
     userid = data["userid"]
     avatar = str(data["avatar"])
     if avatar in utils.AVATAR_IDS:

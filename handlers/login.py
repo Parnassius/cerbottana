@@ -8,11 +8,9 @@ import utils
 
 
 @handler_wrapper(["challstr"])
-async def challstr(self, roomid, *challstring):
-    challstring = "|".join(challstring)
-
+async def challstr(self, roomid: str, *challstring: str) -> None:
     payload = "act=login&name={username}&pass={password}&challstr={challstr}".format(
-        username=self.username, password=self.password, challstr=challstring
+        username=self.username, password=self.password, challstr="|".join(challstring)
     ).encode()
 
     req = urllib.request.Request(
@@ -31,7 +29,9 @@ async def challstr(self, roomid, *challstring):
 
 
 @handler_wrapper(["updateuser"])
-async def updateuser(self, roomid, user, named, avatar, settings):
+async def updateuser(
+    self, roomid: str, user: str, named: str, avatar: str, settings: str
+) -> None:
     username = user.split("@")[0]
     if utils.to_user_id(username) != utils.to_user_id(self.username):
         return

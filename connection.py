@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 import asyncio
 import os
@@ -46,7 +46,7 @@ class Connection:
         self.loop: Optional[asyncio.AbstractEventLoop] = None
         self.websocket: Optional[websockets.client.WebSocketClientProtocol] = None
         self.connection_start: Optional[float] = None
-        self.tiers = None
+        self.tiers: Optional[List[Dict[str, Optional[str]]]] = None
 
     def open_connection(self) -> None:
         self.loop = asyncio.new_event_loop()
@@ -128,7 +128,7 @@ class Connection:
 
     async def send_htmlbox(
         self, room: str, user: str, message: str, simple_message: str = ""
-    ):
+    ) -> None:
         message = message.replace("\n", "<br>")
         if room is not None:
             await self.send_message(room, "/addhtmlbox {}".format(message), False)
@@ -160,7 +160,7 @@ class Connection:
                 message = " " + message
         await self.send("{}|{}".format(room, message))
 
-    async def send_pm(self, user: str, message: str, escape: bool = True):
+    async def send_pm(self, user: str, message: str, escape: bool = True) -> None:
         if escape and message[0] == "/":
             message = "/" + message
         await self.send("|/w {}, {}".format(utils.to_user_id(user), message))

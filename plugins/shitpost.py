@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 import json
 import random
 
@@ -51,7 +53,7 @@ async def memes(self, room: str, user: str, arg: str) -> None:
 
 
 # fmt: off
-LETTERS = {
+LETTERS: Dict[str, List[str]] = {
     "a": [
         "┌─┐",
         "├─┤",
