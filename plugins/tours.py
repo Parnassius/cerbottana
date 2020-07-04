@@ -1,11 +1,16 @@
-from typing import Optional, List
+from __future__ import annotations
+
+from typing import Optional, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
 
 from plugin_loader import plugin_wrapper
 import utils
 
 
 async def create_tour(
-    self,
+    conn: Connection,
     room: str,
     *,
     formatid: str = "customgame",
@@ -20,7 +25,7 @@ async def create_tour(
     rules: List[str] = []
 ) -> None:
     tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
-    await self.send_message(
+    await conn.send_message(
         room,
         tournew.format(
             formatid=formatid,
@@ -32,26 +37,27 @@ async def create_tour(
         False,
     )
     if autostart is not None:
-        await self.send_message(room, "/tour autostart {}".format(autostart), False)
+        await conn.send_message(room, "/tour autostart {}".format(autostart), False)
     if autodq is not None:
-        await self.send_message(room, "/tour autodq {}".format(autodq), False)
+        await conn.send_message(room, "/tour autodq {}".format(autodq), False)
     if not allow_scouting:
-        await self.send_message(room, "/tour scouting off", False)
+        await conn.send_message(room, "/tour scouting off", False)
     if forcetimer:
-        await self.send_message(room, "/tour forcetimer on", False)
+        await conn.send_message(room, "/tour forcetimer on", False)
     if rules:
-        await self.send_message(room, "/tour rules {}".format(",".join(rules)), False)
+        await conn.send_message(room, "/tour rules {}".format(",".join(rules)), False)
 
 
 @plugin_wrapper(
     helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
 )
-async def randpoketour(self, room: str, user: str, arg: str) -> None:
+async def randpoketour(conn: Connection, room: str, user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
 
     if arg.strip() == "":
-        return await self.send_message(room, "Inserisci almeno un Pokémon")
+        await conn.send_message(room, "Inserisci almeno un Pokémon")
+        return
 
     formatid = "nationaldex"
     name = "!RANDPOKE TOUR"
@@ -69,7 +75,7 @@ async def randpoketour(self, room: str, user: str, arg: str) -> None:
     rules.extend(["+" + i for i in unbans])
 
     await create_tour(
-        self, room, formatid=formatid, name=name, autostart=12, rules=rules
+        conn, room, formatid=formatid, name=name, autostart=12, rules=rules
     )
 
 
@@ -78,7 +84,7 @@ async def randpoketour(self, room: str, user: str, arg: str) -> None:
     helpstr="Avvia un torneo Super Italian Bros. Brawl",
     is_unlisted=True,
 )
-async def waffletour(self, room: str, user: str, arg: str) -> None:
+async def waffletour(conn: Connection, room: str, user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
 
@@ -95,7 +101,7 @@ async def waffletour(self, room: str, user: str, arg: str) -> None:
     ]
 
     await create_tour(
-        self, room, name=name, autostart=5, autodq=3, forcetimer=True, rules=rules
+        conn, room, name=name, autostart=5, autodq=3, forcetimer=True, rules=rules
     )
 
-    await self.send_message(room, "!viewfaq sibb", False)
+    await conn.send_message(room, "!viewfaq sibb", False)

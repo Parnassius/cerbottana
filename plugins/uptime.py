@@ -1,11 +1,21 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
+
 from time import time
 
 from plugin_loader import plugin_wrapper
 
 
 @plugin_wrapper()
-async def uptime(self, room: str, user: str, arg: str) -> None:
-    s = int(time() - self.connection_start)
+async def uptime(conn: Connection, room: str, user: str, arg: str) -> None:
+    if conn.connection_start is None:
+        return
+
+    s = int(time() - conn.connection_start)
     m, s = divmod(s, 60)
     h, m = divmod(m, 60)
     d, h = divmod(h, 24)
@@ -15,4 +25,4 @@ async def uptime(self, room: str, user: str, arg: str) -> None:
     minutes = "{} minute{}, ".format(m, "" if m == 1 else "s") if m > 0 else ""
     seconds = "{} second{}".format(s, "" if s == 1 else "s")
 
-    await self.send_reply(room, user, days + hours + minutes + seconds)
+    await conn.send_reply(room, user, days + hours + minutes + seconds)

@@ -1,4 +1,5 @@
 from typing import Optional, Dict
+from connection import Connection
 
 import re
 import hashlib
@@ -51,15 +52,15 @@ def is_driver(user: str) -> bool:
     return user[0] in "%@#&~"
 
 
-def is_private(self, room: str) -> bool:
-    return room in self.private_rooms
+def is_private(conn: Connection, room: str) -> bool:
+    return room in conn.private_rooms
 
 
-def can_pminfobox_to(self, user: str) -> Optional[str]:
-    for room in self.rooms:
+def can_pminfobox_to(conn: Connection, user: str) -> Optional[str]:
+    for room in conn.rooms:
         if user in Room.get(room).users and Room.get(room).roombot:
             return room
-    for room in self.private_rooms:
+    for room in conn.private_rooms:
         if user in Room.get(room).users and Room.get(room).roombot:
             return room
     return None

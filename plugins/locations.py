@@ -1,3 +1,10 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
+
 import veekun
 
 from plugin_loader import plugin_wrapper
@@ -5,7 +12,7 @@ import utils
 
 
 @plugin_wrapper(aliases=["locations"])
-async def location(self, room: str, user: str, arg: str) -> None:
+async def location(conn: Connection, room: str, user: str, arg: str) -> None:
     arg = utils.to_user_id(utils.remove_accents(arg.lower()))
     sql = """SELECT b.version_id, MIN(b.min_level) AS min_level, MAX(b.max_level) AS max_level,
            b.version, b.location_area_id, b.location_area, b.location_name, b.location_subtitle,
@@ -98,13 +105,14 @@ async def location(self, room: str, user: str, arg: str) -> None:
     db.connection.close()
 
     if not html:
-        return await self.send_reply(room, user, "Nessun dato")
+        await conn.send_reply(room, user, "Nessun dato")
+        return
 
-    await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
+    await conn.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
 
 
 @plugin_wrapper(aliases=["encounters"])
-async def encounter(self, room: str, user: str, arg: str) -> None:
+async def encounter(conn: Connection, room: str, user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return
 
@@ -204,6 +212,7 @@ async def encounter(self, room: str, user: str, arg: str) -> None:
     db.connection.close()
 
     if not html:
-        return await self.send_reply(room, user, "Nessun dato")
+        await conn.send_reply(room, user, "Nessun dato")
+        return
 
-    await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
+    await conn.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")

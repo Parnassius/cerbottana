@@ -7,7 +7,7 @@ from time import time
 import re
 
 import pytz
-import websockets
+import websockets  # type: ignore
 
 import utils
 

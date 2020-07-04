@@ -1,4 +1,9 @@
-from typing import List, Dict
+from __future__ import annotations
+
+from typing import List, Dict, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
 
 import json
 import random
@@ -12,10 +17,10 @@ import utils
     helpstr="FOR THE MIMMMSSS",
     is_unlisted=True,
 )
-async def shitpost(self, room: str, user: str, arg: str) -> None:
+async def shitpost(conn: Connection, room: str, user: str, arg: str) -> None:
     message = utils.remove_accents(arg.strip())
     if len(message) > 50:
-        await self.send_reply(room, user, "Testo troppo lungo")
+        await conn.send_reply(room, user, "Testo troppo lungo")
         return
 
     text0 = ""
@@ -23,11 +28,11 @@ async def shitpost(self, room: str, user: str, arg: str) -> None:
     text2 = ""
 
     if message == "":
-        if not utils.is_private(self, room):
+        if not utils.is_private(conn, room):
             return
         message = "SHITPOST"
 
-    if not utils.is_private(self, room) and ("x" in message or "X" in message):
+    if not utils.is_private(conn, room) and ("x" in message or "X" in message):
         message = "lolno"
 
     for i in message:
@@ -42,14 +47,14 @@ async def shitpost(self, room: str, user: str, arg: str) -> None:
 
     html = '<pre style="margin: 0; overflow-x: auto">{}<br>{}<br>{}</pre>'
 
-    await self.send_htmlbox(room, user, html.format(text0, text1, text2))
+    await conn.send_htmlbox(room, user, html.format(text0, text1, text2))
 
 
-async def memes(self, room: str, user: str, arg: str) -> None:
-    if room is None or not utils.is_private(self, room):
+async def memes(conn: Connection, room: str, user: str, arg: str) -> None:
+    if room is None or not utils.is_private(conn, room):
         return
 
-    await self.send_message(room, random.choice(MEMES))
+    await conn.send_message(room, random.choice(MEMES))
 
 
 # fmt: off

@@ -1,3 +1,10 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
+
 import random
 
 from plugin_loader import plugin_wrapper
@@ -27,17 +34,17 @@ ON QUOTES (
 
 
 @plugin_wrapper(aliases=["newquote", "quote"])
-async def addquote(self, room: str, user: str, arg: str) -> None:
+async def addquote(conn: Connection, room: str, user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
 
     if not arg:
-        await self.send_message(room, "Cosa devo salvare?")
+        await conn.send_message(room, "Cosa devo salvare?")
         return
 
     maxlen = 250  # lower than the message limit to have space for metadata
     if len(arg) > maxlen:
-        await self.send_message(room, f"Quote troppo lunga, max {maxlen} caratteri.")
+        await conn.send_message(room, f"Quote troppo lunga, max {maxlen} caratteri.")
         return
 
     db = database.open_db()
@@ -46,17 +53,17 @@ async def addquote(self, room: str, user: str, arg: str) -> None:
     db.execute(sql, [arg, room, utils.to_user_id(user)])
     db.connection.commit()
     if db.connection.total_changes:
-        await self.send_message(room, "Quote salvata.")
+        await conn.send_message(room, "Quote salvata.")
     else:
-        await self.send_message(room, "Quote già esistente.")
+        await conn.send_message(room, "Quote già esistente.")
     db.connection.close()
 
 
 @plugin_wrapper(aliases=["q"])
-async def randquote(self, room: str, user: str, arg: str) -> None:
+async def randquote(conn: Connection, room: str, user: str, arg: str) -> None:
     if arg:
-        self.send_message(
-            f"Usa ``{self.command_character}addquote`` per aggiungere una quote."
+        conn.send_message(
+            room, f"Usa ``{conn.command_character}addquote`` per aggiungere una quote."
         )
         return
 
@@ -67,30 +74,30 @@ async def randquote(self, room: str, user: str, arg: str) -> None:
     db.connection.close()
 
     if not quotes:
-        await self.send_message(room, "Nessuna quote registrata per questa room.")
+        await conn.send_message(room, "Nessuna quote registrata per questa room.")
         return
     quote = random.choice(quotes)
 
     parsed_quote = quote["message"]
     # if quote["date"]:  # backwards compatibility with old quotes without a date
     #   parsed_quote += "  __({})__".format(quote["date"])
-    await self.send_message(room, parsed_quote)
+    await conn.send_message(room, parsed_quote)
 
 
 @plugin_wrapper(aliases=["deletequote", "delquote", "rmquote"])
-async def removequote(self, room: str, user: str, arg: str) -> None:
+async def removequote(conn: Connection, room: str, user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
 
     if not arg:
-        await self.send_message(room, "Che quote devo cancellare?")
+        await conn.send_message(room, "Che quote devo cancellare?")
         return
 
     db = database.open_db()
     db.execute("DELETE FROM quotes WHERE message = ? AND roomid = ?", [arg, room])
     db.connection.commit()
     if db.connection.total_changes:
-        await self.send_message(room, "Quote cancellata.")
+        await conn.send_message(room, "Quote cancellata.")
     else:
-        await self.send_message(room, "Quote inesistente.")
+        await conn.send_message(room, "Quote inesistente.")
     db.connection.close()

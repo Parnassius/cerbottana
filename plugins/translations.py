@@ -1,4 +1,9 @@
-from typing import List, Dict
+from __future__ import annotations
+
+from typing import List, Dict, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
 
 import json
 
@@ -7,10 +12,10 @@ import utils
 
 
 @plugin_wrapper(helpstr="Traduce abilità, mosse e strumenti.")
-async def trad(self, room: str, user: str, arg: str) -> None:
+async def trad(conn: Connection, room: str, user: str, arg: str) -> None:
     parola = utils.to_user_id(utils.remove_accents(arg.lower()))
     if parola == "":
-        await self.send_reply(room, user, "Cosa devo tradurre?")
+        await conn.send_reply(room, user, "Cosa devo tradurre?")
         return
 
     results: List[Dict[str, str]] = []
@@ -24,17 +29,17 @@ async def trad(self, room: str, user: str, arg: str) -> None:
 
     if results:
         if len(results) == 1:
-            await self.send_reply(room, user, results[0]["trad"])
+            await conn.send_reply(room, user, results[0]["trad"])
             return
         resultstext = ""
         for i in results:
             if resultstext != "":
                 resultstext += ", "
             resultstext += "{trad} ({cat})".format(trad=i["trad"], cat=i["cat"])
-        await self.send_reply(room, user, resultstext)
+        await conn.send_reply(room, user, resultstext)
         return
 
-    await self.send_reply(room, user, "Non trovato")
+    await conn.send_reply(room, user, "Non trovato")
 
 
 with open("./data/translations.json", "r") as f:

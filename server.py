@@ -2,7 +2,7 @@ import os
 from datetime import date
 
 from flask import Flask, render_template, session, abort, request, g
-from waitress import serve
+from waitress import serve  # type: ignore
 
 import database
 import utils

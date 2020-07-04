@@ -1,3 +1,10 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
+
 import os
 
 import database
@@ -24,7 +31,7 @@ ON tokens (
 """
 
 
-def create_token(self, rank: str) -> str:
+def create_token(conn: Connection, rank: str) -> str:
     token_id = os.urandom(16).hex()
 
     db = database.open_db()
@@ -37,9 +44,9 @@ def create_token(self, rank: str) -> str:
 
 
 @plugin_wrapper(aliases=["dashboard"])
-async def token(self, room: str, user: str, arg: str) -> None:
+async def token(conn: Connection, room: str, user: str, arg: str) -> None:
     userid = utils.to_user_id(user)
-    for room in self.rooms:
+    for room in conn.rooms:
         users = Room.get(room).users
         if userid in users and utils.is_driver(users[userid]["rank"]):
             rank = users[userid]["rank"]
@@ -47,8 +54,8 @@ async def token(self, room: str, user: str, arg: str) -> None:
     else:
         return
 
-    token_id = create_token(self, rank)
+    token_id = create_token(conn, rank)
 
-    await self.send_pm(
+    await conn.send_pm(
         user, "{url}?token={token}".format(url=os.environ["DOMAIN"], token=token_id)
     )

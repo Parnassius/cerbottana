@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Optional, Any, Dict
 
 from time import time
@@ -10,6 +12,7 @@ class Room:
 
     def __init__(self, roomid: str) -> None:
         self.roomid = roomid
+        self.title: str = ""
         self.users: Dict[str, Dict[str, Any]] = dict()
         self.no_mods_online: Optional[float] = None
         self.roombot = False
@@ -17,7 +20,7 @@ class Room:
         self._instances[roomid] = self
 
     @classmethod
-    def get(cls, roomid: str):
+    def get(cls, roomid: str) -> Room:
         if roomid not in cls._instances:
             Room(roomid)
         return cls._instances[roomid]

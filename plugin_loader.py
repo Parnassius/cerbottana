@@ -1,4 +1,10 @@
-from typing import Callable, Dict, List
+from __future__ import annotations
+
+from typing import Callable, Dict, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
+
 from functools import wraps
 
 import utils
@@ -19,16 +25,15 @@ class Plugin:
         self.aliases = [self.name] + aliases  # needs to be a new binding
         self.helpstr = helpstr
         self.is_unlisted = is_unlisted
-        setattr(self.callback, "helpstr", helpstr)  # enables aliases in '.help foo'
         self._instances[func.__name__] = self
 
     @property
-    def commands(self) -> Dict[str, Callable]:
-        return {alias: self.callback for alias in self.aliases}
+    def commands(self) -> Dict[str, Plugin]:
+        return {alias: self for alias in self.aliases}
 
     @classmethod
-    def get_all_commands(cls) -> Dict[str, Callable]:
-        d: Dict[str, Callable] = {}
+    def get_all_commands(cls) -> Dict[str, Plugin]:
+        d: Dict[str, Plugin] = {}
         for plugin in cls._instances.values():
             d.update(plugin.commands)
         return d
@@ -42,19 +47,21 @@ class Plugin:
         return {k: d[k] for k in sorted(d)}  # python 3.7+
 
 
-def scope_checker(func):
+def scope_checker(func: Callable) -> Callable:
     @wraps(func)
-    async def scope_wrapper(self, room: str, user: str, arg: str):
+    async def scope_wrapper(conn: Connection, room: str, user: str, arg: str) -> None:
         if room is not None and not utils.is_voice(user):
             return
-        return await func(self, room, user, arg)
+        await func(conn, room, user, arg)
 
     return scope_wrapper
 
 
-def plugin_wrapper(**kwargs):
-    def cls_wrapper(func):
+def plugin_wrapper(
+    aliases: List[str] = [], helpstr: str = "", is_unlisted: bool = False
+) -> Callable:
+    def cls_wrapper(func: Callable) -> Plugin:
         func = scope_checker(func)  # manual decorator binding
-        return Plugin(func, **kwargs)
+        return Plugin(func, aliases, helpstr, is_unlisted)
 
     return cls_wrapper

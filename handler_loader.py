@@ -24,8 +24,8 @@ class Handler:
         return d
 
 
-def handler_wrapper(message_types):
-    def cls_wrapper(func):
+def handler_wrapper(message_types: List[str]) -> Callable:
+    def cls_wrapper(func: Callable) -> Handler:
         return Handler(func, message_types)
 
     return cls_wrapper

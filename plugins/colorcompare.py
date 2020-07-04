@@ -1,3 +1,10 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
+
 from plugin_loader import plugin_wrapper
 import utils
 
@@ -5,7 +12,7 @@ import utils
 @plugin_wrapper(
     helpstr="<i>nick1, nick2, ...</i> Visualizza i colori dei nickname elencati."
 )
-async def colorcompare(self, room: str, user: str, arg: str) -> None:
+async def colorcompare(conn: Connection, room: str, user: str, arg: str) -> None:
     if arg == "":
         return
 
@@ -23,4 +30,4 @@ async def colorcompare(self, room: str, user: str, arg: str) -> None:
     html += "</tr>"
     html += "</table>"
 
-    await self.send_htmlbox(room, user, html)
+    await conn.send_htmlbox(room, user, html)

@@ -1,3 +1,10 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
+
 import database
 
 from plugin_loader import plugin_wrapper
@@ -28,7 +35,7 @@ ON utenti (
 
 
 @plugin_wrapper(aliases=["profilo"], helpstr="Visualizza il tuo profilo.")
-async def profile(self, room: str, user: str, arg: str) -> None:
+async def profile(conn: Connection, room: str, user: str, arg: str) -> None:
     # pylint: disable=too-many-locals
     if arg.strip() == "":
         arg = user
@@ -86,7 +93,7 @@ async def profile(self, room: str, user: str, arg: str) -> None:
 
         descrizione = body["descrizione"].replace("<", "&lt;")
 
-        await self.send_htmlbox(
+        await conn.send_htmlbox(
             room,
             user,
             html.format(
@@ -103,9 +110,9 @@ async def profile(self, room: str, user: str, arg: str) -> None:
 
 
 @plugin_wrapper(aliases=["setprofilo"], helpstr="Imposta una tua frase personalizzata.")
-async def setprofile(self, room: str, user: str, arg: str) -> None:
+async def setprofile(conn: Connection, room: str, user: str, arg: str) -> None:
     if len(arg) > 200:
-        await self.send_reply(room, user, "Errore: lunghezza massima 200 caratteri")
+        await conn.send_reply(room, user, "Errore: lunghezza massima 200 caratteri")
         return
 
     db = database.open_db()
@@ -115,13 +122,13 @@ async def setprofile(self, room: str, user: str, arg: str) -> None:
     db.connection.commit()
     db.connection.close()
 
-    await self.send_reply(room, user, "Salvato")
+    await conn.send_reply(room, user, "Salvato")
 
     message = "Qualcuno ha aggiornato la sua frase del profilo. "
     message += (
         'Usa <button name="send" value="/pm '
-        + self.username
+        + conn.username
         + ', .dashboard">.dashboard</button> per approvarla o rifiutarla'
     )
-    for room in self.rooms:
-        await self.send_rankhtmlbox("%", room, message)
+    for room in conn.rooms:
+        await conn.send_rankhtmlbox("%", room, message)

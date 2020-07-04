@@ -1,3 +1,10 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
+
 import veekun
 
 from plugin_loader import plugin_wrapper
@@ -5,7 +12,7 @@ import utils
 
 
 @plugin_wrapper()
-async def learnset(self, room: str, user: str, arg: str) -> None:
+async def learnset(conn: Connection, room: str, user: str, arg: str) -> None:
     args = arg.split(",")
     if len(args) < 2:
         return
@@ -92,6 +99,7 @@ async def learnset(self, room: str, user: str, arg: str) -> None:
     db.connection.close()
 
     if not html:
-        return await self.send_reply(room, user, "Nessun dato")
+        await conn.send_reply(room, user, "Nessun dato")
+        return
 
-    await self.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
+    await conn.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")

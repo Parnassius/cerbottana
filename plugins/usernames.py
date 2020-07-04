@@ -1,3 +1,10 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connection import Connection
+
 from datetime import datetime
 import pytz
 import random
@@ -6,23 +13,23 @@ from plugin_loader import plugin_wrapper
 
 
 @plugin_wrapper()
-async def acher(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "lo acher che bontà ♫")
+async def acher(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "lo acher che bontà ♫")
 
 
 @plugin_wrapper(aliases=["aeth", "eterno"])
-async def aethernum(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "__eterno__ indeciso :^)")
+async def aethernum(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "__eterno__ indeciso :^)")
 
 
 @plugin_wrapper(aliases=["alphawittem", "wittem"])
-async def alpha(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "Italian luck jajaja")
+async def alpha(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "Italian luck jajaja")
 
 
 @plugin_wrapper(aliases=["acii"])
-async def altcauseiminsecure(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(
+async def altcauseiminsecure(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(
         room,
         user,
         "A, wi, we. La fortuna viene a me. Wi, we, wa. La fortuna viene qua. A, we, wi. La fortuna non va lì",
@@ -30,85 +37,85 @@ async def altcauseiminsecure(self, room: str, user: str, arg: str) -> None:
 
 
 @plugin_wrapper(aliases=["cinse", "cobse", "conse"])
-async def consecutio(self, room: str, user: str, arg: str) -> None:
+async def consecutio(conn: Connection, room: str, user: str, arg: str) -> None:
     text = "opss{} ho lasciato il pc acceso tutta notte".format(
         "s" * random.randint(0, 3)
     )
-    await self.send_reply(room, user, text)
+    await conn.send_reply(room, user, text)
 
 
 @plugin_wrapper()
-async def duck(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "quack")
+async def duck(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "quack")
 
 
 @plugin_wrapper(aliases=["ed"])
-async def edgummet(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "soccontro")
+async def edgummet(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "soccontro")
 
 
 @plugin_wrapper(aliases=["francy"])
-async def francyy(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "aiuto ho riso irl")
+async def francyy(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "aiuto ho riso irl")
 
 
 @plugin_wrapper()
-async def haund(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "( ͡° ͜ʖ ͡°)")
+async def haund(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "( ͡° ͜ʖ ͡°)")
 
 
 @plugin_wrapper()
-async def howkings(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "Che si vinca o si perda, v0lca merda :3")
+async def howkings(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "Che si vinca o si perda, v0lca merda :3")
 
 
 @plugin_wrapper(aliases=["infli"])
-async def inflikted(self, room: str, user: str, arg: str) -> None:
+async def inflikted(conn: Connection, room: str, user: str, arg: str) -> None:
     letters = {1: "I", 2: "N", 3: "F", 4: "L", 5: "I", 6: "K", 7: "T", 8: "E", 9: "D"}
     shuffled = sorted(letters, key=lambda x: random.random() * x / len(letters))
     text = ""
     for i in shuffled:
         text += letters[i]
-    await self.send_reply(room, user, "ciao {}".format(text))
+    await conn.send_reply(room, user, "ciao {}".format(text))
 
 
 @plugin_wrapper()
-async def lange(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "Haund mi traduci questo post?")
+async def lange(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "Haund mi traduci questo post?")
 
 
 @plugin_wrapper()
-async def mammalu(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "clicca la stab")
+async def mammalu(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "clicca la stab")
 
 
 @plugin_wrapper(aliases=["gr"])
-async def megagr(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "GRRRRRR")
+async def megagr(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "GRRRRRR")
 
 
 @plugin_wrapper()
-async def milak(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "No Maria io esco")
+async def milak(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "No Maria io esco")
 
 
 @plugin_wrapper()
-async def mister(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "Master")
+async def mister(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "Master")
 
 
 @plugin_wrapper()
-async def mistercantiere(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "MasterCantiere")
+async def mistercantiere(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "MasterCantiere")
 
 
 @plugin_wrapper(aliases=["azyz"])
-async def oizys(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "no")
+async def oizys(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "no")
 
 
 @plugin_wrapper(aliases=["palt0", "palto", "plato"])
-async def plat0(self, room: str, user: str, arg: str) -> None:
+async def plat0(conn: Connection, room: str, user: str, arg: str) -> None:
     text = "oh {} non mi spoilerare".format(
         random.choice(["basta", "senti", "smettila"])
     )
@@ -116,60 +123,60 @@ async def plat0(self, room: str, user: str, arg: str) -> None:
     timestamp = datetime.now(tz)
     if 3 <= timestamp.hour <= 5:
         text += ", che mi sono appena svegliato"
-    await self.send_reply(room, user, text)
+    await conn.send_reply(room, user, text)
 
 
 @plugin_wrapper(aliases=["rospe"])
-async def r0spe(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "buondì")
+async def r0spe(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "buondì")
 
 
 @plugin_wrapper(aliases=["boiler"])
-async def roiler(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "ehm volevo dire")
+async def roiler(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "ehm volevo dire")
 
 
 @plugin_wrapper(aliases=["silver"])
-async def silver97(self, room: str, user: str, arg: str) -> None:
-    tier = random.choice(self.tiers)["name"]
-    await self.send_reply(room, user, "qualcuno mi passa un team {}".format(tier))
+async def silver97(conn: Connection, room: str, user: str, arg: str) -> None:
+    tier = random.choice(conn.tiers)["name"]
+    await conn.send_reply(room, user, "qualcuno mi passa un team {}".format(tier))
 
 
 @plugin_wrapper()
-async def smilzo(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "mai na gioia")
+async def smilzo(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "mai na gioia")
 
 
 @plugin_wrapper(aliases=["spec"])
-async def specn(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "Vi muto tutti")
+async def specn(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "Vi muto tutti")
 
 
 @plugin_wrapper(aliases=["cul1", "culone", "kul1", "swcul1", "swkul1"])
-async def swculone(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "hue")
+async def swculone(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "hue")
 
 
 @plugin_wrapper(aliases=["quas"])
-async def thequasar(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "Basta con le pupazzate")
+async def thequasar(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "Basta con le pupazzate")
 
 
 @plugin_wrapper(aliases=["3v", "vvv"])
-async def trev(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "gioco di merda")
+async def trev(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "gioco di merda")
 
 
 @plugin_wrapper()
-async def ultrasuca(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "@Ultrasuca left")
+async def ultrasuca(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "@Ultrasuca left")
 
 
 @plugin_wrapper(aliases=["useless", "usy"])
-async def uselesstrainer(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "kek")
+async def uselesstrainer(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "kek")
 
 
 @plugin_wrapper(aliases=["volca"])
-async def v0lca(self, room: str, user: str, arg: str) -> None:
-    await self.send_reply(room, user, "Porco mele...")
+async def v0lca(conn: Connection, room: str, user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "Porco mele...")
