@@ -27,51 +27,6 @@
 
     </form>
 
-    <hr>
-
-    <h4 style="margin: 0">Badge elite four</h4>
-
-    <form action="" method="POST">
-
-      <input type="hidden" name="id" value="{{ utente.id }}">
-
-      <select name="tier" required>
-        <option value="" disabled selected>Seleziona una tier</option>
-        {% for row in elitefour_tiers %}
-          <option value="{{ row.id }}"{% if row.userid == utente.id %} disabled{% endif %}>
-            {{ row.descrizione }}
-          </option>
-        {% endfor %}
-      </select>
-
-      dal
-      <input type="date" name="data" required value="{{ today.strftime('%Y-%m-%d') }}">
-
-      <button type="submit">Salva</button>
-
-    </form>
-
-    <hr>
-
-    <h4 style="margin: 0">Badge seasonal e IML</h4>
-
-    <form action="" method="POST">
-
-      <input type="hidden" name="id" value="{{ utente.id }}">
-
-      <select name="seasonal" required>
-        <option value="" disabled selected>Seleziona un torneo</option>
-        {% for row in seasonals %}
-          <option value="{{ row.id }}"{% if row.disabled %} disabled {% endif %}>
-            Vincitore {{ row.descrizione }} {{ today.strftime('%Y') }}
-          </option>
-        {% endfor %}
-      </select>
-
-      <button type="submit">Salva</button>
-
-    </form>
-
   {% else %}
 
     <div class="alert alert-orange">Utente non trovato</div>

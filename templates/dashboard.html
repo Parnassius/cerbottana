@@ -39,48 +39,12 @@
   {% endif %}
 
 
-  {% if seasonal %}
-    <form action="seasonal" method="GET">
-
-      <button type="submit">
-        Inserisci risultati {{ seasonal.descrizione }} ANNO - Fase 1
-      </button>
-
-    </form>
-
-    <hr>
-  {% endif %}
-
-
   <form action="profilo" method="GET">
 
     <label for="userid">Cerca utente</label>
     <input type="text" id="userid" name="userid" maxlength="25">
 
     <button type="submit">Cerca</button>
-
-  </form>
-
-  <hr>
-
-
-  <form action="elitefour" method="GET">
-
-    <table class="table">
-      <tbody>
-        {% for row in elitefour_tiers %}
-          <tr>
-            <th>{{ row.descrizione }}</th>
-            <td>{{ row.utente }}</td>
-            <td style="width: 1px">
-              <button name="tier" value="{{ row.id }}">
-                Dettagli
-              </button>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
 
   </form>
 

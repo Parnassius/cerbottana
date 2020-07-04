@@ -30,7 +30,7 @@ def before():
     token = request.args.get("token")
 
     if token is not None:
-        sql = "SELECT rank, julianday('now'), julianday(scadenza) FROM tokens WHERE token = ? AND JULIANDAY('NOW') - JULIANDAY(scadenza) < 0"
+        sql = "SELECT rank FROM tokens WHERE token = ? AND JULIANDAY() - JULIANDAY(scadenza) < 0"
         rank = g.db.execute(sql, [token]).fetchone()
         if rank:
             session["user"] = rank["rank"]
@@ -70,19 +70,9 @@ def dashboard():
     sql = "SELECT * FROM utenti WHERE descrizione_daapprovare != '' ORDER BY userid"
     descrizioni_daapprovare = g.db.execute(sql).fetchall()
 
-    sql = "SELECT *, "
-    sql += " (SELECT (SELECT nome FROM utenti WHERE id = e.utente) FROM elitefour AS e WHERE tier = t.id ORDER BY data DESC LIMIT 1) AS utente "
-    sql += " FROM elitefour_tiers AS t ORDER BY ordine"
-    elitefour_tiers = g.db.execute(sql).fetchall()
-
-    sql = "SELECT id, descrizione FROM seasonals WHERE (',' || mesi || ',') LIKE ('%,' || STRFTIME('%m', DATE()) || ',%')"
-    seasonal = g.db.execute(sql).fetchall()
-
     return render_template(
         "dashboard.html",
         descrizioni_daapprovare=descrizioni_daapprovare,
-        elitefour_tiers=elitefour_tiers,
-        seasonal=seasonal,
     )
 
 
@@ -97,53 +87,14 @@ def profilo():
             sql = "UPDATE utenti SET descrizione = ? WHERE id = ? AND userid = ?"
             g.db.execute(sql, [request.form["descrizione"], request.form["id"], userid])
 
-        if "tier" in request.form and "data" in request.form:
-            sql = "INSERT INTO elitefour (utente, tier, data) VALUES (?, ?, ?)"
-            g.db.execute(
-                sql, [request.form["id"], request.form["tier"], request.form["data"]]
-            )
-
-        if "seasonal" in request.form:
-            sql = "INSERT INTO seasonal_vincitori (seasonal, anno, utente) VALUES (?, STRFTIME('%Y', DATE()), ?)"
-            g.db.execute(sql, [request.form["seasonal"], request.form["id"]])
-
         g.db.connection.commit()
 
     sql = "SELECT * FROM utenti WHERE userid = ?"
     utente = g.db.execute(sql, [utils.to_user_id(userid)]).fetchone()
 
-    sql = "SELECT *, "
-    sql += " (SELECT (SELECT userid FROM utenti WHERE id = e.utente) FROM elitefour AS e WHERE tier = t.id ORDER BY data DESC LIMIT 1) AS userid "
-    sql += " FROM elitefour_tiers AS t ORDER BY ordine"
-    elitefour_tiers = g.db.execute(sql).fetchall()
-
-    sql = "SELECT *, "
-    sql += " (SELECT id FROM seasonal_vincitori WHERE seasonal = s.id AND anno = STRFTIME('%Y', DATE())) AS disabled "
-    sql += " FROM seasonals AS s ORDER BY ordine"
-    seasonals = g.db.execute(sql).fetchall()
-
     return render_template(
-        "profilo.html",
-        utente=utente,
-        elitefour_tiers=elitefour_tiers,
-        seasonals=seasonals,
-        today=date.today(),
+        "profilo.html", utente=utente, today=date.today()
     )
-
-
-@SERVER.route("/elitefour")
-def elitefour():
-
-    tier = request.args.get("tier")
-
-    sql = "SELECT u.nome, e.data "
-    sql += " FROM elitefour AS e "
-    sql += " LEFT JOIN utenti AS u ON u.id = e.utente "
-    sql += " WHERE e.tier = :tier "
-    sql += " ORDER BY e.data DESC"
-    rs = g.db.execute(sql, [tier]).fetchall()
-
-    return render_template("elitefour.html", rs=rs)
 
 
 @SERVER.route("/eightball", methods=("GET", "POST"))

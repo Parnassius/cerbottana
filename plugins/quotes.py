@@ -15,9 +15,14 @@ CREATE TABLE quotes (
     roomid TEXT,
     author TEXT,
     date TEXT,
-    PRIMARY KEY(id),
-    UNIQUE(message, roomid)
-)
+    PRIMARY KEY(id)
+);
+
+CREATE UNIQUE INDEX idx_unique_quotes_message_roomid
+ON QUOTES (
+    message,
+    roomid
+);
 """
 
 

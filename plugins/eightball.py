@@ -5,6 +5,15 @@ import database
 from plugin_loader import plugin_wrapper
 
 
+"""
+CREATE TABLE eight_ball (
+    id INTEGER,
+    risposta TEXT,
+    PRIMARY KEY(id)
+);
+"""
+
+
 @plugin_wrapper(aliases=["8ball"], helpstr="Chiedi qualsiasi cosa!")
 async def eightball(self, room: str, user: str, arg: str) -> None:
     db = database.open_db()

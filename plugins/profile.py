@@ -4,17 +4,34 @@ from plugin_loader import plugin_wrapper
 import utils
 
 
+"""
+CREATE TABLE utenti (
+    id INTEGER,
+    userid TEXT,
+    nome TEXT,
+    avatar TEXT,
+    descrizione TEXT,
+    descrizione_daapprovare TEXT,
+    PRIMARY KEY(id),
+);
+
+CREATE UNIQUE INDEX idx_unique_utenti_userid
+ON utenti (
+    userid
+);
+
+CREATE INDEX idx_utenti_descrizione_daapprovare
+ON utenti (
+    descrizione_daapprovare
+);
+"""
+
+
 @plugin_wrapper(aliases=["profilo"], helpstr="Visualizza il tuo profilo.")
-async def profile(
-    self, room: str, user: str, arg: str, from_elitefour: bool = False
-) -> None:
+async def profile(self, room: str, user: str, arg: str) -> None:
     # pylint: disable=too-many-locals
     if arg.strip() == "":
         arg = user
-
-    simple_message = ""
-    if from_elitefour:
-        simple_message = arg
 
     arg = utils.to_user_id(arg)
 
@@ -24,21 +41,6 @@ async def profile(
 
     if body:
         body = dict(body)
-
-        sql = "SELECT t.descrizione AS tier, t.immagine, t.sfondo, e.data, "
-        sql += " (SELECT data FROM elitefour "
-        sql += " WHERE tier = e.tier AND data >= e.data AND (CASE WHEN data = e.data THEN id > e.id ELSE TRUE END) "
-        sql += " ORDER BY data LIMIT 1) AS datafine "
-        sql += " FROM elitefour AS e "
-        sql += " LEFT JOIN elitefour_tiers AS t ON t.id = e.tier "
-        sql += " WHERE e.utente = ? ORDER BY e.data DESC LIMIT 10"
-        body["elitefour"] = db.execute(sql, [body["id"]]).fetchall()
-
-        sql = "SELECT s.descrizione AS seasonal, v.anno, s.immagine, s.sfondo "
-        sql += " FROM seasonal_vincitori AS v "
-        sql += " LEFT JOIN seasonals AS s ON s.id = v.seasonal "
-        sql += " WHERE v.utente = ? ORDER BY v.anno DESC, s.ordine DESC"
-        body["seasonal"] = db.execute(sql, [body["id"]]).fetchall()
 
         sql = "SELECT immagine, sfondo, label "
         sql += " FROM altre_badge "
@@ -73,14 +75,6 @@ async def profile(
         badge = '<img src="{immagine}" width="12" height="12" title="{title}"'
         badge += ' style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0;'
         badge += ' background: {sfondo}{opacity}">'
-        title = "Vincitore {seasonal} {anno}"
-        for i in body["seasonal"]:
-            badges += badge.format(
-                immagine=i["immagine"],
-                title=title.format(seasonal=i["seasonal"], anno=i["anno"]),
-                sfondo=i["sfondo"],
-                opacity="",
-            )
         for i in body["altrebadge"]:
             badges += badge.format(
                 immagine=i["immagine"],
@@ -89,20 +83,6 @@ async def profile(
                 opacity="",
             )
         title = "{tier}:{dal}{al}"
-        for i in body["elitefour"]:
-            opacity = ""
-            if i["datafine"] is not None:
-                opacity = "; opacity: .5"
-            dal = " dal {}".format(utils.date_format(i["data"]))
-            al = ""
-            if i["datafine"] is not None:
-                al = " al {}".format(utils.date_format(i["datafine"]))
-            badges += badge.format(
-                immagine=i["immagine"],
-                title=title.format(tier=i["tier"], dal=dal, al=al),
-                sfondo=i["sfondo"],
-                opacity=opacity,
-            )
 
         descrizione = body["descrizione"].replace("<", "&lt;")
 
@@ -117,7 +97,6 @@ async def profile(
                 badges=badges,
                 descrizione=descrizione,
             ),
-            simple_message,
         )
 
     db.connection.close()

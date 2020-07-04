@@ -8,6 +8,22 @@ import utils
 from room import Room
 
 
+"""
+CREATE TABLE tokens (
+    id INTEGER,
+    token TEXT,
+    rank TEXT,
+    scadenza TEXT,
+    PRIMARY KEY(id)
+);
+
+CREATE INDEX idx_tokens_token
+ON tokens (
+    token
+);
+"""
+
+
 def create_token(self, rank: str) -> str:
     token_id = os.urandom(16).hex()
 

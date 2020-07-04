@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+  <a href="/">&laquo; indietro</a>
+
+  {% if request.method == 'POST' %}
+    <div class="alert alert-green">Salvato</div>
+  {% endif %}
+
+  <form action="" method="POST">
+    URL immagine <input type="text" data-replace="immagine">
+    Larghezza <input type="text" data-replace="immaginelarghezza" size="4">
+    Altezza <input type="text" data-replace="immaginealtezza" size="4">
+    <hr>
+    {% for i in range(8) %}
+      Link {{ i + 1 }} <input type="text" data-replace="link{{ i }}">
+      Testo link {{ i + 1 }} <input type="text" data-replace="labellink{{ i }}">
+      <br>
+    {% endfor %}
+    <hr>
+    Testo scorrevole <textarea data-replace="testoscorrevole"></textarea>
+    <input type="hidden" name="roomintro" id="roomintro">
+    <button type="button" id="btn-anteprima">Anteprima</button>
+    <button type="submit">Salva</button>
+  </form>
+
+  <div id="anteprima"></div>
+
+  <textarea id="template" style="display: none">
+
+
+    <center>
+      <div style="position: relative ; width: 492px ; height: 155px ; font-size: 8pt">
+        <img src="@immagine@" width="@immaginelarghezza@" height="@immaginealtezza@">
+        <a style="color: black" href="@link0@" target="_blank" rel="noopener">
+          <div style="border-radius: 8px ; background-color: rgba(221 , 221 , 221 , 0.7) ; border: solid rgba(0 , 0 , 0 , 0.7) ; border-width: 1px 3px ; position: absolute ; top: 6px ; left: 5px ; width: 104px">@labellink0@</div>
+        </a>
+        <a style="color: black" href="@link1@" target="_blank" rel="noopener">
+          <div style="border-radius: 8px ; background-color: rgba(221 , 221 , 221 , 0.7) ; border: solid rgba(0 , 0 , 0 , 0.7) ; border-width: 1px 3px ; position: absolute ; bottom: 11px ; left: 5px ; width: 104px">@labellink1@</div>
+        </a>
+        <a style="color: black" href="@link2@" target="_blank" rel="noopener">
+          <div style="border-radius: 8px ; background-color: rgba(221 , 221 , 221 , 0.7) ; border: solid rgba(0 , 0 , 0 , 0.7) ; border-width: 1px 3px ; position: absolute ; top: 6px ; left: 129px ; width: 104px">@labellink2@</div>
+        </a>
+        <a style="color: black" href="@link3@" target="_blank" rel="noopener">
+          <div style="border-radius: 8px ; background-color: rgba(221 , 221 , 221 , 0.7) ; border: solid rgba(0 , 0 , 0 , 0.7) ; border-width: 1px 3px ; position: absolute ; bottom: 11px ; left: 129px ; width: 104px">@labellink3@</div>
+        </a>
+        <a style="color: black" href="@link4@" target="_blank" rel="noopener">
+          <div style="border-radius: 8px ; background-color: rgba(221 , 221 , 221 , 0.7) ; border: solid rgba(0 , 0 , 0 , 0.7) ; border-width: 1px 3px ; position: absolute ; top: 6px ; left: 253px ; width: 104px">@labellink4@</div>
+        </a>
+        <a style="color: black" href="@link5@" target="_blank" rel="noopener">
+          <div style="border-radius: 8px ; background-color: rgba(221 , 221 , 221 , 0.7) ; border: solid rgba(0 , 0 , 0 , 0.7) ; border-width: 1px 3px ; position: absolute ; bottom: 11px ; left: 253px ; width: 104px">@labellink5@</div>
+        </a>
+        <a style="color: black" href="@link6@" target="_blank" rel="noopener">
+          <div style="border-radius: 8px ; background-color: rgba(221 , 221 , 221 , 0.7) ; border: solid rgba(0 , 0 , 0 , 0.7) ; border-width: 1px 3px ; position: absolute ; top: 6px ; left: 377px ; width: 104px">@labellink6@</div>
+        </a>
+        <a style="color: black" href="@link7@" target="_blank" rel="noopener">
+          <div style="border-radius: 8px ; background-color: rgba(221 , 221 , 221 , 0.7) ; border: solid rgba(0 , 0 , 0 , 0.7) ; border-width: 1px 3px ; position: absolute ; bottom: 11px ; left: 377px ; width: 104px">@labellink7@</div>
+        </a>
+      </div>
+    </center>
+    <b>
+      <marquee>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Italy.svg/20px-Flag_of_Italy.svg.png" width="20" height="13">
+        @testoscorrevole@
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Italy.svg/20px-Flag_of_Italy.svg.png" width="20" height="13">
+      </marquee>
+    </b>
+
+  </textarea>
+
+  <script>
+
+    document.getElementById('btn-anteprima').addEventListener('click', function() {
+      var template = document.getElementById('template').value;
+      document.querySelectorAll('[data-replace]').forEach(function(item) {
+        template = template.replace('@' + item.dataset.replace + '@', item.value);
+      });
+      document.getElementById('anteprima').innerHTML = template;
+      document.getElementById('roomintro').value = template;
+    }, false);
+
+  </script>
+
+{% endblock %}
