@@ -5,7 +5,7 @@ from handler_loader import handler_wrapper
 
 @handler_wrapper(["formats"])
 async def formats(self, roomid: str, *formatslist: str) -> None:
-    tiers: List[Dict[str, Optional[str]]] = []
+    tiers: List[Dict[str, str]] = []
     section: Optional[str] = None
     section_next = False
     for tier in formatslist:
@@ -17,5 +17,6 @@ async def formats(self, roomid: str, *formatslist: str) -> None:
             section_next = False
             continue
         parts = tier.split(",")
-        tiers.append({"name": parts[0], "section": section})
+        if section is not None:
+            tiers.append({"name": parts[0], "section": section})
     self.tiers = tiers
