@@ -117,11 +117,13 @@ class Connection:
             minutes = timestamp.hour * 60 + timestamp.minute
             # 00:30 - 08:00
             if 30 <= minutes < 8 * 60 and room.no_mods_online + (7 * 60) < time():
-                await self.send_message(roomid, "/modchat +")
+                await self.send_message(roomid, "/modchat +", False)
 
     async def send_rankhtmlbox(self, rank: str, room: str, message: str) -> None:
         await self.send_message(
-            room, "/addrankhtmlbox {}, {}".format(rank, message.replace("\n", "<br>"))
+            room,
+            "/addrankhtmlbox {}, {}".format(rank, message.replace("\n", "<br>")),
+            False,
         )
 
     async def send_htmlbox(
@@ -129,27 +131,38 @@ class Connection:
     ):
         message = message.replace("\n", "<br>")
         if room is not None:
-            await self.send_message(room, "/addhtmlbox {}".format(message))
+            await self.send_message(room, "/addhtmlbox {}".format(message), False)
         elif user is not None:
             room = utils.can_pminfobox_to(self, utils.to_user_id(user))
             if room is not None:
-                await self.send_message(room, "/pminfobox {}, {}".format(user, message))
+                await self.send_message(
+                    room, "/pminfobox {}, {}".format(user, message), False
+                )
             else:
                 if simple_message == "":
                     simple_message = "Questo comando è disponibile in PM "
                     simple_message += "solo se sei online in una room dove sono Roombot"
                 await self.send_pm(user, simple_message)
 
-    async def send_reply(self, room: Optional[str], user: str, message: str) -> None:
+    async def send_reply(
+        self, room: Optional[str], user: str, message: str, escape: bool = True
+    ) -> None:
         if room is None:
             await self.send_pm(user, message)
         else:
-            await self.send_message(room, message)
+            await self.send_message(room, message, escape)
 
-    async def send_message(self, room: str, message: str) -> None:
+    async def send_message(self, room: str, message: str, escape: bool = True) -> None:
+        if escape:
+            if message[0] == "/":
+                message = "/" + message
+            elif message[0] == "!":
+                message = " " + message
         await self.send("{}|{}".format(room, message))
 
-    async def send_pm(self, user: str, message: str):
+    async def send_pm(self, user: str, message: str, escape: bool = True):
+        if escape and message[0] == "/":
+            message = "/" + message
         await self.send("|/w {}, {}".format(utils.to_user_id(user), message))
 
     async def send(self, message: str) -> None:

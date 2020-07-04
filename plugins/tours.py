@@ -29,17 +29,18 @@ async def create_tour(
             generatormod=generatormod,
             name=name,
         ),
+        False,
     )
     if autostart is not None:
-        await self.send_message(room, "/tour autostart {}".format(autostart))
+        await self.send_message(room, "/tour autostart {}".format(autostart), False)
     if autodq is not None:
-        await self.send_message(room, "/tour autodq {}".format(autodq))
+        await self.send_message(room, "/tour autodq {}".format(autodq), False)
     if not allow_scouting:
-        await self.send_message(room, "/tour scouting off")
+        await self.send_message(room, "/tour scouting off", False)
     if forcetimer:
-        await self.send_message(room, "/tour forcetimer on")
+        await self.send_message(room, "/tour forcetimer on", False)
     if rules:
-        await self.send_message(room, "/tour rules {}".format(",".join(rules)))
+        await self.send_message(room, "/tour rules {}".format(",".join(rules)), False)
 
 
 @plugin_wrapper(
@@ -97,4 +98,4 @@ async def waffletour(self, room: str, user: str, arg: str) -> None:
         self, room, name=name, autostart=5, autodq=3, forcetimer=True, rules=rules
     )
 
-    await self.send_message(room, "!viewfaq sibb")
+    await self.send_message(room, "!viewfaq sibb", False)

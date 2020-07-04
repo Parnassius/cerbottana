@@ -71,7 +71,7 @@ async def randquote(self, room: str, user: str, arg: str) -> None:
         return
     quote = random.choice(quotes)
 
-    parsed_quote = " " + quote["message"]
+    parsed_quote = quote["message"]
     # if quote["date"]:  # backwards compatibility with old quotes without a date
     #   parsed_quote += "  __({})__".format(quote["date"])
     await self.send_message(room, parsed_quote)

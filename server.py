@@ -71,8 +71,7 @@ def dashboard():
     descrizioni_daapprovare = g.db.execute(sql).fetchall()
 
     return render_template(
-        "dashboard.html",
-        descrizioni_daapprovare=descrizioni_daapprovare,
+        "dashboard.html", descrizioni_daapprovare=descrizioni_daapprovare
     )
 
 
@@ -92,9 +91,7 @@ def profilo():
     sql = "SELECT * FROM utenti WHERE userid = ?"
     utente = g.db.execute(sql, [utils.to_user_id(userid)]).fetchone()
 
-    return render_template(
-        "profilo.html", utente=utente, today=date.today()
-    )
+    return render_template("profilo.html", utente=utente, today=date.today())
 
 
 @SERVER.route("/eightball", methods=("GET", "POST"))

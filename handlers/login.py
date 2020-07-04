@@ -25,7 +25,9 @@ async def challstr(self, roomid, *challstring):
     assertion = json.loads(resp.read().decode("utf-8")[1:])["assertion"]
 
     if assertion:
-        await self.send_message("", "/trn {},0,{}".format(self.username, assertion))
+        await self.send_message(
+            "", "/trn {},0,{}".format(self.username, assertion), False
+        )
 
 
 @handler_wrapper(["updateuser"])
@@ -35,12 +37,12 @@ async def updateuser(self, roomid, user, named, avatar, settings):
         return
 
     if avatar != self.avatar:
-        await self.send_message("", "/avatar {}".format(self.avatar))
+        await self.send_message("", "/avatar {}".format(self.avatar), False)
 
-    await self.send_message("", "/status {}".format(self.statustext))
+    await self.send_message("", "/status {}".format(self.statustext), False)
 
     for public_room in self.rooms:
-        await self.send_message("", "/join {}".format(public_room))
+        await self.send_message("", "/join {}".format(public_room), False)
 
     for private_room in self.private_rooms:
-        await self.send_message("", "/join {}".format(private_room))
+        await self.send_message("", "/join {}".format(private_room), False)

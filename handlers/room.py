@@ -29,7 +29,7 @@ async def add_user(self, roomid, user, skip_avatar_check=False):
     db.connection.close()
 
     if not skip_avatar_check or rank != " ":
-        await self.send_message("", "/cmd userdetails {}".format(username))
+        await self.send_message("", "/cmd userdetails {}".format(username), False)
 
 
 async def remove_user(self, roomid, user):
