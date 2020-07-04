@@ -4,7 +4,7 @@ from plugin_loader import plugin_wrapper
 
 
 @plugin_wrapper()
-async def uptime(self, room, user, arg):
+async def uptime(self, room: str, user: str, arg: str) -> None:
     s = int(time() - self.connection_start)
     m, s = divmod(s, 60)
     h, m = divmod(m, 60)

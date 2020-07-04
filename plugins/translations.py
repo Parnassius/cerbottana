@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 import json
 
 from plugin_loader import plugin_wrapper
@@ -5,13 +7,13 @@ import utils
 
 
 @plugin_wrapper(helpstr="Traduce abilità, mosse e strumenti.")
-async def trad(self, room, user, arg):
+async def trad(self, room: str, user: str, arg: str) -> None:
     parola = utils.to_user_id(utils.remove_accents(arg.lower()))
     if parola == "":
         await self.send_reply(room, user, "Cosa devo tradurre?")
         return
 
-    results = []
+    results: List[Dict[str, str]] = []
 
     for i in TRANSLATIONS:
         for j in TRANSLATIONS[i]:
@@ -29,7 +31,6 @@ async def trad(self, room, user, arg):
             if resultstext != "":
                 resultstext += ", "
             resultstext += "{trad} ({cat})".format(trad=i["trad"], cat=i["cat"])
-        print(resultstext)
         await self.send_reply(room, user, resultstext)
         return
 
