@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -34,7 +34,7 @@ ON QUOTES (
 
 
 @plugin_wrapper(aliases=["newquote", "quote"])
-async def addquote(conn: Connection, room: str, user: str, arg: str) -> None:
+async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
 
@@ -60,7 +60,10 @@ async def addquote(conn: Connection, room: str, user: str, arg: str) -> None:
 
 
 @plugin_wrapper(aliases=["q"])
-async def randquote(conn: Connection, room: str, user: str, arg: str) -> None:
+async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    if room is None:
+        return
+
     if arg:
         conn.send_message(
             room, f"Usa ``{conn.command_character}addquote`` per aggiungere una quote."
@@ -85,7 +88,9 @@ async def randquote(conn: Connection, room: str, user: str, arg: str) -> None:
 
 
 @plugin_wrapper(aliases=["deletequote", "delquote", "rmquote"])
-async def removequote(conn: Connection, room: str, user: str, arg: str) -> None:
+async def removequote(
+    conn: Connection, room: Optional[str], user: str, arg: str
+) -> None:
     if room is None or not utils.is_driver(user):
         return
 

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Dict, List, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Callable, Dict, List
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -49,7 +49,9 @@ class Plugin:
 
 def scope_checker(func: Callable) -> Callable:
     @wraps(func)
-    async def scope_wrapper(conn: Connection, room: str, user: str, arg: str) -> None:
+    async def scope_wrapper(
+        conn: Connection, room: Optional[str], user: str, arg: str
+    ) -> None:
         if room is not None and not utils.is_voice(user):
             return
         await func(conn, room, user, arg)

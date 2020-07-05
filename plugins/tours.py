@@ -51,7 +51,9 @@ async def create_tour(
 @plugin_wrapper(
     helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
 )
-async def randpoketour(conn: Connection, room: str, user: str, arg: str) -> None:
+async def randpoketour(
+    conn: Connection, room: Optional[str], user: str, arg: str
+) -> None:
     if room is None or not utils.is_driver(user):
         return
 
@@ -84,7 +86,9 @@ async def randpoketour(conn: Connection, room: str, user: str, arg: str) -> None
     helpstr="Avvia un torneo Super Italian Bros. Brawl",
     is_unlisted=True,
 )
-async def waffletour(conn: Connection, room: str, user: str, arg: str) -> None:
+async def waffletour(
+    conn: Connection, room: Optional[str], user: str, arg: str
+) -> None:
     if room is None or not utils.is_driver(user):
         return
 

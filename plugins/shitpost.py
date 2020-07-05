@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Dict, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, List, Dict
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -17,7 +17,9 @@ import utils
     helpstr="FOR THE MIMMMSSS",
     is_unlisted=True,
 )
-async def shitpost(conn: Connection, room: str, user: str, arg: str) -> None:
+async def shitpost(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    if room is None:
+        return
     message = utils.remove_accents(arg.strip())
     if len(message) > 50:
         await conn.send_reply(room, user, "Testo troppo lungo")
@@ -50,7 +52,7 @@ async def shitpost(conn: Connection, room: str, user: str, arg: str) -> None:
     await conn.send_htmlbox(room, user, html.format(text0, text1, text2))
 
 
-async def memes(conn: Connection, room: str, user: str, arg: str) -> None:
+async def memes(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if room is None or not utils.is_private(conn, room):
         return
 

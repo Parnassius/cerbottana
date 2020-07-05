@@ -45,7 +45,7 @@ def html_escape(text: str) -> str:
 
 
 def is_voice(user: str) -> bool:
-    return user is None or user[0] in "+*%@★#&~"
+    return user[0] in "+*%@★#&~"
 
 
 def is_driver(user: str) -> bool:

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -11,7 +11,7 @@ from plugin_loader import plugin_wrapper
 
 
 @plugin_wrapper()
-async def uptime(conn: Connection, room: str, user: str, arg: str) -> None:
+async def uptime(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if conn.connection_start is None:
         return
 

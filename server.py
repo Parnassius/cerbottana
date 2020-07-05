@@ -1,8 +1,8 @@
 import os
 from datetime import date
 
-from flask import Flask, render_template, session, abort, request, g
-from waitress import serve  # type: ignore
+from flask import Flask, Response, render_template, session, abort, request, g
+from waitress import serve
 
 import database
 import utils
@@ -24,7 +24,7 @@ def format_date(value: str) -> str:
 
 
 @SERVER.before_request
-def before():
+def before() -> None:
     g.db = database.open_db()
 
     token = request.args.get("token")
@@ -40,7 +40,7 @@ def before():
 
 
 @SERVER.after_request
-def after(res):
+def after(res: Response) -> Response:
     db = g.pop("db", None)
 
     if db is not None:
@@ -49,7 +49,7 @@ def after(res):
 
 
 @SERVER.route("/", methods=("GET", "POST"))
-def dashboard():
+def dashboard() -> str:
 
     if request.method == "POST":
 
@@ -76,7 +76,7 @@ def dashboard():
 
 
 @SERVER.route("/profilo", methods=("GET", "POST"))
-def profilo():
+def profilo() -> str:
 
     userid = utils.to_user_id(request.args.get("userid", ""))
 
@@ -95,7 +95,7 @@ def profilo():
 
 
 @SERVER.route("/eightball", methods=("GET", "POST"))
-def eightball():
+def eightball() -> str:
 
     if request.method == "POST":
 

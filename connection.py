@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Union
 
 import asyncio
 import os
@@ -7,7 +7,7 @@ from time import time
 import re
 
 import pytz
-import websockets  # type: ignore
+import websockets
 
 import utils
 
@@ -54,7 +54,10 @@ class Connection:
 
     async def start_websocket(self) -> None:
         try:
-            async with websockets.connect(self.url, ping_interval=None) as websocket:
+            async with websockets.connect(
+                self.url,
+                ping_interval=None,  # type: ignore # should be fixed by https://github.com/aaugustin/websockets/commit/93ad88a9a8fe2ea8d96fb1d2a0f1625a3c5fee7c
+            ) as websocket:
                 self.websocket = websocket
                 self.connection_start = time()
                 while True:
@@ -127,7 +130,11 @@ class Connection:
         )
 
     async def send_htmlbox(
-        self, room: str, user: str, message: str, simple_message: str = ""
+        self,
+        room: Optional[str],
+        user: Optional[str],
+        message: str,
+        simple_message: str = "",
     ) -> None:
         message = message.replace("\n", "<br>")
         if room is not None:

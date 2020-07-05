@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -35,7 +35,7 @@ ON utenti (
 
 
 @plugin_wrapper(aliases=["profilo"], helpstr="Visualizza il tuo profilo.")
-async def profile(conn: Connection, room: str, user: str, arg: str) -> None:
+async def profile(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     # pylint: disable=too-many-locals
     if arg.strip() == "":
         arg = user
@@ -110,7 +110,9 @@ async def profile(conn: Connection, room: str, user: str, arg: str) -> None:
 
 
 @plugin_wrapper(aliases=["setprofilo"], helpstr="Imposta una tua frase personalizzata.")
-async def setprofile(conn: Connection, room: str, user: str, arg: str) -> None:
+async def setprofile(
+    conn: Connection, room: Optional[str], user: str, arg: str
+) -> None:
     if len(arg) > 200:
         await conn.send_reply(room, user, "Errore: lunghezza massima 200 caratteri")
         return

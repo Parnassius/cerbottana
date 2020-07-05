@@ -13,7 +13,7 @@ For example the `shitpost` plugin represents:
 
 The preferred way to inizialize a `Plugin` instance is through the `plugin_wrapper` decorator, that acts as a functional interface to the class constructor.
 
-Here's the structure of a file with one plugin (every parameter of the decorator is optional): 
+Here's the structure of a file with one plugin (every parameter of the decorator is optional):
 ```python
 from plugin_loader import plugin_wrapper
 
@@ -22,7 +22,7 @@ from plugin_loader import plugin_wrapper
     helpstr="Describes the foo plugin.",
     #is_unlisted=True
 )
-async def foo(self, room: str, user: str, arg: str) -> None:
+async def foo(self, room: Optional[str], user: str, arg: str) -> None:
     pass
 
 # no need to put the function in a dict here even with multiple functions

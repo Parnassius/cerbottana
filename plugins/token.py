@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -44,7 +44,7 @@ def create_token(conn: Connection, rank: str) -> str:
 
 
 @plugin_wrapper(aliases=["dashboard"])
-async def token(conn: Connection, room: str, user: str, arg: str) -> None:
+async def token(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     userid = utils.to_user_id(user)
     for room in conn.rooms:
         users = Room.get(room).users
