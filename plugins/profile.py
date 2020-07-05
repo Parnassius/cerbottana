@@ -89,7 +89,6 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
                 sfondo=utils.html_escape(i["sfondo"]),
                 opacity="",
             )
-        title = "{tier}:{dal}{al}"
 
         descrizione = body["descrizione"].replace("<", "&lt;")
 
