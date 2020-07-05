@@ -15,9 +15,14 @@ import utils
 
 
 @handler_wrapper(["challstr"])
-async def challstr(conn: Connection, roomid: str, *challstring: str) -> None:
+async def challstr(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 1:
+        return
+
+    challstr = "|".join(args)
+
     payload = "act=login&name={username}&pass={password}&challstr={challstr}".format(
-        username=conn.username, password=conn.password, challstr="|".join(challstring)
+        username=conn.username, password=conn.password, challstr=challstr
     ).encode()
 
     req = urllib.request.Request(
@@ -36,9 +41,15 @@ async def challstr(conn: Connection, roomid: str, *challstring: str) -> None:
 
 
 @handler_wrapper(["updateuser"])
-async def updateuser(
-    conn: Connection, roomid: str, user: str, named: str, avatar: str, settings: str
-) -> None:
+async def updateuser(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 4:
+        return
+
+    user = args[0]
+    named = args[1]
+    avatar = args[2]
+    settings = args[3]
+
     username = user.split("@")[0]
     if utils.to_user_id(username) != utils.to_user_id(conn.username):
         return

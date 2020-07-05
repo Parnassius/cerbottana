@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Callable, List, Dict
-
-if TYPE_CHECKING:
-    from connection import Connection
+from typing import TYPE_CHECKING, Optional, Callable, Awaitable, List, Dict
 
 from functools import wraps
 
 import utils
+
+if TYPE_CHECKING:
+    from connection import Connection
+
+    PluginFunc = Callable[[Connection, Optional[str], str, str], Awaitable[None]]
 
 
 class Plugin:
@@ -15,7 +17,7 @@ class Plugin:
 
     def __init__(
         self,
-        func: Callable,
+        func: PluginFunc,
         aliases: List[str] = [],
         helpstr: str = "",
         is_unlisted: bool = False,
@@ -47,7 +49,7 @@ class Plugin:
         return {k: d[k] for k in sorted(d)}  # python 3.7+
 
 
-def scope_checker(func: Callable) -> Callable:
+def scope_checker(func: PluginFunc) -> PluginFunc:
     @wraps(func)
     async def scope_wrapper(
         conn: Connection, room: Optional[str], user: str, arg: str
@@ -61,8 +63,8 @@ def scope_checker(func: Callable) -> Callable:
 
 def plugin_wrapper(
     aliases: List[str] = [], helpstr: str = "", is_unlisted: bool = False
-) -> Callable:
-    def cls_wrapper(func: Callable) -> Plugin:
+) -> Callable[[PluginFunc], Plugin]:
+    def cls_wrapper(func: PluginFunc) -> Plugin:
         func = scope_checker(func)  # manual decorator binding
         return Plugin(func, aliases, helpstr, is_unlisted)
 

@@ -33,34 +33,55 @@ async def parse_chat_message(
 
 
 @handler_wrapper(["chat", "c"])
-async def chat(conn: Connection, roomid: str, user: str, *message: str) -> None:
+async def chat(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 2:
+        return
+
+    user = args[0]
+    message = "|".join(args[1:]).strip()
+
     if utils.to_user_id(user) == utils.to_user_id(conn.username):
         return
-    await parse_chat_message(conn, roomid, user, "|".join(message).strip())
+    await parse_chat_message(conn, roomid, user, message)
 
 
 @handler_wrapper(["c:"])
-async def timestampchat(
-    conn: Connection, roomid: str, timestamp: str, user: str, *message: str
-) -> None:
+async def timestampchat(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 3:
+        return
+
+    timestamp = args[0]
+    user = args[1]
+    message = "|".join(args[2:]).strip()
+
     if utils.to_user_id(user) == utils.to_user_id(conn.username):
         return
     if int(timestamp) <= conn.timestamp:
         return
-    await parse_chat_message(conn, roomid, user, "|".join(message).strip())
+    await parse_chat_message(conn, roomid, user, message)
 
 
 @handler_wrapper(["pm"])
-async def pm(
-    conn: Connection, roomid: str, sender: str, receiver: str, *message: str
-) -> None:
+async def pm(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 3:
+        return
+
+    sender = args[0]
+    receiver = args[1]
+    message = "|".join(args[2:]).strip()
+
     if utils.to_user_id(sender) == utils.to_user_id(conn.username):
         return
     if utils.to_user_id(receiver) != utils.to_user_id(conn.username):
         return
-    await parse_chat_message(conn, None, sender, "|".join(message).strip())
+    await parse_chat_message(conn, None, sender, message)
 
 
 @handler_wrapper([":"])
-async def server_timestamp(conn: Connection, roomid: str, timestamp: str) -> None:
-    conn.timestamp = int(timestamp)
+async def server_timestamp(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 1:
+        return
+
+    timestamp = int(args[0])
+
+    conn.timestamp = timestamp

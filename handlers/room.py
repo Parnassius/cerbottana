@@ -46,36 +46,66 @@ async def remove_user(conn: Connection, roomid: str, user: str) -> None:
 
 
 @handler_wrapper(["title"])
-async def title(conn: Connection, roomid: str, roomtitle: str) -> None:
+async def title(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 1:
+        return
+
+    roomtitle = args[0]
+
     Room.get(roomid).title = roomtitle
 
 
 @handler_wrapper(["users"])
-async def users(conn: Connection, roomid: str, userlist: str) -> None:
+async def users(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 1:
+        return
+
+    userlist = args[0]
+
     for user in userlist.split(",")[1:]:
         await add_user(conn, roomid, user, True)
 
 
 @handler_wrapper(["join", "j", "J"])
-async def join(conn: Connection, roomid: str, user: str) -> None:
+async def join(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 1:
+        return
+
+    user = args[0]
+
     await add_user(conn, roomid, user)
 
 
 @handler_wrapper(["leave", "l", "L"])
-async def leave(conn: Connection, roomid: str, user: str) -> None:
+async def leave(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 1:
+        return
+
+    user = args[0]
+
     await remove_user(conn, roomid, user)
 
 
 @handler_wrapper(["name", "n", "N"])
-async def name(conn: Connection, roomid: str, user: str, oldid: str) -> None:
+async def name(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 2:
+        return
+
+    user = args[0]
+    oldid = args[1]
+
     await remove_user(conn, roomid, oldid)
     await add_user(conn, roomid, user)
 
 
 @handler_wrapper(["queryresponse"])
-async def queryresponse(
-    conn: Connection, roomid: str, querytype: str, querydata: str
-) -> None:
+async def queryresponse(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 2:
+        return
+
+    querytype = args[0]
+    querydata = args[1]
+
     if querytype != "userdetails":
         return
 

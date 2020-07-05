@@ -9,7 +9,12 @@ from handler_loader import handler_wrapper
 
 
 @handler_wrapper(["formats"])
-async def formats(conn: Connection, roomid: str, *formatslist: str) -> None:
+async def formats(conn: Connection, roomid: str, *args: str) -> None:
+    if len(args) < 1:
+        return
+
+    formatslist = args
+
     tiers: List[Dict[str, str]] = []
     section: Optional[str] = None
     section_next = False
