@@ -1,7 +1,13 @@
-from typing import Any, List, Dict
+from typing import List, Dict
+from typing_extensions import TypedDict
 
 import csv
 import sqlite3
+
+
+TablesDict = TypedDict(
+    "TablesDict", {"name": str, "columns": Dict[str, str], "keys": List[str]}
+)
 
 
 def open_db() -> sqlite3.Cursor:
@@ -18,7 +24,7 @@ def csv_to_sqlite() -> None:
         'UPDATE {table} SET identifier = REPLACE(identifier, "-", "");'
     )
 
-    tables: List[Dict[str, Any]] = [
+    tables: List[TablesDict] = [
         {
             "name": "encounter_condition_value_map",
             "columns": {
@@ -316,16 +322,17 @@ def csv_to_sqlite() -> None:
         )
         with open("./data/veekun/" + table["name"] + ".csv", "r") as f:
             data = csv.DictReader(f)
-            keys = data.fieldnames
-            values = [list(i.values()) for i in data]
-            db.executemany(
-                insert_stmt.format(
-                    table=table["name"],
-                    columns="`" + "`, `".join(keys) + "`",
-                    values=", ".join(list("?" * len(keys))),
-                ),
-                values,
-            )
-            if "identifier" in table["columns"]:
-                db.execute(update_stmt_identifier.format(table=table["name"]))
-            db.connection.commit()
+            csv_keys = data.fieldnames
+            if csv_keys is not None:
+                values = [list(i.values()) for i in data]
+                db.executemany(
+                    insert_stmt.format(
+                        table=table["name"],
+                        columns="`" + "`, `".join(csv_keys) + "`",
+                        values=", ".join(list("?" * len(csv_keys))),
+                    ),
+                    values,
+                )
+                if "identifier" in table["columns"]:
+                    db.execute(update_stmt_identifier.format(table=table["name"]))
+                db.connection.commit()

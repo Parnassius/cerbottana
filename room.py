@@ -1,10 +1,23 @@
 from __future__ import annotations
 
-from typing import Optional, Any, Dict
+from typing import Optional, Dict
+from typing_extensions import TypedDict
 
 from time import time
 
 import utils
+
+
+UserDict = TypedDict(
+    "UserDict",
+    {
+        "rank": str,
+        "global_rank": Optional[str],
+        "room_rank": Optional[str],
+        "username": str,
+        "idle": bool,
+    },
+)
 
 
 class Room:
@@ -13,7 +26,7 @@ class Room:
     def __init__(self, roomid: str) -> None:
         self.roomid = roomid
         self.title: str = ""
-        self.users: Dict[str, Dict[str, Any]] = dict()
+        self.users: Dict[str, UserDict] = dict()
         self.no_mods_online: Optional[float] = None
         self.roombot = False
         self.modchat = False
