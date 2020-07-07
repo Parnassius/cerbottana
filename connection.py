@@ -109,8 +109,11 @@ class Connection:
                 return
 
             if command in self.handlers:
+                tasks: List[asyncio.Task[None]] = []
                 for func in self.handlers[command]:
-                    await func(self, roomid, *parts[2:])
+                    tasks.append(asyncio.create_task(func(self, roomid, *parts[2:])))
+                for task in tasks:
+                    await task
 
     async def try_modchat(self, roomid: str) -> None:
         room = Room.get(roomid)
