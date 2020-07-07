@@ -12,7 +12,7 @@ import utils
 
 from room import Room
 
-import database
+from database import Database
 
 
 async def add_user(
@@ -30,12 +30,10 @@ async def add_user(
     if userid == utils.to_user_id(conn.username):
         room.roombot = rank == "*"
 
-    db = database.open_db()
+    db = Database()
     sql = "INSERT INTO utenti (userid, nome) VALUES (?, ?) "
     sql += " ON CONFLICT (userid) DO UPDATE SET nome = excluded.nome"
-    db.execute(sql, [userid, username])
-    db.connection.commit()
-    db.connection.close()
+    db.executenow(sql, [userid, username])
 
     if not skip_avatar_check or rank != " ":
         await conn.send_message("", "/cmd userdetails {}".format(username), False)
@@ -115,12 +113,10 @@ async def queryresponse(conn: Connection, roomid: str, *args: str) -> None:
     if avatar in utils.AVATAR_IDS:
         avatar = utils.AVATAR_IDS[avatar]
 
-    db = database.open_db()
+    db = Database()
     sql = "INSERT INTO utenti (userid, avatar) VALUES (?, ?) "
     sql += " ON CONFLICT (userid) DO UPDATE SET avatar = excluded.avatar"
-    db.execute(sql, [userid, avatar])
-    db.connection.commit()
-    db.connection.close()
+    db.executenow(sql, [userid, avatar])
 
     if data["rooms"] is not False:
         global_rank = data["group"]

@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 import random
 
-import database
+from database import Database
 
 from plugin_loader import plugin_wrapper
 
@@ -23,8 +23,7 @@ CREATE TABLE eight_ball (
 
 @plugin_wrapper(aliases=["8ball"], helpstr="Chiedi qualsiasi cosa!")
 async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    db = database.open_db()
+    db = Database()
     answers = db.execute("SELECT risposta FROM eight_ball").fetchall()
-    db.connection.close()
     answer = random.choice(answers)["risposta"]
     await conn.send_reply(room, user, answer)

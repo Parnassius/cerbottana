@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Iterable, Any
 from typing_extensions import TypedDict
 
 import csv
@@ -10,10 +10,34 @@ TablesDict = TypedDict(
 )
 
 
-def open_db() -> sqlite3.Cursor:
-    db = sqlite3.connect("./veekun.sqlite")
-    db.row_factory = sqlite3.Row
-    return db.cursor()
+class Veekun:
+    def __init__(self) -> None:
+        self.db = sqlite3.connect("./veekun.sqlite")
+        self.db.row_factory = sqlite3.Row
+        self.cursor = self.db.cursor()
+
+    @property
+    def connection(self) -> sqlite3.Connection:
+        return self.db
+
+    def executemany(
+        self, sql: str, params: Iterable[Iterable[Any]] = []
+    ) -> sqlite3.Cursor:
+        return self.cursor.executemany(sql, params)
+
+    def executenow(self, sql: str, params: Iterable[Any] = []) -> sqlite3.Cursor:
+        cur = self.execute(sql, params)
+        self.commit()
+        return cur
+
+    def execute(self, sql: str, params: Iterable[Any] = []) -> sqlite3.Cursor:
+        return self.cursor.execute(sql, params)
+
+    def commit(self) -> None:
+        self.db.commit()
+
+    def __del__(self) -> None:
+        self.db.close()
 
 
 def csv_to_sqlite() -> None:
@@ -310,7 +334,7 @@ def csv_to_sqlite() -> None:
         },
     ]
 
-    db = open_db()
+    db = Veekun()
 
     for table in tables:
         columns = ["`" + i + "` " + table["columns"][i] for i in table["columns"]]
@@ -335,4 +359,4 @@ def csv_to_sqlite() -> None:
                 )
                 if "identifier" in table["columns"]:
                     db.execute(update_stmt_identifier.format(table=table["name"]))
-                db.connection.commit()
+                db.commit()

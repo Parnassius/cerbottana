@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 import os
 
-import database
+from database import Database
 
 from plugin_loader import plugin_wrapper
 import utils
@@ -34,11 +34,9 @@ ON tokens (
 def create_token(conn: Connection, rank: str) -> str:
     token_id = os.urandom(16).hex()
 
-    db = database.open_db()
+    db = Database()
     sql = "INSERT INTO tokens (token, rank, scadenza) VALUES (?, ?, DATETIME('now', '+1 minute'))"
-    db.execute(sql, [token_id, rank])
-    db.connection.commit()
-    db.connection.close()
+    db.executenow(sql, [token_id, rank])
 
     return token_id
 

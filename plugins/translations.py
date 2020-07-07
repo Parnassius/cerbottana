@@ -32,10 +32,10 @@ async def trad(conn: Connection, room: Optional[str], user: str, arg: str) -> No
             await conn.send_reply(room, user, results[0]["trad"])
             return
         resultstext = ""
-        for i in results:
+        for k in results:
             if resultstext != "":
                 resultstext += ", "
-            resultstext += "{trad} ({cat})".format(trad=i["trad"], cat=i["cat"])
+            resultstext += "{trad} ({cat})".format(trad=k["trad"], cat=k["cat"])
         await conn.send_reply(room, user, resultstext)
         return
 
@@ -43,4 +43,4 @@ async def trad(conn: Connection, room: Optional[str], user: str, arg: str) -> No
 
 
 with open("./data/translations.json", "r") as f:
-    TRANSLATIONS = json.load(f)
+    TRANSLATIONS: Dict[str, List[Dict[str, str]]] = json.load(f)

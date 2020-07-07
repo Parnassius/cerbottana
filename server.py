@@ -4,7 +4,7 @@ from datetime import date
 from flask import Flask, Response, render_template, session, abort, request, g
 from waitress import serve
 
-import database
+from database import Database
 import utils
 
 
@@ -25,7 +25,7 @@ def format_date(value: str) -> str:
 
 @SERVER.before_request
 def before() -> None:
-    g.db = database.open_db()
+    g.db = Database()
 
     token = request.args.get("token")
 
@@ -39,15 +39,6 @@ def before() -> None:
         abort(401)
 
 
-@SERVER.after_request
-def after(res: Response) -> Response:
-    db = g.pop("db", None)
-
-    if db is not None:
-        db.connection.close()
-    return res
-
-
 @SERVER.route("/", methods=("GET", "POST"))
 def dashboard() -> str:
 
@@ -57,15 +48,13 @@ def dashboard() -> str:
             parts = request.form["approva"].split(",")
             sql = "UPDATE utenti SET descrizione = descrizione_daapprovare, descrizione_daapprovare = '' "
             sql += " WHERE id = ? AND descrizione_daapprovare = ?"
-            g.db.execute(sql, [parts[0], ",".join(parts[1:])])
+            g.db.executenow(sql, [parts[0], ",".join(parts[1:])])
 
         if "rifiuta" in request.form:
             parts = request.form["rifiuta"].split(",")
             sql = "UPDATE utenti SET descrizione_daapprovare = '' "
             sql += " WHERE id = ? AND descrizione_daapprovare = ?"
-            g.db.execute(sql, [parts[0], ",".join(parts[1:])])
-
-        g.db.connection.commit()
+            g.db.executenow(sql, [parts[0], ",".join(parts[1:])])
 
     sql = "SELECT * FROM utenti WHERE descrizione_daapprovare != '' ORDER BY userid"
     descrizioni_daapprovare = g.db.execute(sql).fetchall()
@@ -84,9 +73,9 @@ def profilo() -> str:
 
         if "descrizione" in request.form:
             sql = "UPDATE utenti SET descrizione = ? WHERE id = ? AND userid = ?"
-            g.db.execute(sql, [request.form["descrizione"], request.form["id"], userid])
-
-        g.db.connection.commit()
+            g.db.executenow(
+                sql, [request.form["descrizione"], request.form["id"], userid]
+            )
 
     sql = "SELECT * FROM utenti WHERE userid = ?"
     utente = g.db.execute(sql, [utils.to_user_id(userid)]).fetchone()
@@ -116,7 +105,7 @@ def eightball() -> str:
             )
             g.db.execute(sql, risposte)
 
-        g.db.connection.commit()
+            g.db.connection.commit()
 
     sql = "SELECT * FROM eight_ball ORDER BY risposta"
     rs = g.db.execute(sql).fetchall()

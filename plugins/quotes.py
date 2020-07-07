@@ -9,13 +9,11 @@ import random
 
 from plugin_loader import plugin_wrapper
 
-import database
+from database import Database
 import utils
 
 
 """
-This plugin uses data from a table in the database.sqlite resource.
-To create such table:
 CREATE TABLE quotes (
     id INTEGER,
     message TEXT,
@@ -47,16 +45,14 @@ async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -
         await conn.send_message(room, f"Quote troppo lunga, max {maxlen} caratteri.")
         return
 
-    db = database.open_db()
+    db = Database()
     sql = "INSERT OR IGNORE INTO quotes (message, roomid, author, date) "
     sql += "VALUES (?, ?, ?, DATE())"
-    db.execute(sql, [arg, room, utils.to_user_id(user)])
-    db.connection.commit()
+    db.executenow(sql, [arg, room, utils.to_user_id(user)])
     if db.connection.total_changes:
         await conn.send_message(room, "Quote salvata.")
     else:
         await conn.send_message(room, "Quote già esistente.")
-    db.connection.close()
 
 
 @plugin_wrapper(aliases=["q"])
@@ -70,11 +66,10 @@ async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) 
         )
         return
 
-    db = database.open_db()
+    db = Database()
     sql = "SELECT message, date "
     sql += "FROM quotes WHERE roomid = ?"
     quotes = db.execute(sql, [room]).fetchall()
-    db.connection.close()
 
     if not quotes:
         await conn.send_message(room, "Nessuna quote registrata per questa room.")
@@ -98,11 +93,9 @@ async def removequote(
         await conn.send_message(room, "Che quote devo cancellare?")
         return
 
-    db = database.open_db()
-    db.execute("DELETE FROM quotes WHERE message = ? AND roomid = ?", [arg, room])
-    db.connection.commit()
+    db = Database()
+    db.executenow("DELETE FROM quotes WHERE message = ? AND roomid = ?", [arg, room])
     if db.connection.total_changes:
         await conn.send_message(room, "Quote cancellata.")
     else:
         await conn.send_message(room, "Quote inesistente.")
-    db.connection.close()

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from connection import Connection
 
-import database
+from database import Database
 
 from plugin_loader import plugin_wrapper
 import utils
@@ -42,7 +42,7 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
 
     arg = utils.to_user_id(arg)
 
-    db = database.open_db()
+    db = Database()
     sql = "SELECT * FROM utenti WHERE userid = ?"
     body = db.execute(sql, [arg]).fetchone()
 
@@ -105,8 +105,6 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
             ),
         )
 
-    db.connection.close()
-
 
 @plugin_wrapper(aliases=["setprofilo"], helpstr="Imposta una tua frase personalizzata.")
 async def setprofile(
@@ -116,12 +114,10 @@ async def setprofile(
         await conn.send_reply(room, user, "Errore: lunghezza massima 200 caratteri")
         return
 
-    db = database.open_db()
+    db = Database()
     sql = "INSERT INTO utenti (userid, descrizione_daapprovare) VALUES (?, ?) "
     sql += " ON CONFLICT (userid) DO UPDATE SET descrizione_daapprovare = excluded.descrizione_daapprovare"
-    db.execute(sql, [utils.to_user_id(user), arg])
-    db.connection.commit()
-    db.connection.close()
+    db.executenow(sql, [utils.to_user_id(user), arg])
 
     await conn.send_reply(room, user, "Salvato")
 

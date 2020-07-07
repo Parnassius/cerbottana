@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from connection import Connection
 
-import veekun
+from veekun import Veekun
 
 from plugin_loader import plugin_wrapper
 import utils
@@ -20,7 +20,7 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
     pokemon = utils.to_user_id(utils.remove_accents(args[0].lower()))
     version_group = utils.to_user_id(utils.remove_accents(args[1].lower()))
 
-    db = veekun.open_db()
+    db = Veekun()
 
     sql = "SELECT id FROM version_groups WHERE identifier = ?"
     version_group_id = db.execute(sql, [version_group]).fetchone()
@@ -28,7 +28,6 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
         sql = "SELECT version_group_id FROM versions WHERE identifier = ?"
         version_group_id = db.execute(sql, [version_group]).fetchone()
         if version_group_id is None:
-            db.connection.close()
             return
     version_group_id = version_group_id[0]
     sql = """SELECT pokemon_moves.version_group_id, pokemon_moves.pokemon_move_method_id,
@@ -95,8 +94,6 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
     if current_move_method_id != 0:
         html += "</tbody></table>"
         html += "</details>"
-
-    db.connection.close()
 
     if not html:
         await conn.send_reply(room, user, "Nessun dato")
