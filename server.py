@@ -1,6 +1,6 @@
-import os
 from datetime import date
 
+from environs import Env
 from flask import Flask, Response, render_template, session, abort, request, g
 from waitress import serve
 
@@ -8,14 +8,18 @@ from database import Database
 import utils
 
 
+env = Env()
+env.read_env()
+
+
 class Server(Flask):
     def serve_forever(self) -> None:
-        serve(self, listen="*:{}".format(os.environ["PORT"]))
+        serve(self, listen="*:{}".format(env("PORT")))
 
 
 SERVER = Server(__name__)
 
-SERVER.secret_key = os.environ["FLASK_SECRET_KEY"]
+SERVER.secret_key = env("FLASK_SECRET_KEY")
 
 
 @SERVER.template_filter("format_date")

@@ -55,5 +55,5 @@ async def token(conn: Connection, room: Optional[str], user: str, arg: str) -> N
     token_id = create_token(conn, rank)
 
     await conn.send_pm(
-        user, "{url}?token={token}".format(url=os.environ["DOMAIN"], token=token_id)
+        user, "{url}?token={token}".format(url=conn.domain, token=token_id)
     )

@@ -54,10 +54,11 @@ async def updateuser(conn: Connection, roomid: str, *args: str) -> None:
     if utils.to_user_id(username) != utils.to_user_id(conn.username):
         return
 
-    if avatar != conn.avatar:
+    if conn.avatar and avatar != conn.avatar:
         await conn.send_message("", "/avatar {}".format(conn.avatar), False)
 
-    await conn.send_message("", "/status {}".format(conn.statustext), False)
+    if conn.statustext:
+        await conn.send_message("", "/status {}".format(conn.statustext), False)
 
     for public_room in conn.rooms:
         await conn.send_message("", "/join {}".format(public_room), False)

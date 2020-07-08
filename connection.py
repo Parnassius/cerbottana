@@ -1,11 +1,11 @@
 from typing import Optional, List, Dict, Union
 
 import asyncio
-import os
 from datetime import datetime
 from time import time
 import re
 
+from environs import Env
 import pytz
 import websockets
 
@@ -29,6 +29,7 @@ class Connection:
         private_rooms: List[str],
         command_character: str,
         administrators: List[str],
+        domain: str,
     ) -> None:
         self.url = url
         self.username = username
@@ -39,6 +40,7 @@ class Connection:
         self.private_rooms = private_rooms
         self.command_character = command_character
         self.administrators = administrators
+        self.domain = domain
         self.handlers = handlers
         self.commands = plugins
         self.timestamp: float = 0
@@ -185,19 +187,23 @@ class Connection:
             await self.websocket.send(message)
 
 
+env = Env()
+env.read_env()
+
 CONNECTION = Connection(
-    ("wss" if os.environ["SHOWDOWN_PORT"] == "443" else "ws")
+    ("wss" if env("SHOWDOWN_PORT") == "443" else "ws")
     + "://"
-    + os.environ["SHOWDOWN_HOST"]
+    + env("SHOWDOWN_HOST")
     + ":"
-    + os.environ["SHOWDOWN_PORT"]
+    + env("SHOWDOWN_PORT")
     + "/showdown/websocket",
-    os.environ["USERNAME"],
-    os.environ["PASSWORD"],
-    os.environ["AVATAR"],
-    os.environ["STATUSTEXT"],
-    os.environ["ROOMS"].split(","),
-    os.environ["PRIVATE_ROOMS"].split(","),
-    os.environ["COMMAND_CHARACTER"],
-    os.environ["ADMINISTRATORS"].split(","),
+    env("USERNAME"),
+    env("PASSWORD"),
+    env("AVATAR", ""),
+    env("STATUSTEXT", ""),
+    env.list("ROOMS"),
+    env.list("PRIVATE_ROOMS"),
+    env("COMMAND_CHARACTER"),
+    env.list("ADMINISTRATORS"),
+    env("DOMAIN"),
 )
