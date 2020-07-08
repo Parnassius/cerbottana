@@ -1,7 +1,7 @@
 from datetime import date
 
 from environs import Env
-from flask import Flask, Response, render_template, session, abort, request, g
+from flask import Flask, render_template, session, abort, request, g
 from waitress import serve
 
 from database import Database

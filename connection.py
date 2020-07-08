@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, Union
+from typing import Optional, List, Dict
 
 import asyncio
 from datetime import datetime

@@ -46,9 +46,9 @@ async def updateuser(conn: Connection, roomid: str, *args: str) -> None:
         return
 
     user = args[0]
-    named = args[1]
+    # named = args[1]
     avatar = args[2]
-    settings = args[3]
+    # settings = args[3]
 
     username = user.split("@")[0]
     if utils.to_user_id(username) != utils.to_user_id(conn.username):

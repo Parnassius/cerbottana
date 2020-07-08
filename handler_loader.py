@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Callable, Awaitable, List, Dict
+from typing import TYPE_CHECKING, Callable, Awaitable, List, Dict
 
 if TYPE_CHECKING:
     from connection import Connection
