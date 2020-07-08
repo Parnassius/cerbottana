@@ -1,6 +1,7 @@
+black==19.10b0
 environs==8.0.0
 Flask==1.1.2
+mypy==0.782
 pytz==2020.1
-typing-extensions==3.7.4.2
 waitress==1.4.4
 websockets==8.1
