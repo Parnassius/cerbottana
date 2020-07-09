@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 import random
 
-from plugin_loader import plugin_wrapper
+from plugin_loader import plugin_wrapper, parametrize_room
 
 from database import Database
 import utils
@@ -56,30 +56,28 @@ async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -
 
 
 @plugin_wrapper(aliases=["q"])
+@parametrize_room
 async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if room is None:
-        return
-
-    if arg:
-        conn.send_message(
-            room, f"Usa ``{conn.command_character}addquote`` per aggiungere una quote."
-        )
+    if len(arg.split(",")) > 1:  # expecting 1 parameter given by @parametrize_room
+        msg = "Non ho capito. "
+        msg += f"Usa ``{conn.command_character}quote messaggio`` per salvare una quote."
+        await conn.send_reply(room, user, msg)
         return
 
     db = Database()
     sql = "SELECT message, date "
     sql += "FROM quotes WHERE roomid = ?"
-    quotes = db.execute(sql, [room]).fetchall()
+    quotes = db.execute(sql, [arg]).fetchall()
 
     if not quotes:
-        await conn.send_message(room, "Nessuna quote registrata per questa room.")
+        await conn.send_reply(room, user, "Nessuna quote registrata per questa room.")
         return
     quote = random.choice(quotes)
 
     parsed_quote = quote["message"]
     # if quote["date"]:  # backwards compatibility with old quotes without a date
     #   parsed_quote += "  __({})__".format(quote["date"])
-    await conn.send_message(room, parsed_quote)
+    await conn.send_reply(room, user, parsed_quote)
 
 
 @plugin_wrapper(aliases=["deletequote", "delquote", "rmquote"])
