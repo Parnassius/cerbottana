@@ -1,8 +1,17 @@
-from typing import List, Dict, Iterable, Any
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, List, Dict
 from typing_extensions import TypedDict
 
+if TYPE_CHECKING:
+    from connection import Connection
+
+
 import csv
-import sqlite3
+
+from database import Database
+
+from inittasks import inittask_wrapper
 
 
 TablesDict = TypedDict(
@@ -10,38 +19,9 @@ TablesDict = TypedDict(
 )
 
 
-class Veekun:
-    def __init__(self) -> None:
-        self.db = sqlite3.connect("./veekun.sqlite")
-        self.db.row_factory = sqlite3.Row
-        self.cursor = self.db.cursor()
-
-    @property
-    def connection(self) -> sqlite3.Connection:
-        return self.db
-
-    def executemany(
-        self, sql: str, params: Iterable[Iterable[Any]] = []
-    ) -> sqlite3.Cursor:
-        return self.cursor.executemany(sql, params)
-
-    def executenow(self, sql: str, params: Iterable[Any] = []) -> sqlite3.Cursor:
-        cur = self.execute(sql, params)
-        self.commit()
-        return cur
-
-    def execute(self, sql: str, params: Iterable[Any] = []) -> sqlite3.Cursor:
-        return self.cursor.execute(sql, params)
-
-    def commit(self) -> None:
-        self.db.commit()
-
-    def __del__(self) -> None:
-        self.db.close()
-
-
-def csv_to_sqlite() -> None:
-    open("./veekun.sqlite", "w").close()
+@inittask_wrapper()
+async def csv_to_sqlite(conn: Connection) -> None:
+    open("./veekun.sqlite", "w").close()  # truncate database
     create_stmt = "CREATE TABLE {table} ({columns}, {keys});"
     insert_stmt = "INSERT INTO {table} ({columns}) VALUES ({values});"
     update_stmt_identifier = (
@@ -334,7 +314,7 @@ def csv_to_sqlite() -> None:
         },
     ]
 
-    db = Veekun()
+    db = Database("veekun")
 
     for table in tables:
         columns = ["`" + i + "` " + table["columns"][i] for i in table["columns"]]

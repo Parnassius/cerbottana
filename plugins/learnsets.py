@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from connection import Connection
 
-from veekun import Veekun
+from database import Database
 
 from plugin_loader import plugin_wrapper
 import utils
@@ -20,7 +20,7 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
     pokemon = utils.to_user_id(utils.remove_accents(args[0].lower()))
     version_group = utils.to_user_id(utils.remove_accents(args[1].lower()))
 
-    db = Veekun()
+    db = Database("veekun")
 
     sql = "SELECT id FROM version_groups WHERE identifier = ?"
     version_group_id = db.execute(sql, [version_group]).fetchone()

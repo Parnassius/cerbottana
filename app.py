@@ -3,16 +3,12 @@ import threading
 import signal
 from types import FrameType
 
-import veekun
-
 from server import SERVER
 
 from connection import CONNECTION
 
 
 if __name__ == "__main__":
-    veekun.csv_to_sqlite()
-
     threading.Thread(target=SERVER.serve_forever, daemon=True).start()
     threading.Thread(target=CONNECTION.open_connection).start()
 

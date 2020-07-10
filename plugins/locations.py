@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from connection import Connection
 
-from veekun import Veekun
+from database import Database
 
 from plugin_loader import plugin_wrapper
 import utils
@@ -50,7 +50,7 @@ async def location(conn: Connection, room: Optional[str], user: str, arg: str) -
            GROUP BY version_id, location_area_id, encounter_method_id
            ORDER BY version_id, location_area_id, encounter_method_id"""
 
-    db = Veekun()
+    db = Database("veekun")
 
     html = ""
 
@@ -155,7 +155,7 @@ async def encounter(conn: Connection, room: Optional[str], user: str, arg: str) 
            GROUP BY version_id, location_area_id, pokemon_id, encounter_method_id
            ORDER BY version_id, location_area_id, encounter_method_id, rarity DESC, pokemon_id"""
 
-    db = Veekun()
+    db = Database("veekun")
 
     html = ""
 
