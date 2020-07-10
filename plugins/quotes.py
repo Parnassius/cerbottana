@@ -98,3 +98,15 @@ async def removequote(
         await conn.send_message(room, "Quote cancellata.")
     else:
         await conn.send_message(room, "Quote inesistente.")
+
+
+@plugin_wrapper(aliases=["quotes", "quoteslist"])
+@parametrize_room
+async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    quoteroom = arg.split(",")[0]
+
+    message = f"{conn.domain}quotes/{quoteroom}"
+    if utils.is_private(conn, quoteroom):
+        token_id = utils.create_token("+", [quoteroom])
+        message += f"?token={token_id}"
+    await conn.send_reply(room, user, message)
