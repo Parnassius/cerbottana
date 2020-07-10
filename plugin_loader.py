@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, Callable, Awaitable, List, Dict
 
 from functools import wraps
-import re
 
 from room import Room
 import utils
@@ -99,9 +98,7 @@ def parametrize_room(func: PluginFunc) -> PluginFunc:
                 await conn.send_pm(user, "Specifica il nome della room.")
                 return
 
-            troom = re.sub(r"[^a-z0-9-]", "", arg.split(",")[0].lower())  # target room
-            # this defaults to "", utils.to_room_id defaults to "lobby"
-
+            troom = utils.to_room_id(arg.split(",")[0], fallback="")  # target room
             if not troom:
                 await conn.send_pm(user, "Specifica il nome della room.")
                 return

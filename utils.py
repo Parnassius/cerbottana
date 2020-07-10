@@ -15,10 +15,10 @@ def to_user_id(user: str) -> str:
     return userid
 
 
-def to_room_id(room: str) -> str:
+def to_room_id(room: str, fallback: str = "lobby") -> str:
     roomid = re.sub(r"[^a-z0-9-]", "", room.lower())
     if not roomid:
-        roomid = "lobby"
+        roomid = fallback
     return roomid
 
 
