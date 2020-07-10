@@ -11,6 +11,7 @@ import websockets
 
 import utils
 
+from inittasks import inittasks
 from handlers import handlers
 from plugins import plugins
 
@@ -41,6 +42,7 @@ class Connection:
         self.command_character = command_character
         self.administrators = administrators
         self.domain = domain
+        self.inittasks = inittasks
         self.handlers = handlers
         self.commands = plugins
         self.timestamp: float = 0
@@ -55,6 +57,12 @@ class Connection:
         self.loop.run_until_complete(self.start_websocket())
 
     async def start_websocket(self) -> None:
+        tasks: List[asyncio.Task[None]] = []
+        for func in self.inittasks:
+            tasks.append(asyncio.create_task(func(self)))
+        for task in tasks:
+            await task
+
         try:
             async with websockets.connect(
                 self.url,

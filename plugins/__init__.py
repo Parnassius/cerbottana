@@ -1,4 +1,4 @@
-from typing import List, Set
+from typing import List
 
 from os.path import dirname, basename, isfile, join
 import glob
