@@ -59,8 +59,9 @@ async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -
 @parametrize_room
 async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if len(arg.split(",")) > 1:  # expecting 1 parameter given by @parametrize_room
-        msg = "Non ho capito. "
-        msg += f"Usa ``{conn.command_character}quote messaggio`` per salvare una quote."
+        msg = "Non ho capito."
+        if room is not None:
+            msg += f" Usa ``{conn.command_character}quote messaggio`` per salvare una quote."
         await conn.send_reply(room, user, msg)
         return
 
