@@ -1,13 +1,42 @@
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from connection import Connection
 
 import re
 import hashlib
 import math
+import os
 
 from html import escape
 
+from database import Database
 from room import Room
+
+
+def create_token(rank: str, private_rooms: List[str]) -> str:
+    """
+    CREATE TABLE tokens (
+        id INTEGER,
+        token TEXT,
+        rank TEXT,
+        prooms TEXT,
+        scadenza TEXT,
+        PRIMARY KEY(id)
+    );
+
+    CREATE INDEX idx_tokens_token
+    ON tokens (
+        token
+    );
+    """
+
+    token_id = os.urandom(16).hex()
+    prooms = ",".join(private_rooms) if private_rooms else None
+
+    db = Database()
+    sql = "INSERT INTO tokens (token, rank, prooms, scadenza) VALUES (?, ?, ?, DATETIME('now', '+1 minute'))"
+    db.executenow(sql, [token_id, rank, prooms])
+
+    return token_id
 
 
 def to_user_id(user: str) -> str:
