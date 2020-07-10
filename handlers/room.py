@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 import json
 
-from handler_loader import handler_wrapper
+from . import handler_wrapper
 import utils
 
 from room import Room

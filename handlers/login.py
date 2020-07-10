@@ -10,7 +10,7 @@ import json
 import urllib.request
 import urllib.parse
 
-from handler_loader import handler_wrapper
+from . import handler_wrapper
 import utils
 
 

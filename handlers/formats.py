@@ -5,7 +5,7 @@ from typing import Optional, List, Dict, TYPE_CHECKING
 if TYPE_CHECKING:
     from connection import Connection
 
-from handler_loader import handler_wrapper
+from . import handler_wrapper
 
 
 @handler_wrapper(["formats"])
