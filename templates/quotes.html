@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <h2>Quotes di {{room}}</h2>
+    <ul>
+        {%- for row in rs -%}
+        <li>
+            {{- row.message -}}
+            {%- if row.date -%}
+                <br>
+                <span class="annotation">{{- row.date|format_date -}}</span>
+            {%- endif -%}
+        </li>
+        {%- endfor -%}
+    </ul>
+
+{% endblock %}
