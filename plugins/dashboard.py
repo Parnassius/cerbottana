@@ -11,8 +11,8 @@ import utils
 from room import Room
 
 
-@plugin_wrapper(aliases=["dashboard"])
-async def token(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+@plugin_wrapper(aliases=["token"])
+async def dashboard(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     userid = utils.to_user_id(user)
     for r in conn.rooms:
         users = Room.get(r).users

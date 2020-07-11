@@ -76,6 +76,16 @@ hr {
   border-top: 1px solid var(--border);
   margin: 30px 0;
 }
+ul {
+  list-style-type: disc;
+  padding-left: 30px;
+}
+ul li {
+  margin-bottom: 15px;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
 .alert {
   padding: 15px;
   line-height: 1.5;
@@ -89,6 +99,12 @@ hr {
 }
 .alert.alert-orange {
   background-color: #f47c3c;
+}
+
+.annotation {
+  color: #707070;
+  font-size: 67%;
+  font-style: italic;
 }
 
 .table {

@@ -105,8 +105,16 @@ async def removequote(
 async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     quoteroom = arg.split(",")[0]
 
+    db = Database()
+    quotes_n = db.execute(
+        "SELECT COUNT(*) FROM quotes WHERE roomid = ?", [quoteroom]
+    ).fetchone()
+    if not quotes_n[0]:
+        await conn.send_reply(room, user, "Nessuna quote da visualizzare.")
+        return
+
     message = f"{conn.domain}quotes/{quoteroom}"
     if utils.is_private(conn, quoteroom):
-        token_id = utils.create_token("+", [quoteroom])
+        token_id = utils.create_token(" ", [quoteroom])
         message += f"?token={token_id}"
     await conn.send_reply(room, user, message)

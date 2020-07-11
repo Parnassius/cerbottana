@@ -128,3 +128,19 @@ def eightball() -> str:
     rs = g.db.execute(sql).fetchall()
 
     return render_template("eightball.html", rs=rs)
+
+
+@SERVER.route("/quotes/<room>")
+def quotes(room: str) -> str:
+    if room in env.list("PRIVATE_ROOMS"):
+        private_rooms = session.get("prooms")
+        if not private_rooms or room not in private_rooms.split(","):
+            abort(401)
+
+    sql = "SELECT message, date "
+    sql += "FROM quotes WHERE roomid = ?"
+    rs = g.db.execute(sql, [room]).fetchall()
+    if not rs:
+        abort(401)  # no quotes for this room
+
+    return render_template("quotes.html", rs=rs, room=room)
