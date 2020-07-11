@@ -12,7 +12,7 @@ from database import Database
 from room import Room
 
 
-def create_token(rank: str, private_rooms: List[str]) -> str:
+def create_token(rank: str, private_rooms: List[str], expire_minutes: int = 30) -> str:
     """
     CREATE TABLE tokens (
         id INTEGER,
@@ -31,10 +31,11 @@ def create_token(rank: str, private_rooms: List[str]) -> str:
 
     token_id = os.urandom(16).hex()
     prooms = ",".join(private_rooms) if private_rooms else None
+    expire = f"+{expire_minutes} minute"
 
     db = Database()
-    sql = "INSERT INTO tokens (token, rank, prooms, scadenza) VALUES (?, ?, ?, DATETIME('now', '+1 minute'))"
-    db.executenow(sql, [token_id, rank, prooms])
+    sql = "INSERT INTO tokens (token, rank, prooms, scadenza) VALUES (?, ?, ?, DATETIME('now', ?))"
+    db.executenow(sql, [token_id, rank, prooms, expire])
 
     return token_id
 
