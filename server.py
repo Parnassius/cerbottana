@@ -1,4 +1,6 @@
 from datetime import date
+from functools import wraps
+from typing import Callable
 
 from environs import Env
 from flask import Flask, Response, render_template, session, abort, request, g
@@ -34,16 +36,25 @@ def before() -> None:
     token = request.args.get("token")
 
     if token is not None:
-        sql = "SELECT rank FROM tokens WHERE token = ? AND JULIANDAY() - JULIANDAY(scadenza) < 0"
-        rank = g.db.execute(sql, [token]).fetchone()
-        if rank:
-            session["user"] = rank["rank"]
+        sql = "SELECT rank, prooms FROM tokens WHERE token = ? AND JULIANDAY() - JULIANDAY(scadenza) < 0"
+        data = g.db.execute(sql, [token]).fetchone()
+        if not data:  # invalid token
+            abort(401)
+        session.update(data)
 
-    if "user" not in session:
-        abort(401)
+
+def require_driver(func: Callable[[], str]) -> Callable[[], str]:
+    @wraps(func)
+    def wrapper() -> str:
+        if "rank" not in session or not utils.is_driver(session["rank"]):
+            abort(401)
+        return func()
+
+    return wrapper
 
 
 @SERVER.route("/", methods=("GET", "POST"))
+@require_driver
 def dashboard() -> str:
 
     if request.method == "POST":
@@ -69,6 +80,7 @@ def dashboard() -> str:
 
 
 @SERVER.route("/profilo", methods=("GET", "POST"))
+@require_driver
 def profilo() -> str:
 
     userid = utils.to_user_id(request.args.get("userid", ""))
@@ -88,6 +100,7 @@ def profilo() -> str:
 
 
 @SERVER.route("/eightball", methods=("GET", "POST"))
+@require_driver
 def eightball() -> str:
 
     if request.method == "POST":
