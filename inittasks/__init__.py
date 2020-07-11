@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, Awaitable, List
+from typing import TYPE_CHECKING, Callable, Awaitable, List, Tuple
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -12,12 +12,12 @@ import glob
 import importlib
 
 
-inittasks = list()  # type: List[InittaskFunc]
+inittasks = list()  # type: List[Tuple[int, InittaskFunc]]
 
 
-def inittask_wrapper() -> Callable[[InittaskFunc], InittaskFunc]:
+def inittask_wrapper(priority: int = 3) -> Callable[[InittaskFunc], InittaskFunc]:
     def cls_wrapper(func: InittaskFunc) -> InittaskFunc:
-        inittasks.append(func)
+        inittasks.append((priority, func))
         return func
 
     return cls_wrapper

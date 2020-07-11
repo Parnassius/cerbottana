@@ -58,7 +58,9 @@ class Connection:
 
     async def start_websocket(self) -> None:
         tasks: List[asyncio.Task[None]] = []
-        for func in self.inittasks:
+        for (priority, func) in sorted(
+            self.inittasks, key=lambda func: func[0]  # sort by priority
+        ):
             tasks.append(asyncio.create_task(func(self)))
         for task in tasks:
             await task
