@@ -126,26 +126,26 @@ def eightball() -> str:
 
     if request.method == "POST":
 
-        if "risposte" in request.form:
-            sql = "DELETE FROM eight_ball"
+        if "answers" in request.form:
+            sql = "DELETE FROM eightball"
             g.db.execute(sql)
 
-            risposte = list(
+            answers = list(
                 filter(
                     None,
                     map(
-                        str.strip, sorted(request.form["risposte"].strip().splitlines())
+                        str.strip, sorted(request.form["answers"].strip().splitlines())
                     ),
                 )
             )
-            sql = "INSERT INTO eight_ball (risposta) VALUES " + ", ".join(
-                ["(?)"] * len(risposte)
+            sql = "INSERT INTO eightball (answer) VALUES " + ", ".join(
+                ["(?)"] * len(answers)
             )
-            g.db.execute(sql, risposte)
+            g.db.execute(sql, answers)
 
             g.db.commit()
 
-    sql = "SELECT * FROM eight_ball ORDER BY risposta"
+    sql = "SELECT * FROM eightball ORDER BY answer"
     rs = g.db.execute(sql).fetchall()
 
     return render_template("eightball.html", rs=rs)
