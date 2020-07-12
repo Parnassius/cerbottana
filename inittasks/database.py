@@ -7,8 +7,6 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
-import csv
-
 from database import Database
 
 from inittasks import inittask_wrapper
