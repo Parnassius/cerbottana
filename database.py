@@ -5,9 +5,8 @@ import sqlite3
 
 class Database:
     def __init__(self, dbname: str = "database") -> None:
-        self.db = sqlite3.connect(f"./{dbname}.sqlite")
+        self.db = sqlite3.connect(f"./{dbname}.sqlite", check_same_thread=False)
         self.db.row_factory = sqlite3.Row
-        self.cursor = self.db.cursor()
 
     @property
     def connection(self) -> sqlite3.Connection:
@@ -16,7 +15,7 @@ class Database:
     def executemany(
         self, sql: str, params: Iterable[Iterable[Any]] = []
     ) -> sqlite3.Cursor:
-        return self.cursor.executemany(sql, params)
+        return self.db.executemany(sql, params)
 
     def executenow(self, sql: str, params: Iterable[Any] = []) -> sqlite3.Cursor:
         cur = self.execute(sql, params)
@@ -24,7 +23,7 @@ class Database:
         return cur
 
     def execute(self, sql: str, params: Iterable[Any] = []) -> sqlite3.Cursor:
-        return self.cursor.execute(sql, params)
+        return self.db.execute(sql, params)
 
     def commit(self) -> None:
         self.db.commit()
