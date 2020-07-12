@@ -61,21 +61,21 @@ def dashboard() -> str:
 
         if "approva" in request.form:
             parts = request.form["approva"].split(",")
-            sql = "UPDATE utenti SET descrizione = descrizione_daapprovare, descrizione_daapprovare = '' "
-            sql += " WHERE id = ? AND descrizione_daapprovare = ?"
+            sql = "UPDATE users SET description = description_pending, description_pending = '' "
+            sql += " WHERE id = ? AND description_pending = ?"
             g.db.executenow(sql, [parts[0], ",".join(parts[1:])])
 
         if "rifiuta" in request.form:
             parts = request.form["rifiuta"].split(",")
-            sql = "UPDATE utenti SET descrizione_daapprovare = '' "
-            sql += " WHERE id = ? AND descrizione_daapprovare = ?"
+            sql = "UPDATE users SET description_pending = '' "
+            sql += " WHERE id = ? AND description_pending = ?"
             g.db.executenow(sql, [parts[0], ",".join(parts[1:])])
 
-    sql = "SELECT * FROM utenti WHERE descrizione_daapprovare != '' ORDER BY userid"
-    descrizioni_daapprovare = g.db.execute(sql).fetchall()
+    sql = "SELECT * FROM users WHERE description_pending != '' ORDER BY userid"
+    descriptions_pending = g.db.execute(sql).fetchall()
 
     return render_template(
-        "dashboard.html", descrizioni_daapprovare=descrizioni_daapprovare
+        "dashboard.html", descriptions_pending=descriptions_pending
     )
 
 
@@ -87,10 +87,10 @@ def profilo() -> str:
 
     if request.method == "POST":
 
-        if "descrizione" in request.form:
-            sql = "UPDATE utenti SET descrizione = ? WHERE id = ? AND userid = ?"
+        if "description" in request.form:
+            sql = "UPDATE users SET description = ? WHERE id = ? AND userid = ?"
             g.db.executenow(
-                sql, [request.form["descrizione"], request.form["id"], userid]
+                sql, [request.form["description"], request.form["id"], userid]
             )
 
         if "labelnew" in request.form:
@@ -111,7 +111,7 @@ def profilo() -> str:
                     g.db.execute(sql, [image, label, row_id])
             g.db.commit()
 
-    sql = "SELECT * FROM utenti WHERE userid = ?"
+    sql = "SELECT * FROM users WHERE userid = ?"
     utente = g.db.execute(sql, [userid]).fetchone()
 
     sql = "SELECT * FROM badges WHERE userid = ? ORDER BY id"

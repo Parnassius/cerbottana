@@ -70,7 +70,9 @@ def date_format(text: str) -> str:
     return "{dd}/{mm}/{yyyy}".format(dd=text[-2:], mm=text[5:7], yyyy=text[:4])
 
 
-def html_escape(text: str) -> str:
+def html_escape(text: Optional[str]) -> str:
+    if text is None:
+        return ""
     return escape(text).replace("\n", "<br>")
 
 

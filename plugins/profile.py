@@ -16,33 +16,6 @@ import utils
 async def create_table(conn: Connection) -> None:
     db = Database()
 
-    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'utenti'"
-    if not db.execute(sql).fetchone():
-        sql = """CREATE TABLE utenti (
-            id INTEGER,
-            userid TEXT,
-            nome TEXT,
-            avatar TEXT,
-            descrizione TEXT,
-            descrizione_daapprovare TEXT,
-            PRIMARY KEY(id)
-        )"""
-        db.execute(sql)
-
-        sql = """CREATE UNIQUE INDEX idx_unique_utenti_userid
-        ON utenti (
-            userid
-        )"""
-        db.execute(sql)
-
-        sql = """CREATE INDEX idx_utenti_descrizione_daapprovare
-        ON utenti (
-            descrizione_daapprovare
-        )"""
-        db.execute(sql)
-
-        db.commit()
-
     sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'badges'"
     if not db.execute(sql).fetchone():
         sql = """CREATE TABLE badges (
@@ -75,7 +48,7 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
     arg = utils.to_user_id(arg)
 
     db = Database()
-    sql = "SELECT * FROM utenti WHERE userid = ?"
+    sql = "SELECT * FROM users WHERE userid = ?"
     body = db.execute(sql, [arg]).fetchone()
 
     if body:
@@ -92,10 +65,10 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
         html += '    width="80" height="80">'
         html += "  </div>"
         html += '  <div style="display: table-cell; width: 100%; vertical-align: top">'
-        html += '    <b style="color: {name_color}">{nome}</b><br>{badges}'
-        if body["descrizione"].strip() != "":
+        html += '    <b style="color: {name_color}">{username}</b><br>{badges}'
+        if body["description"] and body["description"].strip() != "":
             html += '  <hr style="margin: 4px 0">'
-            html += '  <div style="text-align: justify">{descrizione}</div>'
+            html += '  <div style="text-align: justify">{description}</div>'
         html += "  </div>"
         html += "</div>"
 
@@ -106,9 +79,9 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
             avatar_dir = "trainers"
             avatar_name = body["avatar"]
 
-        nome = body["nome"]
+        username = body["username"]
 
-        name_color = utils.username_color(utils.to_user_id(nome))
+        name_color = utils.username_color(utils.to_user_id(username))
 
         badges = ""
         badge = '<img src="{image}" width="12" height="12" title="{title}"'
@@ -118,7 +91,7 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
                 image=i["image"], title=utils.html_escape(i["label"])
             )
 
-        descrizione = body["descrizione"].replace("<", "&lt;")
+        description = utils.html_escape(body["description"])
 
         await conn.send_htmlbox(
             room,
@@ -127,9 +100,9 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
                 avatar_dir=avatar_dir,
                 avatar_name=avatar_name,
                 name_color=name_color,
-                nome=nome,
+                username=username,
                 badges=badges,
-                descrizione=descrizione,
+                description=description,
             ),
         )
 
@@ -143,8 +116,8 @@ async def setprofile(
         return
 
     db = Database()
-    sql = "INSERT INTO utenti (userid, descrizione_daapprovare) VALUES (?, ?) "
-    sql += " ON CONFLICT (userid) DO UPDATE SET descrizione_daapprovare = excluded.descrizione_daapprovare"
+    sql = "INSERT INTO users (userid, description_pending) VALUES (?, ?) "
+    sql += " ON CONFLICT (userid) DO UPDATE SET description_pending = excluded.description_pending"
     db.executenow(sql, [utils.to_user_id(user), arg])
 
     await conn.send_reply(room, user, "Salvato")

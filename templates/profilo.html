@@ -12,13 +12,13 @@
 
         <form action="" method="POST">
 
-            <h3>{{ utente.nome }}</h3>
+            <h3>{{ utente.username }}</h3>
 
             <input type="hidden" name="id" value="{{ utente.id }}">
 
             {% if session.user == '#' %}
-                <label for="descrizione">Descrizione</label>
-                <textarea id="descrizione" name="descrizione" maxlength="200">{{ utente.descrizione }}</textarea>
+                <label for="description">Descrizione</label>
+                <textarea id="description" name="description" maxlength="200">{{ utente.description }}</textarea>
 
                 <br><br>
 

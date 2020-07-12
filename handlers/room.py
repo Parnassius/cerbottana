@@ -7,12 +7,48 @@ if TYPE_CHECKING:
 
 import json
 
-from . import handler_wrapper
+from inittasks import inittask_wrapper
+from handlers import handler_wrapper
 import utils
 
 from room import Room
 
 from database import Database
+
+
+@inittask_wrapper()
+async def create_table(conn: Connection) -> None:
+    db = Database()
+
+    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'users'"
+    if not db.execute(sql).fetchone():
+        sql = """CREATE TABLE users (
+            id INTEGER,
+            userid TEXT,
+            username TEXT,
+            avatar TEXT,
+            description TEXT,
+            description_pending TEXT,
+            PRIMARY KEY(id)
+        )"""
+        db.execute(sql)
+
+        sql = """CREATE UNIQUE INDEX idx_unique_users_userid
+        ON users (
+            userid
+        )"""
+        db.execute(sql)
+
+        sql = """CREATE INDEX idx_users_description_pending
+        ON users (
+            description_pending
+        )"""
+        db.execute(sql)
+
+        sql = "INSERT INTO metadata (key, value) VALUES ('table_version_users', '1')"
+        db.execute(sql)
+
+        db.commit()
 
 
 async def add_user(
@@ -31,8 +67,8 @@ async def add_user(
         room.roombot = rank == "*"
 
     db = Database()
-    sql = "INSERT INTO utenti (userid, nome) VALUES (?, ?) "
-    sql += " ON CONFLICT (userid) DO UPDATE SET nome = excluded.nome"
+    sql = "INSERT INTO users (userid, username) VALUES (?, ?) "
+    sql += " ON CONFLICT (userid) DO UPDATE SET username = excluded.username"
     db.executenow(sql, [userid, username])
 
     if not skip_avatar_check or rank != " ":
@@ -114,7 +150,7 @@ async def queryresponse(conn: Connection, roomid: str, *args: str) -> None:
         avatar = utils.AVATAR_IDS[avatar]
 
     db = Database()
-    sql = "INSERT INTO utenti (userid, avatar) VALUES (?, ?) "
+    sql = "INSERT INTO users (userid, avatar) VALUES (?, ?) "
     sql += " ON CONFLICT (userid) DO UPDATE SET avatar = excluded.avatar"
     db.executenow(sql, [userid, avatar])
 

@@ -5,7 +5,7 @@ from typing import Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from connection import Connection
 
-from . import handler_wrapper
+from handlers import handler_wrapper
 import utils
 
 
