@@ -7,31 +7,63 @@ if TYPE_CHECKING:
 
 from database import Database
 
+from inittasks import inittask_wrapper
 from plugin_loader import plugin_wrapper
 import utils
 
 
-"""
-CREATE TABLE utenti (
-    id INTEGER,
-    userid TEXT,
-    nome TEXT,
-    avatar TEXT,
-    descrizione TEXT,
-    descrizione_daapprovare TEXT,
-    PRIMARY KEY(id),
-);
+@inittask_wrapper()
+async def create_table(conn: Connection) -> None:
+    db = Database()
 
-CREATE UNIQUE INDEX idx_unique_utenti_userid
-ON utenti (
-    userid
-);
+    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'utenti'"
+    if not db.execute(sql).fetchone():
+        sql = """CREATE TABLE utenti (
+            id INTEGER,
+            userid TEXT,
+            nome TEXT,
+            avatar TEXT,
+            descrizione TEXT,
+            descrizione_daapprovare TEXT,
+            PRIMARY KEY(id)
+        )"""
+        db.execute(sql)
 
-CREATE INDEX idx_utenti_descrizione_daapprovare
-ON utenti (
-    descrizione_daapprovare
-);
-"""
+        sql = """CREATE UNIQUE INDEX idx_unique_utenti_userid
+        ON utenti (
+            userid
+        )"""
+        db.execute(sql)
+
+        sql = """CREATE INDEX idx_utenti_descrizione_daapprovare
+        ON utenti (
+            descrizione_daapprovare
+        )"""
+        db.execute(sql)
+
+        db.commit()
+
+    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'badges'"
+    if not db.execute(sql).fetchone():
+        sql = """CREATE TABLE badges (
+            id INTEGER,
+            userid TEXT,
+            image TEXT,
+            label TEXT,
+            PRIMARY KEY(id)
+        )"""
+        db.execute(sql)
+
+        sql = """CREATE INDEX idx_badges_userid
+        ON badges (
+            userid
+        )"""
+        db.execute(sql)
+
+        sql = "INSERT INTO metadata (key, value) VALUES ('table_version_badges', '1')"
+        db.execute(sql)
+
+        db.commit()
 
 
 @plugin_wrapper(aliases=["profilo"], helpstr="Visualizza il tuo profilo.")
@@ -49,10 +81,10 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
     if body:
         body = dict(body)
 
-        sql = "SELECT immagine, sfondo, label "
-        sql += " FROM altre_badge "
-        sql += " WHERE utente = ? ORDER BY id"
-        body["altrebadge"] = db.execute(sql, [body["id"]]).fetchall()
+        sql = "SELECT image, label "
+        sql += " FROM badges "
+        sql += " WHERE userid = ? ORDER BY id"
+        body["badges"] = db.execute(sql, [body["userid"]]).fetchall()
 
         html = "<div>"
         html += '  <div style="display: table-cell; width: 80px; vertical-align: top">'
@@ -79,15 +111,11 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
         name_color = utils.username_color(utils.to_user_id(nome))
 
         badges = ""
-        badge = '<img src="{immagine}" width="12" height="12" title="{title}"'
-        badge += ' style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0;'
-        badge += ' background: {sfondo}{opacity}">'
-        for i in body["altrebadge"]:
+        badge = '<img src="{image}" width="12" height="12" title="{title}"'
+        badge += ' style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">'
+        for i in body["badges"]:
             badges += badge.format(
-                immagine=i["immagine"],
-                title=utils.html_escape(i["label"]),
-                sfondo=utils.html_escape(i["sfondo"]),
-                opacity="",
+                image=i["image"], title=utils.html_escape(i["label"])
             )
 
         descrizione = body["descrizione"].replace("<", "&lt;")

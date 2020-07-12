@@ -93,10 +93,31 @@ def profilo() -> str:
                 sql, [request.form["descrizione"], request.form["id"], userid]
             )
 
-    sql = "SELECT * FROM utenti WHERE userid = ?"
-    utente = g.db.execute(sql, [utils.to_user_id(userid)]).fetchone()
+        if "labelnew" in request.form:
+            image = request.form.get("imagenew")
+            label = request.form.get("labelnew")
+            if label and image:
+                sql = "INSERT INTO badges (userid, image, label) VALUES (?, ?, ?)"
+                g.db.execute(sql, [userid, image, label])
 
-    return render_template("profilo.html", utente=utente, today=date.today())
+            for i in request.form:
+                if i[:5] != "label" or i == "labelnew":
+                    continue
+                row_id = i[5:]
+                image = request.form.get(f"image{row_id}")
+                label = request.form.get(f"label{row_id}")
+                if label and image:
+                    sql = "UPDATE badges SET image = ?, label = ? WHERE id = ?"
+                    g.db.execute(sql, [image, label, row_id])
+            g.db.commit()
+
+    sql = "SELECT * FROM utenti WHERE userid = ?"
+    utente = g.db.execute(sql, [userid]).fetchone()
+
+    sql = "SELECT * FROM badges WHERE userid = ? ORDER BY id"
+    badges = g.db.execute(sql, [userid]).fetchall()
+
+    return render_template("profilo.html", utente=utente, badges=badges)
 
 
 @SERVER.route("/eightball", methods=("GET", "POST"))
@@ -122,7 +143,7 @@ def eightball() -> str:
             )
             g.db.execute(sql, risposte)
 
-            g.db.connection.commit()
+            g.db.commit()
 
     sql = "SELECT * FROM eight_ball ORDER BY risposta"
     rs = g.db.execute(sql).fetchall()
