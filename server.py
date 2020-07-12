@@ -74,9 +74,7 @@ def dashboard() -> str:
     sql = "SELECT * FROM users WHERE description_pending != '' ORDER BY userid"
     descriptions_pending = g.db.execute(sql).fetchall()
 
-    return render_template(
-        "dashboard.html", descriptions_pending=descriptions_pending
-    )
+    return render_template("dashboard.html", descriptions_pending=descriptions_pending)
 
 
 @SERVER.route("/profilo", methods=("GET", "POST"))

@@ -26,7 +26,9 @@ async def create_table(conn: Connection) -> None:
         )"""
         db.execute(sql)
 
-        sql = "INSERT INTO metadata (key, value) VALUES ('table_version_eightball', '1')"
+        sql = (
+            "INSERT INTO metadata (key, value) VALUES ('table_version_eightball', '1')"
+        )
         db.execute(sql)
 
         db.commit()
