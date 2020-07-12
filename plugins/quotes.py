@@ -7,28 +7,40 @@ if TYPE_CHECKING:
 
 import random
 
+from inittasks import inittask_wrapper
 from plugin_loader import plugin_wrapper, parametrize_room
 
 from database import Database
 import utils
 
 
-"""
-CREATE TABLE quotes (
-    id INTEGER,
-    message TEXT,
-    roomid TEXT,
-    author TEXT,
-    date TEXT,
-    PRIMARY KEY(id)
-);
+@inittask_wrapper()
+async def create_table(conn: Connection) -> None:
+    db = Database()
 
-CREATE UNIQUE INDEX idx_unique_quotes_message_roomid
-ON QUOTES (
-    message,
-    roomid
-);
-"""
+    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'quotes'"
+    if not db.execute(sql).fetchone():
+        sql = """CREATE TABLE quotes (
+            id INTEGER,
+            message TEXT,
+            roomid TEXT,
+            author TEXT,
+            date TEXT,
+            PRIMARY KEY(id)
+        )"""
+        db.execute(sql)
+
+        sql = """CREATE UNIQUE INDEX idx_unique_quotes_message_roomid
+        ON quotes (
+            message,
+            roomid
+        )"""
+        db.execute(sql)
+
+        sql = "INSERT INTO metadata (key, value) VALUES ('table_version_quotes', '1')"
+        db.execute(sql)
+
+        db.commit()
 
 
 @plugin_wrapper(aliases=["newquote", "quote"])
