@@ -38,6 +38,14 @@ async def altcauseiminsecure(
     )
 
 
+@plugin_wrapper()
+async def ciarizardmille(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    text = "beh comunque ormai lo avete capito che sono un alt di {}".format(
+        random.choice(["duck", "test2017", "parnassius", "parna", "inflikted", "infli", "trev", "silver97", "silver", "usy", "useless trainer"])
+    )
+    await conn.send_reply(room, user, text)
+
+
 @plugin_wrapper(aliases=["cinse", "cobse", "conse"])
 async def consecutio(
     conn: Connection, room: Optional[str], user: str, arg: str
@@ -93,6 +101,11 @@ async def mammalu(conn: Connection, room: Optional[str], user: str, arg: str) ->
     await conn.send_reply(room, user, "clicca la stab")
 
 
+@plugin_wrapper()
+async def maurizio(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    await conn.send_reply(room, user, "MAURIZIO used ICE PUNCH!")
+
+ 
 @plugin_wrapper(aliases=["gr"])
 async def megagr(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     await conn.send_reply(room, user, "GRRRRRR")
