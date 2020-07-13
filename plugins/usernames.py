@@ -61,7 +61,7 @@ async def ciarizardmille(
     )
     await conn.send_reply(room, user, text)
 
-    
+
 @plugin_wrapper(aliases=["cinse", "cobse", "conse"])
 async def consecutio(
     conn: Connection, room: Optional[str], user: str, arg: str
