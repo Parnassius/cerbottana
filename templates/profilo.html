@@ -70,8 +70,6 @@
                             var image = new Image();
                             image.onload = function () {
                                 console.log('d');
-                                var height = this.height;
-                                var width = this.width;
                                 if (this.height !== 12 || this.width !== 12) {
                                     el.value = "";
                                     alert("Caricare un'immagine 12x12 pixel");
