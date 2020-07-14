@@ -1,16 +1,14 @@
 from __future__ import annotations
 
+import random
 from typing import TYPE_CHECKING, Optional
+
+from database import Database
+from inittasks import inittask_wrapper
+from plugin_loader import plugin_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-import random
-
-from database import Database
-
-from inittasks import inittask_wrapper
-from plugin_loader import plugin_wrapper
 
 
 @inittask_wrapper()

@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Dict
+from typing import TYPE_CHECKING, Dict, List
+
 from typing_extensions import TypedDict
+
+from database import Database
+from inittasks import inittask_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-
-from database import Database
-
-from inittasks import inittask_wrapper
 
 
 TablesDict = TypedDict(

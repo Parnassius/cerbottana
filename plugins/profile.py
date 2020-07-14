@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
-if TYPE_CHECKING:
-    from connection import Connection
-
+import utils
 from database import Database
-
 from inittasks import inittask_wrapper
 from plugin_loader import plugin_wrapper
-import utils
+
+if TYPE_CHECKING:
+    from connection import Connection
 
 
 @inittask_wrapper()

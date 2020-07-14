@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from typing import Optional, Dict
+from time import time
+from typing import Dict, Optional
+
 from typing_extensions import TypedDict
 
-from time import time
-
 import utils
-
 
 UserDict = TypedDict(
     "UserDict",

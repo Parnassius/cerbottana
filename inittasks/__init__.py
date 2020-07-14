@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, Awaitable, List, Tuple
+import glob
+import importlib
+from os.path import basename, dirname, isfile, join
+from typing import TYPE_CHECKING, Awaitable, Callable, List, Tuple
 
 if TYPE_CHECKING:
     from connection import Connection
 
     InittaskFunc = Callable[[Connection], Awaitable[None]]
-
-from os.path import dirname, basename, isfile, join
-import glob
-import importlib
 
 
 inittasks = list()  # type: List[Tuple[int, InittaskFunc]]

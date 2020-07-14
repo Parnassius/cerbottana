@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
+
+import utils
+from handlers import handler_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-from handlers import handler_wrapper
-import utils
 
 
 async def parse_chat_message(

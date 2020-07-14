@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
+import utils
+from plugin_loader import plugin_wrapper
+
 if TYPE_CHECKING:
     from connection import Connection
-
-from plugin_loader import plugin_wrapper
-import utils
 
 
 @plugin_wrapper()

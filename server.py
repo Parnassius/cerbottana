@@ -3,12 +3,11 @@ from functools import wraps
 from typing import Callable
 
 from environs import Env
-from flask import Flask, render_template, session, abort, request, g
+from flask import Flask, abort, g, render_template, request, session
 from waitress import serve
 
-from database import Database
 import utils
-
+from database import Database
 
 env = Env()
 env.read_env()

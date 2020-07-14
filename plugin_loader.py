@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Callable, Awaitable, List, Dict
-
 from functools import wraps
+from typing import TYPE_CHECKING, Awaitable, Callable, Dict, List, Optional
 
-from room import Room
 import utils
+from room import Room
 
 if TYPE_CHECKING:
     from connection import Connection

@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, List, Dict
+import json
+import random
+from typing import TYPE_CHECKING, Dict, List, Optional
+
+import utils
+from plugin_loader import plugin_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-import json
-import random
-
-from plugin_loader import plugin_wrapper
-import utils
 
 
 @plugin_wrapper(

@@ -1,17 +1,15 @@
 from __future__ import annotations
 
+import random
 from typing import TYPE_CHECKING, Optional
+
+import utils
+from database import Database
+from inittasks import inittask_wrapper
+from plugin_loader import parametrize_room, plugin_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-import random
-
-from inittasks import inittask_wrapper
-from plugin_loader import plugin_wrapper, parametrize_room
-
-from database import Database
-import utils
 
 
 @inittask_wrapper()

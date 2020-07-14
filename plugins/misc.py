@@ -1,15 +1,13 @@
 from __future__ import annotations
 
+import random
 from typing import TYPE_CHECKING, Optional
+
+from plugin_loader import plugin_wrapper
+from room import Room
 
 if TYPE_CHECKING:
     from connection import Connection
-
-import random
-
-from plugin_loader import plugin_wrapper
-
-from room import Room
 
 
 @plugin_wrapper(helpstr="Seleziona un utente a caso presente nella room.")

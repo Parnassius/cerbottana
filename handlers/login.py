@@ -1,17 +1,15 @@
 from __future__ import annotations
 
+import json
+import urllib.parse
+import urllib.request
 from typing import TYPE_CHECKING
+
+import utils
+from handlers import handler_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-import json
-
-import urllib.request
-import urllib.parse
-
-from handlers import handler_wrapper
-import utils
 
 
 @handler_wrapper(["challstr"])

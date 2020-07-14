@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, List, Dict
+import json
+from typing import TYPE_CHECKING, Dict, List, Optional
+
+import utils
+from plugin_loader import plugin_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-import json
-
-from plugin_loader import plugin_wrapper
-import utils
 
 
 @plugin_wrapper(helpstr="Traduce abilità, mosse e strumenti.")

@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
+from plugin_loader import Plugin, plugin_wrapper
+
 if TYPE_CHECKING:
     from connection import Connection
-
-from plugin_loader import Plugin, plugin_wrapper
 
 
 @plugin_wrapper(is_unlisted=True)

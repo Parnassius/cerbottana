@@ -1,11 +1,9 @@
-from typing import List
-
-from os.path import dirname, basename, isfile, join
 import glob
 import importlib
+from os.path import basename, dirname, isfile, join
+from typing import List
 
 from plugin_loader import Plugin
-
 
 modules = glob.glob(join(dirname(__file__), "*.py"))
 

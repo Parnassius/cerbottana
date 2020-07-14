@@ -1,13 +1,11 @@
-from typing import Optional, Dict, List
-from connection import Connection
-
-import re
 import hashlib
 import math
 import os
-
+import re
 from html import escape
+from typing import Dict, List, Optional
 
+from connection import Connection
 from database import Database
 from room import Room
 

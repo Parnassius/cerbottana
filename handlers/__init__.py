@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, Awaitable, List, Dict
+import glob
+import importlib
+from os.path import basename, dirname, isfile, join
+from typing import TYPE_CHECKING, Awaitable, Callable, Dict, List
 
 if TYPE_CHECKING:
     from connection import Connection
 
     HandlerFunc = Callable[[Connection, str, str], Awaitable[None]]
-
-from os.path import dirname, basename, isfile, join
-import glob
-import importlib
 
 
 handlers = dict()  # type: Dict[str, List[HandlerFunc]]

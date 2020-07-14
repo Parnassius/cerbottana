@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import Optional, List, TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional
+
+import utils
+from plugin_loader import plugin_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-from plugin_loader import plugin_wrapper
-import utils
 
 
 async def create_tour(

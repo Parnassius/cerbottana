@@ -1,15 +1,15 @@
 from __future__ import annotations
 
+import random
+from datetime import datetime
 from typing import TYPE_CHECKING, Optional
+
+import pytz
+
+from plugin_loader import plugin_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-from datetime import datetime
-import pytz
-import random
-
-from plugin_loader import plugin_wrapper
 
 
 @plugin_wrapper()

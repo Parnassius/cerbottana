@@ -1,12 +1,10 @@
 import asyncio
-import threading
 import signal
+import threading
 from types import FrameType
 
-from server import SERVER
-
 from connection import CONNECTION
-
+from server import SERVER
 
 if __name__ == "__main__":
     threading.Thread(target=SERVER.serve_forever, daemon=True).start()

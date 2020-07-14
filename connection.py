@@ -1,20 +1,17 @@
-from typing import Optional, List, Dict
-
 import asyncio
+import re
 from datetime import datetime
 from time import time
-import re
+from typing import Dict, List, Optional
 
-from environs import Env
 import pytz
 import websockets
+from environs import Env
 
 import utils
-
-from inittasks import inittasks
 from handlers import handlers
+from inittasks import inittasks
 from plugins import plugins
-
 from room import Room
 
 

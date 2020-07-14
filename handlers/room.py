@@ -1,19 +1,16 @@
 from __future__ import annotations
 
+import json
 from typing import TYPE_CHECKING
+
+import utils
+from database import Database
+from handlers import handler_wrapper
+from inittasks import inittask_wrapper
+from room import Room
 
 if TYPE_CHECKING:
     from connection import Connection
-
-import json
-
-from inittasks import inittask_wrapper
-from handlers import handler_wrapper
-import utils
-
-from room import Room
-
-from database import Database
 
 
 @inittask_wrapper()

@@ -1,13 +1,12 @@
 from __future__ import annotations
 
+from time import time
 from typing import TYPE_CHECKING, Optional
+
+from plugin_loader import plugin_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-from time import time
-
-from plugin_loader import plugin_wrapper
 
 
 @plugin_wrapper()

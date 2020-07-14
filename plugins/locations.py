@@ -2,13 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
+import utils
+from database import Database
+from plugin_loader import plugin_wrapper
+
 if TYPE_CHECKING:
     from connection import Connection
-
-from database import Database
-
-from plugin_loader import plugin_wrapper
-import utils
 
 
 @plugin_wrapper(aliases=["locations"])

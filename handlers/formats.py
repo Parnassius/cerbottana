@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import Optional, List, Dict, TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, List, Optional
+
+from handlers import handler_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-from handlers import handler_wrapper
 
 
 @handler_wrapper(["formats"])

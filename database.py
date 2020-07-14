@@ -1,6 +1,5 @@
-from typing import Iterable, Any
-
 import sqlite3
+from typing import Any, Iterable
 
 
 class Database:
