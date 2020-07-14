@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 @inittask_wrapper()
-async def create_table(conn: Connection) -> None:
+async def create_table(conn: Connection) -> None:  # lgtm [py/similar-function]
     db = Database()
 
     sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'badges'"
