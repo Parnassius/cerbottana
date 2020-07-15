@@ -1,13 +1,17 @@
+from __future__ import annotations
+
 import hashlib
 import math
 import os
 import re
 from html import escape
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
 
-from connection import Connection
 from database import Database
 from room import Room
+
+if TYPE_CHECKING:
+    from connection import Connection
 
 
 def create_token(rank: str, private_rooms: List[str], expire_minutes: int = 30) -> str:
