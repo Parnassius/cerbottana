@@ -129,7 +129,7 @@ async def megagr(conn: Connection, room: Optional[str], user: str, arg: str) -> 
 
 @plugin_wrapper()
 async def milak(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    await conn.send_reply(room, user, "No Maria io esco")
+    await conn.send_reply(room, user, "I just salmonella gurl")
 
 
 @plugin_wrapper()
