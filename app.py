@@ -1,14 +1,19 @@
+from __future__ import annotations
+
 import asyncio
 import signal
 import threading
+from queue import SimpleQueue
 from types import FrameType
 
 from connection import CONNECTION
 from server import SERVER
 
 if __name__ == "__main__":
-    threading.Thread(target=SERVER.serve_forever, daemon=True).start()
-    threading.Thread(target=CONNECTION.open_connection).start()
+    queue: SimpleQueue[str] = SimpleQueue()
+
+    threading.Thread(target=SERVER.serve_forever, args=(queue,), daemon=True).start()
+    threading.Thread(target=CONNECTION.open_connection, args=(queue,)).start()
 
     def shutdown(signal: signal.Signals, frame_type: FrameType) -> None:
         try:

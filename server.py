@@ -1,9 +1,12 @@
+from __future__ import annotations
+
+import queue
 from datetime import date
 from functools import wraps
-from typing import Callable
+from typing import Callable, Optional
 
 from environs import Env
-from flask import Flask, abort, g, render_template, request, session
+from flask import Flask, abort, current_app, g, render_template, request, session
 from waitress import serve
 
 import utils
@@ -14,7 +17,12 @@ env.read_env()
 
 
 class Server(Flask):
-    def serve_forever(self) -> None:
+    def __init__(self, *args, **kwargs) -> None:  # type:ignore
+        super().__init__(*args, **kwargs)
+        self.queue: Optional[queue.SimpleQueue[str]] = None
+
+    def serve_forever(self, queue: queue.SimpleQueue[str]) -> None:
+        self.queue = queue
         serve(self, listen="*:{}".format(env("PORT")))
 
 
@@ -55,6 +63,10 @@ def require_driver(func: Callable[[], str]) -> Callable[[], str]:
 @SERVER.route("/", methods=("GET", "POST"))
 @require_driver
 def dashboard() -> str:
+
+    print(g)
+
+    current_app.queue.put("aaa", False)
 
     if request.method == "POST":
 
