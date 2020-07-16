@@ -73,7 +73,7 @@ class Connection:
                     message: str = await websocket.recv()
                     print("<< {}".format(message))
                     asyncio.ensure_future(self.parse_message(message))
-        except:
+        except:  # lgtm [py/catch-base-exception]
             pass
 
     async def parse_message(self, message: str) -> None:
