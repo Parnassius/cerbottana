@@ -2,20 +2,20 @@
 <html>
 <head>
 
-    {% block head %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>cerbottana</title>
 
+    {% block head %}{% endblock %}
+
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
-    {% endblock %}
 
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="container{% block container_classes %}{% endblock %}">
 
         <h1>cerbottana</h1>
 
