@@ -3,13 +3,21 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING, Optional
 
+from environs import Env
+from flask import abort, g, render_template, session
+
 import utils
 from database import Database
 from inittasks import inittask_wrapper
 from plugin_loader import parametrize_room, plugin_wrapper
+from plugins import route_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
+
+
+env = Env()
+env.read_env()
 
 
 @inittask_wrapper()
@@ -128,3 +136,19 @@ async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) 
         token_id = utils.create_token(" ", [quoteroom])
         message += f"?token={token_id}"
     await conn.send_reply(room, user, message)
+
+
+@route_wrapper("/quotes/<room>")
+def quotes(room: str) -> str:
+    if room in env.list("PRIVATE_ROOMS"):
+        private_rooms = session.get("prooms")
+        if not private_rooms or room not in private_rooms.split(","):
+            abort(401)
+
+    sql = "SELECT message, date "
+    sql += "FROM quotes WHERE roomid = ?"
+    rs = g.db.execute(sql, [room]).fetchall()
+    if not rs:
+        abort(401)  # no quotes for this room
+
+    return render_template("quotes.html", rs=rs, room=room)
