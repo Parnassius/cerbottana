@@ -69,7 +69,7 @@ class Connection:
             await init_task
 
         for recurring_task in self.recurring_tasks:
-            asyncio.ensure_future(recurring_task(self), loop=self.loop)
+            asyncio.create_task(recurring_task(self))
 
         try:
             async with websockets.connect(

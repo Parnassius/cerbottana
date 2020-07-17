@@ -2,6 +2,7 @@ black==19.10b0
 environs==8.0.0
 Flask==1.1.2
 isort==5.1.1
+lxml==4.5.2
 mypy==0.782
 pytz==2020.1
 waitress==1.4.4

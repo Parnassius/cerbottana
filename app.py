@@ -18,6 +18,8 @@ if __name__ == "__main__":
     def shutdown(signal: signal.Signals, frame_type: FrameType) -> None:
         try:
             if CONNECTION.websocket is not None and CONNECTION.loop is not None:
+                for task in asyncio.all_tasks(loop=CONNECTION.loop):
+                    task.cancel()
                 coro = CONNECTION.websocket.close()
                 asyncio.run_coroutine_threadsafe(coro, CONNECTION.loop)
         except:  # lgtm [py/catch-base-exception]
