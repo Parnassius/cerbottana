@@ -3,9 +3,12 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING, Optional
 
+from flask import g, render_template, request
+
 from database import Database
 from inittasks import inittask_wrapper
 from plugin_loader import plugin_wrapper
+from plugins import route_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -40,3 +43,33 @@ async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) 
         return
     answer = random.choice(answers)["answer"]
     await conn.send_reply(room, user, answer)
+
+
+@route_wrapper("/eightball", methods=("GET", "POST"), require_driver=True)
+def eightball_route() -> str:
+
+    if request.method == "POST":
+
+        if "answers" in request.form:
+            sql = "DELETE FROM eightball"
+            g.db.execute(sql)
+
+            answers = list(
+                filter(
+                    None,
+                    map(
+                        str.strip, sorted(request.form["answers"].strip().splitlines())
+                    ),
+                )
+            )
+            sql = "INSERT INTO eightball (answer) VALUES " + ", ".join(
+                ["(?)"] * len(answers)
+            )
+            g.db.execute(sql, answers)
+
+            g.db.commit()
+
+    sql = "SELECT * FROM eightball ORDER BY answer"
+    rs = g.db.execute(sql).fetchall()
+
+    return render_template("eightball.html", rs=rs)

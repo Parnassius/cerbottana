@@ -2,10 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
+from flask import g, render_template, request
+
 import utils
 from database import Database
 from inittasks import inittask_wrapper
 from plugin_loader import plugin_wrapper
+from plugins import route_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -129,3 +132,43 @@ async def setprofile(
     )
     for room in conn.rooms:
         await conn.send_rankhtmlbox("%", room, message)
+
+
+@route_wrapper("/profilo", methods=("GET", "POST"), require_driver=True)
+def profilo() -> str:
+
+    userid = utils.to_user_id(request.args.get("userid", ""))
+
+    if request.method == "POST":
+
+        if "description" in request.form:
+            sql = "UPDATE users SET description = ? WHERE id = ? AND userid = ?"
+            g.db.executenow(
+                sql, [request.form["description"], request.form["id"], userid]
+            )
+
+        if "labelnew" in request.form:
+            image = request.form.get("imagenew")
+            label = request.form.get("labelnew")
+            if label and image:
+                sql = "INSERT INTO badges (userid, image, label) VALUES (?, ?, ?)"
+                g.db.execute(sql, [userid, image, label])
+
+            for i in request.form:
+                if i[:5] != "label" or i == "labelnew":
+                    continue
+                row_id = i[5:]
+                image = request.form.get(f"image{row_id}")
+                label = request.form.get(f"label{row_id}")
+                if label and image:
+                    sql = "UPDATE badges SET image = ?, label = ? WHERE id = ?"
+                    g.db.execute(sql, [image, label, row_id])
+            g.db.commit()
+
+    sql = "SELECT * FROM users WHERE userid = ?"
+    utente = g.db.execute(sql, [userid]).fetchone()
+
+    sql = "SELECT * FROM badges WHERE userid = ? ORDER BY id"
+    badges = g.db.execute(sql, [userid]).fetchall()
+
+    return render_template("profilo.html", utente=utente, badges=badges)
