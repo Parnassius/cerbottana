@@ -4,7 +4,7 @@
 
     <a href="/">&laquo; indietro</a>
 
-    {% if utente %}
+    {% if user %}
 
         {% if request.method == 'POST' %}
             <div class="alert alert-green">Salvato</div>
@@ -12,13 +12,13 @@
 
         <form action="" method="POST">
 
-            <h3>{{ utente.username }}</h3>
+            <h3>{{ user.username }}</h3>
 
-            <input type="hidden" name="id" value="{{ utente.id }}">
+            <input type="hidden" name="id" value="{{ user.id }}">
 
             {% if session._rank == '#' %}
                 <label for="description">Descrizione</label>
-                <textarea id="description" name="description" maxlength="200">{{ utente.description }}</textarea>
+                <textarea id="description" name="description" maxlength="200">{{ user.description }}</textarea>
 
                 <br><br>
 
@@ -33,7 +33,7 @@
 
         <form id="form-badges" action="" method="POST">
 
-            <input type="hidden" name="userid" value="{{ utente.userid }}">
+            <input type="hidden" name="userid" value="{{ user.userid }}">
 
             {% for row in badges %}
                 <div>

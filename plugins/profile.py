@@ -134,8 +134,8 @@ async def setprofile(
         await conn.send_rankhtmlbox("%", room, message)
 
 
-@route_wrapper("/profilo", methods=("GET", "POST"), require_driver=True)
-def profilo() -> str:
+@route_wrapper("/profile", methods=("GET", "POST"), require_driver=True)
+def profile_route() -> str:
 
     userid = utils.to_user_id(request.args.get("userid", ""))
 
@@ -166,9 +166,9 @@ def profilo() -> str:
             g.db.commit()
 
     sql = "SELECT * FROM users WHERE userid = ?"
-    utente = g.db.execute(sql, [userid]).fetchone()
+    user = g.db.execute(sql, [userid]).fetchone()
 
     sql = "SELECT * FROM badges WHERE userid = ? ORDER BY id"
     badges = g.db.execute(sql, [userid]).fetchall()
 
-    return render_template("profilo.html", utente=utente, badges=badges)
+    return render_template("profile.html", user=user, badges=badges)
