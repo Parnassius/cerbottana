@@ -86,7 +86,7 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
         name_color = utils.username_color(utils.to_user_id(username))
 
         badges = ""
-        badge = '<img src="{image}" width="12" height="12" title="{title}"'
+        badge = '<img src="{image}" width="13" height="13" title="{title}"'
         badge += ' style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">'
         for i in body["badges"]:
             badges += badge.format(

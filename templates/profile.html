@@ -41,7 +41,7 @@
                         <input type="file" accept="image/png">
                         <span>Seleziona immagine</span>
                     </label>
-                    <img src="{{ row.image }}" width="12" height="12" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">
+                    <img src="{{ row.image }}" width="13" height="13" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">
                     <input type="hidden" name="image{{ row.id }}" value="{{ row.image }}">
                     <input type="text" name="label{{ row.id }}" value="{{ row.label }}" required placeholder="Descrizione">
                 </div>
@@ -51,7 +51,7 @@
                     <input type="file" accept="image/png">
                     <span>Seleziona immagine</span>
                 </label>
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" width="12" height="12" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0; visibility: hidden">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" width="13" height="13" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0; visibility: hidden">
                 <input type="hidden" name="imagenew">
                 <input type="text" name="labelnew" placeholder="Descrizione">
             </div>
@@ -70,9 +70,9 @@
                             var image = new Image();
                             image.onload = function () {
                                 console.log('d');
-                                if (this.height !== 12 || this.width !== 12) {
+                                if (this.height !== 13 || this.width !== 13) {
                                     el.value = "";
-                                    alert("Caricare un'immagine 12x12 pixel");
+                                    alert("Caricare un'immagine 13x13 pixel");
                                     return;
                                 }
                                 var img = el.parentNode.parentNode.querySelector("img");
@@ -82,7 +82,7 @@
                             };
                             image.onerror = function() {
                                 el.value = "";
-                                alert("Caricare un'immagine 12x12 pixel");
+                                alert("Caricare un'immagine 13x13 pixel");
                             };
                             image.src = e.target.result;
                         };
