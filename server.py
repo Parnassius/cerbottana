@@ -44,17 +44,22 @@ def before() -> None:
     token = request.args.get("token")
 
     if token is not None:
-        sql = "SELECT rank, prooms FROM tokens WHERE token = ? AND JULIANDAY() - JULIANDAY(scadenza) < 0"
-        data = g.db.execute(sql, [token]).fetchone()
+        sql = "SELECT room, rank, expiry FROM tokens "
+        sql += " WHERE token = ? AND JULIANDAY() - JULIANDAY(expiry) < 0"
+        data = g.db.execute(sql, [token]).fetchall()
         if not data:  # invalid token
             abort(401)
-        session.update(data)
+        for row in data:
+            if row["room"] is None:
+                session["_rank"] = row["rank"]
+            else:
+                session[row["room"]] = row["rank"]
 
 
 def require_driver(func: Callable[[], str]) -> Callable[[], str]:
     @wraps(func)
     def wrapper() -> str:
-        if "rank" not in session or not utils.is_driver(session["rank"]):
+        if not utils.is_driver(session.get("_rank")):
             abort(401)
         return func()
 

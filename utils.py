@@ -14,30 +14,20 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
-def create_token(rank: str, private_rooms: List[str], expire_minutes: int = 30) -> str:
-    """
-    CREATE TABLE tokens (
-        id INTEGER,
-        token TEXT,
-        rank TEXT,
-        prooms TEXT,
-        scadenza TEXT,
-        PRIMARY KEY(id)
-    );
-
-    CREATE INDEX idx_tokens_token
-    ON tokens (
-        token
-    );
-    """
-
+def create_token(
+    rank: str, rooms: List[str], expire_minutes: int = 30, admin: bool = False
+) -> str:
     token_id = os.urandom(16).hex()
-    prooms = ",".join(private_rooms) if private_rooms else None
     expire = f"+{expire_minutes} minute"
 
     db = Database()
-    sql = "INSERT INTO tokens (token, rank, prooms, scadenza) VALUES (?, ?, ?, DATETIME('now', ?))"
-    db.executenow(sql, [token_id, rank, prooms, expire])
+    sql = "INSERT INTO tokens (token, room, rank, expiry) "
+    sql += " VALUES (?, ?, ?, DATETIME('now', ?))"
+    if admin:
+        db.execute(sql, [token_id, None, rank, expire])
+    for room in rooms:
+        db.execute(sql, [token_id, room, rank, expire])
+    db.commit()
 
     return token_id
 
@@ -79,11 +69,15 @@ def html_escape(text: Optional[str]) -> str:
 
 
 def is_voice(user: str) -> bool:
-    return user[0] in "+*%@★#&~"
+    if user and user[0] in "+*%@★#&~":
+        return True
+    return False
 
 
 def is_driver(user: str) -> bool:
-    return user[0] in "%@#&~"
+    if user and user[0] in "%@#&~":
+        return True
+    return False
 
 
 def is_private(conn: Connection, room: str) -> bool:

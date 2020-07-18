@@ -16,7 +16,7 @@
 
             <input type="hidden" name="id" value="{{ utente.id }}">
 
-            {% if session.user == '#' %}
+            {% if session._rank == '#' %}
                 <label for="description">Descrizione</label>
                 <textarea id="description" name="description" maxlength="200">{{ utente.description }}</textarea>
 

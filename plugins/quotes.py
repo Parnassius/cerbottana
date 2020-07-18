@@ -141,8 +141,7 @@ async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) 
 @route_wrapper("/quotes/<room>")
 def quotes(room: str) -> str:
     if room in env.list("PRIVATE_ROOMS"):
-        private_rooms = session.get("prooms")
-        if not private_rooms or room not in private_rooms.split(","):
+        if not session.get(room):
             abort(401)
 
     sql = "SELECT message, date "

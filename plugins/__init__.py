@@ -18,7 +18,7 @@ routes = list()  # type: List[Tuple[RouteFunc, str, Optional[Iterable[str]]]]
 def route_require_driver(func: RouteFunc) -> RouteFunc:
     @wraps(func)
     def wrapper(*args: str) -> str:
-        if "rank" not in session or not utils.is_driver(session["rank"]):
+        if not utils.is_driver(session.get("_rank")):
             abort(401)
         return func(*args)
 
