@@ -652,5 +652,6 @@ CUSTOM_COLORS: Dict[str, str] = {
     "pichus": "up1gat8f",
     "pigeons": "pigeonsvgc",
     "clefable": "147x0",
+    "splash": "mitsukokongou",
     "cathy": "",
 }
