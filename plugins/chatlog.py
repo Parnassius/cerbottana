@@ -104,6 +104,7 @@ async def logger_task(conn: Connection) -> None:
                 date = yesterday - datetime.timedelta(days=2)
 
             while date < yesterday:
+                await asyncio.sleep(30)
                 await conn.send_message(
                     "", f"/join view-chatlog-{room}--{date.isoformat()}", False
                 )
