@@ -61,15 +61,11 @@
             <script>
 
                 function checkImage(el) {
-                    console.log('a');
                     if (el.files[0]) {
-                        console.log('b');
                         var reader = new FileReader();
                         reader.onload = function (e) {
-                            console.log('c');
                             var image = new Image();
                             image.onload = function () {
-                                console.log('d');
                                 if (this.height !== 13 || this.width !== 13) {
                                     el.value = "";
                                     alert("Caricare un'immagine 13x13 pixel");
