@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Optional
 
 import utils
 from handlers import handler_wrapper
+from room import Room
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -40,6 +41,9 @@ async def chat(conn: Connection, roomid: str, *args: str) -> None:
     user = args[0]
     message = "|".join(args[1:]).strip()
 
+    room = Room.get(roomid)
+    room.dynamic_buffer.append(message)
+
     if utils.to_user_id(user) == utils.to_user_id(conn.username):
         return
     await parse_chat_message(conn, roomid, user, message)
@@ -53,6 +57,9 @@ async def timestampchat(conn: Connection, roomid: str, *args: str) -> None:
     timestamp = args[0]
     user = args[1]
     message = "|".join(args[2:]).strip()
+
+    room = Room.get(roomid)
+    room.dynamic_buffer.append(message)
 
     if utils.to_user_id(user) == utils.to_user_id(conn.username):
         return

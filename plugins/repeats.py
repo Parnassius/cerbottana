@@ -124,6 +124,7 @@ class Repeat:
             if (
                 # conditions that cause a repeat to skip a call but not to stop forever
                 not self.room.modchat  # don't send if modchat is active
+                and self.message not in self.room.buffer  # throttling
             ):
                 await self.conn.send_message(self.room.roomid, self.message)
             else:
