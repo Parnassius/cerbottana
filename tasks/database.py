@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Dict, List
 from typing_extensions import TypedDict
 
 from database import Database
-from inittasks import inittask_wrapper
+from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -16,7 +16,7 @@ TablesDict = TypedDict(
 )
 
 
-@inittask_wrapper(priority=1)
+@init_task_wrapper(priority=1)
 async def initialize_database(conn: Connection) -> None:
     db = Database()
 

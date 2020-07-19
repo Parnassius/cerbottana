@@ -13,9 +13,9 @@ from environs import Env
 
 import utils
 from handlers import handlers
-from inittasks import inittasks
 from plugins import plugins
 from room import Room
+from tasks import init_tasks
 
 
 class Connection:
@@ -42,7 +42,7 @@ class Connection:
         self.command_character = command_character
         self.administrators = administrators
         self.domain = domain
-        self.inittasks = inittasks
+        self.init_tasks = init_tasks
         self.handlers = handlers
         self.commands = plugins
         self.timestamp: float = 0
@@ -61,7 +61,7 @@ class Connection:
     async def start_websocket(self) -> None:
         tasks: List[asyncio.Task[None]] = []
         for (priority, func) in sorted(
-            self.inittasks, key=lambda func: func[0]  # sort by priority
+            self.init_tasks, key=lambda func: func[0]  # sort by priority
         ):
             tasks.append(asyncio.create_task(func(self)))
         for task in tasks:
