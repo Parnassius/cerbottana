@@ -6,14 +6,14 @@ from typing import TYPE_CHECKING
 import utils
 from database import Database
 from handlers import handler_wrapper
-from inittasks import inittask_wrapper
 from room import Room
+from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@inittask_wrapper()
+@init_task_wrapper()
 async def create_table(conn: Connection) -> None:
     db = Database()
 

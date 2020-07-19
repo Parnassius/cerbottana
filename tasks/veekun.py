@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict, List
 from typing_extensions import TypedDict
 
 from database import Database
-from inittasks import inittask_wrapper
+from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -17,7 +17,7 @@ TablesDict = TypedDict(
 )
 
 
-@inittask_wrapper()
+@init_task_wrapper()
 async def csv_to_sqlite(conn: Connection) -> None:
     open("./veekun.sqlite", "w").close()  # truncate database
     create_stmt = "CREATE TABLE {table} ({columns}, {keys});"

@@ -6,15 +6,15 @@ from flask import g, render_template, request
 
 import utils
 from database import Database
-from inittasks import inittask_wrapper
 from plugin_loader import plugin_wrapper
 from plugins import route_wrapper
+from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@inittask_wrapper()
+@init_task_wrapper()
 async def create_table(conn: Connection) -> None:  # lgtm [py/similar-function]
     db = Database()
 

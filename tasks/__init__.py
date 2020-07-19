@@ -8,18 +8,18 @@ from typing import TYPE_CHECKING, Awaitable, Callable, List, Tuple
 if TYPE_CHECKING:
     from connection import Connection
 
-    InittaskFunc = Callable[[Connection], Awaitable[None]]
+    InitTaskFunc = Callable[[Connection], Awaitable[None]]
 
 
-inittasks = list()  # type: List[Tuple[int, InittaskFunc]]
+init_tasks = list()  # type: List[Tuple[int, InitTaskFunc]]
 
 
-def inittask_wrapper(priority: int = 3) -> Callable[[InittaskFunc], InittaskFunc]:
-    def cls_wrapper(func: InittaskFunc) -> InittaskFunc:
-        inittasks.append((priority, func))
+def init_task_wrapper(priority: int = 3) -> Callable[[InitTaskFunc], InitTaskFunc]:
+    def wrapper(func: InitTaskFunc) -> InitTaskFunc:
+        init_tasks.append((priority, func))
         return func
 
-    return cls_wrapper
+    return wrapper
 
 
 modules = glob.glob(join(dirname(__file__), "*.py"))
@@ -27,4 +27,4 @@ modules = glob.glob(join(dirname(__file__), "*.py"))
 for f in modules:
     if isfile(f) and not f.endswith("__init__.py"):
         name = basename(f)[:-3]
-        importlib.import_module("inittasks." + name)
+        importlib.import_module("tasks." + name)
