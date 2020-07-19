@@ -89,7 +89,7 @@ async def logger_task(conn: Connection) -> None:
     while True:
         db = Database("logs")
 
-        yesterday = datetime.date.today()
+        yesterday = datetime.date.today() - datetime.timedelta(days=1)
 
         for room in conn.rooms + conn.private_rooms:
             last_date = db.execute(
