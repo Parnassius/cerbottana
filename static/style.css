@@ -142,6 +142,16 @@ ul li {
     height: auto;
 }
 
+.table-expanding th:first-child,
+.table-expanding td:first-child {
+    overflow-wrap: anywhere;
+}
+.table-expanding th:not(:first-child),
+.table-expanding td:not(:first-child) {
+    width: 1px;
+    white-space: nowrap;
+}
+
 #graph {
     width: 100%;
     height: 400px;

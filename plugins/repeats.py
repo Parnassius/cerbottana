@@ -5,6 +5,9 @@ import math
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
+from environs import Env
+from flask import abort, g, render_template, session
+
 if TYPE_CHECKING:
     from connection import Connection
 
@@ -12,9 +15,13 @@ from dateutil.parser import parse
 
 import utils
 from database import Database
-from plugin_loader import plugin_wrapper
+from plugin_loader import parametrize_room, plugin_wrapper
+from plugins import route_wrapper
 from room import Room
 from tasks import init_task_wrapper
+
+env = Env()
+env.read_env()
 
 
 @init_task_wrapper(priority=3)
@@ -287,29 +294,39 @@ async def stoprepeat(
 
 
 @plugin_wrapper(aliases=["repeats"])
+@parametrize_room
 async def showrepeats(
     conn: Connection, room: Optional[str], user: str, arg: str
 ) -> None:
-    # TODO: Implement on Flask
+    repeats_room = arg.split(",")[0]
+    userid = utils.to_user_id(user)
+    users = Room.get(repeats_room).users
+    rank = users[userid]["rank"]
 
-    if room is None or not utils.is_driver(user):
+    if not utils.is_driver(rank):
+        await conn.send_pm(user, f"Devi essere almeno driver in {repeats_room}.")
         return
 
-    html = (
-        '<table style="width:100%">'
-        + '<tr style="text-align:left">'
-        + "<th>Messaggio</th>"
-        + "<th>Intervallo</th>"
-        + "<th>Scadenza</th>"
-        + "</tr>"
-    )
+    db = Database()
+    repeats_n = db.execute(
+        "SELECT COUNT(*) FROM repeats WHERE roomid = ?", [repeats_room]
+    ).fetchone()
+    if not repeats_n[0]:
+        await conn.send_pm(user, "Nessun repeat attivo.")
+        return
 
-    for instance in Repeat.get(room):  # TODO: truncate instance.message with HTML
-        html += "<tr>"
-        for cell in [instance.message, instance.delta_minutes, instance.expire_dt]:
-            html += f"<td>{cell}</td>"
-        html += "</tr>"
+    token_id = utils.create_token(rank, [repeats_room])
+    url = f"{conn.domain}repeats/{repeats_room}?token={token_id}"
+    await conn.send_pm(user, url)
 
-    html += "</table>"
 
-    await conn.send_htmlbox(room, user, html)
+@route_wrapper("/repeats/<room>")
+def repeats(room: str) -> str:
+    if not utils.is_driver(session.get(room)):
+        abort(401)
+
+    sql = "SELECT message, delta_minutes, expire_dt "
+    sql += "FROM repeats WHERE roomid = ?"
+    rs = g.db.execute(sql, [room]).fetchall()
+
+    return render_template("repeats.html", rs=rs, room=room)
