@@ -15,7 +15,7 @@ import utils
 from handlers import handlers
 from plugins import plugins
 from room import Room
-from tasks import init_tasks
+from tasks import init_tasks, recurring_tasks
 
 
 class Connection:
@@ -43,6 +43,7 @@ class Connection:
         self.administrators = administrators
         self.domain = domain
         self.init_tasks = init_tasks
+        self.recurring_tasks = recurring_tasks
         self.handlers = handlers
         self.commands = plugins
         self.timestamp: float = 0
@@ -59,13 +60,16 @@ class Connection:
         self.loop.run_until_complete(self.start_websocket())
 
     async def start_websocket(self) -> None:
-        tasks: List[asyncio.Task[None]] = []
+        init_tasks: List[asyncio.Task[None]] = []
         for (priority, func) in sorted(
             self.init_tasks, key=lambda func: func[0]  # sort by priority
         ):
-            tasks.append(asyncio.create_task(func(self)))
-        for task in tasks:
-            await task
+            init_tasks.append(asyncio.create_task(func(self)))
+        for init_task in init_tasks:
+            await init_task
+
+        for recurring_task in self.recurring_tasks:
+            asyncio.ensure_future(recurring_task(self), loop=self.loop)
 
         try:
             async with websockets.connect(
