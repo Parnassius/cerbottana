@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 
 import utils
 from plugin_loader import plugin_wrapper
@@ -16,14 +16,19 @@ async def dashboard(conn: Connection, room: Optional[str], user: str, arg: str) 
     for r in conn.rooms:
         users = Room.get(r).users
         if userid in users and utils.is_driver(users[userid]["rank"]):
-            rank = users[userid]["rank"]
+            admin_rank = users[userid]["rank"]
             break
     else:
         return
 
-    rooms = [r for r in conn.rooms + conn.private_rooms if userid in Room.get(r).users]
+    rooms: Dict[str, str] = dict()
 
-    token_id = utils.create_token(rank, rooms, 1, True)
+    for r in conn.rooms + conn.private_rooms:
+        users = Room.get(r).users
+        if userid in users:
+            rooms[r] = users[userid]["rank"]
+
+    token_id = utils.create_token(rooms, 1, admin_rank)
 
     await conn.send_pm(
         user, "{url}?token={token}".format(url=conn.domain, token=token_id)

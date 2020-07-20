@@ -133,7 +133,7 @@ async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) 
 
     message = f"{conn.domain}quotes/{quoteroom}"
     if utils.is_private(conn, quoteroom):
-        token_id = utils.create_token(" ", [quoteroom])
+        token_id = utils.create_token({quoteroom: " "})
         message += f"?token={token_id}"
     await conn.send_reply(room, user, message)
 

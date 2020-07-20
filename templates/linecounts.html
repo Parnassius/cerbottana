@@ -94,6 +94,12 @@
                 });
             });
         });
+
+        var search = new URLSearchParams(location.search).get('search');
+        if (search) {
+            document.getElementById('users').value = search;
+            document.getElementById('search').click();
+        }
     </script>
 
 {% endblock %}

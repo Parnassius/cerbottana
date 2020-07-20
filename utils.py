@@ -5,7 +5,7 @@ import math
 import os
 import re
 from html import escape
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 
 from database import Database
 from room import Room
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 def create_token(
-    rank: str, rooms: List[str], expire_minutes: int = 30, admin: bool = False
+    rooms: Dict[str, str], expire_minutes: int = 30, admin: Optional[str] = None
 ) -> str:
     token_id = os.urandom(16).hex()
     expire = f"+{expire_minutes} minute"
@@ -23,10 +23,10 @@ def create_token(
     db = Database()
     sql = "INSERT INTO tokens (token, room, rank, expiry) "
     sql += " VALUES (?, ?, ?, DATETIME('now', ?))"
-    if admin:
-        db.execute(sql, [token_id, None, rank, expire])
+    if admin is not None:
+        db.execute(sql, [token_id, None, admin, expire])
     for room in rooms:
-        db.execute(sql, [token_id, room, rank, expire])
+        db.execute(sql, [token_id, room, rooms[room], expire])
     db.commit()
 
     return token_id

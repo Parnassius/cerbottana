@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from flask import abort, render_template, request, session
 from lxml.html import fromstring
@@ -10,7 +10,9 @@ from lxml.html import fromstring
 import utils
 from database import Database
 from handlers import handler_wrapper
+from plugin_loader import parametrize_room, plugin_wrapper
 from plugins import route_wrapper
+from room import Room
 from tasks import init_task_wrapper, recurring_task_wrapper
 
 if TYPE_CHECKING:
@@ -142,13 +144,38 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
                     room,
                     date,
                     time[0].text.strip("[] "),
-                    userrank[0].text if len(userrank) else None,
+                    userrank[0].text if len(userrank) else " ",
                     utils.to_user_id(user[0].text_content()),
                     message[0].text,
                 ],
             )
 
     db.commit()
+
+
+@plugin_wrapper(aliases=["linecount"])
+@parametrize_room
+async def linecounts(
+    conn: Connection, room: Optional[str], user: str, arg: str
+) -> None:
+    userid = utils.to_user_id(user)
+    args = arg.split(",")
+    logsroom = args[0]
+
+    users = Room.get(logsroom).users
+    if userid not in users:
+        return
+
+    rank = users[userid]["rank"]
+
+    token_id = utils.create_token({logsroom: rank})
+
+    message = f"{conn.domain}linecounts/{logsroom}?token={token_id}"
+    if len(args) > 1:
+        search = ",".join([utils.to_user_id(u) for u in args[1:]])
+        message += f"&search={search}"
+
+    await conn.send_pm(user, message)
 
 
 @route_wrapper("/linecounts/<room>")
