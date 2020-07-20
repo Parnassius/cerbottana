@@ -38,11 +38,9 @@
             g.setVisibility(i, !enabled);
         }
 
-        var defaultLabels = ["Data", "Total", "Regular", "Auth", "Staff", "Voice", "Driver", "Moderator", "Bot", "Leader/Administrator", "Owner"];
-
         var g = new Dygraph(
             document.getElementById('graph'),
-            '/linecounts/{{ room }}/data', {
+            [[0]], {
                 axes: {
                     x: {
                         axisLabelWidth: 80,
@@ -50,7 +48,7 @@
                     }
                 },
                 colorSaturation: .5,
-                labels: defaultLabels,
+                labels: [''],
                 labelsDiv: 'legend',
                 labelsSeparateLines: true,
                 legend: 'always',
@@ -78,7 +76,7 @@
             if (users !== '') {
                 labels = ["Data"].concat(users.split(','));
             } else {
-                labels = defaultLabels;
+                labels = ["Data", "Total", "Regular", "Auth", "Staff", "Voice", "Driver", "Moderator", "Bot", "Leader/Administrator", "Owner"];
             }
             g.updateOptions({
                 file: '/linecounts/{{ room }}/data?users=' + encodeURIComponent(users),
@@ -98,8 +96,8 @@
         var search = new URLSearchParams(location.search).get('search');
         if (search) {
             document.getElementById('users').value = search;
-            document.getElementById('search').click();
         }
+        document.getElementById('search').click();
     </script>
 
 {% endblock %}
