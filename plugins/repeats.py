@@ -143,6 +143,8 @@ class Repeat:
 
     def start(self) -> bool:
         if self.expired:
+            if not self.is_new:
+                self._unlist()
             return False
 
         if self.key in self._instances:  # this instance updates a previous one
@@ -186,7 +188,7 @@ class Repeat:
         db.executenow(sql, [self.message, self.room.roomid])
 
         # remove from _instances dict
-        self._instances.pop(self.key)
+        self._instances.pop(self.key, None)
 
     def __lt__(self, other: Repeat) -> bool:
         # alphabetical order (for printing purposes)
