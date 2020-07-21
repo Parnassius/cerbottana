@@ -193,41 +193,28 @@ def linecounts_data(room: str) -> str:
 
     db = Database("logs")
 
+    params = [room]
+
+    sql = "SELECT date"
     if request.args.get("users"):
-
         users = [utils.to_user_id(i) for i in request.args["users"].split(",")]
-
-        sql = "SELECT date"
         sql += " || ',' || SUM(CASE WHEN userid = ? THEN 1 ELSE 0 END) " * len(users)
-        sql += " AS data "
-        sql += " FROM logs "
-        sql += " WHERE roomid = ? "
-        sql += " AND userid IN(" + ", ".join(list("?" * len(users))) + ") "
-        sql += " GROUP BY date"
-        data = db.execute(sql, users + [room] + users)
-
-        result = "\n".join([row["data"] for row in data])
-
-        return result
-
+        params = users + params
     else:
+        sql += " || ',' || COUNT(*) "
+        sql += " || ',' || SUM(CASE WHEN userrank = ' ' THEN 1 ELSE 0 END) "
+        sql += " || ',' || SUM(CASE WHEN userrank != ' ' THEN 1 ELSE 0 END) "
+        sql += " || ',' || SUM(CASE WHEN userrank NOT IN(' ', '+') THEN 1 ELSE 0 END) "
+        sql += " || ',' || SUM(CASE WHEN userrank = '+' THEN 1 ELSE 0 END) "
+        sql += " || ',' || SUM(CASE WHEN userrank = '%' THEN 1 ELSE 0 END) "
+        sql += " || ',' || SUM(CASE WHEN userrank = '@' THEN 1 ELSE 0 END) "
+        sql += " || ',' || SUM(CASE WHEN userrank = '*' THEN 1 ELSE 0 END) "
+        sql += " || ',' || SUM(CASE WHEN userrank IN('&', '~') THEN 1 ELSE 0 END) "
+        sql += " || ',' || SUM(CASE WHEN userrank = '#' THEN 1 ELSE 0 END) "
+    sql += " AS data "
+    sql += " FROM logs WHERE roomid = ? GROUP BY date"
+    data = db.execute(sql, params)
 
-        sql = """SELECT date
-                 || ',' || COUNT(*)  -- total
-                 || ',' || SUM(CASE WHEN userrank = ' ' THEN 1 ELSE 0 END)  -- regular
-                 || ',' || SUM(CASE WHEN userrank != ' ' THEN 1 ELSE 0 END)  -- auth
-                 || ',' || SUM(CASE WHEN userrank NOT IN(' ', '+') THEN 1 ELSE 0 END)  -- staff
-                 || ',' || SUM(CASE WHEN userrank = '+' THEN 1 ELSE 0 END)  -- voice
-                 || ',' || SUM(CASE WHEN userrank = '%' THEN 1 ELSE 0 END)  -- driver
-                 || ',' || SUM(CASE WHEN userrank = '@' THEN 1 ELSE 0 END)  -- mod
-                 || ',' || SUM(CASE WHEN userrank = '*' THEN 1 ELSE 0 END)  -- bot
-                 || ',' || SUM(CASE WHEN userrank IN('&', '~') THEN 1 ELSE 0 END)  -- leader/admin
-                 || ',' || SUM(CASE WHEN userrank = '#' THEN 1 ELSE 0 END)  -- owner
-                 AS data
-                 FROM logs WHERE roomid = ? GROUP BY date"""
+    result = "\n".join([row["data"] for row in data])
 
-        data = db.execute(sql, [room])
-
-        result = "\n".join([row["data"] for row in data])
-
-        return result
+    return result
