@@ -190,10 +190,6 @@ class Repeat:
         # remove from _instances dict
         self._instances.pop(self.key, None)
 
-    def __lt__(self, other: Repeat) -> bool:
-        # alphabetical order (for printing purposes)
-        return (self.room.roomid, self.message) < (other.room.roomid, other.message)
-
     @classmethod
     def get(cls, room: str, message: Optional[str] = None) -> List[Repeat]:
         if message:
@@ -203,7 +199,7 @@ class Repeat:
         instances = [
             inst for inst in cls._instances.values() if inst.room.roomid == room
         ]
-        return sorted(instances)
+        return sorted(instances, key=lambda instance: instance.message)
 
     @classmethod
     def pull_db(cls, conn: Connection) -> None:
@@ -328,7 +324,8 @@ def repeats(room: str) -> str:
         abort(401)
 
     sql = "SELECT message, delta_minutes, expire_dt "
-    sql += "FROM repeats WHERE roomid = ?"
+    sql += "FROM repeats WHERE roomid = ? "
+    sql += "ORDER BY message"
     rs = g.db.execute(sql, [room]).fetchall()
 
     return render_template("repeats.html", rs=rs, room=room)
