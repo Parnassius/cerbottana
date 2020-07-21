@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import queue
-from datetime import date
+from datetime import date, datetime
 from functools import wraps
 from typing import Callable, Optional
 
@@ -35,6 +35,13 @@ SERVER.secret_key = env("FLASK_SECRET_KEY")
 @SERVER.template_filter("format_date")
 def format_date(value: str) -> str:
     return date.fromisoformat(value).strftime("%d/%m/%Y")
+
+
+@SERVER.template_filter("format_datetime")
+def format_datetime(value: str) -> str:
+    return datetime.strptime(value, "%Y-%m-%d %H:%M:%S.%f").strftime(
+        "%d/%m/%Y %H:%M:%S"
+    )
 
 
 @SERVER.before_request

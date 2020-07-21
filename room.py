@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from collections import deque
 from time import time
-from typing import Dict, Optional
+from typing import Deque, Dict, Optional
 
 from typing_extensions import TypedDict
 
@@ -29,7 +30,12 @@ class Room:
         self.no_mods_online: Optional[float] = None
         self.roombot = False
         self.modchat = False
+        self.dynamic_buffer: Deque[str] = deque(maxlen=20)
         self._instances[roomid] = self
+
+    @property
+    def buffer(self) -> Deque[str]:
+        return self.dynamic_buffer.copy()
 
     @classmethod
     def get(cls, roomid: str) -> Room:
