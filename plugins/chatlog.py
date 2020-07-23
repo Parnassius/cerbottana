@@ -168,7 +168,7 @@ async def linecounts(
 
     rank = users[userid]["rank"]
 
-    token_id = utils.create_token({logsroom: rank})
+    token_id = utils.create_token({logsroom: rank}, 1)
 
     message = f"{conn.domain}linecounts/{logsroom}?token={token_id}"
     if len(args) > 1:

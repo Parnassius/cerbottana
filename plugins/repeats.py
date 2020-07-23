@@ -313,7 +313,7 @@ async def showrepeats(
         await conn.send_pm(user, "Nessun repeat attivo.")
         return
 
-    token_id = utils.create_token({repeats_room: rank})
+    token_id = utils.create_token({repeats_room: rank}, 1)
     url = f"{conn.domain}repeats/{repeats_room}?token={token_id}"
     await conn.send_pm(user, url)
 
