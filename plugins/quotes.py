@@ -8,8 +8,7 @@ from flask import abort, g, render_template, session
 
 import utils
 from database import Database
-from plugin_loader import parametrize_room, plugin_wrapper
-from plugins import route_wrapper
+from plugins import parametrize_room, plugin_wrapper, route_wrapper
 from tasks import init_task_wrapper
 
 if TYPE_CHECKING:

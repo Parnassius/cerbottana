@@ -15,8 +15,7 @@ from dateutil.parser import parse
 
 import utils
 from database import Database
-from plugin_loader import parametrize_room, plugin_wrapper
-from plugins import route_wrapper
+from plugins import parametrize_room, plugin_wrapper, route_wrapper
 from room import Room
 from tasks import init_task_wrapper
 

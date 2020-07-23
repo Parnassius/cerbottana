@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Optional
 
 import pytz
 
-from plugin_loader import plugin_wrapper
+from plugins import plugin_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection

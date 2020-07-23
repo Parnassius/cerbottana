@@ -22,7 +22,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from connection import Connection
 
-from plugin_loader import plugin_wrapper
+from plugins import plugin_wrapper
 
 
 @plugin_wrapper(

@@ -10,8 +10,7 @@ from lxml.html import fromstring
 import utils
 from database import Database
 from handlers import handler_wrapper
-from plugin_loader import parametrize_room, plugin_wrapper
-from plugins import route_wrapper
+from plugins import parametrize_room, plugin_wrapper, route_wrapper
 from room import Room
 from tasks import init_task_wrapper, recurring_task_wrapper
 

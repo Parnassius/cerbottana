@@ -6,8 +6,7 @@ from typing import TYPE_CHECKING, Optional
 from flask import g, render_template, request
 
 from database import Database
-from plugin_loader import plugin_wrapper
-from plugins import route_wrapper
+from plugins import plugin_wrapper, route_wrapper
 from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
