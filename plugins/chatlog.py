@@ -146,7 +146,7 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
                     time[0].text.strip("[] "),
                     userrank[0].text if len(userrank) else " ",
                     utils.to_user_id(user[0].text_content()),
-                    message[0].text,
+                    message[0].text_content(),
                 ],
             )
 
