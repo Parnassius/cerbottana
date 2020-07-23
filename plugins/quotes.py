@@ -8,7 +8,7 @@ from flask import abort, g, render_template, session
 
 import utils
 from database import Database
-from plugins import parametrize_room, plugin_wrapper, route_wrapper
+from plugins import command_wrapper, parametrize_room, route_wrapper
 from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
@@ -48,7 +48,7 @@ async def create_table(conn: Connection) -> None:  # lgtm [py/similar-function]
         db.commit()
 
 
-@plugin_wrapper(aliases=["newquote", "quote"])
+@command_wrapper(aliases=["newquote", "quote"])
 async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
@@ -72,7 +72,7 @@ async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -
         await conn.send_message(room, "Quote già esistente.")
 
 
-@plugin_wrapper(aliases=["q"])
+@command_wrapper(aliases=["q"])
 @parametrize_room
 async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if len(arg.split(",")) > 1:  # expecting 1 parameter given by @parametrize_room
@@ -98,7 +98,7 @@ async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) 
     await conn.send_reply(room, user, parsed_quote)
 
 
-@plugin_wrapper(aliases=["deletequote", "delquote", "rmquote"])
+@command_wrapper(aliases=["deletequote", "delquote", "rmquote"])
 async def removequote(
     conn: Connection, room: Optional[str], user: str, arg: str
 ) -> None:
@@ -117,7 +117,7 @@ async def removequote(
         await conn.send_message(room, "Quote inesistente.")
 
 
-@plugin_wrapper(aliases=["quotes", "quoteslist"])
+@command_wrapper(aliases=["quotes", "quoteslist"])
 @parametrize_room
 async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     quoteroom = arg.split(",")[0]

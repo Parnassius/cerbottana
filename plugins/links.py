@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
-from plugins import plugin_wrapper
+from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@plugin_wrapper(
+@command_wrapper(
     helpstr="Elenca gli avatar disponibili. Per usarne uno, <code>/avatar [nome]</code>"
 )
 async def avatars(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
@@ -17,6 +17,6 @@ async def avatars(conn: Connection, room: Optional[str], user: str, arg: str) ->
     )
 
 
-@plugin_wrapper(aliases=["github"])
+@command_wrapper(aliases=["github"])
 async def git(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     await conn.send_reply(room, user, "https://github.com/Parnassius/cerbottana")

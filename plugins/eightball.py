@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Optional
 from flask import g, render_template, request
 
 from database import Database
-from plugins import plugin_wrapper, route_wrapper
+from plugins import command_wrapper, route_wrapper
 from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
@@ -34,7 +34,7 @@ async def create_table(conn: Connection) -> None:
         db.commit()
 
 
-@plugin_wrapper(aliases=["8ball"], helpstr="Chiedi qualsiasi cosa!")
+@command_wrapper(aliases=["8ball"], helpstr="Chiedi qualsiasi cosa!")
 async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     db = Database()
     answers = db.execute("SELECT answer FROM eightball").fetchall()

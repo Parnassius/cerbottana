@@ -4,13 +4,13 @@ import json
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 import utils
-from plugins import plugin_wrapper
+from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@plugin_wrapper(helpstr="Traduce abilità, mosse e strumenti.")
+@command_wrapper(helpstr="Traduce abilità, mosse e strumenti.")
 async def trad(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     parola = utils.to_user_id(utils.remove_accents(arg.lower()))
     if parola == "":

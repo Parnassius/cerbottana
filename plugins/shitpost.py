@@ -5,13 +5,13 @@ import random
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 import utils
-from plugins import plugin_wrapper
+from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@plugin_wrapper(
+@command_wrapper(
     aliases=["meme", "memes", "mims", "say"],
     helpstr="FOR THE MIMMMSSS",
     is_unlisted=True,

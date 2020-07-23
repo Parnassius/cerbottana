@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List, Optional
 
 import utils
-from plugins import plugin_wrapper
+from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -48,7 +48,7 @@ async def create_tour(
         await conn.send_message(room, "/tour rules {}".format(",".join(rules)), False)
 
 
-@plugin_wrapper(
+@command_wrapper(
     helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
 )
 async def randpoketour(
@@ -81,7 +81,7 @@ async def randpoketour(
     )
 
 
-@plugin_wrapper(
+@command_wrapper(
     aliases=["sibb"],
     helpstr="Avvia un torneo Super Italian Bros. Brawl",
     is_unlisted=True,

@@ -4,13 +4,13 @@ from typing import TYPE_CHECKING, Optional
 
 import utils
 from database import Database
-from plugins import plugin_wrapper
+from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@plugin_wrapper()
+@command_wrapper()
 async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     args = arg.split(",")
     if len(args) < 2:

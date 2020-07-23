@@ -24,19 +24,19 @@ from room import Room
 if TYPE_CHECKING:
     from connection import Connection
 
-    PluginFunc = Callable[[Connection, Optional[str], str, str], Awaitable[None]]
+    CommandFunc = Callable[[Connection, Optional[str], str, str], Awaitable[None]]
     RouteFunc = Union[Callable[[], str], Callable[[str], str]]
 
 
-# --- Plugin logic and complementary decorators ---
+# --- Command logic and complementary decorators ---
 
 
-class Plugin:
-    _instances: Dict[str, Plugin] = dict()
+class Command:
+    _instances: Dict[str, Command] = dict()
 
     def __init__(
         self,
-        func: PluginFunc,
+        func: CommandFunc,
         aliases: List[str] = [],
         helpstr: str = "",
         is_unlisted: bool = False,
@@ -49,26 +49,26 @@ class Plugin:
         self._instances[func.__name__] = self
 
     @property
-    def commands(self) -> Dict[str, Plugin]:
+    def splitted_aliases(self) -> Dict[str, Command]:
         return {alias: self for alias in self.aliases}
 
     @classmethod
-    def get_all_commands(cls) -> Dict[str, Plugin]:
-        d: Dict[str, Plugin] = {}
-        for plugin in cls._instances.values():
-            d.update(plugin.commands)
+    def get_all_aliases(cls) -> Dict[str, Command]:
+        d: Dict[str, Command] = {}
+        for command in cls._instances.values():
+            d.update(command.splitted_aliases)
         return d
 
     @classmethod
     def get_all_helpstrings(cls) -> Dict[str, str]:
         d: Dict[str, str] = {}
-        for plugin in cls._instances.values():
-            if plugin.helpstr and not plugin.is_unlisted:
-                d[plugin.name] = plugin.helpstr
+        for command in cls._instances.values():
+            if command.helpstr and not command.is_unlisted:
+                d[command.name] = command.helpstr
         return {k: d[k] for k in sorted(d)}  # python 3.7+
 
 
-def scope_checker(func: PluginFunc) -> PluginFunc:
+def scope_checker(func: CommandFunc) -> CommandFunc:
     @wraps(func)
     async def scope_wrapper(
         conn: Connection, room: Optional[str], user: str, arg: str
@@ -80,17 +80,17 @@ def scope_checker(func: PluginFunc) -> PluginFunc:
     return scope_wrapper
 
 
-def plugin_wrapper(
+def command_wrapper(
     aliases: List[str] = [], helpstr: str = "", is_unlisted: bool = False
-) -> Callable[[PluginFunc], Plugin]:
-    def cls_wrapper(func: PluginFunc) -> Plugin:
+) -> Callable[[CommandFunc], Command]:
+    def cls_wrapper(func: CommandFunc) -> Command:
         func = scope_checker(func)  # manual decorator binding
-        return Plugin(func, aliases, helpstr, is_unlisted)
+        return Command(func, aliases, helpstr, is_unlisted)
 
     return cls_wrapper
 
 
-def parametrize_room(func: PluginFunc) -> PluginFunc:
+def parametrize_room(func: CommandFunc) -> CommandFunc:
     """
     Changes the syntax of a command depending on its context:
     (1) If it's used in a room, it automatically adds its roomid at the
@@ -172,4 +172,4 @@ for f in modules:
         name = basename(f)[:-3]
         importlib.import_module("plugins." + name)
 
-plugins = Plugin.get_all_commands()
+commands = Command.get_all_aliases()

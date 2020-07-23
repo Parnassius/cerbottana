@@ -3,13 +3,13 @@ from __future__ import annotations
 from time import time
 from typing import TYPE_CHECKING, Optional
 
-from plugins import plugin_wrapper
+from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@plugin_wrapper()
+@command_wrapper()
 async def uptime(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if conn.connection_start is None:
         return

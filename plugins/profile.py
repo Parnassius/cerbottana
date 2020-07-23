@@ -6,7 +6,7 @@ from flask import g, render_template, request
 
 import utils
 from database import Database
-from plugins import plugin_wrapper, route_wrapper
+from plugins import command_wrapper, route_wrapper
 from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
@@ -40,7 +40,7 @@ async def create_table(conn: Connection) -> None:  # lgtm [py/similar-function]
         db.commit()
 
 
-@plugin_wrapper(aliases=["profilo"], helpstr="Visualizza il tuo profilo.")
+@command_wrapper(aliases=["profilo"], helpstr="Visualizza il tuo profilo.")
 async def profile(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     # pylint: disable=too-many-locals
     if arg.strip() == "":
@@ -108,7 +108,9 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
         )
 
 
-@plugin_wrapper(aliases=["setprofilo"], helpstr="Imposta una tua frase personalizzata.")
+@command_wrapper(
+    aliases=["setprofilo"], helpstr="Imposta una tua frase personalizzata."
+)
 async def setprofile(
     conn: Connection, room: Optional[str], user: str, arg: str
 ) -> None:

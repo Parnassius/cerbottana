@@ -4,13 +4,13 @@ from typing import TYPE_CHECKING, Optional
 
 import utils
 from database import Database
-from plugins import plugin_wrapper
+from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@plugin_wrapper(aliases=["locations"])
+@command_wrapper(aliases=["locations"])
 async def location(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     arg = utils.to_user_id(utils.remove_accents(arg.lower()))
     sql = """SELECT b.version_id, MIN(b.min_level) AS min_level, MAX(b.max_level) AS max_level,
@@ -108,7 +108,7 @@ async def location(conn: Connection, room: Optional[str], user: str, arg: str) -
     await conn.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
 
 
-@plugin_wrapper(aliases=["encounters"])
+@command_wrapper(aliases=["encounters"])
 async def encounter(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if room is not None and not utils.is_voice(user):
         return

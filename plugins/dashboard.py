@@ -3,14 +3,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, Optional
 
 import utils
-from plugins import plugin_wrapper
+from plugins import command_wrapper
 from room import Room
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@plugin_wrapper(aliases=["token"])
+@command_wrapper(aliases=["token"])
 async def dashboard(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     userid = utils.to_user_id(user)
     for r in conn.rooms:
