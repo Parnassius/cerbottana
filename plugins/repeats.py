@@ -271,7 +271,7 @@ async def repeat(conn: Connection, room: Optional[str], user: str, arg: str) -> 
         await conn.send_message(room, errmsg)
 
 
-@plugin_wrapper(aliases=["deleterepeat", "rmrepeat"])
+@plugin_wrapper(aliases=["clearrepeat", "deleterepeat", "rmrepeat"])
 async def stoprepeat(
     conn: Connection, room: Optional[str], user: str, arg: str
 ) -> None:
