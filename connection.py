@@ -110,18 +110,6 @@ class Connection:
 
         for msg in message.split("\n"):
 
-            if roomid in self.rooms:
-                match = re.match(r"^\(.+ set modchat to (.*)\)$", msg)
-                if not match:
-                    match = re.match(
-                        r"^\|error\|Modchat is already set to (.*)\.$", msg
-                    )
-
-                if match:
-                    Room.get(roomid).modchat = len(
-                        match.group(1)
-                    ) == 1 and utils.is_voice(match.group(1))
-
             if not msg or msg[0] != "|":
                 continue
 
