@@ -133,7 +133,7 @@ class Repeat:
                 not self.room.modchat  # don't send if modchat is active
                 and self.message not in self.room.buffer  # throttling
             ):
-                await self.conn.send_message(self.room.roomid, self.message)
+                await self.conn.send_message(self.room.roomid, self.message, False)
             else:
                 print(f"Not sending {self.message}")
             sleep_interval = self.delta - (datetime.now() - start)
