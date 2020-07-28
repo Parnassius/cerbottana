@@ -4,114 +4,48 @@ import asyncio
 import datetime
 from typing import TYPE_CHECKING, Optional
 
-from flask import abort, render_template, request, session
+from flask import abort, g, render_template, request
+from flask import session as web_session
 from lxml.html import fromstring
+from sqlalchemy.sql import and_, func
 
+import databases.logs as l
 import utils
 from database import Database
 from handlers import handler_wrapper
 from plugins import command_wrapper, parametrize_room, route_wrapper
 from room import Room
-from tasks import init_task_wrapper, recurring_task_wrapper
+from tasks import recurring_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@init_task_wrapper()
-async def create_table(conn: Connection) -> None:
-    db = Database("logs")
-
-    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'metadata'"
-    if not db.execute(sql).fetchone():
-        sql = """CREATE TABLE metadata (
-            id INTEGER,
-            key TEXT,
-            value TEXT,
-            PRIMARY KEY(id)
-        )"""
-        db.execute(sql)
-
-        sql = """CREATE UNIQUE INDEX idx_unique_metadata_key
-        ON metadata (
-            key
-        )"""
-        db.execute(sql)
-
-        sql = "INSERT INTO metadata (key, value) VALUES ('table_version_metadata', '1')"
-        db.execute(sql)
-
-        db.commit()
-
-    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'logs'"
-    if not db.execute(sql).fetchone():
-        sql = """CREATE TABLE logs (
-            id INTEGER,
-            roomid TEXT,
-            date TEXT,
-            time TEXT,
-            userrank TEXT,
-            userid TEXT,
-            message TEXT,
-            PRIMARY KEY(id)
-        )"""
-        db.execute(sql)
-
-        sql = """CREATE INDEX idx_logs_roomid_userid_date
-        ON logs (
-            roomid,
-            userid,
-            date
-        )"""
-        db.execute(sql)
-
-        sql = """CREATE INDEX idx_logs_roomid_userrank_date
-        ON logs (
-            roomid,
-            userrank,
-            date
-        )"""
-        db.execute(sql)
-
-        sql = """CREATE INDEX idx_logs_date
-        ON logs (
-            date
-        )"""
-        db.execute(sql)
-
-        sql = "INSERT INTO metadata (key, value) VALUES ('table_version_logs', '1')"
-        db.execute(sql)
-
-        db.commit()
-
-
 @recurring_task_wrapper()
 async def logger_task(conn: Connection) -> None:
+    db = Database.open("logs")
     while True:
-        db = Database("logs")
+        with db.get_session() as session:
+            yesterday = datetime.date.today() - datetime.timedelta(days=1)
 
-        yesterday = datetime.date.today() - datetime.timedelta(days=1)
-
-        for room in conn.rooms + conn.private_rooms:
-            last_date = db.execute(
-                "SELECT MAX(date) AS date FROM logs WHERE roomid = ?", [room]
-            ).fetchone()
-
-            if last_date and last_date["date"]:
-                date = datetime.date.fromisoformat(
-                    last_date["date"]
-                ) + datetime.timedelta(days=1)
-            else:
-                date = yesterday - datetime.timedelta(days=2)
-
-            while date < yesterday:
-                await asyncio.sleep(30)
-                await conn.send_message(
-                    "", f"/join view-chatlog-{room}--{date.isoformat()}", False
+            for room in conn.rooms + conn.private_rooms:
+                last_date = (
+                    session.query(func.max(l.Logs.date)).filter_by(roomid=room).scalar()
                 )
-                date += datetime.timedelta(days=1)
 
-        del db
+                if last_date:
+                    date = datetime.date.fromisoformat(last_date) + datetime.timedelta(
+                        days=1
+                    )
+                else:
+                    date = yesterday - datetime.timedelta(days=2)
+
+                while date < yesterday:
+                    await asyncio.sleep(30)
+                    await conn.send_message(
+                        "", f"/join view-chatlog-{room}--{date.isoformat()}", False
+                    )
+                    date += datetime.timedelta(days=1)
 
         await asyncio.sleep(12 * 60 * 60)
 
@@ -126,9 +60,7 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
 
     html = fromstring(chatlog)
 
-    db = Database("logs")
-
-    db.execute("DELETE FROM logs WHERE date = ? AND roomid = ?", [date, room])
+    values = []
 
     for el in html.xpath('div[@class="message-log"]/div[@class="chat"]'):
         time = el.xpath("small")
@@ -136,20 +68,25 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
         message = el.xpath("q")
         if time and user and message:
             userrank = user[0].xpath("small")
-            db.execute(
-                """INSERT INTO logs (roomid, date, time, userrank, userid, message)
-                VALUES (?, ?, ?, ?, ?, ?)""",
-                [
-                    room,
-                    date,
-                    time[0].text.strip("[] "),
-                    userrank[0].text if len(userrank) else " ",
-                    utils.to_user_id(user[0].text_content()),
-                    message[0].text_content(),
-                ],
+            values.append(
+                {
+                    "roomid": room,
+                    "date": date,
+                    "time": time[0].text.strip("[] "),
+                    "userrank": userrank[0].text if len(userrank) else " ",
+                    "userid": utils.to_user_id(user[0].text_content()),
+                    "message": message[0].text_content(),
+                }
             )
 
-    db.commit()
+    db = Database.open("logs")
+    with db.get_session() as session:
+        session.execute(
+            l.Logs.__table__.delete().where(
+                and_(l.Logs.__table__.c.date == date, l.Logs.__table__.c.roomid == room)
+            )
+        )
+        session.execute(l.Logs.__table__.insert(), values)
 
 
 @command_wrapper(aliases=["linecount"])
@@ -179,7 +116,7 @@ async def linecounts(
 
 @route_wrapper("/linecounts/<room>")
 def linecounts_route(room: str) -> str:
-    if not utils.is_driver(session.get(room)):
+    if not utils.is_driver(web_session.get(room)):
         abort(401)
 
     return render_template("linecounts.html", room=room)
@@ -187,10 +124,8 @@ def linecounts_route(room: str) -> str:
 
 @route_wrapper("/linecounts/<room>/data")
 def linecounts_data(room: str) -> str:
-    if not utils.is_driver(session.get(room)):
+    if not utils.is_driver(web_session.get(room)):
         abort(401)
-
-    db = Database("logs")
 
     params = [room]
 
@@ -212,7 +147,7 @@ def linecounts_data(room: str) -> str:
         sql += " || ',' || SUM(CASE WHEN userrank = '#' THEN 1 ELSE 0 END) "
     sql += " AS data "
     sql += " FROM logs WHERE roomid = ? GROUP BY date"
-    data = db.execute(sql, params)
+    data = g.db.todo.execute(sql, params)
 
     result = "\n".join([row["data"] for row in data])
 

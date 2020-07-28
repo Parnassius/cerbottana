@@ -7,6 +7,9 @@ import re
 from html import escape
 from typing import TYPE_CHECKING, Dict, Optional
 
+from sqlalchemy.sql import func
+
+import databases.database as d
 from database import Database
 from room import Room
 
@@ -18,16 +21,31 @@ def create_token(
     rooms: Dict[str, str], expire_minutes: int = 30, admin: Optional[str] = None
 ) -> str:
     token_id = os.urandom(16).hex()
-    expire = f"+{expire_minutes} minute"
+    expiry = f"+{expire_minutes} minute"
 
-    db = Database()
-    sql = "INSERT INTO tokens (token, room, rank, expiry) "
-    sql += " VALUES (?, ?, ?, DATETIME('now', ?))"
+    values = []
     if admin is not None:
-        db.execute(sql, [token_id, None, admin, expire])
+        values.append(
+            d.Tokens(
+                token=token_id,
+                room=None,
+                rank=admin,
+                expiry=func.datetime("now", expiry),
+            )
+        )
     for room in rooms:
-        db.execute(sql, [token_id, room, rooms[room], expire])
-    db.commit()
+        values.append(
+            d.Tokens(
+                token=token_id,
+                room=room,
+                rank=rooms[room],
+                expiry=func.datetime("now", expiry),
+            )
+        )
+
+    db = Database.open()
+    with db.get_session() as session:
+        session.add_all(values)
 
     return token_id
 

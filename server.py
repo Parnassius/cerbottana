@@ -6,9 +6,12 @@ from functools import wraps
 from typing import Callable, Optional
 
 from environs import Env
-from flask import Flask, abort, current_app, g, render_template, request, session
+from flask import Flask, abort, current_app, g, render_template, request
+from flask import session as web_session
+from sqlalchemy.sql import func
 from waitress import serve
 
+import databases.database as d
 import utils
 from database import Database
 from plugins import routes
@@ -46,27 +49,31 @@ def format_datetime(value: str) -> str:
 
 @SERVER.before_request
 def before() -> None:
-    g.db = Database()
+    g.db = Database.open()
 
     token = request.args.get("token")
 
     if token is not None:
-        sql = "SELECT room, rank, expiry FROM tokens "
-        sql += " WHERE token = ? AND JULIANDAY() - JULIANDAY(expiry) < 0"
-        data = g.db.execute(sql, [token]).fetchall()
-        if not data:  # invalid token
-            abort(401)
-        for row in data:
-            if row["room"] is None:
-                session["_rank"] = row["rank"]
-            else:
-                session[row["room"]] = row["rank"]
+        with g.db.get_session() as session:
+            data = (
+                session.query(d.Tokens)
+                .filter_by(token=token)
+                .filter(func.julianday() - func.julianday(d.Tokens.expiry) < 0)
+                .all()
+            )
+            if not data:  # invalid token
+                abort(401)
+            for row in data:
+                if row.room is None:
+                    web_session["_rank"] = row.rank
+                else:
+                    web_session[row.room] = row.rank
 
 
 def require_driver(func: Callable[[], str]) -> Callable[[], str]:
     @wraps(func)
     def wrapper() -> str:
-        if not utils.is_driver(session.get("_rank")):
+        if not utils.is_driver(web_session.get("_rank")):
             abort(401)
         return func()
 
@@ -79,25 +86,37 @@ def dashboard() -> str:
 
     current_app.queue.put("aaa", False)
 
-    if request.method == "POST":
+    with g.db.get_session() as session:
+        if request.method == "POST":
 
-        if "approva" in request.form:
-            parts = request.form["approva"].split(",")
-            sql = "UPDATE users SET description = description_pending, description_pending = '' "
-            sql += " WHERE id = ? AND description_pending = ?"
-            g.db.executenow(sql, [parts[0], ",".join(parts[1:])])
+            if "approva" in request.form:
+                parts = request.form["approva"].split(",")
+                session.query(d.Users).filter_by(
+                    id=parts[0], description_pending=",".join(parts[1:])
+                ).update(
+                    {
+                        "description": d.Users.description_pending,
+                        "description_pending": "",
+                    }
+                )
 
-        if "rifiuta" in request.form:
-            parts = request.form["rifiuta"].split(",")
-            sql = "UPDATE users SET description_pending = '' "
-            sql += " WHERE id = ? AND description_pending = ?"
-            g.db.executenow(sql, [parts[0], ",".join(parts[1:])])
+            if "rifiuta" in request.form:
+                parts = request.form["rifiuta"].split(",")
+                session.query(d.Users).filter_by(
+                    id=parts[0], description_pending=",".join(parts[1:]),
+                ).update({"description_pending": ""})
 
-    sql = "SELECT * FROM users WHERE description_pending != '' ORDER BY userid"
-    descriptions_pending = g.db.execute(sql).fetchall()
+        descriptions_pending = (
+            session.query(d.Users)
+            .filter(d.Users.description_pending != "")
+            .order_by(d.Users.userid)
+            .all()
+        )
 
-    return render_template("dashboard.html", descriptions_pending=descriptions_pending)
+        return render_template(
+            "dashboard.html", descriptions_pending=descriptions_pending
+        )
 
 
-for func, rule, methods in routes:
-    SERVER.add_url_rule(rule, view_func=func, methods=methods)
+for view_func, rule, methods in routes:
+    SERVER.add_url_rule(rule, view_func=view_func, methods=methods)

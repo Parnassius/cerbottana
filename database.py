@@ -1,31 +1,36 @@
-import sqlite3
-from typing import Any, Iterable
+from __future__ import annotations
+
+from contextlib import contextmanager
+from typing import Dict, Iterator
+
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.session import Session
 
 
 class Database:
-    def __init__(self, dbname: str = "database") -> None:
-        self.db = sqlite3.connect(f"./{dbname}.sqlite", check_same_thread=False)
-        self.db.row_factory = sqlite3.Row
+    _instances: Dict[str, Database] = dict()
 
-    @property
-    def connection(self) -> sqlite3.Connection:
-        return self.db
+    def __init__(self, dbname: str) -> None:
+        self.engine = create_engine(f"sqlite:///{dbname}.sqlite", echo=True)
+        self.metadata = MetaData(bind=self.engine)
+        self.Session = sessionmaker(bind=self.engine)
+        self._instances[dbname] = self
 
-    def executemany(
-        self, sql: str, params: Iterable[Iterable[Any]] = []
-    ) -> sqlite3.Cursor:
-        return self.db.executemany(sql, params)
+    @classmethod
+    def open(cls, dbname: str = "database") -> Database:
+        if dbname not in cls._instances:
+            cls(dbname)
+        return cls._instances[dbname]
 
-    def executenow(self, sql: str, params: Iterable[Any] = []) -> sqlite3.Cursor:
-        cur = self.execute(sql, params)
-        self.commit()
-        return cur
-
-    def execute(self, sql: str, params: Iterable[Any] = []) -> sqlite3.Cursor:
-        return self.db.execute(sql, params)
-
-    def commit(self) -> None:
-        self.db.commit()
-
-    def __del__(self) -> None:
-        self.db.close()
+    @contextmanager
+    def get_session(self) -> Iterator[Session]:
+        session = self.Session()
+        try:
+            yield session
+            session.commit()
+        except:
+            session.rollback()
+            raise
+        finally:
+            session.close()
