@@ -16,7 +16,8 @@ from typing import (
     Union,
 )
 
-from flask import abort, session
+from flask import abort
+from flask import session as web_session
 
 import utils
 from room import Room
@@ -143,7 +144,7 @@ routes: List[Tuple[RouteFunc, str, Optional[Iterable[str]]]] = list()
 def route_require_driver(func: RouteFunc) -> RouteFunc:
     @wraps(func)
     def wrapper(*args: str) -> str:
-        if not utils.is_driver(session.get("_rank")):
+        if not utils.is_driver(web_session.get("_rank")):
             abort(401)
         return func(*args)
 

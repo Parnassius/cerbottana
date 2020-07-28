@@ -3,49 +3,14 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING
 
+import databases.database as d
 import utils
 from database import Database
 from handlers import handler_wrapper
 from room import Room
-from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-
-
-@init_task_wrapper()
-async def create_table(conn: Connection) -> None:
-    db = Database()
-
-    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'users'"
-    if not db.execute(sql).fetchone():
-        sql = """CREATE TABLE users (
-            id INTEGER,
-            userid TEXT,
-            username TEXT,
-            avatar TEXT,
-            description TEXT,
-            description_pending TEXT,
-            PRIMARY KEY(id)
-        )"""
-        db.execute(sql)
-
-        sql = """CREATE UNIQUE INDEX idx_unique_users_userid
-        ON users (
-            userid
-        )"""
-        db.execute(sql)
-
-        sql = """CREATE INDEX idx_users_description_pending
-        ON users (
-            description_pending
-        )"""
-        db.execute(sql)
-
-        sql = "INSERT INTO metadata (key, value) VALUES ('table_version_users', '1')"
-        db.execute(sql)
-
-        db.commit()
 
 
 async def add_user(
@@ -63,10 +28,9 @@ async def add_user(
     if userid == utils.to_user_id(conn.username):
         room.roombot = rank == "*"
 
-    db = Database()
-    sql = "INSERT INTO users (userid, username) VALUES (?, ?) "
-    sql += " ON CONFLICT (userid) DO UPDATE SET username = excluded.username"
-    db.executenow(sql, [userid, username])
+    db = Database.open()
+    with db.get_session() as session:
+        session.add(d.Users(userid=userid, username=username))
 
     if not skip_avatar_check or rank != " ":
         await conn.send_message("", "/cmd userdetails {}".format(username), False)
@@ -141,15 +105,15 @@ async def queryresponse(conn: Connection, roomid: str, *args: str) -> None:
         return
 
     data = json.loads(querydata)
-    userid = data["userid"]
+    userid = utils.to_user_id(data["userid"])
     avatar = str(data["avatar"])
     if avatar in utils.AVATAR_IDS:
         avatar = utils.AVATAR_IDS[avatar]
 
-    db = Database()
-    sql = "INSERT INTO users (userid, avatar) VALUES (?, ?) "
-    sql += " ON CONFLICT (userid) DO UPDATE SET avatar = excluded.avatar"
-    db.executenow(sql, [userid, avatar])
+    db = Database.open()
+    with db.get_session() as session:
+        session.add(d.Users(userid=userid))
+        session.query(d.Users).filter_by(userid=userid).update({"avatar": avatar})
 
     if data["rooms"] is not False:
         global_rank = data["group"]

@@ -5,52 +5,25 @@ import math
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
-from environs import Env
-from flask import abort, g, render_template, session
-
-if TYPE_CHECKING:
-    from connection import Connection
-
 from dateutil.parser import parse
+from environs import Env
+from flask import abort, g, render_template
+from flask import session as web_session
+from sqlalchemy.sql import func
 
+import databases.database as d
 import utils
 from database import Database
 from plugins import command_wrapper, parametrize_room, route_wrapper
 from room import Room
 from tasks import init_task_wrapper
 
+if TYPE_CHECKING:
+    from connection import Connection
+
+
 env = Env()
 env.read_env()
-
-
-@init_task_wrapper(priority=3)
-async def create_table(conn: Connection) -> None:  # lgtm [py/similar-function]
-    db = Database()
-
-    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'repeats'"
-    if not db.execute(sql).fetchone():
-        sql = """CREATE TABLE repeats (
-            id INTEGER,
-            message TEXT,
-            roomid TEXT,
-            delta_minutes INTEGER,
-            initial_dt TEXT,
-            expire_dt TEXT,
-            PRIMARY KEY(id)
-        )"""
-        db.execute(sql)
-
-        sql = """CREATE UNIQUE INDEX idx_unique_repeats_message_roomid
-        ON repeats (
-            message,
-            roomid
-        )"""
-        db.execute(sql)
-
-        sql = "INSERT INTO metadata (key, value) VALUES ('table_version_repeats', '1')"
-        db.execute(sql)
-
-        db.commit()
 
 
 class Repeat:
@@ -158,19 +131,17 @@ class Repeat:
         if self.is_new:
             # if the task has just been created, register it into the SQL db
             print(f"Registering {self.message} into db.")
-            db = Database()
-            sql = "REPLACE INTO repeats (message, roomid, delta_minutes, initial_dt, expire_dt) "
-            sql += "VALUES (?, ?, ?, ?, ?)"
-            db.executenow(
-                sql,
-                [
-                    self.message,
-                    self.room.roomid,
-                    self.delta_minutes,
-                    self.initial_dt,
-                    self.expire_dt,
-                ],
-            )
+            db = Database.open()
+            with db.get_session() as session:
+                session.add(
+                    d.Repeats(
+                        message=self.message,
+                        roomid=self.room.roomid,
+                        delta_minutes=self.delta_minutes,
+                        initial_dt=self.initial_dt,
+                        expire_dt=self.expire_dt,
+                    )
+                )
 
         return True
 
@@ -181,10 +152,11 @@ class Repeat:
 
     def _unlist(self) -> None:
         # remove corresponding SQL row
-        db = Database()
-        sql = "DELETE FROM repeats "
-        sql += "WHERE message = ? AND roomid = ?"
-        db.executenow(sql, [self.message, self.room.roomid])
+        db = Database.open()
+        with db.get_session() as session:
+            session.query(d.Repeats).filter_by(
+                message=self.message, roomid=self.room.roomid
+            ).delete()
 
         # remove from _instances dict
         self._instances.pop(self.key, None)
@@ -208,19 +180,20 @@ class Repeat:
         modified SQL db.
         """
 
-        db = Database()
-        rows = db.execute("SELECT * FROM repeats").fetchall()
-        for row in rows:
-            instance = cls(
-                conn,
-                row["message"],
-                row["roomid"],
-                row["delta_minutes"],
-                initial_dt=parse(row["initial_dt"]),
-                expire_dt=parse(row["expire_dt"]) if row["expire_dt"] else None,
-            )
-            if not instance.start():
-                print(f"Failed to start {instance.message}")
+        db = Database.open()
+        with db.get_session() as session:
+            rows = session.query(d.Repeats).all()
+            for row in rows:
+                instance = cls(
+                    conn,
+                    row.message,
+                    row.roomid,
+                    row.delta_minutes,
+                    initial_dt=parse(row.initial_dt),
+                    expire_dt=parse(row.expire_dt) if row.expire_dt else None,
+                )
+                if not instance.start():
+                    print(f"Failed to start {instance.message}")
 
 
 @init_task_wrapper(priority=4)
@@ -304,11 +277,14 @@ async def showrepeats(
         await conn.send_pm(user, f"Devi essere almeno driver in {repeats_room}.")
         return
 
-    db = Database()
-    repeats_n = db.execute(
-        "SELECT COUNT(*) FROM repeats WHERE roomid = ?", [repeats_room]
-    ).fetchone()
-    if not repeats_n[0]:
+    db = Database.open()
+    with db.get_session() as session:
+        repeats_n = (
+            session.query(func.count(d.Repeats.id))
+            .filter_by(roomid=repeats_room)
+            .first()
+        )
+    if not repeats_n:
         await conn.send_pm(user, "Nessun repeat attivo.")
         return
 
@@ -319,12 +295,15 @@ async def showrepeats(
 
 @route_wrapper("/repeats/<room>")
 def repeats(room: str) -> str:
-    if not utils.is_driver(session.get(room)):
+    if not utils.is_driver(web_session.get(room)):
         abort(401)
 
-    sql = "SELECT message, delta_minutes, expire_dt "
-    sql += "FROM repeats WHERE roomid = ? "
-    sql += "ORDER BY message"
-    rs = g.db.execute(sql, [room]).fetchall()
+    with g.db.get_session() as session:
+        rs = (
+            session.query(d.Repeats)
+            .filter_by(roomid=room)
+            .order_by(d.Repeats.message)
+            .all()
+        )
 
-    return render_template("repeats.html", rs=rs, room=room)
+        return render_template("repeats.html", rs=rs, room=room)

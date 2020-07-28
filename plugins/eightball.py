@@ -5,70 +5,42 @@ from typing import TYPE_CHECKING, Optional
 
 from flask import g, render_template, request
 
+import databases.database as d
 from database import Database
 from plugins import command_wrapper, route_wrapper
-from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
-@init_task_wrapper()
-async def create_table(conn: Connection) -> None:
-    db = Database()
-
-    sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'eightball'"
-    if not db.execute(sql).fetchone():
-        sql = """CREATE TABLE eightball (
-            id INTEGER,
-            answer TEXT,
-            PRIMARY KEY(id)
-        )"""
-        db.execute(sql)
-
-        sql = (
-            "INSERT INTO metadata (key, value) VALUES ('table_version_eightball', '1')"
-        )
-        db.execute(sql)
-
-        db.commit()
-
-
 @command_wrapper(aliases=["8ball"], helpstr="Chiedi qualsiasi cosa!")
 async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    db = Database()
-    answers = db.execute("SELECT answer FROM eightball").fetchall()
+    db = Database.open()
+
+    with db.get_session() as session:
+        answers = session.query(d.EightBall.answer).all()
+
     if not answers:
         return
-    answer = random.choice(answers)["answer"]
+
+    answer = random.choice(answers)[0]
     await conn.send_reply(room, user, answer)
 
 
 @route_wrapper("/eightball", methods=("GET", "POST"), require_driver=True)
 def eightball_route() -> str:
 
-    if request.method == "POST":
+    with g.db.get_session() as session:
+        if request.method == "POST":
 
-        if "answers" in request.form:
-            sql = "DELETE FROM eightball"
-            g.db.execute(sql)
+            if "answers" in request.form:
+                session.query(d.EightBall).delete()
 
-            answers = list(
-                filter(
-                    None,
-                    map(
-                        str.strip, sorted(request.form["answers"].strip().splitlines())
-                    ),
+                answers = set(request.form["answers"].strip().splitlines())
+                session.add_all(
+                    [d.EightBall(answer=answer.strip()) for answer in answers]
                 )
-            )
-            sql = "INSERT INTO eightball (answer) VALUES " + ", ".join(
-                ["(?)"] * len(answers)
-            )
-            g.db.execute(sql, answers)
 
-            g.db.commit()
+        rs = session.query(d.EightBall).order_by(d.EightBall.answer).all()
 
-    sql = "SELECT * FROM eightball ORDER BY answer"
-    rs = g.db.execute(sql).fetchall()
-
-    return render_template("eightball.html", rs=rs)
+        return render_template("eightball.html", rs=rs)

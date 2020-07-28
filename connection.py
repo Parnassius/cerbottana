@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import asyncio
-import queue
-import re
 from datetime import datetime
+from queue import Empty as EmptyQueue
+from queue import SimpleQueue
 from time import time
 from typing import Dict, List, Optional
 
@@ -48,28 +48,28 @@ class Connection:
         self.commands = commands
         self.timestamp: float = 0
         self.lastmessage: float = 0
-        self.queue: Optional[queue.SimpleQueue[str]] = None
+        self.queue: Optional[SimpleQueue[str]] = None
         self.loop: Optional[asyncio.AbstractEventLoop] = None
         self.websocket: Optional[websockets.client.WebSocketClientProtocol] = None
         self.connection_start: Optional[float] = None
         self.tiers: List[Dict[str, str]] = []
 
-    def open_connection(self, queue: queue.SimpleQueue[str]) -> None:
+    def open_connection(self, queue: SimpleQueue[str]) -> None:
         self.queue = queue
         self.loop = asyncio.new_event_loop()
         self.loop.run_until_complete(self.start_websocket())
 
     async def start_websocket(self) -> None:
-        init_tasks: List[asyncio.Task[None]] = []
+        itasks: List[asyncio.Task[None]] = []
         for (priority, func) in sorted(
             self.init_tasks, key=lambda func: func[0]  # sort by priority
         ):
-            init_tasks.append(asyncio.create_task(func(self)))
-        for init_task in init_tasks:
-            await init_task
+            itasks.append(asyncio.create_task(func(self)))
+        for itask in itasks:
+            await itask
 
-        for recurring_task in self.recurring_tasks:
-            asyncio.create_task(recurring_task(self))
+        for rtask in self.recurring_tasks:
+            asyncio.create_task(rtask(self))
 
         try:
             async with websockets.connect(
@@ -83,7 +83,7 @@ class Connection:
                     if self.queue is not None:
                         try:
                             data: Optional[str] = self.queue.get(False)
-                        except queue.Empty:
+                        except EmptyQueue:
                             data = None
 
                         print(data)
