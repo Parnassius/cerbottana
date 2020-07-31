@@ -13,7 +13,7 @@ from environs import Env
 
 import utils
 from handlers import handlers
-from plugins import plugins
+from plugins import commands
 from room import Room
 from tasks import init_tasks, recurring_tasks
 
@@ -45,7 +45,7 @@ class Connection:
         self.init_tasks = init_tasks
         self.recurring_tasks = recurring_tasks
         self.handlers = handlers
-        self.commands = plugins
+        self.commands = commands
         self.timestamp: float = 0
         self.lastmessage: float = 0
         self.queue: Optional[queue.SimpleQueue[str]] = None

@@ -10,8 +10,7 @@ from lxml.html import fromstring
 import utils
 from database import Database
 from handlers import handler_wrapper
-from plugin_loader import parametrize_room, plugin_wrapper
-from plugins import route_wrapper
+from plugins import command_wrapper, parametrize_room, route_wrapper
 from room import Room
 from tasks import init_task_wrapper, recurring_task_wrapper
 
@@ -153,7 +152,7 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
     db.commit()
 
 
-@plugin_wrapper(aliases=["linecount"])
+@command_wrapper(aliases=["linecount"])
 @parametrize_room
 async def linecounts(
     conn: Connection, room: Optional[str], user: str, arg: str
