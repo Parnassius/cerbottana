@@ -21,7 +21,7 @@ env = Env()
 env.read_env()
 
 
-@command_wrapper(aliases=["newquote", "quote"])
+@command_wrapper(aliases=("newquote", "quote"))
 async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
@@ -52,7 +52,7 @@ async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -
             await conn.send_message(room, "Quote già esistente.")
 
 
-@command_wrapper(aliases=["q"])
+@command_wrapper(aliases=("q",))
 @parametrize_room
 async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if len(arg.split(",")) > 1:  # expecting 1 parameter given by @parametrize_room
@@ -81,7 +81,7 @@ async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) 
     await conn.send_reply(room, user, parsed_quote)
 
 
-@command_wrapper(aliases=["deletequote", "delquote", "rmquote"])
+@command_wrapper(aliases=("deletequote", "delquote", "rmquote"))
 async def removequote(
     conn: Connection, room: Optional[str], user: str, arg: str
 ) -> None:
@@ -102,7 +102,7 @@ async def removequote(
             await conn.send_message(room, "Quote inesistente.")
 
 
-@command_wrapper(aliases=["quotes", "quoteslist"])
+@command_wrapper(aliases=("quotes", "quoteslist"))
 @parametrize_room
 async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     quoteroom = arg.split(",")[0]

@@ -82,7 +82,7 @@ async def randpoketour(
 
 
 @command_wrapper(
-    aliases=["sibb"],
+    aliases=("sibb",),
     helpstr="Avvia un torneo Super Italian Bros. Brawl",
     is_unlisted=True,
 )

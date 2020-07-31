@@ -89,7 +89,7 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
         session.execute(l.Logs.__table__.insert(), values)
 
 
-@command_wrapper(aliases=["linecount"])
+@command_wrapper(aliases=("linecount",))
 @parametrize_room
 async def linecounts(
     conn: Connection, room: Optional[str], user: str, arg: str

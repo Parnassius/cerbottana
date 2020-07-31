@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 
 @command_wrapper(
 @plugin_wrapper(
-    aliases=["other name1", "other name2"],
+    aliases=("other name1", "other name2"),
     helpstr="Describes the foo command.",
     #is_unlisted=True
 )
@@ -42,7 +42,7 @@ async def foo(conn: Connection, room: Optional[str], user: str, arg: str) -> Non
     pass
 ```
 
-`aliases` is the `List[str]` parameter that populates the dictionary of commands; the decorated function's name is automatically included as an alias.
+`aliases` is the `Tuple[str]` parameter that populates the dictionary of commands; the decorated function's name is automatically included as an alias.
 
 A `Command` object can also yield useful metadata: `helpstr` is a string that describes the callback function. It is used to generate a help document with data from every instance that doesn't have the boolean parameter `is_unlisted` explicitly set to `False`.
 

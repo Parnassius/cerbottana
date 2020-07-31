@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
-@command_wrapper(aliases=["token"])
+@command_wrapper(aliases=("token",))
 async def dashboard(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     userid = utils.to_user_id(user)
     for r in conn.rooms:
