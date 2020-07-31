@@ -18,9 +18,13 @@ async def colorcompare(
     if arg == "":
         return
 
-    cell = "<td>"
-    cell += '  <div style="background:{color};text-align:center"><br><br>{username}<br><br><br></div>'
-    cell += "</td>"
+    cell = (
+        "<td>"
+        '  <div style="background:{color};text-align:center">'
+        "    <br><br>{username}<br><br><br>"
+        "  </div>"
+        "</td>"
+    )
 
     html = '<table style="width:100%;table-layout:fixed">'
     html += "<tr>"

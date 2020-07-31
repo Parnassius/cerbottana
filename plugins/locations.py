@@ -199,7 +199,7 @@ async def location(conn: Connection, room: Optional[str], user: str, arg: str) -
                 )
                 + "</td>"
             )
-            if len(results[version]["slots"][slot]["conditions"]):
+            if results[version]["slots"][slot]["conditions"]:
                 html += "  <td>" + utils.html_escape(conditions) + "</td>"
             html += "</tr>"
 
@@ -410,7 +410,7 @@ async def encounter(conn: Connection, room: Optional[str], user: str, arg: str) 
                     )
                     + "</td>"
                 )
-                if len(results[version]["areas"][area]["slots"][slot]["conditions"]):
+                if results[version]["areas"][area]["slots"][slot]["conditions"]:
                     html += "  <td>" + utils.html_escape(conditions) + "</td>"
                 html += "</tr>"
 
