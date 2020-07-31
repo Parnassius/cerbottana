@@ -61,7 +61,7 @@ class Repeat:
             self.expire_dt = max(expire_dt, max_iters_dt) if expire_dt else max_iters_dt
 
         # is_new: True if the repeat has just been created with a chat command
-        self.is_new = False if initial_dt else True
+        self.is_new = not initial_dt
 
         self.offset = timedelta(0)  # waiting time before the first repeat
         if not self.is_new:

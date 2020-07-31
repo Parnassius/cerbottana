@@ -22,7 +22,7 @@ async def create_tour(
     autodq: float = 1.5,
     allow_scouting: bool = False,
     forcetimer: bool = False,
-    rules: List[str] = []
+    rules: Optional[List[str]] = None
 ) -> None:
     tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
     await conn.send_message(

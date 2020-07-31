@@ -34,7 +34,11 @@ async def altcauseiminsecure(
     await conn.send_reply(
         room,
         user,
-        "A, wi, we. La fortuna viene a me. Wi, we, wa. La fortuna viene qua. A, we, wi. La fortuna non va lì",
+        (
+            "A, wi, we. La fortuna viene a me. "
+            "Wi, we, wa. La fortuna viene qua. "
+            "A, we, wi. La fortuna non va lì"
+        ),
     )
 
 

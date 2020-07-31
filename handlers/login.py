@@ -17,10 +17,13 @@ async def challstr(conn: Connection, roomid: str, *args: str) -> None:
     if len(args) < 1:
         return
 
-    challstr = "|".join(args)
+    challstring = "|".join(args)
 
-    payload = "act=login&name={username}&pass={password}&challstr={challstr}".format(
-        username=conn.username, password=conn.password, challstr=challstr
+    payload = (
+        "act=login&"
+        f"name={conn.username}"
+        f"&pass={conn.password}"
+        f"&challstr={challstring}"
     ).encode()
 
     req = urllib.request.Request(

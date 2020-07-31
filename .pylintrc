@@ -1,9 +1,0 @@
-[BASIC]
-good-names=f,i,j,pm,al,db,rs,tz
-
-[FORMAT]
-indent-string='  '
-
-[MESSAGES CONTROL]
-disable=
-  missing-docstring

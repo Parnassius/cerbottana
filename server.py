@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import queue
 from datetime import date, datetime
 from functools import wraps
+from queue import SimpleQueue
 from typing import Callable, Optional
 
 from environs import Env
@@ -23,9 +23,9 @@ env.read_env()
 class Server(Flask):
     def __init__(self, *args, **kwargs) -> None:  # type:ignore
         super().__init__(*args, **kwargs)
-        self.queue: Optional[queue.SimpleQueue[str]] = None
+        self.queue: Optional[SimpleQueue[str]] = None
 
-    def serve_forever(self, queue: queue.SimpleQueue[str]) -> None:
+    def serve_forever(self, queue: SimpleQueue[str]) -> None:
         self.queue = queue
         serve(self, listen="*:{}".format(env("PORT")))
 
@@ -70,12 +70,12 @@ def before() -> None:
                     web_session[row.room] = row.rank
 
 
-def require_driver(func: Callable[[], str]) -> Callable[[], str]:
-    @wraps(func)
+def require_driver(f: Callable[[], str]) -> Callable[[], str]:
+    @wraps(f)
     def wrapper() -> str:
         if not utils.is_driver(web_session.get("_rank")):
             abort(401)
-        return func()
+        return f()
 
     return wrapper
 

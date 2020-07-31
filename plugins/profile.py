@@ -114,8 +114,8 @@ async def setprofile(
         + conn.username
         + ', .dashboard">.dashboard</button> per approvarla o rifiutarla'
     )
-    for room in conn.rooms:
-        await conn.send_rankhtmlbox("%", room, message)
+    for r in conn.rooms:
+        await conn.send_rankhtmlbox("%", r, message)
 
 
 @route_wrapper("/profile", methods=("GET", "POST"), require_driver=True)
