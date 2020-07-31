@@ -1,7 +1,7 @@
 black==19.10b0
 environs==8.0.0
 Flask==1.1.2
-isort==5.2.1
+isort==5.2.2
 lxml==4.5.2
 mypy==0.782
 python-dateutil==2.8.1
