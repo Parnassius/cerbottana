@@ -17,6 +17,6 @@ async def avatars(conn: Connection, room: Optional[str], user: str, arg: str) ->
     )
 
 
-@command_wrapper(aliases=["github"])
+@command_wrapper(aliases=("github",))
 async def git(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     await conn.send_reply(room, user, "https://github.com/Parnassius/cerbottana")

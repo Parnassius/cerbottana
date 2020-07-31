@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
-@command_wrapper(aliases=["profilo"], helpstr="Visualizza il tuo profilo.")
+@command_wrapper(aliases=("profilo",), helpstr="Visualizza il tuo profilo.")
 async def profile(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     # pylint: disable=too-many-locals
     if arg.strip() == "":
@@ -88,7 +88,7 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
 
 
 @command_wrapper(
-    aliases=["setprofilo"], helpstr="Imposta una tua frase personalizzata."
+    aliases=("setprofilo",), helpstr="Imposta una tua frase personalizzata."
 )
 async def setprofile(
     conn: Connection, room: Optional[str], user: str, arg: str

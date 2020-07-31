@@ -8,8 +8,8 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
-@command_wrapper(is_unlisted=True)
-async def help(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+@command_wrapper(aliases=("help",), is_unlisted=True)
+async def commands(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if arg in conn.commands and conn.commands[arg].helpstr:
         # asking for a specific command
         message = "<b>{}</b> {}".format(arg, conn.commands[arg].helpstr)

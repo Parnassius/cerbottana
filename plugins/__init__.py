@@ -38,13 +38,13 @@ class Command:
     def __init__(
         self,
         func: CommandFunc,
-        aliases: List[str] = [],
+        aliases: Tuple[str, ...] = (),
         helpstr: str = "",
         is_unlisted: bool = False,
     ) -> None:
         self.name = func.__name__
         self.callback = func
-        self.aliases = [self.name] + aliases  # needs to be a new binding
+        self.aliases = (self.name,) + aliases
         self.helpstr = helpstr
         self.is_unlisted = is_unlisted
         self._instances[func.__name__] = self
@@ -82,7 +82,7 @@ def scope_checker(func: CommandFunc) -> CommandFunc:
 
 
 def command_wrapper(
-    aliases: List[str] = [], helpstr: str = "", is_unlisted: bool = False
+    aliases: Tuple[str, ...] = (), helpstr: str = "", is_unlisted: bool = False
 ) -> Callable[[CommandFunc], Command]:
     def cls_wrapper(func: CommandFunc) -> Command:
         func = scope_checker(func)  # manual decorator binding

@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
-@command_wrapper(aliases=["8ball"], helpstr="Chiedi qualsiasi cosa!")
+@command_wrapper(aliases=("8ball",), helpstr="Chiedi qualsiasi cosa!")
 async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     db = Database.open()
 

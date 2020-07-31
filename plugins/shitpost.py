@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 @command_wrapper(
-    aliases=["meme", "memes", "mims", "say"],
+    aliases=("meme", "memes", "mims", "say"),
     helpstr="FOR THE MIMMMSSS",
     is_unlisted=True,
 )

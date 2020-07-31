@@ -13,8 +13,8 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
-@command_wrapper(aliases=["locations"])
-async def location(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+@command_wrapper(aliases=("location",))
+async def locations(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     arg = utils.to_user_id(utils.remove_accents(arg.lower()))
 
     db = Database.open("veekun")
@@ -213,8 +213,10 @@ async def location(conn: Connection, room: Optional[str], user: str, arg: str) -
     await conn.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
 
 
-@command_wrapper(aliases=["encounters"])
-async def encounter(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+@command_wrapper(aliases=("encounter",))
+async def encounters(
+    conn: Connection, room: Optional[str], user: str, arg: str
+) -> None:
     arg = utils.to_user_id(utils.remove_accents(arg.lower()))
 
     db = Database.open("veekun")
