@@ -22,7 +22,7 @@ async def create_tour(
     autodq: float = 1.5,
     allow_scouting: bool = False,
     forcetimer: bool = False,
-    rules: Optional[List[str]] = None
+    rules: Optional[List[str]] = None,
 ) -> None:
     tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
     await conn.send_message(
@@ -37,15 +37,16 @@ async def create_tour(
         False,
     )
     if autostart is not None:
-        await conn.send_message(room, "/tour autostart {}".format(autostart), False)
+        await conn.send_message(room, f"/tour autostart {autostart}", False)
     if autodq is not None:
-        await conn.send_message(room, "/tour autodq {}".format(autodq), False)
+        await conn.send_message(room, f"/tour autodq {autodq}", False)
     if not allow_scouting:
         await conn.send_message(room, "/tour scouting off", False)
     if forcetimer:
         await conn.send_message(room, "/tour forcetimer on", False)
     if rules:
-        await conn.send_message(room, "/tour rules {}".format(",".join(rules)), False)
+        rules_str = ",".join(rules)
+        await conn.send_message(room, f"/tour rules {rules_str}", False)
 
 
 @command_wrapper(

@@ -33,7 +33,7 @@ async def add_user(
         session.add(d.Users(userid=userid, username=username))
 
     if not skip_avatar_check or rank != " ":
-        await conn.send_message("", "/cmd userdetails {}".format(username), False)
+        await conn.send_message("", f"/cmd userdetails {username}", False)
 
 
 async def remove_user(conn: Connection, roomid: str, user: str) -> None:

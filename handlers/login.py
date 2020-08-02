@@ -36,9 +36,7 @@ async def challstr(conn: Connection, roomid: str, *args: str) -> None:
     assertion = json.loads(resp.read().decode("utf-8")[1:])["assertion"]
 
     if assertion:
-        await conn.send_message(
-            "", "/trn {},0,{}".format(conn.username, assertion), False
-        )
+        await conn.send_message("", f"/trn {conn.username},0,{assertion}", False)
 
 
 @handler_wrapper(["updateuser"])
@@ -56,13 +54,13 @@ async def updateuser(conn: Connection, roomid: str, *args: str) -> None:
         return
 
     if conn.avatar and avatar != conn.avatar:
-        await conn.send_message("", "/avatar {}".format(conn.avatar), False)
+        await conn.send_message("", f"/avatar {conn.avatar}", False)
 
     if conn.statustext:
-        await conn.send_message("", "/status {}".format(conn.statustext), False)
+        await conn.send_message("", f"/status {conn.statustext}", False)
 
     for public_room in conn.rooms:
-        await conn.send_message("", "/join {}".format(public_room), False)
+        await conn.send_message("", f"/join {public_room}", False)
 
     for private_room in conn.private_rooms:
-        await conn.send_message("", "/join {}".format(private_room), False)
+        await conn.send_message("", f"/join {private_room}", False)

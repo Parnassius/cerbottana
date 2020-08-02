@@ -46,23 +46,22 @@ async def altcauseiminsecure(
 async def ciarizardmille(
     conn: Connection, room: Optional[str], user: str, arg: str
 ) -> None:
-    text = "beh comunque ormai lo avete capito che sono un alt di {}".format(
-        random.choice(
-            [
-                "duck",
-                "test2017",
-                "parnassius",
-                "parna",
-                "inflikted",
-                "infli",
-                "trev",
-                "silver97",
-                "silver",
-                "usy",
-                "useless trainer",
-            ]
-        )
+    user = random.choice(
+        [
+            "duck",
+            "test2017",
+            "parnassius",
+            "parna",
+            "inflikted",
+            "infli",
+            "trev",
+            "silver97",
+            "silver",
+            "usy",
+            "useless trainer",
+        ]
     )
+    text = f"beh comunque ormai lo avete capito che sono un alt di {user}"
     await conn.send_reply(room, user, text)
 
 
@@ -108,7 +107,7 @@ async def inflikted(conn: Connection, room: Optional[str], user: str, arg: str) 
     text = ""
     for i in shuffled:
         text += letters[i]
-    await conn.send_reply(room, user, "ciao {}".format(text))
+    await conn.send_reply(room, user, f"ciao {text}")
 
 
 @command_wrapper()
@@ -178,7 +177,7 @@ async def roiler(conn: Connection, room: Optional[str], user: str, arg: str) -> 
 @command_wrapper(aliases=("silver",))
 async def silver97(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     tier = random.choice(conn.tiers)["name"]
-    await conn.send_reply(room, user, "qualcuno mi passa un team {}".format(tier))
+    await conn.send_reply(room, user, f"qualcuno mi passa un team {tier}")
 
 
 @command_wrapper()

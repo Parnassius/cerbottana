@@ -30,6 +30,4 @@ async def dashboard(conn: Connection, room: Optional[str], user: str, arg: str) 
 
     token_id = utils.create_token(rooms, 1, admin_rank)
 
-    await conn.send_pm(
-        user, "{url}?token={token}".format(url=conn.domain, token=token_id)
-    )
+    await conn.send_pm(user, f"{conn.domain}?token={token_id}")

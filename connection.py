@@ -89,7 +89,7 @@ class Connection:
                         print(data)
 
                     message: str = await websocket.recv()
-                    print("<< {}".format(message))
+                    print(f"<< {message}")
                     asyncio.ensure_future(self.parse_message(message))
         except:  # lgtm [py/catch-base-exception]
             pass
@@ -141,11 +141,8 @@ class Connection:
                 await self.send_message(roomid, "/modchat +", False)
 
     async def send_rankhtmlbox(self, rank: str, room: str, message: str) -> None:
-        await self.send_message(
-            room,
-            "/addrankhtmlbox {}, {}".format(rank, message.replace("\n", "<br>")),
-            False,
-        )
+        message = message.replace("\n", "<br>")
+        await self.send_message(room, f"/addrankhtmlbox {rank}, {message}", False)
 
     async def send_htmlbox(
         self,
@@ -156,13 +153,11 @@ class Connection:
     ) -> None:
         message = message.replace("\n", "<br>")
         if room is not None:
-            await self.send_message(room, "/addhtmlbox {}".format(message), False)
+            await self.send_message(room, f"/addhtmlbox {message}", False)
         elif user is not None:
             room = utils.can_pminfobox_to(self, utils.to_user_id(user))
             if room is not None:
-                await self.send_message(
-                    room, "/pminfobox {}, {}".format(user, message), False
-                )
+                await self.send_message(room, f"/pminfobox {user}, {message}", False)
             else:
                 if simple_message == "":
                     simple_message = "Questo comando è disponibile in PM "
@@ -183,15 +178,15 @@ class Connection:
                 message = "/" + message
             elif message[0] == "!":
                 message = " " + message
-        await self.send("{}|{}".format(room, message))
+        await self.send(f"{room}|{message}")
 
     async def send_pm(self, user: str, message: str, escape: bool = True) -> None:
         if escape and message[0] == "/":
             message = "/" + message
-        await self.send("|/w {}, {}".format(utils.to_user_id(user), message))
+        await self.send(f"|/w {utils.to_user_id(user)}, {message}")
 
     async def send(self, message: str) -> None:
-        print(">> {}".format(message))
+        print(f">> {message}")
         now = time()
         if now - self.lastmessage < 0.1:
             await asyncio.sleep(0.1)

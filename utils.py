@@ -77,7 +77,10 @@ def remove_accents(text: str) -> str:
 
 
 def date_format(text: str) -> str:
-    return "{dd}/{mm}/{yyyy}".format(dd=text[-2:], mm=text[5:7], yyyy=text[:4])
+    dd = text[-2:]
+    mm = text[5:7]
+    yyyy = text[:4]
+    return f"{dd}/{mm}/{yyyy}"
 
 
 def html_escape(text: Optional[str]) -> str:
@@ -172,7 +175,7 @@ def username_color(name: str) -> str:
 
     l += hlmod
 
-    return "hsl({h},{s}%,{l}%)".format(h=h, s=s, l=l)
+    return f"hsl({h},{s}%,{l}%)"
 
 
 AVATAR_IDS: Dict[str, str] = {
