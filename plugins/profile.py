@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 @command_wrapper(aliases=("profilo",), helpstr="Visualizza il tuo profilo.")
 async def profile(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    # pylint: disable=too-many-locals
     if arg.strip() == "":
         arg = user
 

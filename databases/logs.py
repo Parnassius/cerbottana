@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods
+
 from sqlalchemy import Table
 from sqlalchemy.ext.declarative import declarative_base
 
