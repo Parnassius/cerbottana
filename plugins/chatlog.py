@@ -127,13 +127,15 @@ def linecounts_data(room: str) -> str:
     if not utils.is_driver(web_session.get(room)):
         abort(401)
 
-    params = [room]
+    params = {"roomid": room}
 
     sql = "SELECT date"
     if request.args.get("users"):
-        users = [utils.to_user_id(i) for i in request.args["users"].split(",")]
-        sql += " || ',' || SUM(CASE WHEN userid = ? THEN 1 ELSE 0 END) " * len(users)
-        params = users + params
+        n = 0
+        for user in request.args["users"].split(","):
+            n += 1
+            sql += f" || ',' || SUM(CASE WHEN userid = :userid_{n} THEN 1 ELSE 0 END) "
+            params[f'userid_{n}'] = utils.to_user_id(user)
     else:
         sql += " || ',' || COUNT(*) "
         sql += " || ',' || SUM(CASE WHEN userrank = ' ' THEN 1 ELSE 0 END) "
@@ -146,9 +148,11 @@ def linecounts_data(room: str) -> str:
         sql += " || ',' || SUM(CASE WHEN userrank IN('&', '~') THEN 1 ELSE 0 END) "
         sql += " || ',' || SUM(CASE WHEN userrank = '#' THEN 1 ELSE 0 END) "
     sql += " AS data "
-    sql += " FROM logs WHERE roomid = ? GROUP BY date"
-    data = g.db.todo.execute(sql, params)
+    sql += " FROM logs WHERE roomid = :roomid GROUP BY date"
 
-    result = "\n".join([row["data"] for row in data])
+    db = Database.open('logs')
 
-    return result
+    with db.get_session() as session:
+        data = session.execute(sql, params)
+
+        return "\n".join([row["data"] for row in data])
