@@ -5,7 +5,7 @@ import math
 import os
 import re
 from html import escape
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional, Tuple
 
 from sqlalchemy.sql import func
 
@@ -116,50 +116,15 @@ def can_pminfobox_to(conn: Connection, user: str) -> Optional[str]:
 
 
 def username_color(name: str) -> str:
-    # pylint: disable=too-many-locals,invalid-name
     name = CUSTOM_COLORS.get(name, name)
     md5 = hashlib.md5(name.encode("utf-8")).hexdigest()
 
-    h: float = int(md5[4:8], 16) % 360
-    s: float = int(md5[:4], 16) % 50 + 40
+    h = int(md5[4:8], 16) % 360
+    s = int(md5[:4], 16) % 50 + 40
     l: float = math.floor(int(md5[8:12], 16) % 20 + 30)
 
-    c: float = (100 - abs(2 * l - 100)) * s / 100 / 100
-    x: float = c * (1 - abs((h / 60) % 2 - 1))
-    m: float = l / 100 - c / 2
-
-    r1: float
-    g1: float
-    b1: float
-    if math.floor(h / 60) == 1:
-        r1 = x
-        g1 = c
-        b1 = 0
-    elif math.floor(h / 60) == 2:
-        r1 = 0
-        g1 = c
-        b1 = x
-    elif math.floor(h / 60) == 3:
-        r1 = 0
-        g1 = x
-        b1 = c
-    elif math.floor(h / 60) == 4:
-        r1 = x
-        g1 = 0
-        b1 = c
-    elif math.floor(h / 60) == 5:
-        r1 = c
-        g1 = 0
-        b1 = x
-    else:
-        r1 = c
-        g1 = x
-        b1 = 0
-
-    r = r1 + m
-    g = g1 + m
-    b = b1 + m
-    lum = r ** 3 * 0.2126 + g ** 3 * 0.7152 + b ** 3 * 0.0722
+    r, g, b = hsl_to_rgb(h, s, l)
+    lum = r * r * r * 0.2126 + g * g * g * 0.7152 + b * b * b * 0.0722
 
     hlmod = (lum - 0.2) * -150
     if hlmod > 18:
@@ -175,7 +140,41 @@ def username_color(name: str) -> str:
 
     l += hlmod
 
-    return f"hsl({h},{s}%,{l}%)"
+    r, g, b = hsl_to_rgb(h, s, l)
+
+    r1 = format(round(r * 255), "x").zfill(2)
+    g1 = format(round(g * 255), "x").zfill(2)
+    b1 = format(round(b * 255), "x").zfill(2)
+
+    return f"#{r1}{g1}{b1}"
+
+
+def hsl_to_rgb(h: float, s: float, l: float) -> Tuple[float, float, float]:
+    c = (100 - abs(2 * l - 100)) * s / 100 / 100
+    x = c * (1 - abs((h / 60) % 2 - 1))
+    m = l / 100 - c / 2
+
+    r1: float
+    g1: float
+    b1: float
+    if math.floor(h / 60) == 1:
+        r1, g1, b1 = x, c, 0
+    elif math.floor(h / 60) == 2:
+        r1, g1, b1 = 0, c, x
+    elif math.floor(h / 60) == 3:
+        r1, g1, b1 = 0, x, c
+    elif math.floor(h / 60) == 4:
+        r1, g1, b1 = x, 0, c
+    elif math.floor(h / 60) == 5:
+        r1, g1, b1 = c, 0, x
+    else:
+        r1, g1, b1 = c, x, 0
+
+    r = r1 + m
+    g = g1 + m
+    b = b1 + m
+
+    return (r, g, b)
 
 
 AVATAR_IDS: Dict[str, str] = {
