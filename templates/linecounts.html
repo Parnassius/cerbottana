@@ -71,6 +71,7 @@
         );
 
         document.getElementById('search').addEventListener('click', function() {
+            document.body.classList.add('loading-fullscreen');
             var users = document.getElementById('users').value;
             var labels;
             if (users !== '') {
@@ -78,10 +79,22 @@
             } else {
                 labels = ["Data", "Total", "Regular", "Auth", "Staff", "Voice", "Driver", "Moderator", "Bot", "Leader/Administrator", "Owner"];
             }
-            g.updateOptions({
-                file: '/linecounts/{{ room }}/data?users=' + encodeURIComponent(users),
-                labels: labels
-            });
+
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    if (req.status === 200) {
+                        g.updateOptions({
+                            file: req.responseText,
+                            labels: labels
+                        });
+                        document.body.classList.remove('loading-fullscreen');
+                    }
+                }
+            };
+
+            req.open("GET", '/linecounts/{{ room }}/data?users=' + encodeURIComponent(users), true);
+            req.send(null);
         });
 
         document.getElementsByName('rollingaverage').forEach(function(el) {

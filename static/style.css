@@ -17,6 +17,14 @@
     }
 }
 
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 * {
     box-sizing: border-box;
@@ -26,6 +34,29 @@ body {
     background: var(--background);
     color: var(--color);
 }
+body.loading-fullscreen::before,
+body.loading-fullscreen::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+body.loading-fullscreen::before {
+    background: var(--background);
+    opacity: .5;
+}
+body.loading-fullscreen::after {
+    width: 2rem;
+    height: 2rem;
+    margin: auto;
+    border: 5px solid var(--color);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate 1.5s linear infinite;
+}
+
 .container {
     width: 100%;
     max-width: 800px;
