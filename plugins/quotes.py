@@ -110,7 +110,7 @@ async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) 
     db = Database.open()
     with db.get_session() as session:
         quotes_n = (
-            session.query(func.count(d.Quotes)).filter_by(roomid=quoteroom).first()
+            session.query(func.count(d.Quotes.id)).filter_by(roomid=quoteroom).first()
         )
 
     if not quotes_n:
@@ -136,4 +136,4 @@ def quotes(room: str) -> str:
         if not rs:
             abort(401)  # no quotes for this room
 
-    return render_template("quotes.html", rs=rs, room=room)
+        return render_template("quotes.html", rs=rs, room=room)
