@@ -135,7 +135,7 @@ def linecounts_data(room: str) -> str:
         for user in request.args["users"].split(","):
             n += 1
             sql += f" || ',' || SUM(CASE WHEN userid = :userid_{n} THEN 1 ELSE 0 END) "
-            params[f'userid_{n}'] = utils.to_user_id(user)
+            params[f"userid_{n}"] = utils.to_user_id(user)
     else:
         sql += " || ',' || COUNT(*) "
         sql += " || ',' || SUM(CASE WHEN userrank = ' ' THEN 1 ELSE 0 END) "
@@ -150,7 +150,7 @@ def linecounts_data(room: str) -> str:
     sql += " AS data "
     sql += " FROM logs WHERE roomid = :roomid GROUP BY date"
 
-    db = Database.open('logs')
+    db = Database.open("logs")
 
     with db.get_session() as session:
         data = session.execute(sql, params)
