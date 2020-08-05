@@ -141,7 +141,6 @@ class Connection:
                 await self.send_message(roomid, "/modchat +", False)
 
     async def send_rankhtmlbox(self, rank: str, room: str, message: str) -> None:
-        message = message.replace("\n", "<br>")
         await self.send_message(room, f"/addrankhtmlbox {rank}, {message}", False)
 
     async def send_htmlbox(
@@ -151,7 +150,6 @@ class Connection:
         message: str,
         simple_message: str = "",
     ) -> None:
-        message = message.replace("\n", "<br>")
         if room is not None:
             await self.send_message(room, f"/addhtmlbox {message}", False)
         elif user is not None:

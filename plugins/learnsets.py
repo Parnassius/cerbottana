@@ -108,23 +108,7 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
 
                 results[method.id]["moves"].append(data)
 
-        html = ""
-
         for method_id in sorted(results.keys()):
-            html += (
-                "<details><summary><b><big>"
-                + utils.html_escape(results[method_id]["name"])
-                + "</big></b></summary>"
-            )
-            html += '<table style="margin: 5px 0"><tbody>'
-            html += "<tr>"
-            html += "  <th>Move</th>"
-            if method_id == 1:  # level-up
-                html += "  <th>Level</th>"
-            elif method_id == 4:  # machine
-                html += "  <th>Machine</th>"
-            html += "</tr>"
-
             if method_id == 1:  # level-up
                 results[method_id]["moves"].sort(key=lambda x: (x["level"], x["name"]))
             elif method_id == 4:  # machine
@@ -134,21 +118,9 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
             else:
                 results[method_id]["moves"].sort(key=lambda x: x["name"])
 
-            for move in results[method_id]["moves"]:
-                html += "<tr>"
-                html += "  <td>" + utils.html_escape(move["name"]) + "</td>"
-                if method_id == 1:  # level-up
-                    html += (
-                        '  <td style="text-align: right">'
-                        + utils.html_escape(str(move["level"]))
-                        + "</td>"
-                    )
-                elif method_id == 4:  # machine
-                    html += "  <td>" + utils.html_escape(move["machine"]) + "</td>"
-                html += "</tr>"
-
-            html += "</tbody></table>"
-            html += "</details>"
+        html = utils.render_template(
+            "learnsets.html", methods=sorted(results.keys()), results=results
+        )
 
         if not html:
             await conn.send_reply(room, user, "Nessun dato")

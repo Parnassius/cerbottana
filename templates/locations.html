@@ -1,0 +1,39 @@
+{% for version_id in versions %}
+    <details>
+        <summary>
+            <b><big>{{ results[version_id]["name"] }}</big></b>
+        </summary>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Location</th>
+                    <th>Method</th>
+                    <th>Level</th>
+                    <th colspan="2">Rarity</th>
+                </tr>
+                {% for slot in results[version_id]["slots"] %}
+                    <tr>
+                        <td>{{ results[version_id]["slots"][slot]["location"] }}</td>
+                        <td>{{ results[version_id]["slots"][slot]["method"] }}</td>
+                        <td>
+                            L{{ results[version_id]["slots"][slot]["min_level"] }}
+                            {%- if results[version_id]["slots"][slot]["min_level"] < results[version_id]["slots"][slot]["max_level"] -%}
+                                -{{ results[version_id]["slots"][slot]["max_level"] }}
+                            {% endif %}
+                        </td>
+                        <td{% if not results[version_id]["slots"][slot]["conditions"] %} colspan="2"{% endif %}>
+                            {{ results[version_id]["slots"][slot]["rarity"] }}%
+                        </td>
+                        {% if results[version_id]["slots"][slot]["conditions"] %}
+                            <td>
+                                {% for i in results[version_id]["slots"][slot]["conditions"].values() %}
+                                    +{{ i["rarity"] }}% {{ i["description"] }}<br>
+                                {% endfor %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </details>
+{% endfor %}

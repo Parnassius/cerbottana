@@ -70,7 +70,7 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
                 print(i)
                 badges += badge.format(image=i.image, title=utils.html_escape(i.label))
 
-            description = utils.html_escape(userdata.description)
+            description = utils.html_escape(userdata.description).replace("\n", "<br>")
 
             await conn.send_htmlbox(
                 room,

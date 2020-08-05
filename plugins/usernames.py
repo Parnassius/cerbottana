@@ -200,7 +200,7 @@ async def thequasar(conn: Connection, room: Optional[str], user: str, arg: str) 
     await conn.send_reply(room, user, "Basta con le pupazzate")
 
 
-@command_wrapper(aliases=("3v", "vvv",))
+@command_wrapper(aliases=("3v", "vvv"))
 async def trev(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     await conn.send_reply(room, user, "gioco di merda")
 

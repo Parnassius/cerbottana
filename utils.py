@@ -7,6 +7,8 @@ import re
 from html import escape
 from typing import TYPE_CHECKING, Dict, Optional, Tuple
 
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+
 from sqlalchemy.sql import func
 
 import databases.database as d
@@ -175,6 +177,17 @@ def hsl_to_rgb(h: float, s: float, l: float) -> Tuple[float, float, float]:
     b = b1 + m
 
     return (r, g, b)
+
+
+def render_template(template_name, **template_vars):
+    env = Environment(
+        loader=FileSystemLoader("templates"),
+        autoescape=select_autoescape(["html", "xml"]),
+        trim_blocks=True,
+        lstrip_blocks=True,
+    )
+    template = env.get_template(template_name)
+    return template.render(**template_vars)
 
 
 AVATAR_IDS: Dict[str, str] = {

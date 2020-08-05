@@ -143,68 +143,14 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
                 else:
                     results[version.id]["slots"][key]["rarity"] += encounter_slot.rarity
 
-    html = ""
+    for version_id in sorted(results.keys()):
+        results[version_id]["slots"] = {
+            key: value for key, value in sorted(results[version_id]["slots"].items())
+        }
 
-    for version in sorted(results.keys()):
-        html += (
-            "<details><summary><b><big>"
-            + utils.html_escape(results[version]["name"])
-            + "</big></b></summary>"
-        )
-        html += "<table><tbody>"
-        html += "<tr>"
-        html += "  <th>Location</th>"
-        html += "  <th>Method</th>"
-        html += "  <th>Level</th>"
-        html += '  <th colspan="2">Rarity</th>'
-        html += "</tr>"
-
-        for slot in sorted(results[version]["slots"].keys()):
-            levels = "L" + str(results[version]["slots"][slot]["min_level"])
-            if (
-                results[version]["slots"][slot]["min_level"]
-                < results[version]["slots"][slot]["max_level"]
-            ):
-                levels += "-" + str(results[version]["slots"][slot]["max_level"])
-
-            conditions = "\n".join(
-                [
-                    "+" + str(i["rarity"]) + "% " + i["description"]
-                    for i in results[version]["slots"][slot]["conditions"].values()
-                ]
-            )
-
-            html += "<tr>"
-            html += (
-                "  <td>"
-                + utils.html_escape(results[version]["slots"][slot]["location"])
-                + "</td>"
-            )
-            html += (
-                "  <td>"
-                + utils.html_escape(results[version]["slots"][slot]["method"])
-                + "</td>"
-            )
-            html += "  <td>" + utils.html_escape(levels) + "</td>"
-            html += (
-                "  <td"
-                + (
-                    ' colspan="2"'
-                    if not results[version]["slots"][slot]["conditions"]
-                    else ""
-                )
-                + ">"
-                + utils.html_escape(
-                    str(results[version]["slots"][slot]["rarity"]) + "%"
-                )
-                + "</td>"
-            )
-            if results[version]["slots"][slot]["conditions"]:
-                html += "  <td>" + utils.html_escape(conditions) + "</td>"
-            html += "</tr>"
-
-        html += "</tbody></table>"
-        html += "</details>"
+    html = utils.render_template(
+        "locations.html", versions=sorted(results.keys()), results=results
+    )
 
     if not html:
         await conn.send_reply(room, user, "Nessun dato")
@@ -337,87 +283,21 @@ async def encounters(
                         "rarity"
                     ] += encounter_slot.rarity
 
-    html = ""
-
-    for version in sorted(results.keys()):
-        html += (
-            "<details><summary><b><big>"
-            + utils.html_escape(results[version]["name"])
-            + "</big></b></summary>"
-        )
-        html += "<table><tbody>"
-
-        for area in sorted(results[version]["areas"].keys()):
-            html += "<tr>"
-            html += (
-                "  <th>"
-                + utils.html_escape(results[version]["areas"][area]["name"])
-                + "</th>"
-            )
-            html += "  <th>Method</th>"
-            html += "  <th>Level</th>"
-            html += '  <th colspan="2">Rarity</th>'
-            html += "</tr>"
-
-            for slot in sorted(results[version]["areas"][area]["slots"].keys()):
-                levels = "L" + str(
-                    results[version]["areas"][area]["slots"][slot]["min_level"]
+    for version_id in sorted(results.keys()):
+        results[version_id]["areas"] = {
+            key: value for key, value in sorted(results[version_id]["areas"].items())
+        }
+        for area in results[version_id]["areas"].keys():
+            results[version_id]["areas"][area]["slots"] = {
+                key: value
+                for key, value in sorted(
+                    results[version_id]["areas"][area]["slots"].items()
                 )
-                if (
-                    results[version]["areas"][area]["slots"][slot]["min_level"]
-                    < results[version]["areas"][area]["slots"][slot]["max_level"]
-                ):
-                    levels += "-" + str(
-                        results[version]["areas"][area]["slots"][slot]["max_level"]
-                    )
+            }
 
-                conditions = "\n".join(
-                    [
-                        "+" + str(i["rarity"]) + "% " + i["description"]
-                        for i in results[version]["areas"][area]["slots"][slot][
-                            "conditions"
-                        ].values()
-                    ]
-                )
-
-                html += "<tr>"
-                html += (
-                    "  <td>"
-                    + utils.html_escape(
-                        results[version]["areas"][area]["slots"][slot]["pokemon"]
-                    )
-                    + "</td>"
-                )
-                html += (
-                    "  <td>"
-                    + utils.html_escape(
-                        results[version]["areas"][area]["slots"][slot]["method"]
-                    )
-                    + "</td>"
-                )
-                html += "  <td>" + utils.html_escape(levels) + "</td>"
-                html += (
-                    "  <td"
-                    + (
-                        ' colspan="2"'
-                        if not results[version]["areas"][area]["slots"][slot][
-                            "conditions"
-                        ]
-                        else ""
-                    )
-                    + ">"
-                    + utils.html_escape(
-                        str(results[version]["areas"][area]["slots"][slot]["rarity"])
-                        + "%"
-                    )
-                    + "</td>"
-                )
-                if results[version]["areas"][area]["slots"][slot]["conditions"]:
-                    html += "  <td>" + utils.html_escape(conditions) + "</td>"
-                html += "</tr>"
-
-        html += "</tbody></table>"
-        html += "</details>"
+    html = utils.render_template(
+        "encounters.html", versions=sorted(results.keys()), results=results
+    )
 
     if not html:
         await conn.send_reply(room, user, "Nessun dato")
