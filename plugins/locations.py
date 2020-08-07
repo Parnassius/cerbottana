@@ -144,9 +144,9 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
                     results[version.id]["slots"][key]["rarity"] += encounter_slot.rarity
 
     for version_id in sorted(results.keys()):
-        results[version_id]["slots"] = {
-            key: value for key, value in sorted(results[version_id]["slots"].items())
-        }
+        results[version_id]["slots"] = dict(
+            sorted(results[version_id]["slots"].items())
+        )
 
     html = utils.render_template(
         "locations.html", versions=sorted(results.keys()), results=results
@@ -284,16 +284,13 @@ async def encounters(
                     ] += encounter_slot.rarity
 
     for version_id in sorted(results.keys()):
-        results[version_id]["areas"] = {
-            key: value for key, value in sorted(results[version_id]["areas"].items())
-        }
+        results[version_id]["areas"] = dict(
+            sorted(results[version_id]["areas"].items())
+        )
         for area in results[version_id]["areas"].keys():
-            results[version_id]["areas"][area]["slots"] = {
-                key: value
-                for key, value in sorted(
-                    results[version_id]["areas"][area]["slots"].items()
-                )
-            }
+            results[version_id]["areas"][area]["slots"] = dict(
+                sorted(results[version_id]["areas"][area]["slots"].items())
+            )
 
     html = utils.render_template(
         "encounters.html", versions=sorted(results.keys()), results=results
