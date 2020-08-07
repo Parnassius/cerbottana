@@ -4,7 +4,7 @@ import random
 from typing import TYPE_CHECKING, Optional
 
 from environs import Env
-from flask import abort, g, render_template
+from flask import abort, render_template
 from flask import session as web_session
 from sqlalchemy.sql import func
 
@@ -131,7 +131,9 @@ def quotes(room: str) -> str:
         if not web_session.get(room):
             abort(401)
 
-    with g.db.get_session() as session:
+    db = Database.open()
+
+    with db.get_session() as session:
         rs = session.query(d.Quotes).filter_by(roomid=room).all()
         if not rs:
             abort(401)  # no quotes for this room

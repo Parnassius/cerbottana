@@ -6,7 +6,7 @@ from queue import SimpleQueue
 from typing import Callable, Optional
 
 from environs import Env
-from flask import Flask, abort, current_app, g, render_template, request
+from flask import Flask, abort, current_app, render_template, request
 from flask import session as web_session
 from sqlalchemy.sql import func
 from waitress import serve
@@ -49,20 +49,17 @@ def format_datetime(value: str) -> str:
 
 @SERVER.before_request
 def before() -> None:
-    g.db = Database.open()
-
     token = request.args.get("token")
 
     if token is not None:
-        with g.db.get_session() as session:
+        db = Database.open()
+        with db.get_session() as session:
             data = (
                 session.query(d.Tokens)
                 .filter_by(token=token)
                 .filter(func.julianday() - func.julianday(d.Tokens.expiry) < 0)
                 .all()
             )
-            if not data:  # invalid token
-                abort(401)
             for row in data:
                 if row.room is None:
                     web_session["_rank"] = row.rank
@@ -86,7 +83,9 @@ def dashboard() -> str:
 
     current_app.queue.put("aaa", False)
 
-    with g.db.get_session() as session:
+    db = Database.open()
+
+    with db.get_session() as session:
         if request.method == "POST":
 
             if "approva" in request.form:

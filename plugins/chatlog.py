@@ -4,7 +4,7 @@ import asyncio
 import datetime
 from typing import TYPE_CHECKING, Optional
 
-from flask import abort, g, render_template, request
+from flask import abort, render_template, request
 from flask import session as web_session
 from lxml.html import fromstring
 from sqlalchemy.sql import and_, func

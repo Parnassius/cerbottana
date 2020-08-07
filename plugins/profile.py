@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
-from flask import g, render_template, request
+from flask import render_template, request
 
 import databases.database as d
 import utils
@@ -119,8 +119,9 @@ async def setprofile(
 
 @route_wrapper("/profile", methods=("GET", "POST"), require_driver=True)
 def profile_route() -> str:
+    db = Database.open()
 
-    with g.db.get_session() as session:
+    with db.get_session() as session:
         userid = utils.to_user_id(request.args.get("userid", ""))
 
         if request.method == "POST":

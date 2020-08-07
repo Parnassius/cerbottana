@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
 from dateutil.parser import parse
 from environs import Env
-from flask import abort, g, render_template
+from flask import abort, render_template
 from flask import session as web_session
 from sqlalchemy.sql import func
 
@@ -298,7 +298,9 @@ def repeats(room: str) -> str:
     if not utils.is_driver(web_session.get(room)):
         abort(401)
 
-    with g.db.get_session() as session:
+    db = Database.open()
+
+    with db.get_session() as session:
         rs = (
             session.query(d.Repeats)
             .filter_by(roomid=room)

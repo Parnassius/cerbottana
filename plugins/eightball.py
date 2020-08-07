@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING, Optional
 
-from flask import g, render_template, request
+from flask import render_template, request
 
 import databases.database as d
 from database import Database
@@ -29,8 +29,9 @@ async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) 
 
 @route_wrapper("/eightball", methods=("GET", "POST"), require_driver=True)
 def eightball_route() -> str:
+    db = Database.open()
 
-    with g.db.get_session() as session:
+    with db.get_session() as session:
         if request.method == "POST":
 
             if "answers" in request.form:
