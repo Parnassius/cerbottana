@@ -26,29 +26,12 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
         userdata = session.query(d.Users).filter_by(userid=arg).first()
 
         if userdata:
-            user_badges = (
+            badges = (
                 session.query(d.Badges)
                 .filter_by(userid=userdata.userid)
                 .order_by(d.Badges.id)
                 .all()
             )
-
-            html = "<div>"
-            html += (
-                '  <div style="display: table-cell; width: 80px; vertical-align: top">'
-            )
-            html += '    <img src="https://play.pokemonshowdown.com/sprites/{avatar_dir}/{avatar_name}.png"'
-            html += '    width="80" height="80">'
-            html += "  </div>"
-            html += (
-                '  <div style="display: table-cell; width: 100%; vertical-align: top">'
-            )
-            html += '    <b style="color: {name_color}">{username}</b><br>{badges}'
-            if userdata.description and userdata.description.strip() != "":
-                html += '  <hr style="margin: 4px 0">'
-                html += '  <div style="text-align: justify">{description}</div>'
-            html += "  </div>"
-            html += "</div>"
 
             if userdata.avatar[0] == "#":
                 avatar_dir = "trainers-custom"
@@ -61,29 +44,17 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
 
             name_color = utils.username_color(utils.to_user_id(username))
 
-            badges = ""
-            badge = '<img src="{image}" width="13" height="13" title="{title}"'
-            badge += (
-                ' style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">'
+            html = utils.render_template(
+                "commands/profile.html",
+                avatar_dir=avatar_dir,
+                avatar_name=avatar_name,
+                name_color=name_color,
+                username=username,
+                badges=badges,
+                description=userdata.description,
             )
-            for i in user_badges:
-                print(i)
-                badges += badge.format(image=i.image, title=utils.html_escape(i.label))
 
-            description = utils.html_escape(userdata.description).replace("\n", "<br>")
-
-            await conn.send_htmlbox(
-                room,
-                user,
-                html.format(
-                    avatar_dir=avatar_dir,
-                    avatar_name=avatar_name,
-                    name_color=name_color,
-                    username=username,
-                    badges=badges,
-                    description=description,
-                ),
-            )
+            await conn.send_htmlbox(room, user, html)
 
 
 @command_wrapper(

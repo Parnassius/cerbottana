@@ -1,0 +1,15 @@
+<div>
+    <div style="display: table-cell; width: 80px; vertical-align: top">
+        <img src="https://play.pokemonshowdown.com/sprites/{{ avatar_dir }}/{{ avatar_name }}.png" width="80" height="80">
+    </div>
+    <div style="display: table-cell; width: 100%; vertical-align: top">
+        <b style="color: {{ name_color }}">{{ username }}</b><br>
+        {% for badge in badges %}
+            <img src="{{ badge.image }}" width="13" height="13" title="{{ badge.label }}" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">
+        {% endfor %}
+        {% if description %}
+            <hr style="margin: 4px 0">
+            <div style="text-align: justify">{{ description }}</div>
+        {% endif %}
+    </div>
+</div>
