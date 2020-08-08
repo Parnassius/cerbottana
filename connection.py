@@ -60,13 +60,13 @@ class Connection:
         self.loop.run_until_complete(self.start_websocket())
 
     async def start_websocket(self) -> None:
-        itasks: List[asyncio.Task[None]] = []
-        for (priority, func) in sorted(
-            self.init_tasks, key=lambda func: func[0]  # sort by priority
-        ):
-            itasks.append(asyncio.create_task(func(self)))
-        for itask in itasks:
-            await itask
+        itasks: List[asyncio.Task[None]]
+        for prio in range(5):
+            itasks = []
+            for func in [t[1] for t in self.init_tasks if t[0] == prio + 1]:
+                itasks.append(asyncio.create_task(func(self)))
+            for itask in itasks:
+                await itask
 
         for rtask in self.recurring_tasks:
             asyncio.create_task(rtask(self))
