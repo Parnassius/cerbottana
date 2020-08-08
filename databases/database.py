@@ -1,6 +1,6 @@
 # pylint: disable=too-few-public-methods
 
-from sqlalchemy import Integer, String, Column, UniqueConstraint
+from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 
 from database import Database

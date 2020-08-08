@@ -5,10 +5,9 @@ import math
 import os
 import re
 from html import escape
-from typing import TYPE_CHECKING, Dict, Optional, Tuple, Any
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-
 from sqlalchemy.sql import func
 
 import databases.database as d

@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Optional
 from environs import Env
 from flask import abort, render_template
 from flask import session as web_session
-from sqlalchemy.sql import func
 from sqlalchemy.orm.exc import ObjectDeletedError
+from sqlalchemy.sql import func
 
 import databases.database as d
 import utils
