@@ -119,7 +119,7 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
                 results[method_id]["moves"].sort(key=lambda x: x["name"])
 
         html = utils.render_template(
-            "learnsets.html", methods=sorted(results.keys()), results=results
+            "commands/learnsets.html", methods=sorted(results.keys()), results=results
         )
 
         if not html:

@@ -149,7 +149,7 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
         )
 
     html = utils.render_template(
-        "locations.html", versions=sorted(results.keys()), results=results
+        "commands/locations.html", versions=sorted(results.keys()), results=results
     )
 
     if not html:
@@ -293,7 +293,7 @@ async def encounters(
             )
 
     html = utils.render_template(
-        "encounters.html", versions=sorted(results.keys()), results=results
+        "commands/encounters.html", versions=sorted(results.keys()), results=results
     )
 
     if not html:
