@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Optional
 from flask import abort, render_template, request
 from flask import session as web_session
 from lxml.html import fromstring
-from sqlalchemy.sql import and_, func
+from sqlalchemy.sql import func
 
 import databases.logs as l
 import utils
@@ -81,12 +81,10 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
 
     db = Database.open("logs")
     with db.get_session() as session:
-        session.execute(
-            l.Logs.__table__.delete().where(
-                and_(l.Logs.__table__.c.date == date, l.Logs.__table__.c.roomid == room)
-            )
+        session.query(l.Logs).filter_by(date=date, roomid=room).delete(
+            synchronize_session=False
         )
-        session.execute(l.Logs.__table__.insert(), values)
+        session.bulk_insert_mappings(l.Logs, values)
 
 
 @command_wrapper(aliases=("linecount",))

@@ -7,6 +7,7 @@ from environs import Env
 from flask import abort, render_template
 from flask import session as web_session
 from sqlalchemy.sql import func
+from sqlalchemy.orm.exc import ObjectDeletedError
 
 import databases.database as d
 import utils
@@ -37,19 +38,19 @@ async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -
 
     db = Database.open()
     with db.get_session() as session:
-        result = session.execute(
-            d.Quotes.__table__.insert().values(
-                message=arg,
-                roomid=room,
-                author=utils.to_user_id(user),
-                date=func.date(),
-            )
+        result = d.Quotes(
+            message=arg, roomid=room, author=utils.to_user_id(user), date=func.date(),
         )
+        session.add(result)
+        session.commit()
 
-        if result.inserted_primary_key[0]:
-            await conn.send_message(room, "Quote salvata.")
-        else:
-            await conn.send_message(room, "Quote già esistente.")
+        try:
+            if result.id:
+                await conn.send_message(room, "Quote salvata.")
+                return
+        except ObjectDeletedError:
+            pass
+        await conn.send_message(room, "Quote già esistente.")
 
 
 @command_wrapper(aliases=("q",))

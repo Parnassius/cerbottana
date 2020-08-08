@@ -5,7 +5,7 @@ import math
 import os
 import re
 from html import escape
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Dict, Optional, Tuple, Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -179,7 +179,9 @@ def hsl_to_rgb(h: float, s: float, l: float) -> Tuple[float, float, float]:
     return (r, g, b)
 
 
-def render_template(template_name, **template_vars):
+def render_template(  # type: ignore[misc]  # allow any
+    template_name: str, **template_vars: Any
+) -> str:
     env = Environment(
         loader=FileSystemLoader("templates"),
         autoescape=select_autoescape(["html", "xml"]),

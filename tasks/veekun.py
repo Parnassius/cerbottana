@@ -38,20 +38,16 @@ async def csv_to_sqlite(conn: Connection) -> None:
                 csv_keys = csv_data.fieldnames
 
                 if csv_keys is not None:
-                    session.execute(
-                        tables_classes[tname].__table__.insert(),
-                        [dict(i) for i in csv_data],
+                    session.bulk_insert_mappings(
+                        tables_classes[tname], [dict(i) for i in csv_data]
                     )
 
                     if "identifier" in csv_keys:
-                        session.execute(
-                            tables_classes[tname]
-                            .__table__.update()
-                            .values(
-                                identifier=func.replace(
-                                    tables_classes[tname].__table__.c.identifier,
-                                    "-",
-                                    "",
+                        session.query(tables_classes[tname]).update(
+                            {
+                                tables_classes[tname].identifier: func.replace(
+                                    tables_classes[tname].identifier, "-", "",
                                 )
-                            )
+                            },
+                            synchronize_session=False,
                         )

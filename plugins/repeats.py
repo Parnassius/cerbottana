@@ -138,8 +138,8 @@ class Repeat:
                         message=self.message,
                         roomid=self.room.roomid,
                         delta_minutes=self.delta_minutes,
-                        initial_dt=self.initial_dt,
-                        expire_dt=self.expire_dt,
+                        initial_dt=str(self.initial_dt),
+                        expire_dt=str(self.expire_dt),
                     )
                 )
 
