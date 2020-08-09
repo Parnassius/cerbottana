@@ -50,7 +50,6 @@ class Repeats(Base):
     delta_minutes = Column(Integer)
     initial_dt = Column(String)
     expire_dt = Column(String)
-    message = Column(String)
 
 
 class Tokens(Base):

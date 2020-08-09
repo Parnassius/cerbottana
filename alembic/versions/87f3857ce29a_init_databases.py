@@ -55,7 +55,6 @@ def upgrade_database():
         Column("delta_minutes", Integer),
         Column("initial_dt", String),
         Column("expire_dt", String),
-        Column("message", String),
         UniqueConstraint("message", "roomid", sqlite_on_conflict="REPLACE"),
     )
 
