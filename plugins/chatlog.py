@@ -87,6 +87,16 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
         session.bulk_insert_mappings(l.Logs, values)
 
 
+@command_wrapper()
+@parametrize_room
+async def getlogs(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    if utils.to_user_id(user) in conn.administrators:
+        args = arg.split(",")
+        logsroom = utils.to_room_id(args[0])
+        date = args[1].strip()
+        await conn.send_message("", f"/join view-chatlog-{logsroom}--{date}", False)
+
+
 @command_wrapper(aliases=("linecount",))
 @parametrize_room
 async def linecounts(
@@ -94,7 +104,7 @@ async def linecounts(
 ) -> None:
     userid = utils.to_user_id(user)
     args = arg.split(",")
-    logsroom = args[0]
+    logsroom = utils.to_room_id(args[0])
 
     users = Room.get(logsroom).users
     if userid not in users:
