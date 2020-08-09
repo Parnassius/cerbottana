@@ -62,7 +62,7 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
 
     values = []
 
-    for el in html.xpath('div[@class="message-log"]/div[@class="chat"]'):
+    for el in html.xpath('//div[@class="chat"]'):
         time = el.xpath("small")
         user = el.xpath("strong")
         message = el.xpath("q")
