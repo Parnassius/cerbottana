@@ -79,6 +79,9 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
                 }
             )
 
+    if not values:
+        values.append({"roomid": room, "date": date})
+
     db = Database.open("logs")
     with db.get_session() as session:
         session.query(l.Logs).filter_by(date=date, roomid=room).delete(
@@ -151,7 +154,7 @@ def linecounts_data(room: str) -> str:
             sql += f" || ',' || SUM(CASE WHEN userid = :userid_{n} THEN 1 ELSE 0 END) "
             params[f"userid_{n}"] = utils.to_user_id(user)
     else:
-        sql += " || ',' || COUNT(*) "
+        sql += " || ',' || SUM(CASE WHEN userrank IS NOT NULL THEN 1 ELSE 0 END) "
         sql += " || ',' || SUM(CASE WHEN userrank = ' ' THEN 1 ELSE 0 END) "
         sql += " || ',' || SUM(CASE WHEN userrank != ' ' THEN 1 ELSE 0 END) "
         sql += " || ',' || SUM(CASE WHEN userrank NOT IN(' ', '+') THEN 1 ELSE 0 END) "
