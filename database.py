@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from typing import Dict, Iterator
 
 from sqlalchemy import MetaData, create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.session import Session
 
 
@@ -14,7 +14,8 @@ class Database:
     def __init__(self, dbname: str) -> None:
         self.engine = create_engine(f"sqlite:///{dbname}.sqlite", echo=True)
         self.metadata = MetaData(bind=self.engine)
-        self.Session = sessionmaker(bind=self.engine)
+        self.session_factory = sessionmaker(bind=self.engine)
+        self.Session = scoped_session(self.session_factory)
         self._instances[dbname] = self
 
     @classmethod
