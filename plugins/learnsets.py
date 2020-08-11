@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 from sqlalchemy.orm import joinedload
+from typing_extensions import TypedDict
 
 import databases.veekun as v
 import utils
@@ -19,28 +20,35 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
     if len(args) < 2:
         return
 
-    pokemon = utils.to_user_id(utils.remove_accents(args[0].lower()))
-    version_group = utils.to_user_id(utils.remove_accents(args[1].lower()))
+    pokemon_id = utils.to_user_id(utils.remove_accents(args[0].lower()))
+    version = utils.to_user_id(utils.remove_accents(args[1].lower()))
 
     db = Database.open("veekun")
 
     with db.get_session() as session:
-        version_group_id = (
-            session.query(v.VersionGroups.id)
-            .filter_by(identifier=version_group)
-            .scalar()
+        version_group_id: Optional[int] = (
+            session.query(v.VersionGroups.id).filter_by(identifier=version).scalar()
         )
 
         if version_group_id is None:
             version_group_id = (
                 session.query(v.Versions.version_group_id)
-                .filter_by(identifier=version_group)
+                .filter_by(identifier=version)
                 .scalar()
             )
             if version_group_id is None:
                 return
 
-        results = dict()
+        class MovesDict(TypedDict):
+            name: str
+            level: Optional[int]
+            machine: Optional[str]
+
+        class ResultsDict(TypedDict):
+            name: str
+            moves: List[MovesDict]
+
+        results: Dict[int, ResultsDict] = dict()
 
         pokemon_species = (
             session.query(v.PokemonSpecies)
@@ -50,63 +58,69 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
                 .joinedload(v.PokemonMoves.version_group)
                 .raiseload("*")
             )
-            .filter_by(identifier=pokemon)
+            .filter_by(identifier=pokemon_id)
             .first()
         )
 
-        for pokemon in pokemon_species.pokemon:
+        if pokemon_species:
 
-            for pokemon_move in pokemon.pokemon_moves:
+            for pokemon in pokemon_species.pokemon:
 
-                version_group = pokemon_move.version_group
+                for pokemon_move in pokemon.pokemon_moves:
 
-                if version_group.id != version_group_id:
-                    continue
+                    version_group = pokemon_move.version_group
 
-                move = pokemon_move.move
-                move_name = next(
-                    (i.name for i in move.move_names if i.local_language_id == 9), None
-                )
+                    if version_group.id != version_group_id:
+                        continue
 
-                method = pokemon_move.pokemon_move_method
-                method_name = next(
-                    (
-                        i.name
-                        for i in method.pokemon_move_method_prose
-                        if i.local_language_id == 9
-                    ),
-                    None,
-                )
-
-                data = {
-                    "name": move_name,
-                }
-
-                if method.id == 1:  # level-up
-                    data["level"] = pokemon_move.level
-                elif method.id == 4:  # machine
-                    machine = next(
-                        (
-                            i
-                            for i in move.machines
-                            if i.version_group_id == version_group.id
-                        ),
-                        None,
+                    move = pokemon_move.move
+                    move_name = next(
+                        (i.name for i in move.move_names if i.local_language_id == 9),
+                        "",
                     )
-                    machine_name = next(
+
+                    method = pokemon_move.pokemon_move_method
+                    method_name = next(
                         (
                             i.name
-                            for i in machine.item.item_names
+                            for i in method.pokemon_move_method_prose
                             if i.local_language_id == 9
                         ),
-                        None,
+                        "",
                     )
-                    data["machine"] = machine_name
 
-                if method.id not in results:
-                    results[method.id] = {"name": method_name, "moves": list()}
+                    data: MovesDict = {
+                        "name": move_name,
+                        "level": None,
+                        "machine": None,
+                    }
 
-                results[method.id]["moves"].append(data)
+                    if method.id == 1:  # level-up
+                        data["level"] = pokemon_move.level
+                    elif method.id == 4:  # machine
+                        machine = next(
+                            (
+                                i
+                                for i in move.machines
+                                if i.version_group_id == version_group.id
+                            ),
+                            None,
+                        )
+                        if machine:
+                            machine_name = next(
+                                (
+                                    i.name
+                                    for i in machine.item.item_names
+                                    if i.local_language_id == 9
+                                ),
+                                None,
+                            )
+                            data["machine"] = machine_name
+
+                    if method.id not in results:
+                        results[method.id] = {"name": method_name, "moves": list()}
+
+                    results[method.id]["moves"].append(data)
 
         for method_id in sorted(results.keys()):
             if method_id == 1:  # level-up

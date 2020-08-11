@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Dict, Optional, Tuple
 
 from sqlalchemy.orm import joinedload
+from typing_extensions import TypedDict
 
 import databases.veekun as v
 import utils
@@ -20,7 +21,24 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
     db = Database.open("veekun")
 
     with db.get_session() as session:
-        results = dict()
+
+        class ConditionsDict(TypedDict):
+            rarity: int
+            description: str
+
+        class SlotsDict(TypedDict):
+            location: str
+            method: str
+            min_level: int
+            max_level: int
+            conditions: Dict[Tuple[int, ...], ConditionsDict]
+            rarity: int
+
+        class ResultsDict(TypedDict):
+            name: str
+            slots: Dict[Tuple[int, int], SlotsDict]
+
+        results: Dict[int, ResultsDict] = dict()
 
         pokemon_species = (
             session.query(v.PokemonSpecies)
@@ -35,113 +53,125 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
             .first()
         )
 
-        for pokemon in pokemon_species.pokemon:
+        if pokemon_species:
 
-            for encounter in pokemon.encounters:
+            for pokemon in pokemon_species.pokemon:
 
-                version = encounter.version
-                version_name = next(
-                    (i.name for i in version.version_names if i.local_language_id == 9),
-                    None,
-                )
+                for encounter in pokemon.encounters:
 
-                area = encounter.location_area
-                area_name = next(
-                    (
-                        i.name
-                        for i in area.location_area_prose
-                        if i.local_language_id == 9
-                    ),
-                    None,
-                )
-
-                location = area.location
-                location_name = next(
-                    (
-                        i.name
-                        for i in location.location_names
-                        if i.local_language_id == 9
-                    ),
-                    None,
-                )
-                location_subtitle = next(
-                    (
-                        i.subtitle
-                        for i in location.location_names
-                        if i.local_language_id == 9
-                    ),
-                    None,
-                )
-
-                full_location_name = location_name
-                if location_subtitle:
-                    full_location_name += " - " + location_subtitle
-                if area_name:
-                    full_location_name += " (" + area_name + ")"
-
-                encounter_slot = encounter.encounter_slot
-
-                method = encounter_slot.encounter_method
-                method_name = next(
-                    (
-                        i.name
-                        for i in method.encounter_method_prose
-                        if i.local_language_id == 9
-                    ),
-                    None,
-                )
-
-                condition_names = dict()
-                for condition_value_map in encounter.encounter_condition_value_map:
-                    condition = condition_value_map.encounter_condition_value
-                    condition_names[condition.id] = next(
+                    version = encounter.version
+                    version_name = next(
                         (
                             i.name
-                            for i in condition.encounter_condition_value_prose
+                            for i in version.version_names
+                            if i.local_language_id == 9
+                        ),
+                        "",
+                    )
+
+                    area = encounter.location_area
+                    area_name = next(
+                        (
+                            i.name
+                            for i in area.location_area_prose
                             if i.local_language_id == 9
                         ),
                         None,
                     )
 
-                if version.id not in results:
-                    results[version.id] = {"name": version_name, "slots": dict()}
+                    location = area.location
+                    location_name = next(
+                        (
+                            i.name
+                            for i in location.location_names
+                            if i.local_language_id == 9
+                        ),
+                        None,
+                    )
+                    location_subtitle = next(
+                        (
+                            i.subtitle
+                            for i in location.location_names
+                            if i.local_language_id == 9
+                        ),
+                        None,
+                    )
 
-                key = (area.id, method.id)
+                    full_location_name = ""
+                    if location_name:
+                        full_location_name += location_name
+                    if location_subtitle:
+                        full_location_name += " - " + location_subtitle
+                    if area_name:
+                        full_location_name += " (" + area_name + ")"
 
-                if key not in results[version.id]["slots"]:
-                    results[version.id]["slots"][key] = {
-                        "location": full_location_name,
-                        "method": method_name,
-                        "min_level": 100,
-                        "max_level": 0,
-                        "conditions": dict(),
-                        "rarity": 0,
-                    }
+                    encounter_slot = encounter.encounter_slot
 
-                results[version.id]["slots"][key]["min_level"] = min(
-                    results[version.id]["slots"][key]["min_level"], encounter.min_level
-                )
-                results[version.id]["slots"][key]["max_level"] = max(
-                    results[version.id]["slots"][key]["max_level"], encounter.max_level
-                )
+                    method = encounter_slot.encounter_method
+                    method_name = next(
+                        (
+                            i.name
+                            for i in method.encounter_method_prose
+                            if i.local_language_id == 9
+                        ),
+                        "",
+                    )
 
-                if condition_names:
-                    key_conditions = tuple(sorted(condition_names.keys()))
-                    if (
-                        key_conditions
-                        not in results[version.id]["slots"][key]["conditions"]
-                    ):
-                        results[version.id]["slots"][key]["conditions"][
-                            key_conditions
-                        ] = {
+                    condition_names = dict()
+                    for condition_value_map in encounter.encounter_condition_value_map:
+                        condition = condition_value_map.encounter_condition_value
+                        condition_names[condition.id] = next(
+                            (
+                                i.name
+                                for i in condition.encounter_condition_value_prose
+                                if i.local_language_id == 9
+                            ),
+                            "",
+                        )
+
+                    if version.id not in results:
+                        results[version.id] = {"name": version_name, "slots": {}}
+
+                    key = (area.id, method.id)
+
+                    if key not in results[version.id]["slots"]:
+                        results[version.id]["slots"][key] = {
+                            "location": full_location_name,
+                            "method": method_name,
+                            "min_level": 100,
+                            "max_level": 0,
+                            "conditions": dict(),
                             "rarity": 0,
-                            "description": ", ".join(condition_names.values()),
                         }
-                    results[version.id]["slots"][key]["conditions"][key_conditions][
-                        "rarity"
-                    ] += encounter_slot.rarity
-                else:
-                    results[version.id]["slots"][key]["rarity"] += encounter_slot.rarity
+
+                    results[version.id]["slots"][key]["min_level"] = min(
+                        results[version.id]["slots"][key]["min_level"],
+                        encounter.min_level,
+                    )
+                    results[version.id]["slots"][key]["max_level"] = max(
+                        results[version.id]["slots"][key]["max_level"],
+                        encounter.max_level,
+                    )
+
+                    if condition_names:
+                        key_conditions = tuple(sorted(condition_names.keys()))
+                        if (
+                            key_conditions
+                            not in results[version.id]["slots"][key]["conditions"]
+                        ):
+                            results[version.id]["slots"][key]["conditions"][
+                                key_conditions
+                            ] = {
+                                "rarity": 0,
+                                "description": ", ".join(condition_names.values()),
+                            }
+                        results[version.id]["slots"][key]["conditions"][key_conditions][
+                            "rarity"
+                        ] += encounter_slot.rarity
+                    else:
+                        results[version.id]["slots"][key][
+                            "rarity"
+                        ] += encounter_slot.rarity
 
     for version_id in sorted(results.keys()):
         results[version_id]["slots"] = dict(
@@ -168,7 +198,28 @@ async def encounters(
     db = Database.open("veekun")
 
     with db.get_session() as session:
-        results = dict()
+
+        class ConditionsDict(TypedDict):
+            rarity: int
+            description: str
+
+        class SlotsDict(TypedDict):
+            pokemon: str
+            method: str
+            min_level: int
+            max_level: int
+            conditions: Dict[Tuple[int, ...], ConditionsDict]
+            rarity: int
+
+        class AreasDict(TypedDict):
+            name: str
+            slots: Dict[Tuple[int, int], SlotsDict]
+
+        class ResultsDict(TypedDict):
+            name: str
+            areas: Dict[int, AreasDict]
+
+        results: Dict[int, ResultsDict] = dict()
 
         location = (
             session.query(v.Locations)
@@ -181,115 +232,133 @@ async def encounters(
             .first()
         )
 
-        for area in location.location_areas:
+        if location:
 
-            area_name = next(
-                (i.name for i in area.location_area_prose if i.local_language_id == 9),
-                None,
-            )
+            for area in location.location_areas:
 
-            for encounter in area.encounters:
-
-                version = encounter.version
-                version_name = next(
-                    (i.name for i in version.version_names if i.local_language_id == 9),
-                    None,
-                )
-
-                pokemon = encounter.pokemon
-                pokemon_species = pokemon.species
-                pokemon_species_name = next(
+                area_name = next(
                     (
                         i.name
-                        for i in pokemon_species.pokemon_species_name
+                        for i in area.location_area_prose
                         if i.local_language_id == 9
                     ),
-                    None,
+                    "",
                 )
 
-                encounter_slot = encounter.encounter_slot
+                for encounter in area.encounters:
 
-                method = encounter_slot.encounter_method
-                method_name = next(
-                    (
-                        i.name
-                        for i in method.encounter_method_prose
-                        if i.local_language_id == 9
-                    ),
-                    None,
-                )
-
-                condition_names = dict()
-                for condition_value_map in encounter.encounter_condition_value_map:
-                    condition = condition_value_map.encounter_condition_value
-                    condition_names[condition.id] = next(
+                    version = encounter.version
+                    version_name = next(
                         (
                             i.name
-                            for i in condition.encounter_condition_value_prose
+                            for i in version.version_names
                             if i.local_language_id == 9
                         ),
-                        None,
+                        "",
                     )
 
-                if version.id not in results:
-                    results[version.id] = {"name": version_name, "areas": dict()}
+                    pokemon = encounter.pokemon
+                    pokemon_species = pokemon.species
+                    pokemon_species_name = next(
+                        (
+                            i.name
+                            for i in pokemon_species.pokemon_species_name
+                            if i.local_language_id == 9
+                        ),
+                        "",
+                    )
 
-                if area.id not in results[version.id]["areas"]:
-                    results[version.id]["areas"][area.id] = {
-                        "name": area_name,
-                        "slots": dict(),
-                    }
+                    encounter_slot = encounter.encounter_slot
 
-                key = (method.id, pokemon.id)
+                    method = encounter_slot.encounter_method
+                    method_name = next(
+                        (
+                            i.name
+                            for i in method.encounter_method_prose
+                            if i.local_language_id == 9
+                        ),
+                        "",
+                    )
 
-                if key not in results[version.id]["areas"][area.id]["slots"]:
-                    results[version.id]["areas"][area.id]["slots"][key] = {
-                        "pokemon": pokemon_species_name,
-                        "method": method_name,
-                        "min_level": 100,
-                        "max_level": 0,
-                        "conditions": dict(),
-                        "rarity": 0,
-                    }
+                    condition_names = dict()
+                    for condition_value_map in encounter.encounter_condition_value_map:
+                        condition = condition_value_map.encounter_condition_value
+                        condition_names[condition.id] = next(
+                            (
+                                i.name
+                                for i in condition.encounter_condition_value_prose
+                                if i.local_language_id == 9
+                            ),
+                            "",
+                        )
 
-                results[version.id]["areas"][area.id]["slots"][key]["min_level"] = min(
-                    results[version.id]["areas"][area.id]["slots"][key]["min_level"],
-                    encounter.min_level,
-                )
-                results[version.id]["areas"][area.id]["slots"][key]["max_level"] = max(
-                    results[version.id]["areas"][area.id]["slots"][key]["max_level"],
-                    encounter.max_level,
-                )
+                    if version.id not in results:
+                        results[version.id] = {"name": version_name, "areas": dict()}
 
-                if condition_names:
-                    key_conditions = tuple(sorted(condition_names.keys()))
-                    if (
-                        key_conditions
-                        not in results[version.id]["areas"][area.id]["slots"][key][
-                            "conditions"
-                        ]
-                    ):
+                    if area.id not in results[version.id]["areas"]:
+                        results[version.id]["areas"][area.id] = {
+                            "name": area_name,
+                            "slots": dict(),
+                        }
+
+                    key = (method.id, pokemon.id)
+
+                    if key not in results[version.id]["areas"][area.id]["slots"]:
+                        results[version.id]["areas"][area.id]["slots"][key] = {
+                            "pokemon": pokemon_species_name,
+                            "method": method_name,
+                            "min_level": 100,
+                            "max_level": 0,
+                            "conditions": dict(),
+                            "rarity": 0,
+                        }
+
+                    results[version.id]["areas"][area.id]["slots"][key][
+                        "min_level"
+                    ] = min(
+                        results[version.id]["areas"][area.id]["slots"][key][
+                            "min_level"
+                        ],
+                        encounter.min_level,
+                    )
+                    results[version.id]["areas"][area.id]["slots"][key][
+                        "max_level"
+                    ] = max(
+                        results[version.id]["areas"][area.id]["slots"][key][
+                            "max_level"
+                        ],
+                        encounter.max_level,
+                    )
+
+                    if condition_names:
+                        key_conditions = tuple(sorted(condition_names.keys()))
+                        if (
+                            key_conditions
+                            not in results[version.id]["areas"][area.id]["slots"][key][
+                                "conditions"
+                            ]
+                        ):
+                            results[version.id]["areas"][area.id]["slots"][key][
+                                "conditions"
+                            ][key_conditions] = {
+                                "rarity": 0,
+                                "description": ", ".join(condition_names.values()),
+                            }
                         results[version.id]["areas"][area.id]["slots"][key][
                             "conditions"
-                        ][key_conditions] = {
-                            "rarity": 0,
-                            "description": ", ".join(condition_names.values()),
-                        }
-                    results[version.id]["areas"][area.id]["slots"][key]["conditions"][
-                        key_conditions
-                    ]["rarity"] += encounter_slot.rarity
-                else:
-                    results[version.id]["areas"][area.id]["slots"][key][
-                        "rarity"
-                    ] += encounter_slot.rarity
+                        ][key_conditions]["rarity"] += encounter_slot.rarity
+                    else:
+                        results[version.id]["areas"][area.id]["slots"][key][
+                            "rarity"
+                        ] += encounter_slot.rarity
 
     for version_id in sorted(results.keys()):
         results[version_id]["areas"] = dict(
             sorted(results[version_id]["areas"].items())
         )
-        for area in results[version_id]["areas"].keys():
-            results[version_id]["areas"][area]["slots"] = dict(
-                sorted(results[version_id]["areas"][area]["slots"].items())
+        for area_id in results[version_id]["areas"].keys():
+            results[version_id]["areas"][area_id]["slots"] = dict(
+                sorted(results[version_id]["areas"][area_id]["slots"].items())
             )
 
     html = utils.render_template(
