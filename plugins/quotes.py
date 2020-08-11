@@ -68,18 +68,17 @@ async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) 
 
     db = Database.open()
     with db.get_session() as session:
-        rs = session.query(d.Quotes.message).filter_by(roomid=arg).all()
+        quotes = session.query(d.Quotes).filter_by(roomid=arg).all()
 
-    if not rs:
-        await conn.send_reply(room, user, "Nessuna quote registrata per questa room.")
-        return
+        if not quotes:
+            await conn.send_reply(
+                room, user, "Nessuna quote registrata per questa room."
+            )
+            return
 
-    quote = random.choice(rs)[0]
-
-    parsed_quote = quote
-    # if quote["date"]:  # backwards compatibility with old quotes without a date
-    #   parsed_quote += "  __({})__".format(quote["date"])
-    await conn.send_reply(room, user, parsed_quote)
+        quote = random.choice(quotes).message
+        if quote:
+            await conn.send_reply(room, user, quote)
 
 
 @command_wrapper(aliases=("deletequote", "delquote", "rmquote"))

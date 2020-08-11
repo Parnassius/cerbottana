@@ -18,13 +18,14 @@ async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) 
     db = Database.open()
 
     with db.get_session() as session:
-        answers = session.query(d.EightBall.answer).all()
+        answers = session.query(d.EightBall).all()
 
-    if not answers:
-        return
+        if not answers:
+            return
 
-    answer = random.choice(answers)[0]
-    await conn.send_reply(room, user, answer)
+        answer = random.choice(answers).answer
+        if answer:
+            await conn.send_reply(room, user, answer)
 
 
 @route_wrapper("/eightball", methods=("GET", "POST"), require_driver=True)

@@ -25,7 +25,7 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
 
         userdata = session.query(d.Users).filter_by(userid=arg).first()
 
-        if userdata:
+        if userdata and userdata.userid and userdata.avatar:
             badges = (
                 session.query(d.Badges)
                 .filter_by(userid=userdata.userid)
@@ -40,16 +40,14 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
                 avatar_dir = "trainers"
                 avatar_name = userdata.avatar
 
-            username = userdata.username
-
-            name_color = utils.username_color(utils.to_user_id(username))
+            name_color = utils.username_color(userdata.userid)
 
             html = utils.render_template(
                 "commands/profile.html",
                 avatar_dir=avatar_dir,
                 avatar_name=avatar_name,
                 name_color=name_color,
-                username=username,
+                username=userdata.username,
                 badges=badges,
                 description=userdata.description,
             )
