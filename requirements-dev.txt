@@ -3,4 +3,4 @@ black==19.10b0
 isort==4.3.21
 mypy==0.782
 pylint==2.5.3
-sqlalchemy-stubs==0.3
+-e git+https://github.com/dropbox/sqlalchemy-stubs.git@55470ceab8149db983411d5c094c9fe16343c58b#egg=sqlalchemy_stubs
