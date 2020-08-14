@@ -126,7 +126,7 @@ async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) 
 
 
 @route_wrapper("/quotes/<room>")
-def quotes(room: str) -> str:
+def quotes_route(room: str) -> str:
     if room in env.list("PRIVATE_ROOMS"):
         if not web_session.get(room):
             abort(401)
