@@ -87,13 +87,7 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
         session.query(l.Logs).filter_by(date=date, roomid=room).delete(
             synchronize_session=False
         )
-        n = 0
-        while True:
-            v = values[n * 1000 : (n + 1) * 1000]
-            if not v:
-                break
-            session.bulk_insert_mappings(l.Logs, v)
-            n += 1
+        session.bulk_insert_mappings(l.Logs, values)
 
 
 @command_wrapper()
