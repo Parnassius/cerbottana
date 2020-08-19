@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 
 from flask import abort, render_template, request
 from flask import session as web_session
@@ -89,6 +89,26 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
         )
         session.bulk_insert_mappings(l.Logs, values)
 
+        session.execute(
+            "INSERT INTO daily_totals_per_rank (roomid, date, userrank, messages) "
+            "SELECT roomid, date, userrank, COUNT(*) "
+            "FROM logs "
+            "WHERE roomid=:roomid AND date=:date "
+            "GROUP BY userrank "
+            "HAVING userrank IS NOT NULL",
+            {"roomid": room, "date": date},
+        )
+
+        session.execute(
+            "INSERT INTO daily_totals_per_user (roomid, date, userid, messages) "
+            "SELECT roomid, date, userid, COUNT(*) "
+            "FROM logs "
+            "WHERE roomid=:roomid AND date=:date "
+            "GROUP BY userid "
+            "HAVING userid IS NOT NULL",
+            {"roomid": room, "date": date},
+        )
+
 
 @command_wrapper()
 @parametrize_room
@@ -138,32 +158,144 @@ def linecounts_data(room: str) -> str:
     if not utils.is_driver(web_session.get(room)):
         abort(401)
 
-    params = {"roomid": room}
+    out = ""
+    data: Dict[str, Dict[str, int]] = {}
 
-    sql = "SELECT date"
-    if request.args.get("users"):
-        n = 0
-        for user in request.args["users"].split(","):
-            n += 1
-            sql += f" || ',' || SUM(CASE WHEN userid = :userid_{n} THEN 1 ELSE 0 END) "
-            params[f"userid_{n}"] = utils.to_user_id(user)
-    else:
-        sql += " || ',' || SUM(CASE WHEN userrank IS NOT NULL THEN 1 ELSE 0 END) "
-        sql += " || ',' || SUM(CASE WHEN userrank = ' ' THEN 1 ELSE 0 END) "
-        sql += " || ',' || SUM(CASE WHEN userrank != ' ' THEN 1 ELSE 0 END) "
-        sql += " || ',' || SUM(CASE WHEN userrank NOT IN(' ', '+') THEN 1 ELSE 0 END) "
-        sql += " || ',' || SUM(CASE WHEN userrank = '+' THEN 1 ELSE 0 END) "
-        sql += " || ',' || SUM(CASE WHEN userrank = '%' THEN 1 ELSE 0 END) "
-        sql += " || ',' || SUM(CASE WHEN userrank = '@' THEN 1 ELSE 0 END) "
-        sql += " || ',' || SUM(CASE WHEN userrank = '*' THEN 1 ELSE 0 END) "
-        sql += " || ',' || SUM(CASE WHEN userrank IN('&', '~') THEN 1 ELSE 0 END) "
-        sql += " || ',' || SUM(CASE WHEN userrank = '#' THEN 1 ELSE 0 END) "
-    sql += " AS data "
-    sql += " FROM logs WHERE roomid = :roomid GROUP BY date"
+    date: Optional[datetime.date] = None
+    date_str: str
 
     db = Database.open("logs")
 
     with db.get_session() as session:
-        data = session.execute(sql, params)
+        if request.args.get("users"):
 
-        return "\n".join([row["data"] for row in data])
+            users = [
+                utils.to_user_id(user) for user in request.args["users"].split(",")
+            ]
+
+            results_per_user = (
+                session.query(l.DailyTotalsPerUser)
+                .filter(
+                    l.DailyTotalsPerUser.roomid == room,
+                    l.DailyTotalsPerUser.userid.in_(users),
+                )
+                .order_by(l.DailyTotalsPerUser.date)
+                .all()
+            )
+
+            if results_per_user:
+                results_per_user_iter = iter(results_per_user)
+
+                while True:
+                    urow = next(results_per_user_iter, None)
+
+                    if urow is None:
+                        break
+
+                    if urow.date is None or urow.messages is None:
+                        continue
+
+                    while True:
+                        if date is None:
+                            date = datetime.date.fromisoformat(urow.date)
+                            date_str = date.isoformat()
+
+                        if date_str not in data:
+                            data[date_str] = {user: 0 for user in users}
+
+                        if date_str < urow.date:
+                            date += datetime.timedelta(days=1)
+                            date_str = date.isoformat()
+                        else:
+                            break
+
+                    if urow.userid in data[date_str]:
+                        data[date_str][urow.userid] += urow.messages
+
+                out_urow = "{date},{values}\n"
+                for d in data:
+                    out += out_urow.format(
+                        date=d, values=",".join([str(i) for i in data[d].values()])
+                    )
+
+        else:
+
+            results_per_rank = (
+                session.query(l.DailyTotalsPerRank)
+                .filter(l.DailyTotalsPerRank.roomid == room)
+                .order_by(
+                    l.DailyTotalsPerRank.date,
+                    func.instr(" +%@*&~#", l.DailyTotalsPerRank.userrank),
+                )
+                .all()
+            )
+
+            if results_per_rank:
+                results_per_rank_iter = iter(results_per_rank)
+
+                while True:
+                    rrow = next(results_per_rank_iter, None)
+
+                    if rrow is None:
+                        break
+
+                    if rrow.date is None or rrow.messages is None:
+                        continue
+
+                    while True:
+                        if date is None:
+                            date = datetime.date.fromisoformat(rrow.date)
+                            date_str = date.isoformat()
+
+                        if date_str not in data:
+                            data[date_str] = {
+                                " ": 0,
+                                "+": 0,
+                                "%": 0,
+                                "@": 0,
+                                "*": 0,
+                                "&": 0,
+                                "~": 0,
+                                "#": 0,
+                            }
+
+                        if date_str < rrow.date:
+                            date += datetime.timedelta(days=1)
+                            date_str = date.isoformat()
+                        else:
+                            break
+
+                    if rrow.userrank in data[date_str]:
+                        data[date_str][rrow.userrank] += rrow.messages
+
+                out_rrow = (
+                    "{date},{total},{regular},{auth},{staff},"
+                    "{voice},{driver},{moderator},{bot},{administrator},{owner}\n"
+                )
+                for d in data:
+                    staff = (
+                        data[d]["%"]
+                        + data[d]["@"]
+                        + data[d]["*"]
+                        + data[d]["&"]
+                        + data[d]["~"]
+                        + data[d]["#"]
+                    )
+                    auth = staff + data[d]["+"]
+                    total = auth + data[d][" "]
+
+                    out += out_rrow.format(
+                        date=d,
+                        total=total,
+                        regular=str(data[d][" "]),
+                        auth=auth,
+                        staff=staff,
+                        voice=str(data[d]["+"]),
+                        driver=str(data[d]["%"]),
+                        moderator=str(data[d]["@"]),
+                        bot=str(data[d]["*"]),
+                        administrator=str(data[d]["&"] + data[d]["~"]),
+                        owner=str(data[d]["#"]),
+                    )
+
+    return out
