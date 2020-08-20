@@ -89,6 +89,9 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
         )
         session.bulk_insert_mappings(l.Logs, values)
 
+        session.query(l.DailyTotalsPerRank).filter_by(date=date, roomid=room).delete(
+            synchronize_session=False
+        )
         session.execute(
             "INSERT INTO daily_totals_per_rank (roomid, date, userrank, messages) "
             "SELECT roomid, date, userrank, COUNT(*) "
@@ -99,6 +102,9 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
             {"roomid": room, "date": date},
         )
 
+        session.query(l.DailyTotalsPerUser).filter_by(date=date, roomid=room).delete(
+            synchronize_session=False
+        )
         session.execute(
             "INSERT INTO daily_totals_per_user (roomid, date, userid, messages) "
             "SELECT roomid, date, userid, COUNT(*) "
