@@ -1,5 +1,5 @@
 [tool.pylint.messages_control]
-disable = "bad-continuation, invalid-name, missing-class-docstring, missing-function-docstring, missing-module-docstring, unused-argument"
+disable = "invalid-name, missing-class-docstring, missing-function-docstring, missing-module-docstring, unused-argument"
 
 [tool.pylint.format]
 max-line-length = "88"
