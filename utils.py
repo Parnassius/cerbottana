@@ -84,10 +84,10 @@ def date_format(text: str) -> str:
     return f"{dd}/{mm}/{yyyy}"
 
 
-def html_escape(text: Optional[str]) -> str:
+def html_escape(text: Optional[str], newline_ch="<br>") -> str:
     if text is None:
         return ""
-    return escape(text).replace("\n", "<br>")
+    return escape(text).replace("\n", newline_ch)
 
 
 def is_voice(user: str) -> bool:
@@ -189,6 +189,26 @@ def render_template(  # type: ignore[misc]  # allow any
     )
     template = env.get_template(template_name)
     return template.render(**template_vars)
+
+
+def to_unselectable_html(text: Optional[str]) -> str:
+    if text is None:
+        return ""
+    escaped_text = html_escape(text, newline_ch=" ")
+    return (
+        '<input type="button" style="'
+        + "background: none; "
+        + "border: none; "
+        + "color: inherit; "
+        + "cursor: inherit; "
+        + "font: inherit; "
+        + "margin: 0; "
+        + "outline: none; "
+        + "text-align: inherit; "
+        + "padding: 0; "
+        + "white-space: normal; "
+        + f'" value="{escaped_text}">'
+    )
 
 
 AVATAR_IDS: Dict[str, str] = {
