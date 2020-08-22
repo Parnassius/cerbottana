@@ -92,7 +92,10 @@ class Connection:
                     if isinstance(message, str):
                         print(f"<< {message}")
                         asyncio.ensure_future(self.parse_message(message))
-        except:  # lgtm [py/catch-base-exception]
+        except (
+            websockets.exceptions.WebSocketException,
+            OSError,  # https://github.com/aaugustin/websockets/issues/593
+        ):
             pass
 
     async def parse_message(self, message: str) -> None:
