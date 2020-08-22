@@ -1,3 +1,4 @@
+# pylint: skip-file
 import logging
 import re
 from logging.config import fileConfig
