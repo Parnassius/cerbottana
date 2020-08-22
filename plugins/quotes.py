@@ -77,8 +77,7 @@ async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) 
             return
 
         quote = random.choice(quotes).message
-        if quote:
-            await conn.send_reply(room, user, quote)
+        await conn.send_reply(room, user, quote)
 
 
 @command_wrapper(aliases=("deletequote", "delquote", "rmquote"))

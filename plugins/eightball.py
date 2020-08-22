@@ -24,8 +24,7 @@ async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) 
             return
 
         answer = random.choice(answers).answer
-        if answer:
-            await conn.send_reply(room, user, answer)
+        await conn.send_reply(room, user, answer)
 
 
 @route_wrapper("/eightball", methods=("GET", "POST"), require_driver=True)

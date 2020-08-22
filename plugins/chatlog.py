@@ -198,9 +198,6 @@ def linecounts_data(room: str) -> str:
                     if urow is None:
                         break
 
-                    if urow.date is None or urow.messages is None:
-                        continue
-
                     while True:
                         if date is None:
                             date = datetime.date.fromisoformat(urow.date)
@@ -244,9 +241,6 @@ def linecounts_data(room: str) -> str:
 
                     if rrow is None:
                         break
-
-                    if rrow.date is None or rrow.messages is None:
-                        continue
 
                     while True:
                         if date is None:

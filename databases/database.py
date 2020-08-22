@@ -15,14 +15,14 @@ class Badges(Base):
 
     id = Column(Integer, primary_key=True)
     userid = Column(String, index=True)
-    image = Column(String)
-    label = Column(String)
+    image = Column(String, nullable=False)
+    label = Column(String, nullable=False)
 
 
 class EightBall(Base):
     __tablename__ = "eightball"
     id = Column(Integer, primary_key=True)
-    answer = Column(String)
+    answer = Column(String, nullable=False)
 
 
 class Quotes(Base):
@@ -32,8 +32,8 @@ class Quotes(Base):
     )
 
     id = Column(Integer, primary_key=True)
-    message = Column(String)
-    roomid = Column(String)
+    message = Column(String, nullable=False)
+    roomid = Column(String, nullable=False)
     author = Column(String)
     date = Column(String)
 
@@ -45,10 +45,10 @@ class Repeats(Base):
     )
 
     id = Column(Integer, primary_key=True)
-    message = Column(String)
-    roomid = Column(String)
-    delta_minutes = Column(Integer)
-    initial_dt = Column(String)
+    message = Column(String, nullable=False)
+    roomid = Column(String, nullable=False)
+    delta_minutes = Column(Integer, nullable=False)
+    initial_dt = Column(String, nullable=False)
     expire_dt = Column(String)
 
 
@@ -56,10 +56,10 @@ class Tokens(Base):
     __tablename__ = "tokens"
 
     id = Column(Integer, primary_key=True)
-    token = Column(String, index=True)
+    token = Column(String, index=True, nullable=False)
     room = Column(String)
-    rank = Column(String)
-    expiry = Column(String)
+    rank = Column(String, nullable=False)
+    expiry = Column(String, nullable=False)
 
 
 class Users(Base):
@@ -67,7 +67,7 @@ class Users(Base):
     __table_opts__ = (UniqueConstraint("userid", sqlite_on_conflict="IGNORE"),)
 
     id = Column(Integer, primary_key=True)
-    userid = Column(String)
+    userid = Column(String, nullable=False)
     username = Column(String)
     avatar = Column(String)
     description = Column(String)

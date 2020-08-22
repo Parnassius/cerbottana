@@ -18,8 +18,8 @@ class Logs(Base):
     )
 
     id = Column(Integer, primary_key=True)
-    roomid = Column(String)
-    date = Column(String, index=True)
+    roomid = Column(String, nullable=False)
+    date = Column(String, index=True, nullable=False)
     time = Column(String)
     userrank = Column(String)
     userid = Column(String)
@@ -28,25 +28,32 @@ class Logs(Base):
 
 class DailyTotalsPerRank(Base):
     __tablename__ = "daily_totals_per_rank"
-    __table_opts__ = Index(
-        "ix_daily_totals_per_rank_roomid_userrank_date", "roomid", "userrank", "date"
+    __table_opts__ = (
+        Index(
+            "ix_daily_totals_per_rank_roomid_userrank_date",
+            "roomid",
+            "userrank",
+            "date",
+        ),
     )
 
     id = Column(Integer, primary_key=True)
-    roomid = Column(String)
-    date = Column(String, index=True)
-    userrank = Column(String)
-    messages = Column(Integer)
+    roomid = Column(String, nullable=False)
+    date = Column(String, index=True, nullable=False)
+    userrank = Column(String, nullable=False)
+    messages = Column(Integer, nullable=False)
 
 
 class DailyTotalsPerUser(Base):
     __tablename__ = "daily_totals_per_user"
-    __table_opts__ = Index(
-        "ix_daily_totals_per_rank_roomid_userid_date", "roomid", "userid", "date"
+    __table_opts__ = (
+        Index(
+            "ix_daily_totals_per_rank_roomid_userid_date", "roomid", "userid", "date"
+        ),
     )
 
     id = Column(Integer, primary_key=True)
-    roomid = Column(String)
-    date = Column(String, index=True)
-    userid = Column(String)
-    messages = Column(Integer)
+    roomid = Column(String, nullable=False)
+    date = Column(String, index=True, nullable=False)
+    userid = Column(String, nullable=False)
+    messages = Column(Integer, nullable=False)
