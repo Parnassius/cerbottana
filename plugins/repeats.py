@@ -139,7 +139,7 @@ class Repeat:
                         roomid=self.room.roomid,
                         delta_minutes=self.delta_minutes,
                         initial_dt=str(self.initial_dt),
-                        expire_dt=str(self.expire_dt),
+                        expire_dt=str(self.expire_dt) if self.expire_dt else None,
                     )
                 )
 
