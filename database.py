@@ -12,7 +12,7 @@ class Database:
     _instances: Dict[str, Database] = dict()
 
     def __init__(self, dbname: str) -> None:
-        self.engine = create_engine(f"sqlite:///{dbname}.sqlite", echo=True)
+        self.engine = create_engine(f"sqlite:///{dbname}.sqlite")
         self.metadata = MetaData(bind=self.engine)
         self.session_factory = sessionmaker(bind=self.engine)
         self.Session = scoped_session(self.session_factory)
