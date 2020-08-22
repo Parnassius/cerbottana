@@ -21,7 +21,7 @@ env.read_env()
 
 
 class Server(Flask):
-    def __init__(self, *args, **kwargs) -> None:  # type:ignore
+    def __init__(self, *args, **kwargs) -> None:  # type: ignore
         super().__init__(*args, **kwargs)
         self.queue: Optional[SimpleQueue[str]] = None
 
@@ -36,12 +36,12 @@ SERVER.secret_key = env("FLASK_SECRET_KEY")
 
 
 @SERVER.template_filter("format_date")
-def format_date(value: str) -> str:
+def format_date(value: str) -> str:  # type: ignore
     return date.fromisoformat(value).strftime("%d/%m/%Y")
 
 
 @SERVER.template_filter("format_datetime")
-def format_datetime(value: str) -> str:
+def format_datetime(value: str) -> str:  # type: ignore
     return datetime.strptime(value, "%Y-%m-%d %H:%M:%S.%f").strftime(
         "%d/%m/%Y %H:%M:%S"
     )
