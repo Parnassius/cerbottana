@@ -88,9 +88,10 @@ class Connection:
 
                         print(data)
 
-                    message: str = await websocket.recv()
-                    print(f"<< {message}")
-                    asyncio.ensure_future(self.parse_message(message))
+                    message = await websocket.recv()
+                    if isinstance(message, str):
+                        print(f"<< {message}")
+                        asyncio.ensure_future(self.parse_message(message))
         except:  # lgtm [py/catch-base-exception]
             pass
 
