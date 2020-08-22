@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Union, cast
 
 from flask import abort, render_template, request
 from flask import session as web_session
 from lxml.html import fromstring
+from sqlalchemy.orm import Query
 from sqlalchemy.sql import func
 
 import databases.logs as l
@@ -173,101 +174,80 @@ def linecounts_data(room: str) -> str:
     db = Database.open("logs")
 
     with db.get_session() as session:
-        if request.args.get("users"):
 
-            users = [
+        columns: List[str]
+        query: Union[Query[l.DailyTotalsPerUser], Query[l.DailyTotalsPerRank]]
+        if request.args.get("users"):
+            columns = [
                 utils.to_user_id(user) for user in request.args["users"].split(",")
             ]
+            query = session.query(l.DailyTotalsPerUser)
+        else:
+            columns = [" ", "+", "%", "@", "*", "&", "~", "#"]
+            query = session.query(l.DailyTotalsPerRank)
 
-            results_per_user = (
-                session.query(l.DailyTotalsPerUser)
-                .filter(
-                    l.DailyTotalsPerUser.roomid == room,
-                    l.DailyTotalsPerUser.userid.in_(users),
-                )
-                .order_by(l.DailyTotalsPerUser.date)
-                .all()
+        query = query.filter_by(roomid=room)
+
+        if request.args.get("users"):
+            query = query.filter(l.DailyTotalsPerUser.userid.in_(columns)).order_by(
+                l.DailyTotalsPerUser.date
+            )
+        else:
+            query = query.order_by(
+                l.DailyTotalsPerRank.date,
+                func.instr(" +%@*&~#", l.DailyTotalsPerRank.userrank),
             )
 
-            if results_per_user:
-                results_per_user_iter = iter(results_per_user)
+        results = query.all()
+
+        if results:
+            results_iter: Union[
+                Iterator[l.DailyTotalsPerUser], Iterator[l.DailyTotalsPerRank]
+            ]
+            if request.args.get("users"):
+                results = cast(List[l.DailyTotalsPerUser], results)
+                results_iter = iter(results)
+            else:
+                results = cast(List[l.DailyTotalsPerRank], results)
+                results_iter = iter(results)
+
+            while True:
+                row = next(results_iter, None)
+
+                if row is None:
+                    break
 
                 while True:
-                    urow = next(results_per_user_iter, None)
+                    if date is None:
+                        date = datetime.date.fromisoformat(row.date)
+                        date_str = date.isoformat()
 
-                    if urow is None:
+                    if date_str not in data:
+                        data[date_str] = {column: 0 for column in columns}
+
+                    if date_str < row.date:
+                        date += datetime.timedelta(days=1)
+                        date_str = date.isoformat()
+                    else:
                         break
 
-                    while True:
-                        if date is None:
-                            date = datetime.date.fromisoformat(urow.date)
-                            date_str = date.isoformat()
+                if request.args.get("users"):
+                    row = cast(l.DailyTotalsPerUser, row)
+                    column = row.userid
+                else:
+                    row = cast(l.DailyTotalsPerRank, row)
+                    column = row.userrank
 
-                        if date_str not in data:
-                            data[date_str] = {user: 0 for user in users}
+                if column in data[date_str]:
+                    data[date_str][column] += row.messages
 
-                        if date_str < urow.date:
-                            date += datetime.timedelta(days=1)
-                            date_str = date.isoformat()
-                        else:
-                            break
-
-                    if urow.userid in data[date_str]:
-                        data[date_str][urow.userid] += urow.messages
-
+            if request.args.get("users"):
                 out_urow = "{date},{values}\n"
                 for d in data:
                     out += out_urow.format(
                         date=d, values=",".join([str(i) for i in data[d].values()])
                     )
-
-        else:
-
-            results_per_rank = (
-                session.query(l.DailyTotalsPerRank)
-                .filter(l.DailyTotalsPerRank.roomid == room)
-                .order_by(
-                    l.DailyTotalsPerRank.date,
-                    func.instr(" +%@*&~#", l.DailyTotalsPerRank.userrank),
-                )
-                .all()
-            )
-
-            if results_per_rank:
-                results_per_rank_iter = iter(results_per_rank)
-
-                while True:
-                    rrow = next(results_per_rank_iter, None)
-
-                    if rrow is None:
-                        break
-
-                    while True:
-                        if date is None:
-                            date = datetime.date.fromisoformat(rrow.date)
-                            date_str = date.isoformat()
-
-                        if date_str not in data:
-                            data[date_str] = {
-                                " ": 0,
-                                "+": 0,
-                                "%": 0,
-                                "@": 0,
-                                "*": 0,
-                                "&": 0,
-                                "~": 0,
-                                "#": 0,
-                            }
-
-                        if date_str < rrow.date:
-                            date += datetime.timedelta(days=1)
-                            date_str = date.isoformat()
-                        else:
-                            break
-
-                    if rrow.userrank in data[date_str]:
-                        data[date_str][rrow.userrank] += rrow.messages
-
+            else:
                 out_rrow = (
                     "{date},{total},{regular},{auth},{staff},"
                     "{voice},{driver},{moderator},{bot},{administrator},{owner}\n"
