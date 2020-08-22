@@ -84,7 +84,7 @@ def date_format(text: str) -> str:
     return f"{dd}/{mm}/{yyyy}"
 
 
-def html_escape(text: Optional[str], newline_ch="<br>") -> str:
+def html_escape(text: Optional[str], newline_ch: str = "<br>") -> str:
     if text is None:
         return ""
     return escape(text).replace("\n", newline_ch)
