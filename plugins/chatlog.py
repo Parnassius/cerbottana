@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Union, cast
 
 from flask import abort, render_template, request
 from flask import session as web_session
-from lxml.html import fromstring
+from lxml.html import fromstring  # type: ignore
 from sqlalchemy.sql import func
 
 import databases.logs as l
