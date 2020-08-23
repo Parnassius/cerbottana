@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Union, cast
 from flask import abort, render_template, request
 from flask import session as web_session
 from lxml.html import fromstring
-from sqlalchemy.orm import Query
 from sqlalchemy.sql import func
 
 import databases.logs as l
@@ -176,29 +175,29 @@ def linecounts_data(room: str) -> str:
     with db.get_session() as session:
 
         columns: List[str]
-        query: Union[Query[l.DailyTotalsPerUser], Query[l.DailyTotalsPerRank]]
+        results: Union[List[l.DailyTotalsPerUser], List[l.DailyTotalsPerRank]]
         if request.args.get("users"):
             columns = [
                 utils.to_user_id(user) for user in request.args["users"].split(",")
             ]
-            query = session.query(l.DailyTotalsPerUser)
+            results = (
+                session.query(l.DailyTotalsPerUser)
+                .filter_by(roomid=room)
+                .filter(l.DailyTotalsPerUser.userid.in_(columns))
+                .order_by(l.DailyTotalsPerUser.date)
+                .all()
+            )
         else:
             columns = [" ", "+", "%", "@", "*", "&", "~", "#"]
-            query = session.query(l.DailyTotalsPerRank)
-
-        query = query.filter_by(roomid=room)
-
-        if request.args.get("users"):
-            query = query.filter(l.DailyTotalsPerUser.userid.in_(columns)).order_by(
-                l.DailyTotalsPerUser.date
+            results = (
+                session.query(l.DailyTotalsPerRank)
+                .filter_by(roomid=room)
+                .order_by(
+                    l.DailyTotalsPerRank.date,
+                    func.instr(" +%@*&~#", l.DailyTotalsPerRank.userrank),
+                )
+                .all()
             )
-        else:
-            query = query.order_by(
-                l.DailyTotalsPerRank.date,
-                func.instr(" +%@*&~#", l.DailyTotalsPerRank.userrank),
-            )
-
-        results = query.all()
 
         if results:
             results_iter: Union[
