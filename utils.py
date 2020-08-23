@@ -46,7 +46,7 @@ def create_token(
 
     db = Database.open()
     with db.get_session() as session:
-        session.add_all(values)
+        session.add_all(values)  # type: ignore  # sqlalchemy
 
     return token_id
 

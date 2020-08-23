@@ -30,7 +30,9 @@ async def logger_task(conn: Connection) -> None:
 
             for room in conn.rooms + conn.private_rooms:
                 last_date = (
-                    session.query(func.max(l.Logs.date)).filter_by(roomid=room).scalar()
+                    session.query(func.max(l.Logs.date))  # type: ignore  # sqlalchemy
+                    .filter_by(roomid=room)
+                    .scalar()
                 )
 
                 if last_date:

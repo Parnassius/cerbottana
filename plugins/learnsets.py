@@ -27,12 +27,14 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
 
     with db.get_session() as session:
         version_group_id: Optional[int] = (
-            session.query(v.VersionGroups.id).filter_by(identifier=version).scalar()
+            session.query(v.VersionGroups.id)  # type: ignore  # sqlalchemy
+            .filter_by(identifier=version)
+            .scalar()
         )
 
         if version_group_id is None:
             version_group_id = (
-                session.query(v.Versions.version_group_id)
+                session.query(v.Versions.version_group_id)  # type: ignore  # sqlalchemy
                 .filter_by(identifier=version)
                 .scalar()
             )
@@ -51,7 +53,7 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
         results: Dict[int, ResultsDict] = dict()
 
         pokemon_species = (
-            session.query(v.PokemonSpecies)
+            session.query(v.PokemonSpecies)  # type: ignore  # sqlalchemy
             .options(
                 joinedload(v.PokemonSpecies.pokemon)
                 .joinedload(v.Pokemon.pokemon_moves)

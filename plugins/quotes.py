@@ -42,7 +42,7 @@ async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -
             message=arg, roomid=room, author=utils.to_user_id(user), date=func.date(),
         )
         session.add(result)
-        session.commit()
+        session.commit()  # type: ignore  # sqlalchemy
 
         try:
             if result.id:

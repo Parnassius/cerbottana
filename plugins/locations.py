@@ -41,7 +41,7 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
         results: Dict[int, ResultsDict] = dict()
 
         pokemon_species = (
-            session.query(v.PokemonSpecies)
+            session.query(v.PokemonSpecies)  # type: ignore  # sqlalchemy
             .options(
                 joinedload(v.PokemonSpecies.pokemon)
                 .joinedload(v.Pokemon.encounters)
@@ -222,7 +222,7 @@ async def encounters(
         results: Dict[int, ResultsDict] = dict()
 
         location = (
-            session.query(v.Locations)
+            session.query(v.Locations)  # type: ignore  # sqlalchemy
             .options(
                 joinedload(v.Locations.location_areas)
                 .joinedload(v.LocationAreas.location_area_prose)

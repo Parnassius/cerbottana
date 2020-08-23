@@ -38,7 +38,7 @@ def eightball_route() -> str:
                 session.query(d.EightBall).delete()
 
                 answers = set(request.form["answers"].strip().splitlines())
-                session.add_all(
+                session.add_all(  # type: ignore  # sqlalchemy
                     [d.EightBall(answer=answer.strip()) for answer in answers]
                 )
 
