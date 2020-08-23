@@ -5,6 +5,16 @@ disable = [
     "missing-function-docstring",
     "missing-module-docstring",
     "unused-argument",
+
+    # temporarily disabled, should be re-enabled sooner or later
+    "too-many-arguments",
+    "too-many-branches",
+    "too-many-instance-attributes",
+    "too-many-locals",
+    "too-many-statements",
+
+    # disabled until https://github.com/PyCQA/pylint/issues/3525 is fixed
+    "cyclic-import",
 ]
 
 [tool.pylint.format]

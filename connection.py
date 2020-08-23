@@ -74,8 +74,10 @@ class Connection:
         try:
             async with websockets.connect(
                 self.url,
-                ping_interval=None,  # type: ignore # should be fixed by https://github.com/aaugustin/websockets/commit/93ad88a9a8fe2ea8d96fb1d2a0f1625a3c5fee7c
-                max_size=None,  # type: ignore # should be fixed by https://github.com/aaugustin/websockets/commit/93ad88a9a8fe2ea8d96fb1d2a0f1625a3c5fee7c
+                # these two should be fixed by the next websockets release
+                # https://github.com/aaugustin/websockets/commit/93ad88a9a8fe2ea8d96fb1d2a0f1625a3c5fee7c
+                ping_interval=None,  # type: ignore
+                max_size=None,  # type: ignore
             ) as websocket:
                 self.websocket = websocket
                 self.connection_start = time()
