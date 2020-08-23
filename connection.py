@@ -57,7 +57,10 @@ class Connection:
     def open_connection(self, queue: SimpleQueue[str]) -> None:
         self.queue = queue
         self.loop = asyncio.new_event_loop()
-        self.loop.run_until_complete(self.start_websocket())
+        try:
+            self.loop.run_until_complete(self.start_websocket())
+        except asyncio.CancelledError:
+            pass
 
     async def start_websocket(self) -> None:
         itasks: List[asyncio.Task[None]]
