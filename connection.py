@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import htmlmin
+
 import asyncio
 from datetime import datetime
 from queue import Empty as EmptyQueue
@@ -150,6 +152,7 @@ class Connection:
                 await self.send_message(roomid, "/modchat +", False)
 
     async def send_rankhtmlbox(self, rank: str, room: str, message: str) -> None:
+        message = htmlmin.minify(message)
         await self.send_message(room, f"/addrankhtmlbox {rank}, {message}", False)
 
     async def send_htmlbox(
@@ -159,6 +162,7 @@ class Connection:
         message: str,
         simple_message: str = "",
     ) -> None:
+        message = htmlmin.minify(message)
         if room is not None:
             await self.send_message(room, f"/addhtmlbox {message}", False)
         elif user is not None:
