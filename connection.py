@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import htmlmin
-
 import asyncio
 from datetime import datetime
 from queue import Empty as EmptyQueue
@@ -9,6 +7,7 @@ from queue import SimpleQueue
 from time import time
 from typing import Dict, List, Optional
 
+import htmlmin  # type: ignore
 import pytz
 import websockets
 from environs import Env
