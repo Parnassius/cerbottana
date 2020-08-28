@@ -11,7 +11,7 @@ from server import SERVER
 
 
 def shutdown(
-    sig: signal.Signals, frame_type: FrameType,  # pylint: disable=no-member
+    sig: signal.Signals, frame_type: FrameType  # pylint: disable=no-member
 ) -> None:
     if CONNECTION.websocket is not None and CONNECTION.loop is not None:
         for task in asyncio.all_tasks(loop=CONNECTION.loop):

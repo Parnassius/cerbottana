@@ -39,7 +39,7 @@ async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -
     db = Database.open()
     with db.get_session() as session:
         result = d.Quotes(
-            message=arg, roomid=room, author=utils.to_user_id(user), date=func.date(),
+            message=arg, roomid=room, author=utils.to_user_id(user), date=func.date()
         )
         session.add(result)
         session.commit()  # type: ignore  # sqlalchemy
