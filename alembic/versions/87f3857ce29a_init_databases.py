@@ -35,7 +35,7 @@ def upgrade_database():
     )
 
     op.create_table(
-        "eightball", Column("id", Integer, primary_key=True), Column("answer", String),
+        "eightball", Column("id", Integer, primary_key=True), Column("answer", String)
     )
 
     op.create_table(

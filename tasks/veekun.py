@@ -46,7 +46,7 @@ async def csv_to_sqlite(conn: Connection) -> None:
                         session.query(tables_classes[tname]).update(
                             {
                                 tables_classes[tname].identifier: func.replace(
-                                    tables_classes[tname].identifier, "-", "",
+                                    tables_classes[tname].identifier, "-", ""
                                 )
                             },
                             synchronize_session=False,

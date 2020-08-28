@@ -102,7 +102,7 @@ def dashboard() -> str:
             if "rifiuta" in request.form:
                 parts = request.form["rifiuta"].split(",")
                 session.query(d.Users).filter_by(
-                    id=parts[0], description_pending=",".join(parts[1:]),
+                    id=parts[0], description_pending=",".join(parts[1:])
                 ).update({"description_pending": ""})
 
         descriptions_pending = (
