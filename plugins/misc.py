@@ -40,7 +40,7 @@ async def tell(conn: Connection, room: Optional[str], user: str, arg: str) -> No
 
     text = ",".join(args[1:]).lstrip()
     html = (
-        f"<b>{utils.to_unselectable_html(text)}</b><br>"
+        f"<b>{utils.to_obfuscated_html(text)}</b><br>"
         + '<div style="float: left; color: #888; font-size: 8pt">'
         + f"[inviato da {rank}{userid}]"
         + "</div>"

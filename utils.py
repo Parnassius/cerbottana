@@ -3,7 +3,9 @@ from __future__ import annotations
 import hashlib
 import math
 import os
+import random
 import re
+import string
 from html import escape
 from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
 
@@ -84,10 +86,10 @@ def date_format(text: str) -> str:
     return f"{dd}/{mm}/{yyyy}"
 
 
-def html_escape(text: Optional[str], newline_ch: str = "<br>") -> str:
+def html_escape(text: Optional[str]) -> str:
     if text is None:
         return ""
-    return escape(text).replace("\n", newline_ch)
+    return escape(text).replace("\n", "<br>")
 
 
 def is_voice(user: str) -> bool:
@@ -191,24 +193,33 @@ def render_template(  # type: ignore[misc]  # allow any
     return template.render(**template_vars)
 
 
-def to_unselectable_html(text: Optional[str]) -> str:
+def to_obfuscated_html(text: Optional[str]) -> str:
+    """
+    Converts a string to htmlbox-compatible code; inverts character insertion order
+    with pull-left/pull-right divs and randomly adds invisible obfuscation text.
+    """
     if text is None:
         return ""
-    escaped_text = html_escape(text, newline_ch=" ")
-    return (
-        '<input type="button" style="'
-        + "background: none; "
-        + "border: none; "
-        + "color: inherit; "
-        + "cursor: inherit; "
-        + "font: inherit; "
-        + "margin: 0; "
-        + "outline: none; "
-        + "text-align: inherit; "
-        + "padding: 0; "
-        + "white-space: normal; "
-        + f'" value="{escaped_text}">'
-    )
+
+    obfuscated = '<div class="pull-left">'
+
+    for ch in text[::-1]:
+        # escape character: not preserving \n because we can't get it from user input;
+        # if you need this, transform '\n' into '</div><br><div class="pull-left">'
+        escaped_ch = "&nbsp;" if ch.isspace() else html_escape(ch)
+
+        # reverse character order
+        obfuscated += f'<div class="pull-right">{escaped_ch}</div>'
+
+        # add obfuscation text
+        randstr = ""
+        for _ in range(random.randrange(3, 10)):
+            randstr += random.choice(string.ascii_letters + string.digits)
+        obfuscated += f'<span style="position: absolute; top: -999vh">{randstr}</span>'
+
+    obfuscated += "</div>"  # closes <div class="pull-left">
+    # PS already inserts <div style="clear: both"></div> at the end
+    return obfuscated
 
 
 AVATAR_IDS: Dict[str, str] = {
