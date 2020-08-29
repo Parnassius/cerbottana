@@ -38,6 +38,18 @@
       g.setVisibility(i, !enabled);
     }
 
+    function pad(number) {
+      if (number < 10) {
+        return '0' + number;
+      }
+      return number;
+    }
+
+    function formatDate(timestamp) {
+      var date = new Date(timestamp);
+      return pad(date.getDate()) + '/' + pad(date.getMonth() + 1) + '/' + date.getFullYear();
+    }
+
     var g = new Dygraph(
       document.getElementById('graph'),
       [[0]], {
@@ -53,14 +65,25 @@
         labelsSeparateLines: true,
         legend: 'always',
         legendFormatter: function(data) {
+          console.log(data);
           var html = '';
-          if (data.x != null) html += data.xHTML;
-          data.series.forEach(function(series) {
+          if (data.x != null) {
+            html += formatDate(data.x);
+          } else {
+            html += formatDate(data.dygraph.layout_._xAxis.minval) + ' - ' + formatDate(data.dygraph.layout_._xAxis.maxval);
+          }
+          data.series.forEach(function(series, index) {
             var labeledData = series.dashHTML + ' ' + series.labelHTML;
             if (!series.isVisible) {
               labeledData = '<span style="opacity: .4">' + labeledData + '</span>';
             } else if (data.x != null) {
               labeledData += ': ' + series.yHTML;
+            } else {
+              var total = 0;
+              data.dygraph.rolledSeries_[index + 1].forEach(function(value) {
+                total += value[1];
+              });
+              labeledData += ': ' + total;
             }
             html += '<br>';
             html += '<span onclick="showhide(this, ' + String(series.isVisible) + ')">' + labeledData + '</span>';
@@ -84,8 +107,13 @@
       req.onreadystatechange = function () {
         if (req.readyState == 4) {
           if (req.status === 200) {
+            var text = req.responseText;
+            {% if request.args.get("topusers") %}
+              labels = ["Data"].concat(text.substr(0, text.indexOf("\n")).split(','));
+              text = text.substr(text.indexOf("\n") + 1);
+            {% endif %}
             g.updateOptions({
-              file: req.responseText,
+              file: text,
               labels: labels
             });
             document.body.classList.remove('loading-fullscreen');
@@ -93,7 +121,12 @@
         }
       };
 
-      req.open("GET", '/linecounts/{{ room }}/data?users=' + encodeURIComponent(users), true);
+      var url = '/linecounts/{{ room }}/data?users=' + encodeURIComponent(users);
+      {% if request.args.get("topusers") %}
+        url += '&topusers=1';
+      {% endif %}
+
+      req.open("GET", url, true);
       req.send(null);
     });
 

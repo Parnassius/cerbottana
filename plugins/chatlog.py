@@ -153,6 +153,26 @@ async def linecounts(
     await conn.send_pm(user, message)
 
 
+@command_wrapper()
+@parametrize_room
+async def topusers(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    userid = utils.to_user_id(user)
+    args = arg.split(",")
+    logsroom = utils.to_room_id(args[0])
+
+    users = Room.get(logsroom).users
+    if userid not in users:
+        return
+
+    rank = users[userid]["rank"]
+
+    token_id = utils.create_token({logsroom: rank}, 1)
+
+    message = f"{conn.domain}linecounts/{logsroom}?token={token_id}&topusers=1"
+
+    await conn.send_pm(user, message)
+
+
 @route_wrapper("/linecounts/<room>")
 def linecounts_route(room: str) -> str:
     if not utils.is_driver(web_session.get(room)):
@@ -178,7 +198,27 @@ def linecounts_data(room: str) -> str:
 
         columns: List[str]
         results: Union[List[l.DailyTotalsPerUser], List[l.DailyTotalsPerRank]]
-        if request.args.get("users"):
+        if request.args.get("topusers"):
+            min_date = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
+            query = (
+                session.query(l.DailyTotalsPerUser)
+                .filter_by(roomid=room)
+                .filter(l.DailyTotalsPerUser.date >= min_date)
+            )
+            columns = [
+                utils.to_user_id(row.userid)
+                for row in query.group_by(l.DailyTotalsPerUser.userid)
+                .order_by(func.sum(l.DailyTotalsPerUser.messages).desc())
+                .limit(10)
+                .all()
+            ]
+            results = (
+                query.filter(l.DailyTotalsPerUser.userid.in_(columns))
+                .order_by(l.DailyTotalsPerUser.date)
+                .all()
+            )
+            out += ",".join(columns) + "\n"
+        elif request.args.get("users"):
             columns = [
                 utils.to_user_id(user) for user in request.args["users"].split(",")
             ]
@@ -205,7 +245,7 @@ def linecounts_data(room: str) -> str:
             results_iter: Union[
                 Iterator[l.DailyTotalsPerUser], Iterator[l.DailyTotalsPerRank]
             ]
-            if request.args.get("users"):
+            if request.args.get("topusers") or request.args.get("users"):
                 results = cast(List[l.DailyTotalsPerUser], results)
                 results_iter = iter(results)
             else:
@@ -232,7 +272,7 @@ def linecounts_data(room: str) -> str:
                     else:
                         break
 
-                if request.args.get("users"):
+                if request.args.get("topusers") or request.args.get("users"):
                     row = cast(l.DailyTotalsPerUser, row)
                     column = row.userid
                 else:
@@ -242,7 +282,7 @@ def linecounts_data(room: str) -> str:
                 if column in data[date_str]:
                     data[date_str][column] += row.messages
 
-            if request.args.get("users"):
+            if request.args.get("topusers") or request.args.get("users"):
                 out_urow = "{date},{values}\n"
                 for d in data:
                     out += out_urow.format(
