@@ -1,116 +1,116 @@
 {% extends "layout.html" %}
 
 {% block head %}
-    <link href="{{ url_for('static', filename='dygraph.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='dygraph.min.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block container_classes %}
-    container-fullwidth
+  container-fullwidth
 {% endblock %}
 
 {% block content %}
 
-    <h2>
-        Statistiche di {{ room }}
-        <input type="text" id="users" placeholder="Cerca utenti (sepati da virgola)">
-        <button type="button" id="search">Cerca</button>
-    </h2>
+  <h2>
+    Statistiche di {{ room }}
+    <input type="text" id="users" placeholder="Cerca utenti (sepati da virgola)">
+    <button type="button" id="search">Cerca</button>
+  </h2>
 
-    <div id="rollingaverage">
-        Media mobile:
-        <label><input type="radio" name="rollingaverage" value="1" checked> No</label>
-        <label><input type="radio" name="rollingaverage" value="7"> 1 settimana</label>
-        <label><input type="radio" name="rollingaverage" value="30"> 30 giorni</label>
-    </div>
-    <div id="graph"></div>
-    <div id="legend"></div>
+  <div id="rollingaverage">
+    Media mobile:
+    <label><input type="radio" name="rollingaverage" value="1" checked> No</label>
+    <label><input type="radio" name="rollingaverage" value="7"> 1 settimana</label>
+    <label><input type="radio" name="rollingaverage" value="30"> 30 giorni</label>
+  </div>
+  <div id="graph"></div>
+  <div id="legend"></div>
 
-    <script src="{{ url_for('static', filename='dygraph.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='dygraph.min.js') }}"></script>
 
-    <script>
-        function showhide(el, enabled) {
-            var i = 0;
-            while ((el = el.previousSibling) != null) {
-                if (el.tagName.toUpperCase() === 'SPAN') {
-                    i++;
-                }
-            }
-            g.setVisibility(i, !enabled);
+  <script>
+    function showhide(el, enabled) {
+      var i = 0;
+      while ((el = el.previousSibling) != null) {
+        if (el.tagName.toUpperCase() === 'SPAN') {
+          i++;
         }
+      }
+      g.setVisibility(i, !enabled);
+    }
 
-        var g = new Dygraph(
-            document.getElementById('graph'),
-            [[0]], {
-                axes: {
-                    x: {
-                        axisLabelWidth: 80,
-                        pixelsPerLabel: 100
-                    }
-                },
-                colorSaturation: .5,
-                labels: [''],
-                labelsDiv: 'legend',
-                labelsSeparateLines: true,
-                legend: 'always',
-                legendFormatter: function(data) {
-                    var html = '';
-                    if (data.x != null) html += data.xHTML;
-                    data.series.forEach(function(series) {
-                        var labeledData = series.dashHTML + ' ' + series.labelHTML;
-                        if (!series.isVisible) {
-                            labeledData = '<span style="opacity: .4">' + labeledData + '</span>';
-                        } else if (data.x != null) {
-                            labeledData += ': ' + series.yHTML;
-                        }
-                        html += '<br>';
-                        html += '<span onclick="showhide(this, ' + String(series.isVisible) + ')">' + labeledData + '</span>';
-                    });
-                    return html;
-                }
+    var g = new Dygraph(
+      document.getElementById('graph'),
+      [[0]], {
+        axes: {
+          x: {
+            axisLabelWidth: 80,
+            pixelsPerLabel: 100
+          }
+        },
+        colorSaturation: .5,
+        labels: [''],
+        labelsDiv: 'legend',
+        labelsSeparateLines: true,
+        legend: 'always',
+        legendFormatter: function(data) {
+          var html = '';
+          if (data.x != null) html += data.xHTML;
+          data.series.forEach(function(series) {
+            var labeledData = series.dashHTML + ' ' + series.labelHTML;
+            if (!series.isVisible) {
+              labeledData = '<span style="opacity: .4">' + labeledData + '</span>';
+            } else if (data.x != null) {
+              labeledData += ': ' + series.yHTML;
             }
-        );
+            html += '<br>';
+            html += '<span onclick="showhide(this, ' + String(series.isVisible) + ')">' + labeledData + '</span>';
+          });
+          return html;
+        }
+      }
+    );
 
-        document.getElementById('search').addEventListener('click', function() {
-            document.body.classList.add('loading-fullscreen');
-            var users = document.getElementById('users').value;
-            var labels;
-            if (users !== '') {
-                labels = ["Data"].concat(users.split(','));
-            } else {
-                labels = ["Data", "Total", "Regular", "Auth", "Staff", "Voice", "Driver", "Moderator", "Bot", "Leader/Administrator", "Owner"];
-            }
+    document.getElementById('search').addEventListener('click', function() {
+      document.body.classList.add('loading-fullscreen');
+      var users = document.getElementById('users').value;
+      var labels;
+      if (users !== '') {
+        labels = ["Data"].concat(users.split(','));
+      } else {
+        labels = ["Data", "Total", "Regular", "Auth", "Staff", "Voice", "Driver", "Moderator", "Bot", "Leader/Administrator", "Owner"];
+      }
 
-            var req = new XMLHttpRequest();
-            req.onreadystatechange = function () {
-                if (req.readyState == 4) {
-                    if (req.status === 200) {
-                        g.updateOptions({
-                            file: req.responseText,
-                            labels: labels
-                        });
-                        document.body.classList.remove('loading-fullscreen');
-                    }
-                }
-            };
-
-            req.open("GET", '/linecounts/{{ room }}/data?users=' + encodeURIComponent(users), true);
-            req.send(null);
-        });
-
-        document.getElementsByName('rollingaverage').forEach(function(el) {
-            el.addEventListener('click', function() {
-                var period = this.value;
-                g.updateOptions({
-                    rollPeriod: period
-                });
+      var req = new XMLHttpRequest();
+      req.onreadystatechange = function () {
+        if (req.readyState == 4) {
+          if (req.status === 200) {
+            g.updateOptions({
+              file: req.responseText,
+              labels: labels
             });
-        });
-
-        var search = new URLSearchParams(location.search).get('search');
-        if (search) {
-            document.getElementById('users').value = search;
+            document.body.classList.remove('loading-fullscreen');
+          }
         }
-        document.getElementById('search').click();
-    </script>
+      };
+
+      req.open("GET", '/linecounts/{{ room }}/data?users=' + encodeURIComponent(users), true);
+      req.send(null);
+    });
+
+    document.getElementsByName('rollingaverage').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var period = this.value;
+        g.updateOptions({
+          rollPeriod: period
+        });
+      });
+    });
+
+    var search = new URLSearchParams(location.search).get('search');
+    if (search) {
+      document.getElementById('users').value = search;
+    }
+    document.getElementById('search').click();
+  </script>
 
 {% endblock %}

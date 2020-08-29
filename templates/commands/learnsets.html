@@ -1,29 +1,29 @@
 {% for method_id in methods %}
-    <details>
-        <summary>
-            <b><big>{{ results[method_id]["name"] }}</big></b>
-        </summary>
-        <table style="margin: 5px 0">
-            <tbody>
-                <tr>
-                    <th>Move</th>
-                    {% if method_id == 1 %}
-                        <th>Level</th>
-                    {% elif method_id == 4 %}
-                        <th>Machine</th>
-                    {% endif %}
-                </tr>
-                {% for move in results[method_id]["moves"] %}
-                    <tr>
-                        <td>{{ move["name"] }}</td>
-                        {% if method_id == 1 %}
-                            <td style="text-align: right">{{ move["level"] }}</td>
-                        {% elif method_id == 4 %}
-                            <td>{{ move["machine"] }}</td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </details>
+  <details>
+    <summary>
+      <b><big>{{ results[method_id]["name"] }}</big></b>
+    </summary>
+    <table style="margin: 5px 0">
+      <tbody>
+        <tr>
+          <th>Move</th>
+          {% if method_id == 1 %}
+            <th>Level</th>
+          {% elif method_id == 4 %}
+            <th>Machine</th>
+          {% endif %}
+        </tr>
+        {% for move in results[method_id]["moves"] %}
+          <tr>
+            <td>{{ move["name"] }}</td>
+            {% if method_id == 1 %}
+              <td style="text-align: right">{{ move["level"] }}</td>
+            {% elif method_id == 4 %}
+              <td>{{ move["machine"] }}</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
 {% endfor %}

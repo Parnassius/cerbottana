@@ -1,41 +1,41 @@
 {% for version_id in versions %}
-    <details>
-        <summary>
-            <b><big>{{ results[version_id]["name"] }}</big></b>
-        </summary>
-        <table>
-            <tbody>
-                {% for area in results[version_id]["areas"] %}
-                    <tr>
-                        <th>{{ results[version_id]["areas"][area]["name"] }}</th>
-                        <th>Method</th>
-                        <th>Level</th>
-                        <th colspan="2">Rarity</th>
-                    </tr>
-                    {% for slot in results[version_id]["areas"][area]["slots"] %}
-                        <tr>
-                            <td>{{ results[version_id]["areas"][area]["slots"][slot]["pokemon"] }}</td>
-                            <td>{{ results[version_id]["areas"][area]["slots"][slot]["method"] }}</td>
-                            <td>
-                                L{{ results[version_id]["areas"][area]["slots"][slot]["min_level"] }}
-                                {%- if results[version_id]["areas"][area]["slots"][slot]["min_level"] < results[version_id]["areas"][area]["slots"][slot]["max_level"] -%}
-                                    -{{ results[version_id]["areas"][area]["slots"][slot]["max_level"] }}
-                                {% endif %}
-                            </td>
-                            <td{% if not results[version_id]["areas"][area]["slots"][slot]["conditions"] %} colspan="2"{% endif %}>
-                                {{ results[version_id]["areas"][area]["slots"][slot]["rarity"] }}%
-                            </td>
-                            {% if results[version_id]["areas"][area]["slots"][slot]["conditions"] %}
-                                <td>
-                                    {% for i in results[version_id]["areas"][area]["slots"][slot]["conditions"].values() %}
-                                        +{{ i["rarity"] }}% {{ i["description"] }}<br>
-                                    {% endfor %}
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </details>
+  <details>
+    <summary>
+      <b><big>{{ results[version_id]["name"] }}</big></b>
+    </summary>
+    <table>
+      <tbody>
+        {% for area in results[version_id]["areas"] %}
+          <tr>
+            <th>{{ results[version_id]["areas"][area]["name"] }}</th>
+            <th>Method</th>
+            <th>Level</th>
+            <th colspan="2">Rarity</th>
+          </tr>
+          {% for slot in results[version_id]["areas"][area]["slots"] %}
+            <tr>
+              <td>{{ results[version_id]["areas"][area]["slots"][slot]["pokemon"] }}</td>
+              <td>{{ results[version_id]["areas"][area]["slots"][slot]["method"] }}</td>
+              <td>
+                L{{ results[version_id]["areas"][area]["slots"][slot]["min_level"] }}
+                {%- if results[version_id]["areas"][area]["slots"][slot]["min_level"] < results[version_id]["areas"][area]["slots"][slot]["max_level"] -%}
+                  -{{ results[version_id]["areas"][area]["slots"][slot]["max_level"] }}
+                {% endif %}
+              </td>
+              <td{% if not results[version_id]["areas"][area]["slots"][slot]["conditions"] %} colspan="2"{% endif %}>
+                {{ results[version_id]["areas"][area]["slots"][slot]["rarity"] }}%
+              </td>
+              {% if results[version_id]["areas"][area]["slots"][slot]["conditions"] %}
+                <td>
+                  {% for i in results[version_id]["areas"][area]["slots"][slot]["conditions"].values() %}
+                    +{{ i["rarity"] }}% {{ i["description"] }}<br>
+                  {% endfor %}
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
 {% endfor %}
