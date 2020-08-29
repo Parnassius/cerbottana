@@ -1,0 +1,25 @@
+on:
+  schedule:
+  - cron: '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: cerbottana
+    - name: Clone veekun pokedex
+      uses: actions/checkout@v2
+      with:
+        repository: veekun/pokedex
+        path: veekun
+    - name: Update veekun data
+      run: cp veekun/pokedex/data/csv/*.csv cerbottana/data/veekun/
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        path: cerbottana
+        commit-message: 'Veekun: update data'
+        title: 'Veekun: update data'
+        branch: veekun-update-data
