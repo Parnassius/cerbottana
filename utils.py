@@ -194,31 +194,17 @@ def render_template(  # type: ignore[misc]  # allow any
 
 
 def to_obfuscated_html(text: Optional[str]) -> str:
-    """
-    Converts a string to htmlbox-compatible code; inverts character insertion order
-    with pull-left/pull-right divs and randomly adds invisible obfuscation text.
-    """
+    """Converts a string to HTML code and adds invisible obfuscation text."""
     if text is None:
         return ""
 
-    obfuscated = '<div class="pull-left">'
-
-    for ch in text[::-1]:
-        # escape character: not preserving \n because we can't get it from user input;
-        # if you need this, transform '\n' into '</div><br><div class="pull-left">'
-        escaped_ch = "&nbsp;" if ch.isspace() else html_escape(ch)
-
-        # reverse character order
-        obfuscated += f'<div class="pull-right">{escaped_ch}</div>'
-
-        # add obfuscation text
+    obfuscated = ""
+    for ch in text:
+        obfuscated += html_escape(ch)
         randstr = ""
         for _ in range(random.randrange(3, 10)):
             randstr += random.choice(string.ascii_letters + string.digits)
         obfuscated += f'<span style="position: absolute; top: -999vh">{randstr}</span>'
-
-    obfuscated += "</div>"  # closes <div class="pull-left">
-    # PS already inserts <div style="clear: both"></div> at the end
     return obfuscated
 
 
