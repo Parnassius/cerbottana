@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     HandlerFunc = Callable[[Connection, str, str], Awaitable[None]]
 
 
-handlers = dict()  # type: Dict[str, List[HandlerFunc]]
+handlers: Dict[str, List[HandlerFunc]] = dict()
 
 
 def handler_wrapper(message_types: List[str]) -> Callable[[HandlerFunc], HandlerFunc]:

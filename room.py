@@ -21,7 +21,7 @@ UserDict = TypedDict(
 
 
 class Room:
-    _instances = dict()  # type: Dict[str, Room]
+    _instances: Dict[str, Room] = dict()
 
     def __init__(self, roomid: str) -> None:
         self.roomid = roomid
