@@ -1,0 +1,10 @@
+alembic
+environs
+Flask
+htmlmin
+lxml
+python-dateutil
+pytz
+SQLAlchemy
+waitress
+websockets
