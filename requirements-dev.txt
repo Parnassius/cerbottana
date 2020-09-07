@@ -20,9 +20,9 @@ click==7.1.2 \
     --hash=sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a \
     --hash=sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc \
     # via -c requirements.txt, black, pip-tools
-isort==5.5.0 \
-    --hash=sha256:0906e0e7092e060c05de709ad172e1ec1b26aa27fdd4e8093f257890cd881d18 \
-    --hash=sha256:8103bc070d9258fe97e82470cb30f0e4b730e94c44ac81ebae32b05d5a6c87ea \
+isort==5.5.1 \
+    --hash=sha256:92533892058de0306e51c88f22ece002a209dc8e80288aa3cec6d443060d584f \
+    --hash=sha256:a200d47b7ee8b7f7d0a9646650160c4a51b6a91a9413fd31b1da2c4de789f5d3 \
     # via -r requirements-dev.in, pylint
 lazy-object-proxy==1.4.3 \
     --hash=sha256:0c4b206227a8097f05c4dbdd323c50edf81f15db3b8dc064d08c62d37e1a504d \
