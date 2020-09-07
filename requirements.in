@@ -6,5 +6,6 @@ lxml
 python-dateutil
 pytz
 SQLAlchemy
+typing_extensions
 waitress
 websockets
