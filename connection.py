@@ -222,6 +222,6 @@ CONNECTION = Connection(
     env.list("ROOMS", []),
     env.list("PRIVATE_ROOMS", []),
     env("COMMAND_CHARACTER"),
-    env.list("ADMINISTRATORS"),
+    env.list("ADMINISTRATORS", []),
     env("DOMAIN"),
 )
