@@ -215,8 +215,28 @@ class PokemonSpecies(Base):
     generation = relationship("Generations", uselist=False)
     evolution_chain = relationship("EvolutionChains", uselist=False)
 
+    pokemon_species_flavor_text = relationship("PokemonSpeciesFlavorText", uselist=True)
     pokemon_species_name = relationship("PokemonSpeciesNames", uselist=True)
     pokemon = relationship("Pokemon", uselist=True)
+
+
+class PokemonSpeciesFlavorText(Base):
+    __tablename__ = "pokemon_species_flavor_text"
+
+    species_id = Column(
+        Integer, ForeignKey("pokemon_species.id"), primary_key=True, nullable=False
+    )
+    version_id = Column(
+        Integer, ForeignKey("versions.id"), primary_key=True, nullable=False
+    )
+    language_id = Column(
+        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
+    )
+    flavor_text = Column(String, nullable=False)
+
+    species = relationship("PokemonSpecies", uselist=False)
+    version = relationship("Versions", uselist=False)
+    language = relationship("Languages", uselist=False)
 
 
 class PokemonSpeciesNames(Base):
