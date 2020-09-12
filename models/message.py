@@ -1,0 +1,87 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, List, Optional
+
+from .room import Room
+from .user import User
+
+if TYPE_CHECKING:
+    from connection import Connection
+
+
+class Message:
+    """Chat message sent to a room or in PM to a user.
+
+    Attributes:
+        conn (Connection): Used to access the websocket.
+        room: (Optional[Room]): Room in which the message was sent to. None if the
+            message is a PM.
+        user (User): Message author.
+        arg (str): Text body of the message without the initial command keyword.
+        args (List[str]): arg attribute splitted by commas.
+        parametrized_room (Optional[Room]): See plugins.parametrize_room decorator.
+            Defaults to None.
+    """
+
+    def __init__(self, room: Optional[Room], user: User, arg: str) -> None:
+        # Core attributes
+        # Note: `self.conn` should become a property if it's not treated a singleton
+        # anymore.
+        self.conn = user.conn
+        self.room = room
+        self.user = user
+        self.arg = arg
+
+        # Attributes to support supplementary functionalities
+        self._parametrized_room: Optional[Room] = None
+
+    @property
+    def args(self) -> List[str]:
+        # Special case to preserve msg.arg's truth.
+        # An empty string (False) would be translated to [""] (True).
+        if not self.arg:
+            return []
+
+        return [word.strip() for word in self.arg.split(",")]
+
+    @args.setter
+    def args(self, new: List[str]) -> None:
+        self.arg = ",".join(new)
+
+    @property
+    def parametrized_room(self) -> Room:
+        if self._parametrized_room is None:
+            raise BaseException(
+                "Trying to access parametrized_room attribute without prior decoration"
+            )
+        return self._parametrized_room
+
+    @parametrized_room.setter
+    def parametrized_room(self, room: Room) -> None:
+        self._parametrized_room = room
+
+    async def reply(self, message: str, escape: bool = True) -> None:
+        """Sends a text message to a room or in PM to a user, depending on the context.
+
+        Args:
+            message (str): Text to be sent.
+            escape (bool, optional): True if PS commands should be escaped. Defaults to
+                True.
+        """
+        if self.room is None:
+            await self.user.send(message, escape)
+        else:
+            await self.room.send(message, escape)
+
+    async def reply_htmlbox(self, message: str, simple_message: str = "") -> None:
+        """Sends an HTML box to a room or in PM to a user, depending on the context.
+
+        Args:
+            message (str): HTML to be sent.
+            simple_message (str): Alt text, not needed if the HTML box is sent to a
+                room. Defaults to a generic message.
+        """
+        if self.room is None:
+            await self.user.send_htmlbox(message, simple_message)
+        else:
+            await self.room.send_htmlbox(message)

@@ -10,10 +10,11 @@ from handlers import handler_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.room import Room
 
 
 @handler_wrapper(["challstr"])
-async def challstr(conn: Connection, roomid: str, *args: str) -> None:
+async def challstr(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 1:
         return
 
@@ -36,11 +37,11 @@ async def challstr(conn: Connection, roomid: str, *args: str) -> None:
     assertion = json.loads(resp.read().decode("utf-8")[1:])["assertion"]
 
     if assertion:
-        await conn.send_message("", f"/trn {conn.username},0,{assertion}", False)
+        await conn.send(f"|/trn {conn.username},0,{assertion}")
 
 
 @handler_wrapper(["updateuser"])
-async def updateuser(conn: Connection, roomid: str, *args: str) -> None:
+async def updateuser(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 4:
         return
 
@@ -54,13 +55,10 @@ async def updateuser(conn: Connection, roomid: str, *args: str) -> None:
         return
 
     if conn.avatar and avatar != conn.avatar:
-        await conn.send_message("", f"/avatar {conn.avatar}", False)
+        await conn.send(f"|/avatar {conn.avatar}")
 
     if conn.statustext:
-        await conn.send_message("", f"/status {conn.statustext}", False)
+        await conn.send(f"|/status {conn.statustext}")
 
-    for public_room in conn.rooms:
-        await conn.send_message("", f"/join {public_room}", False)
-
-    for private_room in conn.private_rooms:
-        await conn.send_message("", f"/join {private_room}", False)
+    for roomid in conn.rooms:
+        await conn.send(f"|/join {roomid}")

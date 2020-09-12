@@ -20,12 +20,13 @@ from flask import abort
 from flask import session as web_session
 
 import utils
-from room import Room
+from models.room import Room
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.message import Message
 
-    CommandFunc = Callable[[Connection, Optional[str], str, str], Awaitable[None]]
+    CommandFunc = Callable[[Message], Awaitable[None]]
     RouteFunc = Union[Callable[[], str], Callable[[str], str]]
 
 
@@ -71,12 +72,10 @@ class Command:
 
 def scope_checker(func: CommandFunc) -> CommandFunc:
     @wraps(func)
-    async def scope_wrapper(
-        conn: Connection, room: Optional[str], user: str, arg: str
-    ) -> None:
-        if room is not None and not utils.has_role("voice", user):
+    async def scope_wrapper(msg: Message) -> None:
+        if msg.room is not None and not msg.user.has_role("voice", msg.room):
             return
-        await func(conn, room, user, arg)
+        await func(msg)
 
     return scope_wrapper
 
@@ -93,44 +92,44 @@ def command_wrapper(
 
 def parametrize_room(func: CommandFunc) -> CommandFunc:
     """
-    Changes the syntax of a command depending on its context:
-    (1) If it's used in a room, it automatically adds its roomid at the
-        beginning of arg.
-    (2) If it's used in PM, it requires to specify an additional parameter
-        at the beginning of arg representing a roomid.
+    Enriches a command depending on its context:
+    (1) If it's used in a room, it saves such room in msg.parametrized_room.
+    (2) If it's used in PM, it requires to specify a temporary parameter representing
+        a room that'll be saved in msg.parametrized_room.
 
-    This way, room-dependant commands can be used in PM too without coding
-    any additional logic. An example is randquote (quotes.py).
+    This way, room-dependant commands can be used in PM too without coding any
+    additional logic. An example is randquote (quotes.py).
     """
 
     @wraps(func)
-    async def wrapper(
-        conn: Connection, room: Optional[str], user: str, arg: str
-    ) -> None:
-        if room:  # (1) command used in a room: just add the roomid param to arg
-            args = arg.split(",") if arg else []
-            args.insert(0, room)
-        else:  # (2) command used in PM: check perms
-            if not arg:
-                await conn.send_pm(user, "Specifica il nome della room.")
+    async def wrapper(msg: Message) -> None:
+        if msg.room:  # (1)
+            msg.parametrized_room = msg.room
+        else:  # (2)
+            # User didn't supply any parameters
+            if not msg.arg:
+                await msg.user.send("Specifica il nome della room")
                 return
 
-            args = arg.split(",")
-            args[0] = utils.to_room_id(args[0], fallback="")  # target room
-            if not args[0]:
-                await conn.send_pm(user, "Specifica il nome della room.")
+            # Check if user supplied a non-empty roomid
+            target_roomid = utils.to_room_id(msg.args[0], fallback="")
+            msg.args = msg.args[1:]
+            if not target_roomid:
+                await msg.user.send("Specifica il nome della room")
                 return
+            msg.parametrized_room = Room.get(msg.conn, target_roomid)
 
+            # Check if the room is valid
             if (
-                args[0] not in conn.rooms + conn.private_rooms  # bot in room
-                or utils.to_user_id(user) not in Room.get(args[0]).users  # user in room
+                target_roomid not in msg.conn.rooms  # bot in room
+                or msg.user not in msg.parametrized_room  # user in room
             ):
                 # Send the same message for both errors to avoid leaking private rooms
-                await conn.send_pm(user, "Sei nella room?")
+                await msg.user.send("Sei nella room?")
                 return
 
-        arg = ",".join(args)  # update original arg
-        await func(conn, room, user, arg)
+        # Every check passed: wrap the original function
+        await func(msg)
 
     return wrapper
 
@@ -173,4 +172,4 @@ for f in modules:
         name = basename(f)[:-3]
         importlib.import_module("plugins." + name)
 
-commands = Command.get_all_aliases()
+commands: Dict[str, Command] = {}  # TODO: Enable plugins after rewrite is complete

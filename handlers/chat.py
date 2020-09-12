@@ -4,15 +4,25 @@ from typing import TYPE_CHECKING, Optional
 
 import utils
 from handlers import handler_wrapper
-from room import Room
+from models.message import Message
+from models.room import Room
+from models.user import User
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
 async def parse_chat_message(
-    conn: Connection, roomid: Optional[str], user: str, message: str
+    conn: Connection, room: Optional[Room], user: User, message: str
 ) -> None:
+    """Parses potential bot commands to their respective callback.
+
+    Args:
+        conn (Connection): Used to access the websocket.
+        room (Optional[Room]): Command room if it isn't a PM. Defaults to None.
+        user (User): User that requested the command.
+        message (str): Command argument.
+    """
     if message[: len(conn.command_character)] == conn.command_character:
         command = message.split(" ")[0][len(conn.command_character) :].lower()
 
@@ -20,72 +30,74 @@ async def parse_chat_message(
             message = message[
                 (len(conn.command_character) + len(command) + 1) :
             ].strip()
-            await conn.commands[command].callback(conn, roomid, user, message)
-        elif roomid is None:
-            await conn.send_pm(user, "Invalid command")
+            msg = Message(room, user, message)
+            await conn.commands[command].callback(msg)
+        elif room is None:
+            await user.send("Invalid command")
 
-    elif roomid is None:
+    elif room is None:
         c = f"``{conn.command_character}help``"
         message = f"I'm a bot: type {c} to get a list of available commands. "
         message += (
             f"Sono un bot: scrivi {c} per ottenere un elenco dei comandi disponibili."
         )
-        await conn.send_pm(user, message)
+        await user.send(message)
 
 
 @handler_wrapper(["chat", "c"])
-async def chat(conn: Connection, roomid: str, *args: str) -> None:
+async def chat(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 2:
         return
 
-    user = args[0]
+    user = User.get(conn, args[0])
     message = "|".join(args[1:]).strip()
 
-    room = Room.get(roomid)
     room.dynamic_buffer.append(message)
 
-    if utils.to_user_id(user) == utils.to_user_id(conn.username):
+    if user.userid == utils.to_user_id(conn.username):
         return
-    await parse_chat_message(conn, roomid, user, message)
+
+    await parse_chat_message(conn, room, user, message)
 
 
 @handler_wrapper(["c:"])
-async def timestampchat(conn: Connection, roomid: str, *args: str) -> None:
+async def timestampchat(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 3:
         return
 
     timestamp = args[0]
-    user = args[1]
+    user = User.get(conn, args[1])
     message = "|".join(args[2:]).strip()
 
-    room = Room.get(roomid)
     room.dynamic_buffer.append(message)
 
-    if utils.to_user_id(user) == utils.to_user_id(conn.username):
+    if user.userid == utils.to_user_id(conn.username):
         return
     if int(timestamp) <= conn.timestamp:
         return
-    await parse_chat_message(conn, roomid, user, message)
+
+    await parse_chat_message(conn, room, user, message)
 
 
 @handler_wrapper(["pm"])
-async def pm(conn: Connection, roomid: str, *args: str) -> None:
+async def pm(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 3:
         return
 
-    sender = args[0]
-    receiver = args[1]
+    sender = User.get(conn, args[0])
+    receiver = User.get(conn, args[1])
     message = "|".join(args[2:]).strip()
 
-    if utils.to_user_id(sender) == utils.to_user_id(conn.username):
+    if sender.userid == utils.to_user_id(conn.username):
         return
-    if utils.to_user_id(receiver) != utils.to_user_id(conn.username):
+    if receiver.userid != utils.to_user_id(conn.username):
         return
+
     await parse_chat_message(conn, None, sender, message)
 
 
 @handler_wrapper([":"])
-async def server_timestamp(conn: Connection, roomid: str, *args: str) -> None:
+async def server_timestamp(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 1:
         return
 

@@ -1,22 +1,21 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime
 from queue import Empty as EmptyQueue
 from queue import SimpleQueue
 from time import time
-from typing import List, Optional
+from typing import Dict, List, Optional
+from weakref import WeakValueDictionary
 
-import htmlmin  # type: ignore
-import pytz
 import websockets
 from environs import Env
 from typing_extensions import TypedDict
 
 import utils
 from handlers import handlers
+from models.room import Room
+from models.user import User
 from plugins import commands
-from room import Room
 from tasks import init_tasks, recurring_tasks
 
 TiersDict = TypedDict(
@@ -48,11 +47,17 @@ class Connection:
         self.password = password
         self.avatar = avatar
         self.statustext = statustext
-        self.rooms = rooms
-        self.private_rooms = private_rooms
+        self.rooms: Dict[str, Room] = {}  # roomid, Room
+        for roomid in rooms:
+            self.rooms[roomid] = Room(self, roomid, is_private=False)
+        for roomid in private_rooms:
+            self.rooms[roomid] = Room(self, roomid, is_private=True)
         self.command_character = command_character
         self.administrators = administrators
         self.domain = domain
+        self.users: WeakValueDictionary[  # pylint: disable=unsubscriptable-object
+            str, User
+        ] = WeakValueDictionary()
         self.init_tasks = init_tasks
         self.recurring_tasks = recurring_tasks
         self.handlers = handlers
@@ -69,11 +74,11 @@ class Connection:
         self.queue = queue
         self.loop = asyncio.new_event_loop()
         try:
-            self.loop.run_until_complete(self.start_websocket())
+            self.loop.run_until_complete(self._start_websocket())
         except asyncio.CancelledError:
             pass
 
-    async def start_websocket(self) -> None:
+    async def _start_websocket(self) -> None:
         itasks: List[asyncio.Task[None]]
         for prio in range(5):
             itasks = []
@@ -106,26 +111,33 @@ class Connection:
 
                     if isinstance(message, str):
                         print(f"<< {message}")
-                        asyncio.ensure_future(self.parse_message(message))
+                        asyncio.ensure_future(self._parse_message(message))
         except (
             websockets.exceptions.WebSocketException,
             OSError,  # https://github.com/aaugustin/websockets/issues/593
         ):
             pass
 
-    async def parse_message(self, message: str) -> None:
+    async def _parse_message(self, message: str) -> None:
+        """Extracts a Room object from a raw message.
+
+        Args:
+            message (raw): Raw message received from the websocket.
+        """
         if not message:
             return
 
         init = False
 
-        room = ""
+        roomname = ""
         if message[0] == ">":
-            room = message.split("\n")[0]
-        roomid = utils.to_room_id(room)
+            roomname = message.split("\n")[0]
+        roomid = utils.to_room_id(roomname)
+        room = Room.get(self, roomid)
 
-        if roomid in self.rooms:
-            await self.try_modchat(roomid)
+        # Try to set modchat if it's a public room and cerbottana has relevant auth
+        if room.roombot and not room.is_private:
+            await room.try_modchat()
 
         for msg in message.split("\n"):
 
@@ -145,66 +157,16 @@ class Connection:
             if command in self.handlers:
                 tasks: List[asyncio.Task[None]] = []
                 for func in self.handlers[command]:
-                    tasks.append(asyncio.create_task(func(self, roomid, *parts[2:])))
+                    tasks.append(asyncio.create_task(func(self, room, *parts[2:])))
                 for task in tasks:
                     await task
 
-    async def try_modchat(self, roomid: str) -> None:
-        room = Room.get(roomid)
-        if room and not room.modchat and room.no_mods_online:
-            tz = pytz.timezone("Europe/Rome")
-            timestamp = datetime.now(tz)
-            minutes = timestamp.hour * 60 + timestamp.minute
-            # 00:30 - 08:00
-            if 30 <= minutes < 8 * 60 and room.no_mods_online + (7 * 60) < time():
-                await self.send_message(roomid, "/modchat +", False)
-
-    async def send_rankhtmlbox(self, rank: str, room: str, message: str) -> None:
-        message = htmlmin.minify(message)
-        await self.send_message(room, f"/addrankhtmlbox {rank}, {message}", False)
-
-    async def send_htmlbox(
-        self,
-        room: Optional[str],
-        user: Optional[str],
-        message: str,
-        simple_message: str = "",
-    ) -> None:
-        message = htmlmin.minify(message)
-        if room is not None:
-            await self.send_message(room, f"/addhtmlbox {message}", False)
-        elif user is not None:
-            room = utils.can_pminfobox_to(self, utils.to_user_id(user))
-            if room is not None:
-                await self.send_message(room, f"/pminfobox {user}, {message}", False)
-            else:
-                if simple_message == "":
-                    simple_message = "Questo comando è disponibile in PM "
-                    simple_message += "solo se sei online in una room dove sono Roombot"
-                await self.send_pm(user, simple_message)
-
-    async def send_reply(
-        self, room: Optional[str], user: str, message: str, escape: bool = True
-    ) -> None:
-        if room is None:
-            await self.send_pm(user, message)
-        else:
-            await self.send_message(room, message, escape)
-
-    async def send_message(self, room: str, message: str, escape: bool = True) -> None:
-        if escape:
-            if message[0] == "/":
-                message = "/" + message
-            elif message[0] == "!":
-                message = " " + message
-        await self.send(f"{room}|{message}")
-
-    async def send_pm(self, user: str, message: str, escape: bool = True) -> None:
-        if escape and message[0] == "/":
-            message = "/" + message
-        await self.send(f"|/w {utils.to_user_id(user)}, {message}")
-
     async def send(self, message: str) -> None:
+        """Sends a raw unescaped message to the websocket.
+
+        Args:
+            message (str): String to send.
+        """
         print(f">> {message}")
         now = time()
         if now - self.lastmessage < 0.1:

@@ -7,94 +7,95 @@ import databases.database as d
 import utils
 from database import Database
 from handlers import handler_wrapper
-from room import Room
+from models.room import Room
+from models.user import User
 
 if TYPE_CHECKING:
     from connection import Connection
 
 
 async def add_user(
-    conn: Connection, roomid: str, user: str, skip_avatar_check: bool = False
+    conn: Connection,
+    room: Room,
+    userstring: str,
+    skip_avatar_check: bool = False,
 ) -> None:
-    rank = user[0]
-    username = user[1:].split("@")[0]
-    userid = utils.to_user_id(username)
-    idle = user[-2:] == "@!"
+    rank = userstring[0]
+    user = User.get(conn, userstring[1:])  # Strip leading character rank
+    room.add_user(user)  # Rank will be retrieved from userdetails, if necessary
 
-    room = Room.get(roomid)
-
-    room.add_user(userid, rank, username, idle)
-
-    if userid == utils.to_user_id(conn.username):
+    if user.userid == utils.to_user_id(conn.username):
         room.roombot = rank == "*"
 
     db = Database.open()
     with db.get_session() as session:
-        session.add(d.Users(userid=userid, username=username))
+        session.add(d.Users(userid=user.userid, username=user.username))
 
     if not skip_avatar_check or rank != " ":
-        await conn.send_message("", f"/cmd userdetails {username}", False)
+        await conn.send(f"|/cmd userdetails {user.username}")
 
 
-async def remove_user(conn: Connection, roomid: str, user: str) -> None:
-    Room.get(roomid).remove_user(utils.to_user_id(user))
+async def remove_user(conn: Connection, room: Room, userstring: str) -> None:
+    user = User.get(conn, userstring)
+    room.remove_user(user)
 
 
 @handler_wrapper(["title"])
-async def title(conn: Connection, roomid: str, *args: str) -> None:
+async def title(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 1:
         return
 
-    roomtitle = args[0]
-
-    Room.get(roomid).title = roomtitle
+    room.title = args[0]
 
 
 @handler_wrapper(["users"])
-async def users(conn: Connection, roomid: str, *args: str) -> None:
+async def users(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 1:
         return
 
     userlist = args[0]
 
     for user in userlist.split(",")[1:]:
-        await add_user(conn, roomid, user, True)
+        await add_user(conn, room, user, True)
 
 
 @handler_wrapper(["join", "j", "J"])
-async def join(conn: Connection, roomid: str, *args: str) -> None:
+async def join(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 1:
         return
 
     user = args[0]
 
-    await add_user(conn, roomid, user)
+    await add_user(conn, room, user)
 
 
 @handler_wrapper(["leave", "l", "L"])
-async def leave(conn: Connection, roomid: str, *args: str) -> None:
+async def leave(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 1:
         return
 
     user = args[0]
 
-    await remove_user(conn, roomid, user)
+    await remove_user(conn, room, user)
 
 
 @handler_wrapper(["name", "n", "N"])
-async def name(conn: Connection, roomid: str, *args: str) -> None:
+async def name(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 2:
         return
 
-    user = args[0]
+    userstring = args[0]
     oldid = args[1]
 
-    await remove_user(conn, roomid, oldid)
-    await add_user(conn, roomid, user)
+    # If the nick change changes userid, treat the new user as unrelated
+    if utils.to_user_id(userstring) != utils.to_user_id(oldid):
+        await remove_user(conn, room, oldid)
+
+    await add_user(conn, room, userstring)
 
 
 @handler_wrapper(["queryresponse"])
-async def queryresponse(conn: Connection, roomid: str, *args: str) -> None:
+async def queryresponse(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 2:
         return
 
@@ -105,19 +106,19 @@ async def queryresponse(conn: Connection, roomid: str, *args: str) -> None:
         return
 
     data = json.loads(querydata)
-    userid = utils.to_user_id(data["userid"])
+    user = User.get(conn, data["name"])
     avatar = str(data["avatar"])
     if avatar in utils.AVATAR_IDS:
         avatar = utils.AVATAR_IDS[avatar]
 
     db = Database.open()
     with db.get_session() as session:
-        session.add(d.Users(userid=userid))
-        session.query(d.Users).filter_by(userid=userid).update({"avatar": avatar})
+        session.add(d.Users(userid=user.userid))
+        session.query(d.Users).filter_by(userid=user.userid).update({"avatar": avatar})
 
     if data["rooms"] is not False:
-        global_rank = data["group"]
+        user.global_rank = data["group"]
         for r in data["rooms"]:
-            room = Room.get(utils.to_room_id(r))
+            room = Room.get(conn, utils.to_room_id(r))
             room_rank = r[0] if utils.has_role("voice", r[0]) else " "
-            room.set_global_and_room_rank(userid, global_rank, room_rank)
+            room.add_user(user, room_rank)

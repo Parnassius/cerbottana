@@ -7,8 +7,9 @@ from typing import TYPE_CHECKING, Awaitable, Callable, Dict, List
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.room import Room
 
-    HandlerFunc = Callable[[Connection, str, str], Awaitable[None]]
+    HandlerFunc = Callable[[Connection, Room, str], Awaitable[None]]
 
 
 handlers: Dict[str, List[HandlerFunc]] = {}
