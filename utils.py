@@ -7,17 +7,13 @@ import random
 import re
 import string
 from html import escape
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.sql import func
 
 import databases.database as d
 from database import Database
-from room import Room
-
-if TYPE_CHECKING:
-    from connection import Connection
 
 
 def create_token(
@@ -104,27 +100,13 @@ def has_role(role: str, user: str) -> bool:
         if user and user[0] in roles[role]:
             return True
         return False
-    raise BaseException("Unrecognized role")  # TODO: better exception?
+    raise BaseException("Unrecognized role")
 
 
 def html_escape(text: Optional[str]) -> str:
     if text is None:
         return ""
     return escape(text).replace("\n", "<br>")
-
-
-def is_private(conn: Connection, room: str) -> bool:
-    return room in conn.private_rooms
-
-
-def can_pminfobox_to(conn: Connection, user: str) -> Optional[str]:
-    for room in conn.rooms:
-        if user in Room.get(room).users and Room.get(room).roombot:
-            return room
-    for room in conn.private_rooms:
-        if user in Room.get(room).users and Room.get(room).roombot:
-            return room
-    return None
 
 
 def username_color(name: str) -> str:

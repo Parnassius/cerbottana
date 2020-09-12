@@ -9,6 +9,7 @@ disable = [
 
     # temporarily disabled, should be re-enabled sooner or later
     "duplicate-code",  # encounters / locations plugins
+    "no-member",  # TODO: Remove after plugins rewrite is complete
     "too-many-arguments",
     "too-many-branches",
     "too-many-instance-attributes",

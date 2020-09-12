@@ -6,10 +6,11 @@ from handlers import handler_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection, TiersDict
+    from models.room import Room
 
 
 @handler_wrapper(["formats"])
-async def formats(conn: Connection, roomid: str, *args: str) -> None:
+async def formats(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 1:
         return
 

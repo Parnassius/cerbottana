@@ -5,23 +5,23 @@ from typing import TYPE_CHECKING
 
 import utils
 from handlers import handler_wrapper
-from room import Room
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.room import Room
 
 
 @handler_wrapper(["chat", "c"])
-async def modchat(conn: Connection, roomid: str, *args: str) -> None:
+async def modchat(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 2:
         return
 
     message = "|".join(args[1:]).strip()
 
-    if roomid in conn.rooms:
+    if room.roomid in conn.rooms:
         match = re.match(r"^\/log \(.+ set modchat to (.*)\)$", message)
 
         if match:
-            Room.get(roomid).modchat = len(match.group(1)) == 1 and utils.has_role(
+            room.modchat = len(match.group(1)) == 1 and utils.has_role(
                 "voice", match.group(1)
             )
