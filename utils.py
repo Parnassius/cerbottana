@@ -704,5 +704,7 @@ CUSTOM_COLORS: Dict[str, str] = {
     "shuutsukiyama": "spankmepikachu",
     "blaz": "blazask",
     "annika": "l07kxym4",
+    "turthur": "turthur1",
+    "moutemoute": "fjlelzmzp",
     "cathy": "",
 }
