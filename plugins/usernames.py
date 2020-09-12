@@ -43,6 +43,12 @@ async def altcauseiminsecure(
 
 
 @command_wrapper()
+async def azyzyz(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    text = "CAIO AZ" + "YZ" * random.randint(1, 5)
+    await conn.send_reply(room, user, text)
+
+
+@command_wrapper()
 async def ciarizardmille(
     conn: Connection, room: Optional[str], user: str, arg: str
 ) -> None:
