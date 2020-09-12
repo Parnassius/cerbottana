@@ -33,7 +33,6 @@ if TYPE_CHECKING:
 
 
 @command_wrapper(
-@plugin_wrapper(
     aliases=("other name1", "other name2"),
     helpstr="Describes the foo command.",
     #is_unlisted=True
