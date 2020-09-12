@@ -209,7 +209,7 @@ def linecounts_data(room: str) -> str:
                 utils.to_user_id(row.userid)
                 for row in query.group_by(l.DailyTotalsPerUser.userid)
                 .order_by(func.sum(l.DailyTotalsPerUser.messages).desc())
-                .limit(10)
+                .limit(20)
                 .all()
             ]
             results = (
