@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from typing import TYPE_CHECKING, List, Optional
 
 import utils
@@ -110,3 +111,13 @@ async def waffletour(
     )
 
     await conn.send_message(room, "!viewfaq sibb", False)
+
+
+@command_wrapper()
+async def randtour(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    if room is None or not utils.is_driver(user):
+        return
+
+    tiers = [x["name"] for x in conn.tiers if x["random"]]
+
+    await create_tour(conn, room, formatid=random.choice(tiers))
