@@ -16,19 +16,12 @@ The bulk of cerbottana's code are plugins (see [plugins reference](plugins/READM
 
 ### Creating the virtual environment and installing dependencies
 
-For these instruction we assume you're in the root directory of a cloned cerbottana repository. If you wish to test your bot instance locally you'll also need an active instance of a Pokemon Showdown server.
+For these instructions we assume you're in the root directory of a cloned cerbottana repository; if you're on Windows we recommend using the [WSL](https://docs.microsoft.com/en-us/windows/wsl). If you wish to test your bot locally, you'll also need an active instance of a [Pokemon Showdown server](https://github.com/smogon/pokemon-showdown).
 
-It's strongly recommended to use a Python virtual environment with Python 3.7; future versions should work too but might cause inconsistencies in `pip-compile` output. To create the virtual environment, run:
+It's strongly recommended to use a Python virtual environment with Python 3.7; future versions should work too but might cause inconsistencies in `pip-compile` output. To create and start the virtual environment on Unix or MacOS, run:
 
     python3 -m venv .venv
-
-To activate it on Unix or MacOS:
-
     source .venv/bin/activate
-
-To activate it on Windows:
-
-    .venv\Scripts\activate.bat
 
 If you just want to run an instance of the bot without dev-tools, add only the core dependencies:
 
@@ -52,7 +45,7 @@ In the future if an update to your cerbottana fork changes the databases schemes
 
 ### Running a bot instance
 
-Make sure the PS server you connect to is active if it's a local instance created for testing purposes. To start cerbottana:
+Make sure the PS server you connect to is active if it's a local instance created for testing purposes. To start cerbottana, run:
 
     python3 app.py
 
