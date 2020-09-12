@@ -5,18 +5,28 @@ from datetime import datetime
 from queue import Empty as EmptyQueue
 from queue import SimpleQueue
 from time import time
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import htmlmin  # type: ignore
 import pytz
 import websockets
 from environs import Env
+from typing_extensions import TypedDict
 
 import utils
 from handlers import handlers
 from plugins import commands
 from room import Room
 from tasks import init_tasks, recurring_tasks
+
+TiersDict = TypedDict(
+    "TiersDict",
+    {
+        "name": str,
+        "section": str,
+        "random": bool,
+    },
+)
 
 
 class Connection:
@@ -53,7 +63,7 @@ class Connection:
         self.loop: Optional[asyncio.AbstractEventLoop] = None
         self.websocket: Optional[websockets.client.WebSocketClientProtocol] = None
         self.connection_start: Optional[float] = None
-        self.tiers: List[Dict[str, str]] = []
+        self.tiers: List[TiersDict] = []
 
     def open_connection(self, queue: SimpleQueue[str]) -> None:
         self.queue = queue

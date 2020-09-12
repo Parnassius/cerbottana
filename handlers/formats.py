@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from handlers import handler_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from connection import Connection, TiersDict
 
 
 @handler_wrapper(["formats"])
@@ -15,7 +15,7 @@ async def formats(conn: Connection, roomid: str, *args: str) -> None:
 
     formatslist = args
 
-    tiers: List[Dict[str, str]] = []
+    tiers: List[TiersDict] = []
     section: Optional[str] = None
     section_next = False
     for tier in formatslist:
@@ -28,5 +28,11 @@ async def formats(conn: Connection, roomid: str, *args: str) -> None:
             continue
         parts = tier.split(",")
         if section is not None:
-            tiers.append({"name": parts[0], "section": section})
+            tiers.append(
+                {
+                    "name": parts[0],
+                    "section": section,
+                    "random": bool(int(parts[1], 16) & 1),
+                }
+            )
     conn.tiers = tiers
