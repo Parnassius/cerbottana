@@ -5,7 +5,7 @@ from datetime import datetime
 from queue import Empty as EmptyQueue
 from queue import SimpleQueue
 from time import time
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import htmlmin  # type: ignore
 import pytz
