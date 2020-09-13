@@ -158,6 +158,13 @@ async def oizys(conn: Connection, room: Optional[str], user: str, arg: str) -> N
     await conn.send_reply(room, user, "no")
 
 
+@command_wrapper(aliases=("parna",))
+async def parnassius(
+    conn: Connection, room: Optional[str], user: str, arg: str
+) -> None:
+    await conn.send_reply(room, user, "allora, intanto ti calmi")
+
+
 @command_wrapper(aliases=("palt0", "palto", "plato"))
 async def plat0(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     text = "oh {} non mi spoilerare".format(
