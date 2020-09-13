@@ -120,4 +120,4 @@ async def randtour(conn: Connection, room: Optional[str], user: str, arg: str) -
 
     tiers = [x["name"] for x in conn.tiers if x["random"]]
 
-    await create_tour(conn, room, formatid=random.choice(tiers))
+    await create_tour(conn, room, formatid=random.choice(tiers), autostart=3.5)
