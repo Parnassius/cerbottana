@@ -65,3 +65,6 @@ async def guessthemon(
         await conn.send_message(
             room, f"/hangman create {species_name}, {dex_entry}", escape=False
         )
+        await conn.send_htmlbox(
+            room, None, "Usa <code>/guess pokemon o lettera</code> per giocare!"
+        )
