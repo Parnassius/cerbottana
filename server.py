@@ -70,7 +70,7 @@ def before() -> None:
 def require_driver(f: Callable[[], str]) -> Callable[[], str]:
     @wraps(f)
     def wrapper() -> str:
-        if not utils.is_driver(web_session.get("_rank")):
+        if not utils.has_role("driver", web_session.get("_rank")):
             abort(401)
         return f()
 

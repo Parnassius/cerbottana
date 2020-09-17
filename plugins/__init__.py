@@ -74,7 +74,7 @@ def scope_checker(func: CommandFunc) -> CommandFunc:
     async def scope_wrapper(
         conn: Connection, room: Optional[str], user: str, arg: str
     ) -> None:
-        if room is not None and not utils.is_voice(user):
+        if room is not None and not utils.has_role("voice", user):
             return
         await func(conn, room, user, arg)
 
@@ -144,7 +144,7 @@ routes: List[Tuple[RouteFunc, str, Optional[Iterable[str]]]] = []
 def route_require_driver(func: RouteFunc) -> RouteFunc:
     @wraps(func)
     def wrapper(*args: str) -> str:
-        if not utils.is_driver(web_session.get("_rank")):
+        if not utils.has_role("driver", web_session.get("_rank")):
             abort(401)
         return func(*args)
 
