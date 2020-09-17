@@ -119,5 +119,5 @@ async def queryresponse(conn: Connection, roomid: str, *args: str) -> None:
         global_rank = data["group"]
         for r in data["rooms"]:
             room = Room.get(utils.to_room_id(r))
-            room_rank = r[0] if utils.is_voice(r[0]) else " "
+            room_rank = r[0] if utils.has_role("voice", r[0]) else " "
             room.set_global_and_room_rank(userid, global_rank, room_rank)

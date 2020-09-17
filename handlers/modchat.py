@@ -22,6 +22,6 @@ async def modchat(conn: Connection, roomid: str, *args: str) -> None:
         match = re.match(r"^\/log \(.+ set modchat to (.*)\)$", message)
 
         if match:
-            Room.get(roomid).modchat = len(match.group(1)) == 1 and utils.is_voice(
-                match.group(1)
+            Room.get(roomid).modchat = len(match.group(1)) == 1 and utils.has_role(
+                "voice", match.group(1)
             )

@@ -86,22 +86,31 @@ def date_format(text: str) -> str:
     return f"{dd}/{mm}/{yyyy}"
 
 
+def has_role(role: str, user: str) -> bool:
+    """Checks if a user has a PS role or higher.
+
+    Args:
+        role (str): PS role (i.e. "voice", "driver").
+        user (str): User to check.
+
+    Raises:
+        BaseException: role is unrecognized.
+
+    Returns:
+        bool: True if user meets the required criteria.
+    """
+    roles = {"voice": "+*%@★#&~", "driver": "%@#&~"}
+    if role in roles:
+        if user and user[0] in roles[role]:
+            return True
+        return False
+    raise BaseException("Unrecognized role")  # TODO: better exception?
+
+
 def html_escape(text: Optional[str]) -> str:
     if text is None:
         return ""
     return escape(text).replace("\n", "<br>")
-
-
-def is_voice(user: str) -> bool:
-    if user and user[0] in "+*%@★#&~":
-        return True
-    return False
-
-
-def is_driver(user: str) -> bool:
-    if user and user[0] in "%@#&~":
-        return True
-    return False
 
 
 def is_private(conn: Connection, room: str) -> bool:

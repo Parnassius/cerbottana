@@ -51,7 +51,7 @@ class Room:
             "username": username,
             "idle": idle,
         }
-        if utils.is_driver(rank):
+        if utils.has_role("driver", rank):
             if not idle:
                 self.no_mods_online = None
             else:
@@ -60,7 +60,7 @@ class Room:
     def remove_user(self, userid: str) -> None:
         user = self.users.pop(userid, None)
         if user is not None:
-            if utils.is_driver(user["rank"]):
+            if utils.has_role("driver", user["rank"]):
                 self.check_no_mods_online()
 
     def set_global_and_room_rank(
@@ -77,6 +77,6 @@ class Room:
             if self.users[user]["idle"]:
                 continue
             rank = self.users[user]["room_rank"] or self.users[user]["rank"]
-            if utils.is_driver(rank):
+            if utils.has_role("driver", rank):
                 return
         self.no_mods_online = time()
