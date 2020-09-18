@@ -113,7 +113,10 @@ async def waffletour(
     await conn.send_message(room, "!viewfaq sibb", False)
 
 
-@command_wrapper()
+@command_wrapper(
+    helpstr="Avvia un torneo di una tier scelta a caso tra quelle con team random",
+    is_unlisted=True,
+)
 async def randtour(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if room is None or not utils.is_driver(user):
         return
