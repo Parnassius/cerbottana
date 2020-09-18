@@ -9,7 +9,7 @@ from sqlalchemy.orm.session import Session
 
 
 class Database:
-    _instances: Dict[str, Database] = dict()
+    _instances: Dict[str, Database] = {}
 
     def __init__(self, dbname: str) -> None:
         self.engine = create_engine(f"sqlite:///{dbname}.sqlite")

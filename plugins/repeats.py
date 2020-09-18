@@ -32,7 +32,7 @@ class Repeat:
     also registers a task to the base asyncio loop of the Connection param.
     """
 
-    _instances: Dict[Tuple[str, str], Repeat] = dict()  # record of active instances
+    _instances: Dict[Tuple[str, str], Repeat] = {}  # record of active instances
 
     def __init__(
         self,

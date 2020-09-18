@@ -21,12 +21,12 @@ UserDict = TypedDict(
 
 
 class Room:
-    _instances: Dict[str, Room] = dict()
+    _instances: Dict[str, Room] = {}
 
     def __init__(self, roomid: str) -> None:
         self.roomid = roomid
         self.title: str = ""
-        self.users: Dict[str, UserDict] = dict()
+        self.users: Dict[str, UserDict] = {}
         self.no_mods_online: Optional[float] = None
         self.roombot = False
         self.modchat = False

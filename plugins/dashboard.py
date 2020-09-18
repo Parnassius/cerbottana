@@ -21,7 +21,7 @@ async def dashboard(conn: Connection, room: Optional[str], user: str, arg: str) 
     else:
         return
 
-    rooms: Dict[str, str] = dict()
+    rooms: Dict[str, str] = {}
 
     for r in conn.rooms + conn.private_rooms:
         users = Room.get(r).users

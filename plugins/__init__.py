@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 
 
 class Command:
-    _instances: Dict[str, Command] = dict()
+    _instances: Dict[str, Command] = {}
 
     def __init__(
         self,
@@ -138,7 +138,7 @@ def parametrize_room(func: CommandFunc) -> CommandFunc:
 # --- Flask implementation ---
 
 
-routes: List[Tuple[RouteFunc, str, Optional[Iterable[str]]]] = list()
+routes: List[Tuple[RouteFunc, str, Optional[Iterable[str]]]] = []
 
 
 def route_require_driver(func: RouteFunc) -> RouteFunc:

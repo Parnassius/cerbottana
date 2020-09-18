@@ -38,7 +38,7 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
             name: str
             slots: Dict[Tuple[int, int], SlotsDict]
 
-        results: Dict[int, ResultsDict] = dict()
+        results: Dict[int, ResultsDict] = {}
 
         pokemon_species = (
             session.query(v.PokemonSpecies)  # type: ignore  # sqlalchemy
@@ -117,7 +117,7 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
                         "",
                     )
 
-                    condition_names = dict()
+                    condition_names = {}
                     for condition_value_map in encounter.encounter_condition_value_map:
                         condition = condition_value_map.encounter_condition_value
                         condition_names[condition.id] = next(
@@ -140,7 +140,7 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
                             "method": method_name,
                             "min_level": 100,
                             "max_level": 0,
-                            "conditions": dict(),
+                            "conditions": {},
                             "rarity": 0,
                         }
 
@@ -219,7 +219,7 @@ async def encounters(
             name: str
             areas: Dict[int, AreasDict]
 
-        results: Dict[int, ResultsDict] = dict()
+        results: Dict[int, ResultsDict] = {}
 
         location = (
             session.query(v.Locations)  # type: ignore  # sqlalchemy
@@ -280,7 +280,7 @@ async def encounters(
                         "",
                     )
 
-                    condition_names = dict()
+                    condition_names = {}
                     for condition_value_map in encounter.encounter_condition_value_map:
                         condition = condition_value_map.encounter_condition_value
                         condition_names[condition.id] = next(
@@ -293,12 +293,12 @@ async def encounters(
                         )
 
                     if version.id not in results:
-                        results[version.id] = {"name": version_name, "areas": dict()}
+                        results[version.id] = {"name": version_name, "areas": {}}
 
                     if area.id not in results[version.id]["areas"]:
                         results[version.id]["areas"][area.id] = {
                             "name": area_name,
-                            "slots": dict(),
+                            "slots": {},
                         }
 
                     key = (method.id, pokemon.id)
@@ -309,7 +309,7 @@ async def encounters(
                             "method": method_name,
                             "min_level": 100,
                             "max_level": 0,
-                            "conditions": dict(),
+                            "conditions": {},
                             "rarity": 0,
                         }
 

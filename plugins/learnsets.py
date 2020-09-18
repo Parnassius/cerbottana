@@ -50,7 +50,7 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
             name: str
             moves: List[MovesDict]
 
-        results: Dict[int, ResultsDict] = dict()
+        results: Dict[int, ResultsDict] = {}
 
         pokemon_species = (
             session.query(v.PokemonSpecies)  # type: ignore  # sqlalchemy
@@ -120,7 +120,7 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
                             data["machine"] = machine_name
 
                     if method.id not in results:
-                        results[method.id] = {"name": method_name, "moves": list()}
+                        results[method.id] = {"name": method_name, "moves": []}
 
                     results[method.id]["moves"].append(data)
 
