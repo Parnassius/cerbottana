@@ -95,7 +95,7 @@ class Connection:
             ) as websocket:
                 self.websocket = websocket
                 self.connection_start = time()
-                while True:
+                async for message in websocket:
                     if self.queue is not None:
                         try:
                             data: Optional[str] = self.queue.get(False)
@@ -104,7 +104,6 @@ class Connection:
 
                         print(data)
 
-                    message = await websocket.recv()
                     if isinstance(message, str):
                         print(f"<< {message}")
                         asyncio.ensure_future(self.parse_message(message))
