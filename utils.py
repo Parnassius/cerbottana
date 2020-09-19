@@ -521,7 +521,6 @@ AVATAR_IDS: Dict[str, str] = {
 CUSTOM_COLORS: Dict[str, str] = {
     "theimmortal": "taco",
     "bmelts": "testmelts",
-    "zarel": "aeo",
     "jumpluff": "zacchaeus",
     "zacchaeus": "jumpluff",
     "kraw": "kraw1",
@@ -706,5 +705,6 @@ CUSTOM_COLORS: Dict[str, str] = {
     "annika": "l07kxym4",
     "turthur": "turthur1",
     "moutemoute": "fjlelzmzp",
+    "mia": "whgmpdku",
     "cathy": "",
 }
