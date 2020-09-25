@@ -11,6 +11,18 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
+@command_wrapper(helpstr="Saluta un utente a caso presente nella room.")
+async def randomcaio(
+    conn: Connection, room: Optional[str], user: str, arg: str
+) -> None:
+    if room is None:
+        return
+    users = Room.get(room).users
+    await conn.send_reply(
+        room, user, "caio " + users[random.choice(list(users.keys()))]["username"]
+    )
+
+
 @command_wrapper(helpstr="Seleziona un utente a caso presente nella room.")
 async def randomuser(
     conn: Connection, room: Optional[str], user: str, arg: str
