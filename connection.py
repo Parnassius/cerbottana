@@ -38,6 +38,7 @@ class Connection:
         statustext: str,
         rooms: List[str],
         private_rooms: List[str],
+        main_room: Optional[str],
         command_character: str,
         administrators: List[str],
         domain: str,
@@ -52,6 +53,7 @@ class Connection:
             self.rooms[roomid] = Room(self, roomid, is_private=False)
         for roomid in private_rooms:
             self.rooms[roomid] = Room(self, roomid, is_private=True)
+        self.main_room = Room.get(self, main_room) if main_room else None
         self.command_character = command_character
         self.administrators = administrators
         self.domain = domain
@@ -192,6 +194,7 @@ CONNECTION = Connection(
     env("STATUSTEXT", ""),
     env.list("ROOMS", []),
     env.list("PRIVATE_ROOMS", []),
+    env("MAIN_ROOM", None),
     env("COMMAND_CHARACTER"),
     env.list("ADMINISTRATORS", []),
     env("DOMAIN"),
