@@ -1,21 +1,19 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import utils
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper(
     helpstr="<i>nick1, nick2, ...</i> Visualizza i colori dei nickname elencati."
 )
-async def colorcompare(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    if arg == "":
+async def colorcompare(msg: Message) -> None:
+    if msg.arg == "":
         return
 
     cell = (
@@ -28,7 +26,7 @@ async def colorcompare(
 
     html = '<table style="width:100%;table-layout:fixed">'
     html += "<tr>"
-    for i in arg.split(","):
+    for i in msg.args:
         html += cell.format(
             color=utils.username_color(utils.to_user_id(i)),
             username=utils.html_escape(i),
@@ -36,4 +34,4 @@ async def colorcompare(
     html += "</tr>"
     html += "</table>"
 
-    await conn.send_htmlbox(room, user, html)
+    await msg.reply_htmlbox(html)

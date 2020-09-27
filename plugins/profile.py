@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from flask import render_template, request
 
@@ -10,20 +10,19 @@ from database import Database
 from plugins import command_wrapper, route_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper(aliases=("profilo",), helpstr="Visualizza il tuo profilo.")
-async def profile(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if arg.strip() == "":
-        arg = user
-
-    arg = utils.to_user_id(arg)
+async def profile(msg: Message) -> None:
+    userid = utils.to_user_id(msg.arg.strip())
+    if userid == "":
+        userid = msg.user.userid
 
     db = Database.open()
     with db.get_session() as session:
 
-        userdata = session.query(d.Users).filter_by(userid=arg).first()
+        userdata = session.query(d.Users).filter_by(userid=userid).first()
 
         if userdata and userdata.userid and userdata.avatar:
             badges = (
@@ -52,38 +51,37 @@ async def profile(conn: Connection, room: Optional[str], user: str, arg: str) ->
                 description=userdata.description,
             )
 
-            await conn.send_htmlbox(room, user, html)
+            await msg.reply_htmlbox(html)
 
 
 @command_wrapper(
     aliases=("setprofilo",), helpstr="Imposta una tua frase personalizzata."
 )
-async def setprofile(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    if len(arg) > 200:
-        await conn.send_reply(room, user, "Errore: lunghezza massima 200 caratteri")
+async def setprofile(msg: Message) -> None:
+    if len(msg.arg) > 200:
+        await msg.reply("Errore: lunghezza massima 200 caratteri")
         return
 
-    userid = utils.to_user_id(user)
+    userid = msg.user.userid
 
     db = Database.open()
     with db.get_session() as session:
         session.add(d.Users(userid=userid))
         session.query(d.Users).filter_by(userid=userid).update(
-            {"description_pending": arg}
+            {"description_pending": msg.arg}
         )
 
-    await conn.send_reply(room, user, "Salvato")
+    await msg.reply("Salvato")
 
     message = "Qualcuno ha aggiornato la sua frase del profilo. "
     message += (
         'Usa <button name="send" value="/pm '
-        + conn.username
+        + msg.conn.username
         + ', .dashboard">.dashboard</button> per approvarla o rifiutarla'
     )
-    for r in conn.rooms:
-        await conn.send_rankhtmlbox("%", r, message)
+
+    if msg.conn.main_room is not None:
+        await msg.conn.main_room.send_rankhtmlbox("%", message)
 
 
 @route_wrapper("/profile", methods=("GET", "POST"), require_driver=True)

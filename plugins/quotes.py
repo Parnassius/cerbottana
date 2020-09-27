@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from environs import Env
 from flask import abort, render_template
@@ -15,7 +15,7 @@ from database import Database
 from plugins import command_wrapper, parametrize_room, route_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 env = Env()
@@ -23,105 +23,110 @@ env.read_env()
 
 
 @command_wrapper(aliases=("newquote", "quote"))
-async def addquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if room is None or not utils.is_driver(user):
+async def addquote(msg: Message) -> None:
+    if msg.room is None or not msg.user.has_role("driver", msg.room):
         return
 
-    if not arg:
-        await conn.send_message(room, "Cosa devo salvare?")
+    if not msg.arg:
+        await msg.room.send("Cosa devo salvare?")
         return
 
     maxlen = 250  # lower than the message limit to have space for metadata
-    if len(arg) > maxlen:
-        await conn.send_message(room, f"Quote troppo lunga, max {maxlen} caratteri.")
+    if len(msg.arg) > maxlen:
+        await msg.room.send(f"Quote troppo lunga, max {maxlen} caratteri.")
         return
 
     db = Database.open()
     with db.get_session() as session:
         result = d.Quotes(
-            message=arg, roomid=room, author=utils.to_user_id(user), date=func.date()
+            message=msg.arg,
+            roomid=msg.room.roomid,
+            author=msg.user.userid,
+            date=func.date(),
         )
         session.add(result)
         session.commit()  # type: ignore  # sqlalchemy
 
         try:
             if result.id:
-                await conn.send_message(room, "Quote salvata.")
+                await msg.room.send("Quote salvata.")
                 return
         except ObjectDeletedError:
             pass
-        await conn.send_message(room, "Quote già esistente.")
+        await msg.room.send("Quote già esistente.")
 
 
 @command_wrapper(aliases=("q",))
 @parametrize_room
-async def randquote(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if len(arg.split(",")) > 1:  # expecting 1 parameter given by @parametrize_room
-        msg = "Non ho capito."
-        if room is not None:
-            msg += (
-                f" Usa ``{conn.command_character}quote messaggio``"
+async def randquote(msg: Message) -> None:
+    if msg.arg:
+        phrase = "Non ho capito."
+        if msg.room is not None:
+            phrase += (
+                f" Usa ``{msg.conn.command_character}quote messaggio``"
                 " per salvare una quote."
             )
-        await conn.send_reply(room, user, msg)
+        await msg.reply(phrase)
         return
 
     db = Database.open()
     with db.get_session() as session:
-        quotes = session.query(d.Quotes).filter_by(roomid=arg).all()
+        quotes = (
+            session.query(d.Quotes).filter_by(roomid=msg.parametrized_room.roomid).all()
+        )
 
         if not quotes:
-            await conn.send_reply(
-                room, user, "Nessuna quote registrata per questa room."
-            )
+            await msg.reply("Nessuna quote registrata per questa room.")
             return
 
         quote = random.choice(quotes).message
-        await conn.send_reply(room, user, quote)
+        await msg.reply(quote)
 
 
 @command_wrapper(aliases=("deletequote", "delquote", "rmquote"))
-async def removequote(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    if room is None or not utils.is_driver(user):
+async def removequote(msg: Message) -> None:
+    if msg.room is None or not msg.user.has_role("driver", msg.room):
         return
 
-    if not arg:
-        await conn.send_message(room, "Che quote devo cancellare?")
+    if not msg.arg:
+        await msg.room.send("Che quote devo cancellare?")
         return
 
     db = Database.open()
     with db.get_session() as session:
-        result = session.query(d.Quotes).filter_by(message=arg, roomid=room).delete()
+        result = (
+            session.query(d.Quotes)
+            .filter_by(message=msg.arg, roomid=msg.room.roomid)
+            .delete()
+        )
 
         if result:
-            await conn.send_message(room, "Quote cancellata.")
+            await msg.room.send("Quote cancellata.")
         else:
-            await conn.send_message(room, "Quote inesistente.")
+            await msg.room.send("Quote inesistente.")
 
 
 @command_wrapper(aliases=("quotes", "quoteslist"))
 @parametrize_room
-async def quotelist(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    quoteroom = arg.split(",")[0]
-
+async def quotelist(msg: Message) -> None:
     db = Database.open()
     with db.get_session() as session:
         quotes_n = (
-            session.query(func.count(d.Quotes.id)).filter_by(roomid=quoteroom).first()
+            session.query(func.count(d.Quotes.id))
+            .filter_by(roomid=msg.parametrized_room.roomid)
+            .first()
         )
 
     if not quotes_n:
-        await conn.send_reply(room, user, "Nessuna quote da visualizzare.")
+        await msg.reply("Nessuna quote da visualizzare.")
         return
 
-    message = f"{conn.domain}quotes/{quoteroom}"
-    if utils.is_private(conn, quoteroom):
-        token_id = utils.create_token({quoteroom: " "})
-        message += f"?token={token_id}"
+    phrase = f"{msg.conn.domain}quotes/{msg.parametrized_room}"
+    if msg.parametrized_room.is_private:
+        token_id = utils.create_token({msg.parametrized_room.roomid: " "})
+        phrase += f"?token={token_id}"
 
-    await conn.send_reply(room, user, message)
+    await msg.reply(phrase)
 
 
 @route_wrapper("/quotes/<room>")

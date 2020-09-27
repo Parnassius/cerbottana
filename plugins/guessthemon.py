@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import random
 import re
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql.expression import func
@@ -12,7 +12,7 @@ from database import Database
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper(
@@ -22,10 +22,8 @@ if TYPE_CHECKING:
     ),
     helpstr="Indovina un pokemon da una sua entry del pokedex!",
 )
-async def guessthemon(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    if room is None:
+async def guessthemon(msg: Message) -> None:
+    if msg.room is None:
         return
 
     db = Database.open("veekun")
@@ -62,6 +60,6 @@ async def guessthemon(
         # Flavor text strings usually have unneeded newlines
         dex_entry = dex_entry.replace("\n", " ")
 
-        await conn.send_message(
-            room, f"/hangman create {species_name}, {dex_entry}", escape=False
+        await msg.room.send(
+            f"/hangman create {species_name}, {dex_entry}", escape=False
         )

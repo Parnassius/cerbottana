@@ -3,17 +3,15 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING, List, Optional
 
-import utils
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
+    from models.room import Room
 
 
 async def create_tour(
-    conn: Connection,
-    room: str,
-    *,
+    room: Room,
     formatid: str = "customgame",
     generator: str = "elimination",
     playercap: Optional[int] = None,
@@ -26,8 +24,7 @@ async def create_tour(
     rules: Optional[List[str]] = None,
 ) -> None:
     tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
-    await conn.send_message(
-        room,
+    await room.send(
         tournew.format(
             formatid=formatid,
             generator=generator,
@@ -38,29 +35,27 @@ async def create_tour(
         False,
     )
     if autostart is not None:
-        await conn.send_message(room, f"/tour autostart {autostart}", False)
+        await room.send(f"/tour autostart {autostart}", False)
     if autodq is not None:
-        await conn.send_message(room, f"/tour autodq {autodq}", False)
+        await room.send(f"/tour autodq {autodq}", False)
     if not allow_scouting:
-        await conn.send_message(room, "/tour scouting off", False)
+        await room.send("/tour scouting off", False)
     if forcetimer:
-        await conn.send_message(room, "/tour forcetimer on", False)
+        await room.send("/tour forcetimer on", False)
     if rules:
         rules_str = ",".join(rules)
-        await conn.send_message(room, f"/tour rules {rules_str}", False)
+        await room.send(f"/tour rules {rules_str}", False)
 
 
 @command_wrapper(
     helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
 )
-async def randpoketour(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    if room is None or not utils.is_driver(user):
+async def randpoketour(msg: Message) -> None:
+    if msg.room is None or not msg.user.has_role("driver", msg.room):
         return
 
-    if arg.strip() == "":
-        await conn.send_message(room, "Inserisci almeno un Pokémon")
+    if msg.arg.strip() == "":
+        await msg.room.send("Inserisci almeno un Pokémon")
         return
 
     formatid = "nationaldex"
@@ -68,19 +63,17 @@ async def randpoketour(
     rules = ["Z-Move Clause", "Dynamax Clause"]
     bans = ["All Pokemon"]
     unbans = []
-    if "," in arg:
+    if "," in msg.arg:
         sep = ","
     else:
         sep = " "
-    for item in arg.split(sep):
+    for item in msg.arg.split(sep):
         unbans.append(item.strip() + "-base")
 
     rules.extend(["-" + i for i in bans])
     rules.extend(["+" + i for i in unbans])
 
-    await create_tour(
-        conn, room, formatid=formatid, name=name, autostart=12, rules=rules
-    )
+    await create_tour(msg.room, formatid=formatid, name=name, autostart=12, rules=rules)
 
 
 @command_wrapper(
@@ -88,10 +81,8 @@ async def randpoketour(
     helpstr="Avvia un torneo Super Italian Bros. Brawl",
     is_unlisted=True,
 )
-async def waffletour(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    if room is None or not utils.is_driver(user):
+async def waffletour(msg: Message) -> None:
+    if msg.room is None or not msg.user.has_role("driver", msg.room):
         return
 
     name = "Super Italian Bros. Brawl"
@@ -107,21 +98,21 @@ async def waffletour(
     ]
 
     await create_tour(
-        conn, room, name=name, autostart=5, autodq=3, forcetimer=True, rules=rules
+        msg.room, name=name, autostart=5, autodq=3, forcetimer=True, rules=rules
     )
 
-    await conn.send_message(room, "!viewfaq sibb", False)
+    await msg.room.send("!viewfaq sibb", False)
 
 
 @command_wrapper(
     helpstr="Avvia un torneo di una tier scelta a caso tra quelle con team random",
     is_unlisted=True,
 )
-async def randtour(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if room is None or not utils.is_driver(user):
+async def randtour(msg: Message) -> None:
+    if msg.room is None or not msg.user.has_role("driver", msg.room):
         return
 
-    tiers = [x["name"] for x in conn.tiers if x["random"]]
+    tiers = [x["name"] for x in msg.conn.tiers if x["random"]]
 
     rules = []
 
@@ -132,8 +123,7 @@ async def randtour(conn: Connection, room: Optional[str], user: str, arg: str) -
         rules.append("Inverse Mod")
 
     await create_tour(
-        conn,
-        room,
+        msg.room,
         formatid=random.choice(tiers),
         autostart=3.5,
         allow_scouting=True,

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Dict, Tuple
 
 from sqlalchemy.orm import joinedload
 from typing_extensions import TypedDict
@@ -11,12 +11,12 @@ from database import Database
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper(aliases=("location",))
-async def locations(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    arg = utils.to_user_id(utils.remove_accents(arg.lower()))
+async def locations(msg: Message) -> None:
+    pokemon_id = utils.to_user_id(utils.remove_accents(msg.arg.lower()))
 
     db = Database.open("veekun")
 
@@ -49,7 +49,7 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
                 .joinedload(v.Versions.version_names)
                 .raiseload("*")
             )
-            .filter_by(identifier=arg)
+            .filter_by(identifier=pokemon_id)
             .first()
         )
 
@@ -183,17 +183,15 @@ async def locations(conn: Connection, room: Optional[str], user: str, arg: str) 
     )
 
     if not html:
-        await conn.send_reply(room, user, "Nessun dato")
+        await msg.reply("Nessun dato")
         return
 
-    await conn.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
+    await msg.reply_htmlbox('<div class="ladder">' + html + "</div>")
 
 
 @command_wrapper(aliases=("encounter",))
-async def encounters(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    arg = utils.to_user_id(utils.remove_accents(arg.lower()))
+async def encounters(msg: Message) -> None:
+    location_id = utils.to_user_id(utils.remove_accents(msg.arg.lower()))
 
     db = Database.open("veekun")
 
@@ -228,7 +226,7 @@ async def encounters(
                 .joinedload(v.LocationAreas.location_area_prose)
                 .raiseload("*")
             )
-            .filter_by(identifier=arg)
+            .filter_by(identifier=location_id)
             .first()
         )
 
@@ -366,7 +364,7 @@ async def encounters(
     )
 
     if not html:
-        await conn.send_reply(room, user, "Nessun dato")
+        await msg.reply("Nessun dato")
         return
 
-    await conn.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
+    await msg.reply_htmlbox('<div class="ladder">' + html + "</div>")

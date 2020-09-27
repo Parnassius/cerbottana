@@ -14,11 +14,12 @@ import utils
 from database import Database
 from handlers import handler_wrapper
 from plugins import command_wrapper, parametrize_room, route_wrapper
-from room import Room
 from tasks import recurring_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.message import Message
+    from models.room import Room
 
 
 @recurring_task_wrapper()
@@ -28,7 +29,7 @@ async def logger_task(conn: Connection) -> None:
         with db.get_session() as session:
             yesterday = datetime.date.today() - datetime.timedelta(days=1)
 
-            for room in conn.rooms + conn.private_rooms:
+            for room in conn.rooms.keys():
                 last_date = (
                     session.query(func.max(l.Logs.date))  # type: ignore  # sqlalchemy
                     .filter_by(roomid=room)
@@ -44,20 +45,18 @@ async def logger_task(conn: Connection) -> None:
 
                 while date < yesterday:
                     await asyncio.sleep(30)
-                    await conn.send_message(
-                        "", f"/join view-chatlog-{room}--{date.isoformat()}", False
-                    )
+                    await conn.send(f"|/join view-chatlog-{room}--{date.isoformat()}")
                     date += datetime.timedelta(days=1)
 
         await asyncio.sleep(12 * 60 * 60)
 
 
 @handler_wrapper(["pagehtml"])
-async def logger(conn: Connection, roomid: str, *args: str) -> None:
-    if roomid[:13] != "view-chatlog-":
+async def logger(conn: Connection, room: Room, *args: str) -> None:
+    if room.roomid[:13] != "view-chatlog-":
         return
 
-    room, date = roomid[13:].split("--")
+    logsroom, date = room.roomid[13:].split("--")
     chatlog = "|".join(args).strip()
 
     html = fromstring(chatlog)
@@ -72,7 +71,7 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
             userrank = user[0].xpath("small")
             values.append(
                 {
-                    "roomid": room,
+                    "roomid": logsroom,
                     "date": date,
                     "time": time[0].text.strip("[] "),
                     "userrank": userrank[0].text if userrank else " ",
@@ -82,18 +81,18 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
             )
 
     if not values:
-        values.append({"roomid": room, "date": date})
+        values.append({"roomid": logsroom, "date": date})
 
     db = Database.open("logs")
     with db.get_session() as session:
-        session.query(l.Logs).filter_by(date=date, roomid=room).delete(
+        session.query(l.Logs).filter_by(date=date, roomid=logsroom).delete(
             synchronize_session=False
         )
         session.bulk_insert_mappings(l.Logs, values)
 
-        session.query(l.DailyTotalsPerRank).filter_by(date=date, roomid=room).delete(
-            synchronize_session=False
-        )
+        session.query(l.DailyTotalsPerRank).filter_by(
+            date=date, roomid=logsroom
+        ).delete(synchronize_session=False)
         session.execute(
             "INSERT INTO daily_totals_per_rank (roomid, date, userrank, messages) "
             "SELECT roomid, date, userrank, COUNT(*) "
@@ -101,12 +100,12 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
             "WHERE roomid=:roomid AND date=:date "
             "GROUP BY userrank "
             "HAVING userrank IS NOT NULL",
-            {"roomid": room, "date": date},
+            {"roomid": logsroom, "date": date},
         )
 
-        session.query(l.DailyTotalsPerUser).filter_by(date=date, roomid=room).delete(
-            synchronize_session=False
-        )
+        session.query(l.DailyTotalsPerUser).filter_by(
+            date=date, roomid=logsroom
+        ).delete(synchronize_session=False)
         session.execute(
             "INSERT INTO daily_totals_per_user (roomid, date, userid, messages) "
             "SELECT roomid, date, userid, COUNT(*) "
@@ -114,68 +113,65 @@ async def logger(conn: Connection, roomid: str, *args: str) -> None:
             "WHERE roomid=:roomid AND date=:date "
             "GROUP BY userid "
             "HAVING userid IS NOT NULL",
-            {"roomid": room, "date": date},
+            {"roomid": logsroom, "date": date},
         )
 
 
 @command_wrapper()
 @parametrize_room
-async def getlogs(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if utils.to_user_id(user) in conn.administrators:
-        args = arg.split(",")
-        logsroom = utils.to_room_id(args[0])
-        date = args[1].strip()
-        await conn.send_message("", f"/join view-chatlog-{logsroom}--{date}", False)
+async def getlogs(msg: Message) -> None:
+    if msg.user.userid in msg.conn.administrators:
+        logsroom = msg.parametrized_room.roomid
+        date = msg.arg.strip()
+        await msg.conn.send(f"|/join view-chatlog-{logsroom}--{date}")
 
 
 @command_wrapper(aliases=("linecount",))
 @parametrize_room
-async def linecounts(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    userid = utils.to_user_id(user)
-    args = arg.split(",")
-    logsroom = utils.to_room_id(args[0])
+async def linecounts(msg: Message) -> None:
+    logsroom = msg.parametrized_room.roomid
 
-    users = Room.get(logsroom).users
-    if userid not in users:
+    users = msg.parametrized_room.users
+    if msg.user not in users:
         return
 
-    rank = users[userid]["rank"]
+    rank = users[msg.user]
+    if not utils.has_role("driver", rank):
+        return
 
     token_id = utils.create_token({logsroom: rank}, 1)
 
-    message = f"{conn.domain}linecounts/{logsroom}?token={token_id}"
-    if len(args) > 1:
-        search = ",".join([utils.to_user_id(u) for u in args[1:]])
+    message = f"{msg.conn.domain}linecounts/{logsroom}?token={token_id}"
+    if msg.arg:
+        search = ",".join([utils.to_user_id(u) for u in msg.args])
         message += f"&search={search}"
 
-    await conn.send_pm(user, message)
+    await msg.user.send(message)
 
 
 @command_wrapper()
 @parametrize_room
-async def topusers(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    userid = utils.to_user_id(user)
-    args = arg.split(",")
-    logsroom = utils.to_room_id(args[0])
+async def topusers(msg: Message) -> None:
+    logsroom = msg.parametrized_room.roomid
 
-    users = Room.get(logsroom).users
-    if userid not in users:
+    users = msg.parametrized_room.users
+    if msg.user not in users:
         return
 
-    rank = users[userid]["rank"]
+    rank = users[msg.user]
+    if not utils.has_role("driver", rank):
+        return
 
     token_id = utils.create_token({logsroom: rank}, 1)
 
-    message = f"{conn.domain}linecounts/{logsroom}?token={token_id}&topusers=1"
+    message = f"{msg.conn.domain}linecounts/{logsroom}?token={token_id}&topusers=1"
 
-    await conn.send_pm(user, message)
+    await msg.user.send(message)
 
 
 @route_wrapper("/linecounts/<room>")
 def linecounts_route(room: str) -> str:
-    if not utils.is_driver(web_session.get(room)):
+    if not utils.has_role("driver", web_session.get(room)):
         abort(401)
 
     return render_template("linecounts.html", room=room)
@@ -183,7 +179,7 @@ def linecounts_route(room: str) -> str:
 
 @route_wrapper("/linecounts/<room>/data")
 def linecounts_data(room: str) -> str:
-    if not utils.is_driver(web_session.get(room)):
+    if not utils.has_role("driver", web_session.get(room)):
         abort(401)
 
     out = ""

@@ -172,4 +172,4 @@ for f in modules:
         name = basename(f)[:-3]
         importlib.import_module("plugins." + name)
 
-commands: Dict[str, Command] = {}  # TODO: Enable plugins after rewrite is complete
+commands = Command.get_all_aliases()
