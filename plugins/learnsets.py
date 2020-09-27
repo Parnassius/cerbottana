@@ -11,17 +11,16 @@ from database import Database
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper()
-async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    args = arg.split(",")
-    if len(args) < 2:
+async def learnset(msg: Message) -> None:
+    if len(msg.args) < 2:
         return
 
-    pokemon_id = utils.to_user_id(utils.remove_accents(args[0].lower()))
-    version = utils.to_user_id(utils.remove_accents(args[1].lower()))
+    pokemon_id = utils.to_user_id(utils.remove_accents(msg.args[0].lower()))
+    version = utils.to_user_id(utils.remove_accents(msg.args[1].lower()))
 
     db = Database.open("veekun")
 
@@ -139,7 +138,7 @@ async def learnset(conn: Connection, room: Optional[str], user: str, arg: str) -
         )
 
         if not html:
-            await conn.send_reply(room, user, "Nessun dato")
+            await msg.reply("Nessun dato")
             return
 
-        await conn.send_htmlbox(room, user, '<div class="ladder">' + html + "</div>")
+        await msg.reply_htmlbox('<div class="ladder">' + html + "</div>")

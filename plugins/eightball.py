@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from flask import render_template, request
 
@@ -10,11 +10,11 @@ from database import Database
 from plugins import command_wrapper, route_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper(aliases=("8ball",), helpstr="Chiedi qualsiasi cosa!")
-async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+async def eightball(msg: Message) -> None:
     db = Database.open()
 
     with db.get_session() as session:
@@ -24,7 +24,7 @@ async def eightball(conn: Connection, room: Optional[str], user: str, arg: str) 
             return
 
         answer = random.choice(answers).answer
-        await conn.send_reply(room, user, answer)
+        await msg.reply(answer)
 
 
 @route_wrapper("/eightball", methods=("GET", "POST"), require_driver=True)

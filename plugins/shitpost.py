@@ -2,37 +2,41 @@ from __future__ import annotations
 
 import json
 import random
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List
 
 import utils
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
-@command_wrapper(aliases=("say",), helpstr="FOR THE MIMMMSSS", is_unlisted=True)
-async def shitpost(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if room is None:
+@command_wrapper(
+    aliases=("say",),
+    helpstr="FOR THE MIMMMSSS",
+    is_unlisted=True,
+)
+async def shitpost(msg: Message) -> None:
+    if msg.room is None:
         return
-    message = utils.remove_accents(arg.strip())
-    if len(message) > 50:
-        await conn.send_reply(room, user, "Testo troppo lungo")
+    phrase = utils.remove_accents(msg.arg.strip())
+    if len(phrase) > 50:
+        await msg.reply("Testo troppo lungo")
         return
 
     text0 = ""
     text1 = ""
     text2 = ""
 
-    if message == "":
-        if not utils.is_private(conn, room):
+    if phrase == "":
+        if not msg.room.is_private:
             return
-        message = "SHITPOST"
+        phrase = "SHITPOST"
 
-    if not utils.is_private(conn, room) and ("x" in message or "X" in message):
-        message = "lolno"
+    if not msg.room.is_private and ("x" in phrase or "X" in phrase):
+        phrase = "lolno"
 
-    for i in message:
+    for i in phrase:
         if i in LETTERS:
             if text0 != "":
                 text0 += " "
@@ -44,15 +48,15 @@ async def shitpost(conn: Connection, room: Optional[str], user: str, arg: str) -
 
     html = '<pre style="margin: 0; overflow-x: auto">{}<br>{}<br>{}</pre>'
 
-    await conn.send_htmlbox(room, user, html.format(text0, text1, text2))
+    await msg.reply_htmlbox(html.format(text0, text1, text2))
 
 
 @command_wrapper(aliases=("meme", "memes", "mims"))
-async def memes(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if room is None or not utils.is_private(conn, room):
+async def memes(msg: Message) -> None:
+    if msg.room is None or not msg.room.is_private:
         return
 
-    await conn.send_message(room, random.choice(MEMES))
+    await msg.room.send(random.choice(MEMES))
 
 
 # fmt: off

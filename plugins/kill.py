@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
-import utils
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper()
-async def kill(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if utils.to_user_id(user) in conn.administrators and conn.websocket is not None:
-        for task in asyncio.all_tasks(loop=conn.loop):
+async def kill(msg: Message) -> None:
+    if msg.user.is_administrator and msg.conn.websocket is not None:
+        for task in asyncio.all_tasks(loop=msg.conn.loop):
             task.cancel()
-        await conn.websocket.close()
+        await msg.conn.websocket.close()

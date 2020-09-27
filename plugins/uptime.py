@@ -1,20 +1,20 @@
 from __future__ import annotations
 
 from time import time
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper()
-async def uptime(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if conn.connection_start is None:
+async def uptime(msg: Message) -> None:
+    if msg.conn.connection_start is None:
         return
 
-    s = int(time() - conn.connection_start)
+    s = int(time() - msg.conn.connection_start)
     m, s = divmod(s, 60)
     h, m = divmod(m, 60)
     d, h = divmod(h, 24)
@@ -24,4 +24,4 @@ async def uptime(conn: Connection, room: Optional[str], user: str, arg: str) -> 
     minutes = "{} minute{}, ".format(m, "" if m == 1 else "s") if m > 0 else ""
     seconds = "{} second{}".format(s, "" if s == 1 else "s")
 
-    await conn.send_reply(room, user, days + hours + minutes + seconds)
+    await msg.reply(days + hours + minutes + seconds)

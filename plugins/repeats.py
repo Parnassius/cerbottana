@@ -14,12 +14,13 @@ from sqlalchemy.sql import func
 import databases.database as d
 import utils
 from database import Database
+from models.room import Room
 from plugins import command_wrapper, parametrize_room, route_wrapper
-from room import Room
 from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.message import Message
 
 
 env = Env()
@@ -32,13 +33,12 @@ class Repeat:
     also registers a task to the base asyncio loop of the Connection param.
     """
 
-    _instances: Dict[Tuple[str, str], Repeat] = {}  # record of active instances
+    _instances: Dict[Tuple[str, Room], Repeat] = {}  # record of active instances
 
     def __init__(
         self,
-        conn: Connection,
         message: str,
-        room: str,
+        room: Room,
         delta_minutes: int,
         initial_dt: Optional[datetime] = None,  # if None, then it's a new task
         expire_dt: Optional[datetime] = None,
@@ -46,9 +46,8 @@ class Repeat:
     ) -> None:
         now = datetime.now()  # fixes the time for calculations within this method
 
-        self.conn = conn
         self.message = message
-        self.room = Room.get(room)
+        self.room = room
 
         self.delta = timedelta(minutes=delta_minutes)
         self.delta_minutes = delta_minutes  # kept only as an external property
@@ -94,8 +93,8 @@ class Repeat:
         return False
 
     @property
-    def key(self) -> Tuple[str, str]:
-        return (self.message, self.room.roomid)
+    def key(self) -> Tuple[str, Room]:
+        return (self.message, self.room)
 
     async def coro(self) -> None:
         await asyncio.sleep(self.offset.total_seconds())
@@ -107,7 +106,7 @@ class Repeat:
                 not self.room.modchat  # don't send if modchat is active
                 and self.message not in self.room.buffer  # throttling
             ):
-                await self.conn.send_message(self.room.roomid, self.message, False)
+                await self.room.send(self.message, False)
             else:
                 print(f"Not sending {self.message}")
             sleep_interval = self.delta - (datetime.now() - start)
@@ -128,7 +127,7 @@ class Repeat:
                 # no need to previous._unlist(), we'll just update the SQL row
         self._instances[self.key] = self
 
-        self.task = asyncio.ensure_future(self.coro(), loop=self.conn.loop)
+        self.task = asyncio.ensure_future(self.coro(), loop=self.room.conn.loop)
 
         if self.is_new:
             # if the task has just been created, register it into the SQL db
@@ -164,14 +163,12 @@ class Repeat:
         self._instances.pop(self.key, None)
 
     @classmethod
-    def get(cls, room: str, message: Optional[str] = None) -> List[Repeat]:
+    def get(cls, room: Room, message: Optional[str] = None) -> List[Repeat]:
         if message:
             key = (message, room)
             return [cls._instances[key]] if key in cls._instances else []
 
-        instances = [
-            inst for inst in cls._instances.values() if inst.room.roomid == room
-        ]
+        instances = [inst for inst in cls._instances.values() if inst.room == room]
         return sorted(instances, key=lambda instance: instance.message)
 
     @classmethod
@@ -187,9 +184,8 @@ class Repeat:
             rows = session.query(d.Repeats).all()
             for row in rows:
                 instance = cls(
-                    conn,
                     row.message,
-                    row.roomid,
+                    Room.get(conn, row.roomid),
                     row.delta_minutes,
                     initial_dt=parse(row.initial_dt),
                     expire_dt=parse(row.expire_dt) if row.expire_dt else None,
@@ -204,100 +200,95 @@ async def load_old_repeats(conn: Connection) -> None:
 
 
 @command_wrapper(aliases=("addrepeat", "ripeti"))
-async def repeat(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    if room is None or not utils.is_driver(user):
+async def repeat(msg: Message) -> None:
+    if msg.room is None or not msg.user.has_role("driver", msg.room):
         return
 
+    ch = msg.conn.command_character
     errmsg = "Sintassi: "
-    errmsg += f"``{conn.command_character}repeat testo, distanza in minuti, scadenza`` "
+    errmsg += f"``{ch}repeat testo, distanza in minuti, scadenza`` "
     errmsg += "La scadenza può essere una data o il numero totale di ripetizioni."
 
     # parse command args
-    args = [a.strip() for a in arg.split(",")]
-    if len(args) > 3 or len(args) < 2:
-        await conn.send_message(room, errmsg)
+    if len(msg.args) > 3 or len(msg.args) < 2:
+        await msg.room.send(errmsg)
         return
 
-    message = args[0]
-    if message.lower() == "all":
-        await conn.send_message(room, "Testo del repeat non valido.")
+    phrase = msg.args[0]
+    if phrase.lower() == "all":
+        await msg.room.send("Testo del repeat non valido.")
         return
 
-    if not args[1].isdigit():
-        await conn.send_message(room, errmsg)
+    if not msg.args[1].isdigit():
+        await msg.room.send(errmsg)
         return
-    delta_minutes = int(args[1])
+    delta_minutes = int(msg.args[1])
 
-    if len(args) == 2:  # no third param: repeat never expires
-        instance = Repeat(conn, message, room, delta_minutes)
-    elif args[2].isdigit():
-        instance = Repeat(conn, message, room, delta_minutes, max_iters=int(args[2]))
+    if len(msg.args) == 2:  # no third param: repeat never expires
+        instance = Repeat(phrase, msg.room, delta_minutes)
+    elif msg.args[2].isdigit():
+        instance = Repeat(phrase, msg.room, delta_minutes, max_iters=int(msg.args[2]))
     else:
         try:  # is the third param an expire date string?
-            expire_dt = parse(args[2], default=datetime.now(), dayfirst=True)
-            instance = Repeat(conn, message, room, delta_minutes, expire_dt=expire_dt)
+            expire_dt = parse(msg.args[2], default=datetime.now(), dayfirst=True)
+            instance = Repeat(phrase, msg.room, delta_minutes, expire_dt=expire_dt)
         except ValueError:
-            await conn.send_message(room, errmsg)
+            await msg.room.send(errmsg)
             return
 
     # start repeat and report result
     if not instance.start():
-        await conn.send_message(room, errmsg)
+        await msg.room.send(errmsg)
 
 
 @command_wrapper(aliases=("clearrepeat", "deleterepeat", "rmrepeat"))
-async def stoprepeat(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    if room is None or not utils.is_driver(user) or not arg:
+async def stoprepeat(msg: Message) -> None:
+    if msg.room is None or not msg.user.has_role("driver", msg.room) or not msg.arg:
         return
 
-    query = None if arg.lower().strip() == "all" else arg
-    instances = Repeat.get(room, query)
+    query = None if msg.arg.lower().strip() == "all" else msg.arg
+    instances = Repeat.get(msg.room, query)
 
     if not instances:
-        await conn.send_message(room, "Nessun repeat da cancellare.")
+        await msg.room.send("Nessun repeat da cancellare.")
         return
 
     for instance in instances:
         instance.stop()
 
-    await conn.send_message(room, "Fatto.")
+    await msg.room.send("Fatto.")
 
 
 @command_wrapper(aliases=("repeats",))
 @parametrize_room
-async def showrepeats(
-    conn: Connection, room: Optional[str], user: str, arg: str
-) -> None:
-    repeats_room = arg.split(",")[0]
-    userid = utils.to_user_id(user)
-    users = Room.get(repeats_room).users
-    rank = users[userid]["rank"]
+async def showrepeats(msg: Message) -> None:
+    repeats_room = msg.parametrized_room
 
-    if not utils.is_driver(rank):
-        await conn.send_pm(user, f"Devi essere almeno driver in {repeats_room}.")
+    if not msg.user.has_role("driver", repeats_room):
+        await msg.user.send(f"Devi essere almeno driver in {repeats_room}.")
         return
 
     db = Database.open()
     with db.get_session() as session:
         repeats_n = (
             session.query(func.count(d.Repeats.id))
-            .filter_by(roomid=repeats_room)
+            .filter_by(roomid=repeats_room.roomid)
             .first()
         )
     if not repeats_n:
-        await conn.send_pm(user, "Nessun repeat attivo.")
+        await msg.user.send("Nessun repeat attivo.")
         return
 
-    token_id = utils.create_token({repeats_room: rank}, 1)
-    url = f"{conn.domain}repeats/{repeats_room}?token={token_id}"
-    await conn.send_pm(user, url)
+    rank = msg.user.rank(repeats_room)
+    if rank:  # @parametrize_room guarantees rank is not None
+        token_id = utils.create_token({repeats_room.roomid: rank}, 1)
+        url = f"{msg.conn.domain}repeats/{repeats_room}?token={token_id}"
+        await msg.user.send(url)
 
 
 @route_wrapper("/repeats/<room>")
 def repeats(room: str) -> str:
-    if not utils.is_driver(web_session.get(room)):
+    if not utils.has_role("driver", web_session.get(room)):
         abort(401)
 
     db = Database.open()

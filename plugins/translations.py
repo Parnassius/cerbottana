@@ -1,20 +1,20 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List
 
 import utils
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper(helpstr="Traduce abilità, mosse e strumenti.")
-async def trad(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    parola = utils.to_user_id(utils.remove_accents(arg.lower()))
+async def trad(msg: Message) -> None:
+    parola = utils.to_user_id(utils.remove_accents(msg.arg.lower()))
     if parola == "":
-        await conn.send_reply(room, user, "Cosa devo tradurre?")
+        await msg.reply("Cosa devo tradurre?")
         return
 
     results: List[Dict[str, str]] = []
@@ -28,17 +28,17 @@ async def trad(conn: Connection, room: Optional[str], user: str, arg: str) -> No
 
     if results:
         if len(results) == 1:
-            await conn.send_reply(room, user, results[0]["trad"])
+            await msg.reply(results[0]["trad"])
             return
         resultstext = ""
         for k in results:
             if resultstext != "":
                 resultstext += ", "
             resultstext += "{trad} ({cat})".format(trad=k["trad"], cat=k["cat"])
-        await conn.send_reply(room, user, resultstext)
+        await msg.reply(resultstext)
         return
 
-    await conn.send_reply(room, user, "Non trovato")
+    await msg.reply("Non trovato")
 
 
 with open("./data/translations.json", "r") as f:
