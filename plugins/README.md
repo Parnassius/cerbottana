@@ -24,12 +24,12 @@ Here is the structure of a plugin module with one command, where every parameter
 ```python
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @command_wrapper(
@@ -37,7 +37,7 @@ if TYPE_CHECKING:
     helpstr="Describes the foo command.",
     #is_unlisted=True
 )
-async def foo(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+async def foo(msg: Message) -> None:
     pass
 ```
 
@@ -53,12 +53,12 @@ The most common use case is linking a webpage with a command:
 ```python
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from plugins import command_wrapper, route_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection
+    from models.message import Message
 
 
 @route_wrapper("/foo")
@@ -66,6 +66,6 @@ def foo(room: str) -> str:
     return render_template("foo.html")
 
 @command_wrapper()
-async def linkfoo(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
-    await conn.send_reply(room, user, f"{conn.domain}foo")
+async def linkfoo(msg: Message) -> None:
+    await msg.reply(f"{msg.conn.domain}foo")
 ```
