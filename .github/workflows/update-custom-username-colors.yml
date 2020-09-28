@@ -19,6 +19,7 @@ jobs:
       run: |
         cd scripts
         python update-custom-username-colors.py
+        cd ..
         black utils.py
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
