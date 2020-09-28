@@ -36,6 +36,13 @@ async def randomuser(
 
 
 @command_wrapper()
+async def shrug(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    if room is None:
+        return
+    await conn.send_reply(room, user, "¯" + r"\_(ツ)_/¯")
+
+
+@command_wrapper()
 @parametrize_room
 async def tell(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     args = arg.split(",")
