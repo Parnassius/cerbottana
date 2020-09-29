@@ -24,7 +24,6 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
-        path: cerbottana
         commit-message: 'Update custom username colors'
         title: 'Update custom username colors'
         branch: update-custom-username-colors
