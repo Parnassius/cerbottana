@@ -29,6 +29,7 @@ class Room:
         title (str): Formatted variant of roomid.
         users (Dict[User, str]): User instance, rank string.
         no_mods_online (Optional[float])
+        last_modchat_command (float)
 
     Todo:
         `is_private` should be determined dynamically from protocol communication.
@@ -50,6 +51,7 @@ class Room:
         # Attributes updated within this instance
         self._users: Dict[User, str] = {}  # user, rank
         self.no_mods_online: Optional[float] = None
+        self.last_modchat_command: float = 0
 
         # Register new initialized room
         if self.roomid in self.conn.rooms:
@@ -126,7 +128,12 @@ class Room:
             timestamp = datetime.now(tz)
             minutes = timestamp.hour * 60 + timestamp.minute
             # 00:30 - 08:00
-            if 30 <= minutes < 8 * 60 and self.no_mods_online + (7 * 60) < time():
+            if (
+                30 <= minutes < 8 * 60
+                and self.no_mods_online + (7 * 60) < time()
+                and self.last_modchat_command + 15 < time()
+            ):
+                self.last_modchat_command = time()
                 await self.send("/modchat +", False)
 
     async def send(self, message: str, escape: bool = True) -> None:
