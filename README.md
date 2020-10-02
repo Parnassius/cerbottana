@@ -10,7 +10,7 @@ cerbottana is a [Pokémon Showdown](https://play.pokemonshowdown.com/) bot, orig
 
 Before submitting a pull request, please make sure your code is linted with ``pylint``, type-checked with ``mypy``, formatted with ``black`` and ``isort``.
 
-The bulk of cerbottana code is plugins (see [plugins reference](plugins/README.md)); working on a simple plugin is a good first contribution.
+The bulk of cerbottana code is plugins (see [plugins reference](plugins/README.md)). Working on a simple plugin is a good first contribution.
 
 ## Detailed install instructions
 
@@ -20,7 +20,7 @@ These instructions assume you are in the root directory of a cloned cerbottana r
 
 If you are going to test your bot locally, you will also need an active instance of a [Pokémon Showdown server](https://github.com/smogon/pokemon-showdown).
 
-It is highly recommended to use a Python 3.7 virtual environment. Although future versions should also work, they might cause inconsistencies in `pip-compile` output.
+It is highly recommended to use a Python 3.7 virtual environment. Although newer versions should also work, they might cause inconsistencies in `pip-compile` output.
 
 To create and start the virtual environment on Unix or MacOS, run:
 
