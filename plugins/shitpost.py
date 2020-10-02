@@ -11,11 +11,7 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
-@command_wrapper(
-    aliases=("meme", "memes", "mims", "say"),
-    helpstr="FOR THE MIMMMSSS",
-    is_unlisted=True,
-)
+@command_wrapper(aliases=("say",), helpstr="FOR THE MIMMMSSS", is_unlisted=True)
 async def shitpost(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if room is None:
         return
@@ -51,6 +47,7 @@ async def shitpost(conn: Connection, room: Optional[str], user: str, arg: str) -
     await conn.send_htmlbox(room, user, html.format(text0, text1, text2))
 
 
+@command_wrapper(aliases=("meme", "memes", "mims"))
 async def memes(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
     if room is None or not utils.is_private(conn, room):
         return
