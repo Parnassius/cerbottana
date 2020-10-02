@@ -15,11 +15,11 @@ For example the `addquote` command represents:
 }
 ```
 
-To invoke a command it suffices to write one of its associated strings, preceded by the env variable `COMMAND_CHARACTER`, in the chat.
+To invoke a command, just type in the chat one of its associated strings, preceded by the env variable `COMMAND_CHARACTER`.
 
-The preferred way to inizialize a `Command` instance is through the `command_wrapper` decorator, that acts as a functional interface to the class constructor.
+The preferred way to inizialize a `Command` instance is through the `command_wrapper` decorator, which acts as a functional interface to the class constructor.
 
-Here's the structure of a plugin module with one command (every parameter of the decorator is optional):
+Here is the structure of a plugin module with one command, where every parameter of the decorator is optional:
 
 ```python
 from __future__ import annotations
@@ -41,12 +41,12 @@ async def foo(conn: Connection, room: Optional[str], user: str, arg: str) -> Non
     pass
 ```
 
-`aliases` is the `Tuple[str]` parameter that populates the dictionary of commands; the decorated function's name is automatically included as an alias.
+`aliases` is the `Tuple[str]` parameter that populates the dictionary of commands; the decorated function name is automatically included as an alias.
 
-A `Command` object can also yield useful metadata: `helpstr` is a string that describes the callback function. It is used to generate a help document with data from every instance that doesn't have the boolean parameter `is_unlisted` explicitly set to `False`.
+A `Command` object can also yield useful metadata: `helpstr` is a string that describes the callback function. It is used to generate a help document with data from every instance that doesn't have the boolean parameter `is_unlisted` explicitly set to `True`.
 
 ## Generating Flask webpages
-A plugin module might add some routes to the Flask server created in `server.py`. Use the `route_wrapper` decorator with the same syntax of a regular Flask route decorator and put any needed template files in the `../templates/` folder.
+A plugin module might add some routes to the Flask server created in `server.py`. Use the `route_wrapper` decorator with the same syntax of a regular Flask route decorator, and put any needed template files in the `../templates/` folder.
 
 The most common use case is linking a webpage with a command:
 
