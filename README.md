@@ -4,49 +4,53 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Total Alerts](https://img.shields.io/lgtm/alerts/g/Parnassius/cerbottana.svg?logo=lgtm)](https://lgtm.com/projects/g/Parnassius/cerbottana/alerts)
 
-Pokémon Showdown bot mainly used in the [Italiano room](https://play.pokemonshowdown.com/italiano).
+cerbottana is a [Pokémon Showdown](https://play.pokemonshowdown.com/) bot, originally developed for the room [Italiano](https://play.pokemonshowdown.com/italiano).
 
 ## Contributing
 
-Before submitting a PR, make sure your code is linted with ``pylint``, type-checked with ``mypy``, formatted with ``black`` and ``isort``.
+Before submitting a pull request, please make sure your code is linted with ``pylint``, type-checked with ``mypy``, formatted with ``black`` and ``isort``.
 
-The bulk of cerbottana's code are plugins (see [plugins reference](plugins/README.md)); working on a simple plugin is a good first contribution.
+The bulk of cerbottana code is plugins (see [plugins reference](plugins/README.md)); working on a simple plugin is a good first contribution.
 
 ## Detailed install instructions
 
 ### Creating the virtual environment and installing dependencies
 
-For these instructions we assume you're in the root directory of a cloned cerbottana repository; if you're on Windows we recommend using the [WSL](https://docs.microsoft.com/en-us/windows/wsl). If you wish to test your bot locally, you'll also need an active instance of a [Pokemon Showdown server](https://github.com/smogon/pokemon-showdown).
+These instructions assume you are in the root directory of a cloned cerbottana repository. If you use Windows, it is strongly advised to work within the [WSL](https://docs.microsoft.com/en-us/windows/wsl).
 
-It's strongly recommended to use a Python virtual environment with Python 3.7; future versions should work too but might cause inconsistencies in `pip-compile` output. To create and start the virtual environment on Unix or MacOS, run:
+If you are going to test your bot locally, you will also need an active instance of a [Pokémon Showdown server](https://github.com/smogon/pokemon-showdown).
+
+It is highly recommended to use a Python 3.7 virtual environment. Although future versions should also work, they might cause inconsistencies in `pip-compile` output.
+
+To create and start the virtual environment on Unix or MacOS, run:
 
     python3 -m venv .venv
     source .venv/bin/activate
 
-If you just want to run an instance of the bot without dev-tools, add only the core dependencies:
+Add the core dependencies needed to run an instance of the bot:
 
     pip3 install -r requirements.txt
 
-If you wish to contribute, you'll also need dev-tools; run the following command in addition to the previous one:
+If you wish to contribute, you will also need dev-tools:
 
     pip3 install -r requirements-dev.txt
 
-The next sections assume that you're still in the virtual environment. When you've finished, just run `deactivate` to exit it.
+The next sections assume that the virtual environment is still active. When you are done, simply run `deactivate` to exit.
 
 ### Generating complementary files
 
-Copy `.env-example` into `.env` and edit accordingly; optional environment variables are commented.
+Copy `.env-example` into `.env` and edit the file accordingly. Optional environment variables are commented out.
 
-Use ``alembic`` to generate the required sqlite databases:
+Use ``alembic`` to generate the required SQLite databases:
 
     alembic upgrade head
 
-In the future if an update to your cerbottana fork changes the databases schemes you'll need to run this command again; to see if this is the case, just check if the ``alembic/`` folder has new files.
+You should run this command every time you make any change to the database schema. If you are not sure, just check if the ``alembic/`` folder has new files, and run the command if it does.
 
 ### Running a bot instance
 
-Make sure the PS server you connect to is active if it's a local instance created for testing purposes. To start cerbottana, run:
+If you are running a local Pokémon Showdown instance, make sure it is active. To start cerbottana, run:
 
     python3 app.py
 
-To stop the execution, use the command `.kill` on PS (change the first character depending on the configured `COMMAND_CHARACTER`) or just raise a `SIGINT` (`Ctrl + C`) on the console.
+To stop the execution, use the command `.kill` on PS (the first character might differ, depending on the configured `COMMAND_CHARACTER`) or just raise a `SIGINT` (`Ctrl + C`) in the console.
