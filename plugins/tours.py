@@ -123,6 +123,19 @@ async def randtour(conn: Connection, room: Optional[str], user: str, arg: str) -
 
     tiers = [x["name"] for x in conn.tiers if x["random"]]
 
+    rules = []
+
+    if random.randint(1, 100) <= 10:
+        rules.append("Blitz")
+
+    if random.randint(1, 100) <= 10:
+        rules.append("Inverse Mod")
+
     await create_tour(
-        conn, room, formatid=random.choice(tiers), autostart=3.5, allow_scouting=True
+        conn,
+        room,
+        formatid=random.choice(tiers),
+        autostart=3.5,
+        allow_scouting=True,
+        rules=rules,
     )
