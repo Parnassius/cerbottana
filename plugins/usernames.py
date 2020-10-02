@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Optional
 
 import pytz
 
+import utils
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
@@ -40,6 +41,14 @@ async def altcauseiminsecure(
             "A, we, wi. La fortuna non va lì"
         ),
     )
+
+
+@command_wrapper()
+async def annika(conn: Connection, room: Optional[str], user: str, arg: str) -> None:
+    if room is None or not utils.is_private(conn, room):
+        return
+
+    await conn.send_reply(room, user, "enjoy ur italian joke punishment room")
 
 
 @command_wrapper()
