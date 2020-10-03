@@ -29,7 +29,7 @@ async def logger_task(conn: Connection) -> None:
         with db.get_session() as session:
             yesterday = datetime.date.today() - datetime.timedelta(days=1)
 
-            for room in conn.rooms.keys():
+            for room in list(conn.rooms.keys()):
                 last_date = (
                     session.query(func.max(l.Logs.date))  # type: ignore  # sqlalchemy
                     .filter_by(roomid=room)

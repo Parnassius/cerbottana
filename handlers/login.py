@@ -60,5 +60,5 @@ async def updateuser(conn: Connection, room: Room, *args: str) -> None:
     if conn.statustext:
         await conn.send(f"|/status {conn.statustext}")
 
-    for roomid in conn.rooms:
+    for roomid in list(conn.rooms.keys()):
         await conn.send(f"|/join {roomid}")
