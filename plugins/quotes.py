@@ -112,9 +112,9 @@ async def quotelist(msg: Message) -> None:
     db = Database.open()
     with db.get_session() as session:
         quotes_n = (
-            session.query(func.count(d.Quotes.id))
+            session.query(func.count(d.Quotes.id))  # type: ignore  # sqlalchemy
             .filter_by(roomid=msg.parametrized_room.roomid)
-            .first()
+            .scalar()
         )
 
     if not quotes_n:

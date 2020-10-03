@@ -271,10 +271,11 @@ async def showrepeats(msg: Message) -> None:
     db = Database.open()
     with db.get_session() as session:
         repeats_n = (
-            session.query(func.count(d.Repeats.id))
+            session.query(func.count(d.Repeats.id))  # type: ignore  # sqlalchemy
             .filter_by(roomid=repeats_room.roomid)
-            .first()
+            .scalar()
         )
+
     if not repeats_n:
         await msg.user.send("Nessun repeat attivo.")
         return
