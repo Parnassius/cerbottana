@@ -23,6 +23,8 @@ class Room:
         conn (Connection): Used to access the websocket.
         roomid (str): Uniquely identifies a room, see utils.to_room_id.
         is_private (bool, optional): Determined from environs. Defaults to True.
+        autojoin (bool, optional): Whether the bot should join the room on startup.
+            Defaults to False.
         buffer (Deque[str]): Fixed list of the last room messages.
         modchat (bool): True if modchat level is at least "+".
         roombot (bool): True if cerbottana is roombot in this room.
@@ -36,11 +38,18 @@ class Room:
         Rooms should be removed from conn.rooms if they |deinit|.
     """
 
-    def __init__(self, conn: Connection, roomid: str, is_private: bool = True) -> None:
+    def __init__(
+        self,
+        conn: Connection,
+        roomid: str,
+        is_private: bool = True,
+        autojoin: bool = False,
+    ) -> None:
         # Attributes initialized directly
         self.conn = conn
         self.roomid = roomid
         self.is_private = is_private
+        self.autojoin = autojoin
 
         # Attributes initialized through handlers
         self.dynamic_buffer: Deque[str] = deque(maxlen=20)

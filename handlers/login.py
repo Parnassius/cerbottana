@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING
 
 import utils
 from handlers import handler_wrapper
+from models.room import Room
 
 if TYPE_CHECKING:
     from connection import Connection
-    from models.room import Room
 
 
 @handler_wrapper(["challstr"])
@@ -61,4 +61,5 @@ async def updateuser(conn: Connection, room: Room, *args: str) -> None:
         await conn.send(f"|/status {conn.statustext}")
 
     for roomid in list(conn.rooms.keys()):
-        await conn.send(f"|/join {roomid}")
+        if Room.get(conn, roomid).autojoin:
+            await conn.send(f"|/join {roomid}")

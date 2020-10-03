@@ -50,9 +50,9 @@ class Connection:
         self.statustext = statustext
         self.rooms: Dict[str, Room] = {}  # roomid, Room
         for roomid in rooms:
-            self.rooms[roomid] = Room(self, roomid, is_private=False)
+            self.rooms[roomid] = Room(self, roomid, is_private=False, autojoin=True)
         for roomid in private_rooms:
-            self.rooms[roomid] = Room(self, roomid, is_private=True)
+            self.rooms[roomid] = Room(self, roomid, is_private=True, autojoin=True)
         self.main_room = Room.get(self, main_room) if main_room else None
         self.command_character = command_character
         self.administrators = administrators
