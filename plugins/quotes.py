@@ -3,8 +3,7 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING
 
-from environs import Env
-from flask import abort, render_template
+from flask import abort, current_app, render_template
 from flask import session as web_session
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.sql import func
@@ -16,10 +15,6 @@ from plugins import command_wrapper, parametrize_room, route_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
-
-
-env = Env()
-env.read_env()
 
 
 @command_wrapper(aliases=("newquote", "quote"))
@@ -131,7 +126,7 @@ async def quotelist(msg: Message) -> None:
 
 @route_wrapper("/quotes/<room>")
 def quotes_route(room: str) -> str:
-    if room in env.list("PRIVATE_ROOMS"):
+    if room not in current_app.conn.rooms or current_app.conn.rooms[room].is_private:
         if not web_session.get(room):
             abort(401)
 

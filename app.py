@@ -22,7 +22,9 @@ def shutdown(
 
 def main() -> None:
     queue: SimpleQueue[str] = SimpleQueue()
-    threading.Thread(target=SERVER.serve_forever, args=(queue,), daemon=True).start()
+    threading.Thread(
+        target=SERVER.serve_forever, args=(CONNECTION, queue), daemon=True
+    ).start()
     threading.Thread(target=CONNECTION.open_connection, args=(queue,)).start()
 
 

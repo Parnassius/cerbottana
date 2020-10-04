@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
 from dateutil.parser import parse
-from environs import Env
 from flask import abort, render_template
 from flask import session as web_session
 from sqlalchemy.sql import func
@@ -21,10 +20,6 @@ from tasks import init_task_wrapper
 if TYPE_CHECKING:
     from connection import Connection
     from models.message import Message
-
-
-env = Env()
-env.read_env()
 
 
 class Repeat:

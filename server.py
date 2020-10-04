@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from functools import wraps
 from queue import SimpleQueue
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from environs import Env
 from flask import Flask, abort, current_app, render_template, request
@@ -16,6 +16,9 @@ import utils
 from database import Database
 from plugins import routes
 
+if TYPE_CHECKING:
+    from connection import Connection
+
 env = Env()
 env.read_env()
 
@@ -23,9 +26,11 @@ env.read_env()
 class Server(Flask):
     def __init__(self, *args, **kwargs) -> None:  # type: ignore
         super().__init__(*args, **kwargs)
+        self.conn: Optional[Connection] = None
         self.queue: Optional[SimpleQueue[str]] = None
 
-    def serve_forever(self, queue: SimpleQueue[str]) -> None:
+    def serve_forever(self, conn: Connection, queue: SimpleQueue[str]) -> None:
+        self.conn = conn
         self.queue = queue
         serve(self, listen="*:{}".format(env("PORT")))
 
