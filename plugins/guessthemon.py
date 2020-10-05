@@ -16,10 +16,7 @@ if TYPE_CHECKING:
 
 
 @command_wrapper(
-    aliases=(
-        "hangmanpokemon",
-        "pokemonhangman",
-    ),
+    aliases=("gtm", "hangmanpokemon", "pokemonhangman"),
     helpstr="Indovina un pokemon da una sua entry del pokedex!",
 )
 async def guessthemon(msg: Message) -> None:
