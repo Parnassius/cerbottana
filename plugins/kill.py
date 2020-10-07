@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from models.message import Message
 
 
-@command_wrapper()
+@command_wrapper(aliases=("ammaz", "ammazz"))
 async def kill(msg: Message) -> None:
     if msg.user.is_administrator and msg.conn.websocket is not None:
         for task in asyncio.all_tasks(loop=msg.conn.loop):

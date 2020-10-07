@@ -156,7 +156,7 @@ async def oizys(msg: Message) -> None:
     await msg.reply("no")
 
 
-@command_wrapper(aliases=("parna",))
+@command_wrapper(aliases=("parna", "pota"))
 async def parnassius(msg: Message) -> None:
     await msg.reply("allora, intanto ti calmi")
 
