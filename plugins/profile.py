@@ -66,25 +66,31 @@ async def setprofile(msg: Message) -> None:
         await msg.reply("Errore: lunghezza massima 200 caratteri")
         return
 
-    userid = msg.user.userid
+    # authorized: True if msg.user can approve new descriptions.
+    authorized = msg.conn.main_room is not None and msg.user.has_role(
+        "driver", msg.conn.main_room
+    )
 
     db = Database.open()
     with db.get_session() as session:
+        userid = msg.user.userid
         session.add(d.Users(userid=userid))
-        session.query(d.Users).filter_by(userid=userid).update(
-            {"description_pending": msg.arg}
-        )
+        query_ = session.query(d.Users).filter_by(userid=userid)
+        if authorized:
+            # Authorized users skip the validation process.
+            query_.update({"description": msg.arg, "description_pending": ""})
+        else:
+            query_.update({"description_pending": msg.arg})
 
     await msg.reply("Salvato")
 
-    message = "Qualcuno ha aggiornato la sua frase del profilo. "
-    message += (
-        'Usa <button name="send" value="/pm '
-        + msg.conn.username
-        + ', .dashboard">.dashboard</button> per approvarla o rifiutarla'
-    )
-
-    if msg.conn.main_room is not None:
+    if msg.conn.main_room is not None and not authorized:
+        message = "Qualcuno ha aggiornato la sua frase del profilo. "
+        message += (
+            'Usa <button name="send" value="/pm '
+            + msg.conn.username
+            + ', .dashboard">.dashboard</button> per approvarla o rifiutarla'
+        )
         await msg.conn.main_room.send_rankhtmlbox("%", message)
 
 
