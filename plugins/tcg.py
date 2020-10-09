@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import urllib
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 import aiohttp
 
@@ -10,6 +10,34 @@ from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
+
+
+JsonDict = Dict[str, Any]  # type: ignore[misc]
+
+
+async def query_scryfall(url: str, resp_type: str) -> Optional[JsonDict]:
+    """Queries the Scryfall API.
+
+    Args:
+        url (str): Query.
+        resp_type (str): Expected Scryfall API object type.
+
+    Returns:
+        Optional[JsonDict]: Valid JSON received from the API, None if data is not valid.
+    """
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            if resp.status != 200:
+                return None
+            json_body: JsonDict = await resp.json()
+
+    # API error handling
+    # Check response type and trust the API that it has the required parameters.
+    if json_body["object"] != resp_type:
+        print(f'Scryfall API error: Response object is "{resp_type}", expected "list"')
+        return None
+
+    return json_body
 
 
 def to_card_id(card_name: str) -> str:
@@ -22,6 +50,30 @@ def to_card_id(card_name: str) -> str:
         str: Card ID. Lowercase, alphanumeric characters.
     """
     return "".join(ch.lower() for ch in card_name if ch.isalpha())
+
+
+def to_card_thumbnail(card_json: JsonDict) -> str:
+    """Generates HTML that shows card thumbnail(s).
+
+    Args:
+        card_json (JsonDict): JSON of a Scryfall Card object.
+
+    Returns:
+        str: htmlbox code.
+    """
+    # img_uris ~ URI for card thumbnail(s): Double-faced cards have 2 thumbnails.
+    # Example of a double-faced card query: "Search for Azcanta"
+    if "card_faces" in card_json:
+        img_uris = [face["image_uris"]["normal"] for face in card_json["card_faces"]]
+    else:
+        img_uris = [card_json["image_uris"]["normal"]]
+
+    # scryfall_uri: Images are clickable and redirect to the card's Scryfall webpage.
+    scryfall_uri = card_json["scryfall_uri"]
+
+    return utils.render_template(
+        "commands/mtg_card.html", img_uris=img_uris, scryfall_uri=scryfall_uri
+    )
 
 
 @command_wrapper(
@@ -39,23 +91,11 @@ async def card(msg: Message) -> None:
     query = urllib.parse.quote(msg.arg)
     url = "https://api.scryfall.com/cards/search?include_multilingual=true&q=" + query
 
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-            if resp.status != 200:
-                await msg.reply("Nome non valido")
-                return
-            json_body = await resp.json()
-
-    # API error handling ~ Response should be a non-empty list of Card objects.
-    resp_type = json_body["object"]
-    if resp_type != "list":
-        print(f'Scryfall API error: Response object is "{resp_type}", expected "list"')
+    json_body = await query_scryfall(url, "list")
+    if json_body is None:
+        await msg.reply("Nome non valido")
         return
-
-    cards = json_body["data"]
-    if not cards:
-        print("Scryfall API error: Response data is an empty list.")
-        return
+    cards = json_body["data"]  # Scryfall lists are always non-empty.
 
     if len(cards) == 1:
         card_ = cards[0]
@@ -67,24 +107,9 @@ async def card(msg: Message) -> None:
 
     if card_:
         # Show card thumbnail(s) if there's only 1 query result.
-
-        # img_uris ~ URI for card thumbnail(s): Double-faced cards have 2 thumbnails.
-        # Example of a double-faced card query: "Search for Azcanta"
-        if "card_faces" in card_:
-            img_uris = [face["image_uris"]["normal"] for face in card_["card_faces"]]
-        else:
-            img_uris = [card_["image_uris"]["normal"]]
-
-        # scryfall_uri: Images are clickable and redirect to the card's Scryfall page.
-        scryfall_uri = card_["scryfall_uri"]
-
-        html = utils.render_template(
-            "commands/mtg_card.html", img_uris=img_uris, scryfall_uri=scryfall_uri
-        )
-        await msg.reply_htmlbox(html)
+        await msg.reply_htmlbox(to_card_thumbnail(card_))
     elif len(cards) <= 40:
         # Show a list of all query results.
-
         link = '<a href="{}">{}</a>'
         links = [link.format(c["scryfall_uri"], c["name"]) for c in cards]
         await msg.reply_htmlbox("<br>".join(links))
