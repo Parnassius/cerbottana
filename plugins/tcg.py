@@ -37,7 +37,7 @@ async def card(msg: Message) -> None:
         return
 
     query = urllib.parse.quote(msg.arg)
-    url = "https://api.scryfall.com/cards/search?order=name&q=" + query
+    url = "https://api.scryfall.com/cards/search?include_multilingual=true&q=" + query
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
