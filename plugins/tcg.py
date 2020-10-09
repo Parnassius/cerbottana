@@ -115,3 +115,21 @@ async def card(msg: Message) -> None:
         await msg.reply_htmlbox("<br>".join(links))
     else:
         await msg.reply(f"**{len(cards)}** risultati! Usa un nome più specifico...")
+
+
+@command_wrapper(aliases=("randomcard",))
+async def randcard(msg: Message) -> None:
+    if msg.room is None:
+        return
+
+    url = "https://api.scryfall.com/cards/random"
+    if msg.arg:
+        # Users can input an optional query to restrict the cardpool.
+        url += "?q=" + urllib.parse.quote(msg.arg)
+
+    card_ = await query_scryfall(url, "card")
+    if card_ is None:
+        await msg.reply("Ricerca non valida")
+        return
+
+    await msg.reply_htmlbox(to_card_thumbnail(card_))
