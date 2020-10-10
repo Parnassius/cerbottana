@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Union, cast
 
 from flask import abort, render_template, request
 from flask import session as web_session
-from lxml.html import fromstring  # type: ignore
+from lxml.html import fromstring, tostring  # type: ignore
 from sqlalchemy.sql import func
 
 import databases.logs as l
@@ -45,7 +45,9 @@ async def logger_task(conn: Connection) -> None:
 
                 while date < yesterday:
                     await asyncio.sleep(30)
-                    await conn.send(f"|/join view-chatlog-{room}--{date.isoformat()}")
+                    await conn.send(
+                        f"|/join view-chatlog-{room}--{date.isoformat()}--txt-onlychat"
+                    )
                     date += datetime.timedelta(days=1)
 
         await asyncio.sleep(12 * 60 * 60)
@@ -56,7 +58,11 @@ async def logger(conn: Connection, room: Room, *args: str) -> None:
     if room.roomid[:13] != "view-chatlog-":
         return
 
-    logsroom, date = room.roomid[13:].split("--")
+    opts = room.roomid[13:].split("--")
+    if len(opts) != 3 or opts[2] != "txt-onlychat":
+        return
+
+    logsroom, date = opts[:2]
     chatlog = "|".join(args).strip()
 
     html = fromstring(chatlog)
@@ -64,19 +70,22 @@ async def logger(conn: Connection, room: Room, *args: str) -> None:
     values = []
 
     for el in html.xpath('//div[@class="chat"]'):
-        time = el.xpath("small")
-        user = el.xpath("strong")
-        message = el.xpath("q")
+        parts = el.text.split("|")
+        if len(parts) < 4:
+            continue
+
+        time = parts[0].strip()
+        user = parts[2]
+        message = "|".join(tostring(el, encoding="unicode").split("|")[3:])[:-6]
         if time and user and message:
-            userrank = user[0].xpath("small")
             values.append(
                 {
                     "roomid": logsroom,
                     "date": date,
-                    "time": time[0].text.strip("[] "),
-                    "userrank": userrank[0].text if userrank else " ",
-                    "userid": utils.to_user_id(user[0].text_content()),
-                    "message": message[0].text_content(),
+                    "time": time,
+                    "userrank": user[0],
+                    "userid": utils.to_user_id(user),
+                    "message": message,
                 }
             )
 
@@ -123,7 +132,7 @@ async def getlogs(msg: Message) -> None:
     if msg.user.userid in msg.conn.administrators:
         logsroom = msg.parametrized_room.roomid
         date = msg.arg.strip()
-        await msg.conn.send(f"|/join view-chatlog-{logsroom}--{date}")
+        await msg.conn.send(f"|/join view-chatlog-{logsroom}--{date}--txt-onlychat")
 
 
 @command_wrapper(aliases=("linecount",))
