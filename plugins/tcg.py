@@ -61,18 +61,25 @@ def to_card_thumbnail(card_json: JsonDict) -> str:
     Returns:
         str: htmlbox code.
     """
-    # img_uris ~ URI for card thumbnail(s): Double-faced cards have 2 thumbnails.
-    # Example of a double-faced card query: "Search for Azcanta"
-    if "card_faces" in card_json:
+    # img_uris ~ URI for card thumbnail(s)
+    if "card_faces" in card_json and "image_uris" in card_json["card_faces"][0]:
+        # Double-faced cards have 2 thumbnails, i.e. transform cards.
         img_uris = [face["image_uris"]["normal"] for face in card_json["card_faces"]]
-    else:
+    elif "image_uris" in card_json:
+        # Most cards have 1 thumbnail. Split cards fall under this category.
         img_uris = [card_json["image_uris"]["normal"]]
-
-    # scryfall_uri: Images are clickable and redirect to the card's Scryfall webpage.
-    scryfall_uri = card_json["scryfall_uri"]
+    else:
+        # Fallback: image_uris isn't guaranteed to exist or be non-null but the previous
+        # conditional cases should cover most cards.
+        return 'Immagine per <a href="{}">{}</a> non disponibile.'.format(
+            card_json["scryfall_uri"],
+            card_json["name"],
+        )
 
     return utils.render_template(
-        "commands/mtg_card.html", img_uris=img_uris, scryfall_uri=scryfall_uri
+        "commands/mtg_card.html",
+        img_uris=img_uris,
+        scryfall_uri=card_json["scryfall_uri"],
     )
 
 
