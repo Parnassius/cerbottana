@@ -700,5 +700,6 @@ CUSTOM_COLORS: Dict[str, str] = {
     "inactive": "xfd6bys3",
     "trace": "mashirokurata",
     "celine": "celine13",
+    "hydro": "683tdwj6",
     "cathy": "",
 }
