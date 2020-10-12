@@ -45,3 +45,21 @@ async def tell(msg: Message) -> None:
         + "</div>"
     )
     await msg.parametrized_room.send_htmlbox(html)
+
+
+@command_wrapper(helpstr="<i>[blitz]</i> Avvia una partita di UNO.")
+async def uno(msg: Message) -> None:
+    if msg.room is None:
+        return
+
+    blitz_keywords = ("blitz", "fast", "veloce")
+    timer = 5 if msg.arg.lower() in blitz_keywords else 30
+
+    ps_commands = (
+        "/uno create 100",
+        "/uno autostart 120",
+        f"/uno timer {timer}",
+    )
+
+    for ps_command in ps_commands:
+        await msg.room.send(ps_command, False)
