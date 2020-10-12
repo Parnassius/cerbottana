@@ -701,5 +701,6 @@ CUSTOM_COLORS: Dict[str, str] = {
     "trace": "mashirokurata",
     "celine": "celine13",
     "hydro": "683tdwj6",
+    "pants": "stnap",
     "cathy": "",
 }
