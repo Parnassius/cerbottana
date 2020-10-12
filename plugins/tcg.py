@@ -97,13 +97,19 @@ async def card(msg: Message) -> None:
 
     query = urllib.parse.quote(msg.arg)
     url = "https://api.scryfall.com/cards/search?include_multilingual=true&q=" + query
-
     json_body = await query_scryfall(url, "list")
+
+    # If the search didn't match any cards, broaden the scope to include extras (tokens,
+    # planes, ...).
+    if json_body is None:
+        url += "&include_extras=true"
+        json_body = await query_scryfall(url, "list")
+
     if json_body is None:
         await msg.reply("Nome non valido")
         return
-    cards = json_body["data"]  # Scryfall lists are always non-empty.
 
+    cards = json_body["data"]  # Scryfall lists are always non-empty.
     if len(cards) == 1:
         card_ = cards[0]
     else:
