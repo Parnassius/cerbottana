@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import urllib
 from typing import TYPE_CHECKING, Any, Dict, Optional
 
@@ -128,6 +129,45 @@ async def card(msg: Message) -> None:
         await msg.reply_htmlbox("<br>".join(links))
     else:
         await msg.reply(f"**{len(cards)}** risultati! Usa un nome più specifico...")
+
+
+@command_wrapper(
+    aliases=("cardhangman", "gtc", "hangmancard"),
+    helpstr="Indovina una carta di Magic: the Gathering!",
+)
+async def guessthecard(msg: Message) -> None:
+    if msg.room is None:
+        return
+
+    filters = (
+        "legal:standard",
+        "-type:basic",  # Basic lands
+    )
+    query = "+".join([urllib.parse.quote(param) for param in filters])
+    url = "https://api.scryfall.com/cards/random?q=" + query
+
+    card_ = await query_scryfall(url, "card")
+    if card_ is None:  # Safety check. Error is propagated from query_scryfall().
+        return
+
+    # Strip PS parameter separators from cardname.
+    cardname = re.sub(",|", "", card_["name"])
+
+    # Hint generation logic: type line, mana cost, flavor text
+    if "planeswalker" in card_["type_line"].lower():
+        # Type lines of planeswalkers contain their name.
+        hint = "Planeswalker"
+    else:
+        hint = card_["type_line"]
+    if "mana_cost" in card_ and card_["mana_cost"]:
+        hint += ", " + card_["mana_cost"]
+    if "flavor_text" in card_ and card_["flavor_text"]:
+        # Add flavor text if the hint won't exceed PS' limits.
+        hint_with_flavor = hint + " ~ " + card_["flavor_text"]
+        hint = hint_with_flavor if len(hint_with_flavor) <= 150 else hint
+    hint = hint.replace("\n", " ")
+
+    await msg.room.send(f"/hangman create {cardname}, {hint}", False)
 
 
 @command_wrapper(aliases=("randomcard",))
