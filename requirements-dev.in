@@ -4,4 +4,5 @@ isort
 mypy
 pip-tools
 pylint
+pytest
 https://github.com/dropbox/sqlalchemy-stubs/archive/55470ceab8149db983411d5c094c9fe16343c58b.zip

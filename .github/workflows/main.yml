@@ -28,3 +28,5 @@ jobs:
       run: |
         shopt -s globstar
         pylint **/*.py --disable=fixme
+    - name: Test with pytest
+      run: pytest

@@ -8,7 +8,7 @@ cerbottana is a [Pokémon Showdown](https://play.pokemonshowdown.com/) bot, orig
 
 ## Contributing
 
-Before submitting a pull request, please make sure your code is linted with ``pylint``, type-checked with ``mypy``, formatted with ``black`` and ``isort``.
+Before submitting a pull request, please make sure your code is linted with `pylint`, type-checked with `mypy`, formatted with `black` and `isort`. Also run `pytest` unit tests.
 
 The bulk of cerbottana code is plugins (see [plugins reference](plugins/README.md)). Working on a simple plugin is a good first contribution.
 
