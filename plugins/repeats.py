@@ -6,20 +6,19 @@ from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
 from dateutil.parser import parse
-from flask import abort, render_template
-from flask import session as web_session
+from sqlalchemy.orm import Query
 from sqlalchemy.sql import func
 
 import databases.database as d
-import utils
 from database import Database
 from models.room import Room
-from plugins import command_wrapper, parametrize_room, route_wrapper
+from plugins import command_wrapper, htmlpage_wrapper, parametrize_room
 from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
     from models.message import Message
+    from models.user import User
 
 
 # WHITELISTED_CMD: List of commands that are broadcastable in a repeat. We don't have a
@@ -275,17 +274,17 @@ async def stoprepeat(msg: Message) -> None:
 @command_wrapper(aliases=("repeats",))
 @parametrize_room
 async def showrepeats(msg: Message) -> None:
-    repeats_room = msg.parametrized_room
+    room = msg.parametrized_room
 
-    if not msg.user.has_role("driver", repeats_room):
-        await msg.user.send(f"Devi essere almeno driver in {repeats_room}.")
+    if not msg.user.has_role("driver", room):
+        await msg.user.send(f"Devi essere almeno driver in {room.title}.")
         return
 
     db = Database.open()
     with db.get_session() as session:
         repeats_n = (
             session.query(func.count(d.Repeats.id))  # type: ignore  # sqlalchemy
-            .filter_by(roomid=repeats_room.roomid)
+            .filter_by(roomid=room.roomid)
             .scalar()
         )
 
@@ -293,26 +292,14 @@ async def showrepeats(msg: Message) -> None:
         await msg.user.send("Nessun repeat attivo.")
         return
 
-    rank = msg.user.rank(repeats_room)
-    if rank:  # @parametrize_room guarantees rank is not None
-        token_id = utils.create_token({repeats_room.roomid: rank}, 1)
-        url = f"{msg.conn.domain}repeats/{repeats_room}?token={token_id}"
-        await msg.user.send(url)
+    try:
+        page = int(msg.arg)
+    except ValueError:
+        page = 1
+
+    await msg.user.send_htmlpage("repeats", room, page)
 
 
-@route_wrapper("/repeats/<room>")
-def repeats(room: str) -> str:
-    if not utils.has_role("driver", web_session.get(room)):
-        abort(401)
-
-    db = Database.open()
-
-    with db.get_session() as session:
-        rs = (
-            session.query(d.Repeats)
-            .filter_by(roomid=room)
-            .order_by(d.Repeats.message)
-            .all()
-        )
-
-        return render_template("repeats.html", rs=rs, room=room)
+@htmlpage_wrapper("repeats", required_rank="driver")
+def repeats_htmlpage(user: User, room: Room) -> Query:  # type: ignore[type-arg]
+    return Query(d.Repeats).filter_by(roomid=room.roomid).order_by(d.Repeats.message)
