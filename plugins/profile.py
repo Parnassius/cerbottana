@@ -58,6 +58,10 @@ async def profile(msg: Message) -> None:
     aliases=("setprofilo",), helpstr="Imposta una tua frase personalizzata."
 )
 async def setprofile(msg: Message) -> None:
+    if not msg.arg:
+        await msg.reply("Specifica una frase da inserire nel tuo profilo")
+        return
+
     if len(msg.arg) > 200:
         await msg.reply("Errore: lunghezza massima 200 caratteri")
         return
