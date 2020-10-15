@@ -39,13 +39,10 @@ async def profile(msg: Message) -> None:
                 avatar_dir = "trainers"
                 avatar_name = userdata.avatar
 
-            name_color = utils.username_color(userdata.userid)
-
             html = utils.render_template(
                 "commands/profile.html",
                 avatar_dir=avatar_dir,
                 avatar_name=avatar_name,
-                name_color=name_color,
                 username=userdata.username,
                 badges=badges,
                 description=userdata.description,

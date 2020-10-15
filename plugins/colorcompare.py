@@ -16,22 +16,6 @@ async def colorcompare(msg: Message) -> None:
     if msg.arg == "":
         return
 
-    cell = (
-        "<td>"
-        '  <div style="background:{color};text-align:center">'
-        "    <br><br>{username}<br><br><br>"
-        "  </div>"
-        "</td>"
-    )
-
-    html = '<table style="width:100%;table-layout:fixed">'
-    html += "<tr>"
-    for i in msg.args:
-        html += cell.format(
-            color=utils.username_color(utils.to_user_id(i)),
-            username=utils.html_escape(i),
-        )
-    html += "</tr>"
-    html += "</table>"
+    html = utils.render_template("commands/colorcompare.html", usernames=msg.args)
 
     await msg.reply_htmlbox(html)
