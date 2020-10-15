@@ -12,6 +12,7 @@ from sqlalchemy.sql import func
 
 import databases.database as d
 from database import Database
+from typedefs import Role, RoomId, UserId
 
 
 def create_token(
@@ -47,13 +48,13 @@ def create_token(
     return token_id
 
 
-def to_user_id(user: str) -> str:
-    userid = re.sub(r"[^a-z0-9]", "", user.lower())
+def to_user_id(user: str) -> UserId:
+    userid = UserId(re.sub(r"[^a-z0-9]", "", user.lower()))
     return userid
 
 
-def to_room_id(room: str, fallback: str = "lobby") -> str:
-    roomid = re.sub(r"[^a-z0-9-]", "", room.lower())
+def to_room_id(room: str, fallback: RoomId = RoomId("lobby")) -> RoomId:
+    roomid = RoomId(re.sub(r"[^a-z0-9-]", "", room.lower()))
     if not roomid:
         roomid = fallback
     return roomid
@@ -80,25 +81,33 @@ def date_format(text: str) -> str:
     return f"{dd}/{mm}/{yyyy}"
 
 
-def has_role(role: str, user: str) -> bool:
+def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
     """Checks if a user has a PS role or higher.
 
     Args:
-        role (str): PS role (i.e. "voice", "driver").
+        role (Role): PS role (i.e. "voice", "driver").
         user (str): User to check.
-
-    Raises:
-        BaseException: role is unrecognized.
 
     Returns:
         bool: True if user meets the required criteria.
     """
-    roles = {"voice": "+*%@★#&~", "driver": "%@#&~"}
-    if role in roles:
-        if user and user[0] in roles[role]:
+    roles: Dict[Role, str] = {
+        "admin": "~&",
+        "owner": "~&#",
+        "bot": "*",
+        "host": "★",
+        "mod": "~&#@",
+        "driver": "~&#@%",
+        "player": "☆",
+        "voice": "~&#@%+",
+        "prizewinner": "^",
+    }
+    if user:
+        if user[0] in roles[role]:
             return True
-        return False
-    raise BaseException("Unrecognized role")
+        if role == "voice" and not strict_voice_check and user[0] not in "*★☆^":
+            return True
+    return False
 
 
 def html_escape(text: Optional[str]) -> str:

@@ -21,6 +21,7 @@ from flask import session as web_session
 
 import utils
 from models.room import Room
+from typedefs import RoomId
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -112,7 +113,7 @@ def parametrize_room(func: CommandFunc) -> CommandFunc:
                 return
 
             # Check if user supplied a non-empty roomid
-            target_roomid = utils.to_room_id(msg.args[0], fallback="")
+            target_roomid = utils.to_room_id(msg.args[0], fallback=RoomId(""))
             msg.args = msg.args[1:]
             if not target_roomid:
                 await msg.user.send("Specifica il nome della room")
