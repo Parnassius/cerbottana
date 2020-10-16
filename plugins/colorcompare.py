@@ -10,7 +10,8 @@ if TYPE_CHECKING:
 
 
 @command_wrapper(
-    helpstr="<i>nick1, nick2, ...</i> Visualizza i colori dei nickname elencati."
+    aliases=("cc",),
+    helpstr="<i>nick1, nick2, ...</i> Visualizza i colori dei nickname elencati.",
 )
 async def colorcompare(msg: Message) -> None:
     if msg.arg == "":
