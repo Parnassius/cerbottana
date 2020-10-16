@@ -44,6 +44,8 @@
           <img src="{{ row.image }}" width="13" height="13" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">
           <input type="hidden" name="image{{ row.id }}" value="{{ row.image }}">
           <input type="text" name="label{{ row.id }}" value="{{ row.label }}" required placeholder="Descrizione">
+          <input type="checkbox" name="delete{{ row.id }}">
+          <label for="delete{{ row.id }}">Elimina</label>
         </div>
       {% endfor %}
       <div>

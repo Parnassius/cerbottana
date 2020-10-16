@@ -117,7 +117,10 @@ def profile_route() -> str:
                     row_id = i[5:]
                     image = request.form.get(f"image{row_id}")
                     label = request.form.get(f"label{row_id}", "")
-                    if image:
+                    delete = request.form.get(f"delete{row_id}")
+                    if delete:
+                        session.query(d.Badges).filter_by(id=row_id).delete()
+                    elif image:
                         session.query(d.Badges).filter_by(id=row_id).update(
                             {"image": image, "label": label}
                         )
