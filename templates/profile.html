@@ -2,106 +2,106 @@
 
 {% block content %}
 
-<a href="/">&laquo; indietro</a>
+  <a href="/">&laquo; indietro</a>
 
-{% if user %}
+  {% if user %}
 
-{% if request.method == 'POST' %}
-<div class="alert alert-green">Salvato</div>
-{% endif %}
+    {% if request.method == 'POST' %}
+      <div class="alert alert-green">Salvato</div>
+    {% endif %}
 
-<form action="" method="POST">
+    <form action="" method="POST">
 
-  <h3>{{ user.username }}</h3>
+      <h3>{{ user.username }}</h3>
 
-  <input type="hidden" name="id" value="{{ user.id }}">
+      <input type="hidden" name="id" value="{{ user.id }}">
 
-  {% if session._rank == '#' %}
-  <label for="description">Descrizione</label>
-  <textarea id="description" name="description" maxlength="200">{{ user.description }}</textarea>
+      {% if session._rank == '#' %}
+        <label for="description">Descrizione</label>
+        <textarea id="description" name="description" maxlength="200">{{ user.description }}</textarea>
 
-  <br><br>
+        <br><br>
 
-  <button type="submit">Salva</button>
+        <button type="submit">Salva</button>
+      {% endif %}
+
+    </form>
+
+    <hr>
+
+    <h4 style="margin: 0">Badge</h4>
+
+    <form id="form-badges" action="" method="POST">
+
+      <input type="hidden" name="userid" value="{{ user.userid }}">
+
+      {% for row in badges %}
+        <div>
+          <label>
+            <input type="file" accept="image/png">
+            <span>Seleziona immagine</span>
+          </label>
+          <img src="{{ row.image }}" width="13" height="13" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">
+          <input type="hidden" name="image{{ row.id }}" value="{{ row.image }}">
+          <input type="text" name="label{{ row.id }}" value="{{ row.label }}" required placeholder="Descrizione">
+          <input type="checkbox" name="delete{{ row.id }}">
+          <label for="delete{{ row.id }}">Elimina</label>
+        </div>
+      {% endfor %}
+      <div>
+        <label>
+          <input type="file" accept="image/png">
+          <span>Seleziona immagine</span>
+        </label>
+        <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" width="13" height="13" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0; visibility: hidden">
+        <input type="hidden" name="imagenew">
+        <input type="text" name="labelnew" placeholder="Descrizione">
+      </div>
+
+      <button type="submit">Salva</button>
+
+      <script>
+
+        function checkImage(el) {
+          if (el.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var image = new Image();
+              image.onload = function () {
+                if (this.height !== 13 || this.width !== 13) {
+                  el.value = "";
+                  alert("Caricare un'immagine 13x13 pixel");
+                  return;
+                }
+                var img = el.parentNode.parentNode.querySelector("img");
+                img.src = image.src;
+                img.style.visibility = 'visible';
+                el.parentNode.parentNode.querySelector('[name^="image"]').value = image.src;
+              };
+              image.onerror = function() {
+                el.value = "";
+                alert("Caricare un'immagine 13x13 pixel");
+              };
+              image.src = e.target.result;
+            };
+            reader.readAsDataURL(el.files[0]);
+          }
+        }
+
+        document.querySelectorAll('#form-badges input[type="file"]').forEach(function(el) {
+          el.addEventListener('change', function() {
+            checkImage(el);
+          });
+        });
+
+      </script>
+
+    </form>
+
+  {% else %}
+
+    <div class="alert alert-orange">Utente non trovato</div>
+
   {% endif %}
-
-</form>
-
-<hr>
-
-<h4 style="margin: 0">Badge</h4>
-
-<form id="form-badges" action="" method="POST">
-
-  <input type="hidden" name="userid" value="{{ user.userid }}">
-
-  {% for row in badges %}
-  <div>
-    <label>
-      <input type="file" accept="image/png">
-      <span>Seleziona immagine</span>
-    </label>
-    <img src="{{ row.image }}" width="13" height="13" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">
-    <input type="hidden" name="image{{ row.id }}" value="{{ row.image }}">
-    <input type="text" name="label{{ row.id }}" value="{{ row.label }}" required placeholder="Descrizione">
-    <input type="checkbox" name="delete{{ row.id }}">
-    <label for="delete{{ row.id }}">Elimina</label>
-  </div>
-  {% endfor %}
-  <div>
-    <label>
-      <input type="file" accept="image/png">
-      <span>Seleziona immagine</span>
-    </label>
-    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" width="13" height="13" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0; visibility: hidden">
-    <input type="hidden" name="imagenew">
-    <input type="text" name="labelnew" placeholder="Descrizione">
-  </div>
-
-  <button type="submit">Salva</button>
-
-  <script>
-
-    function checkImage(el) {
-      if (el.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          var image = new Image();
-          image.onload = function () {
-            if (this.height !== 13 || this.width !== 13) {
-              el.value = "";
-              alert("Caricare un'immagine 13x13 pixel");
-              return;
-            }
-            var img = el.parentNode.parentNode.querySelector("img");
-            img.src = image.src;
-            img.style.visibility = 'visible';
-            el.parentNode.parentNode.querySelector('[name^="image"]').value = image.src;
-          };
-          image.onerror = function() {
-            el.value = "";
-            alert("Caricare un'immagine 13x13 pixel");
-          };
-          image.src = e.target.result;
-        };
-        reader.readAsDataURL(el.files[0]);
-      }
-    }
-
-    document.querySelectorAll('#form-badges input[type="file"]').forEach(function(el) {
-      el.addEventListener('change', function() {
-        checkImage(el);
-      });
-    });
-
-  </script>
-
-</form>
-
-{% else %}
-
-<div class="alert alert-orange">Utente non trovato</div>
-
-{% endif %}
 
 {% endblock %}
