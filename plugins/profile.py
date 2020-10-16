@@ -107,8 +107,8 @@ def profile_route() -> str:
 
             if "labelnew" in request.form:
                 image = request.form.get("imagenew")
-                label = request.form.get("labelnew")
-                if label and image:
+                label = request.form.get("labelnew", "")
+                if image:
                     session.add(d.Badges(userid=userid, image=image, label=label))
 
                 for i in request.form:
@@ -116,8 +116,8 @@ def profile_route() -> str:
                         continue
                     row_id = i[5:]
                     image = request.form.get(f"image{row_id}")
-                    label = request.form.get(f"label{row_id}")
-                    if label and image:
+                    label = request.form.get(f"label{row_id}", "")
+                    if image:
                         session.query(d.Badges).filter_by(id=row_id).update(
                             {"image": image, "label": label}
                         )
