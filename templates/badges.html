@@ -2,34 +2,13 @@
 
 {% block content %}
 
-  <a href="/">&laquo; indietro</a>
-
   {% if user %}
 
     {% if request.method == 'POST' %}
       <div class="alert alert-green">Salvato</div>
     {% endif %}
 
-    <form action="" method="POST">
-
-      <h3>{{ user.username }}</h3>
-
-      <input type="hidden" name="id" value="{{ user.id }}">
-
-      {% if session._rank == '#' %}
-        <label for="description">Descrizione</label>
-        <textarea id="description" name="description" maxlength="200">{{ user.description }}</textarea>
-
-        <br><br>
-
-        <button type="submit">Salva</button>
-      {% endif %}
-
-    </form>
-
-    <hr>
-
-    <h4 style="margin: 0">Badge</h4>
+    <h3>Badge di {{ user.username }}</h3>
 
     <form id="form-badges" action="" method="POST">
 
@@ -43,7 +22,7 @@
           </label>
           <img src="{{ row.image }}" width="13" height="13" style="border: 1px solid; border-radius: 2px; margin: 2px 1px 0 0">
           <input type="hidden" name="image{{ row.id }}" value="{{ row.image }}">
-          <input type="text" name="label{{ row.id }}" value="{{ row.label }}" required placeholder="Descrizione">
+          <input type="text" name="label{{ row.id }}" value="{{ row.label }}" placeholder="Descrizione">
           <input type="checkbox" name="delete{{ row.id }}">
           <label for="delete{{ row.id }}">Elimina</label>
         </div>
