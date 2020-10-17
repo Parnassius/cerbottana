@@ -87,6 +87,8 @@ def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
     Args:
         role (Role): PS role (i.e. "voice", "driver").
         user (str): User to check.
+        strict_voice_check (str, optional): True if custom rank symbols should not be
+            considered voice. Defaults to False.
 
     Returns:
         bool: True if user meets the required criteria.

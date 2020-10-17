@@ -90,7 +90,7 @@ class User:
         Higher global roles ovveride room roles.
 
         Args:
-            role (str): PS role (i.e. "voice", "driver").
+            role (Role): PS role (i.e. "voice", "driver").
             room (Room): Room to check.
 
         Returns:
