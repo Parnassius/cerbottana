@@ -22,6 +22,17 @@ if TYPE_CHECKING:
     from models.message import Message
 
 
+# WHITELISTED_CMD: List of commands that are broadcastable in a repeat. We don't have a
+# validity check for the command syntax.
+WHITELISTED_CMD = (
+    "daily",
+    "rfaq",
+    "roomfaq",
+    "viewfaq",
+    "show",
+)
+
+
 class Repeat:
     """
     Implements an active record pattern to interact with the SQL database;
@@ -210,7 +221,11 @@ async def repeat(msg: Message) -> None:
         return
 
     phrase = msg.args[0]
-    if phrase.lower() == "all":
+    if (
+        phrase.lower() == "all"  # Reserved keyword for `.stoprepeat` command.
+        or phrase[0] == "/"  # Repeats should always be broadcasted.
+        or (phrase[0] == "!" and phrase.split()[0][1:].lower() not in WHITELISTED_CMD)
+    ):
         await msg.room.send("Testo del repeat non valido.")
         return
 
