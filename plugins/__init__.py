@@ -27,7 +27,7 @@ if TYPE_CHECKING:
     from models.message import Message
 
     CommandFunc = Callable[[Message], Awaitable[None]]
-    RouteFunc = Union[Callable[[], str], Callable[[str], str]]
+    RouteFunc = Callable[..., str]  # type: ignore[misc]
 
 
 # --- Command logic and complementary decorators ---
@@ -142,10 +142,10 @@ routes: List[Tuple[RouteFunc, str, Optional[Iterable[str]]]] = []
 
 def route_require_driver(func: RouteFunc) -> RouteFunc:
     @wraps(func)
-    def wrapper(*args: str, **kwargs: str) -> str:
+    def wrapper(**kwargs: str) -> str:
         if not utils.has_role("driver", web_session.get("_rank")):
             abort(401)
-        return func(*args, **kwargs)
+        return func(**kwargs)
 
     return wrapper
 
