@@ -39,6 +39,7 @@ from utils import has_role
         ("voice", "☆", False),
         ("voice", "+", True),
         ("voice", "^", False),
+        ("voice", " ", False),
         ("voice", "", False),
         ("prizewinner", "+", False),
         ("prizewinner", "^", True),
