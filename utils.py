@@ -105,7 +105,7 @@ def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
     if user:
         if user[0] in roles[role]:
             return True
-        if role == "voice" and not strict_voice_check and user[0] not in "*★☆^":
+        if role == "voice" and not strict_voice_check and user[0] not in "*★☆^ ":
             return True
     return False
 
