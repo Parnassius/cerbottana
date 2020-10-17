@@ -5,8 +5,9 @@ from typing import TYPE_CHECKING, List, Optional
 from handlers import handler_wrapper
 
 if TYPE_CHECKING:
-    from connection import Connection, TiersDict
+    from connection import Connection
     from models.room import Room
+    from typedefs import TiersDict
 
 
 @handler_wrapper(["formats"])

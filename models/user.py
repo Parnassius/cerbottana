@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Optional, Set
 import htmlmin  # type: ignore
 
 import utils
+from typedefs import Role, UserId
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -46,7 +47,7 @@ class User:
         return self.userstring.split("@")[0]
 
     @property
-    def userid(self) -> str:
+    def userid(self) -> UserId:
         return utils.to_user_id(self.userstring)
 
     @property
@@ -83,13 +84,13 @@ class User:
         """
         return room.users[self] if self in room else None
 
-    def has_role(self, role: str, room: Room) -> bool:
+    def has_role(self, role: Role, room: Room) -> bool:
         """Check if user has a PS room role or higher.
 
         Higher global roles ovveride room roles.
 
         Args:
-            role (str): PS role (i.e. "voice", "driver").
+            role (Role): PS role (i.e. "voice", "driver").
             room (Room): Room to check.
 
         Returns:

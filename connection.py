@@ -4,12 +4,11 @@ import asyncio
 from queue import Empty as EmptyQueue
 from queue import SimpleQueue
 from time import time
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
 from weakref import WeakValueDictionary
 
 import websockets
 from environs import Env
-from typing_extensions import TypedDict
 
 import utils
 from handlers import handlers
@@ -17,15 +16,10 @@ from models.room import Room
 from models.user import User
 from plugins import commands
 from tasks import init_tasks, recurring_tasks
+from typedefs import RoomId, UserId
 
-TiersDict = TypedDict(
-    "TiersDict",
-    {
-        "name": str,
-        "section": str,
-        "random": bool,
-    },
-)
+if TYPE_CHECKING:
+    from typedefs import TiersDict
 
 
 class Connection:
@@ -48,17 +42,17 @@ class Connection:
         self.password = password
         self.avatar = avatar
         self.statustext = statustext
-        self.rooms: Dict[str, Room] = {}  # roomid, Room
-        for roomid in rooms:
+        self.rooms: Dict[RoomId, Room] = {}  # roomid, Room
+        for roomid in [utils.to_room_id(room) for room in rooms]:
             self.rooms[roomid] = Room(self, roomid, is_private=False, autojoin=True)
-        for roomid in private_rooms:
+        for roomid in [utils.to_room_id(room) for room in private_rooms]:
             self.rooms[roomid] = Room(self, roomid, is_private=True, autojoin=True)
         self.main_room = Room.get(self, main_room) if main_room else None
         self.command_character = command_character
-        self.administrators = administrators
+        self.administrators = [utils.to_user_id(user) for user in administrators]
         self.domain = domain
         self.users: WeakValueDictionary[  # pylint: disable=unsubscriptable-object
-            str, User
+            UserId, User
         ] = WeakValueDictionary()
         self.init_tasks = init_tasks
         self.recurring_tasks = recurring_tasks

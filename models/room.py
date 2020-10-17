@@ -8,6 +8,9 @@ from typing import TYPE_CHECKING, Deque, Dict, Optional
 import htmlmin  # type: ignore
 import pytz
 
+import utils
+from typedefs import RoomId
+
 if TYPE_CHECKING:
     from connection import Connection
 
@@ -41,7 +44,7 @@ class Room:
     def __init__(
         self,
         conn: Connection,
-        roomid: str,
+        roomid: RoomId,
         is_private: bool = True,
         autojoin: bool = False,
     ) -> None:
@@ -98,7 +101,7 @@ class Room:
                 self._check_no_mods_online()
 
         # User persistance
-        if self.roomid not in self.conn.users:
+        if user.userid not in self.conn.users:
             self.conn.users[user.userid] = user
 
     def remove_user(self, user: User) -> None:
@@ -180,18 +183,19 @@ class Room:
         await self.send(f"/addhtmlbox {message}", False)
 
     @classmethod
-    def get(cls, conn: Connection, roomid: str) -> Room:
+    def get(cls, conn: Connection, room: str) -> Room:
         """Safely retrieves a Room instance, if it exists, or creates a new one.
 
         New rooms are private by default.
 
         Args:
             conn (Connection): Used to access the websocket.
-            roomid (str): Roomid of the room to retrieve.
+            room (str): The room to retrieve.
 
         Returns:
             Room: Existing instance associated with roomid or newly created one.
         """
+        roomid = utils.to_room_id(room)
         if roomid not in conn.rooms:
             conn.rooms[roomid] = cls(conn, roomid)
         return conn.rooms[roomid]
