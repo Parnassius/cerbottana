@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict
 
 from flask import render_template, request
 from sqlalchemy.orm import Query
@@ -112,19 +112,31 @@ async def clearprofile(msg: Message) -> None:
     await msg.reply("Frase rimossa")
 
 
-@route_wrapper("/profile", methods=("GET", "POST"), require_driver=True)
-def profile_route() -> str:
+@command_wrapper(aliases=("badges",))
+async def badge(msg: Message) -> None:
+    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+        return
+    admin_rank = msg.user.rank(msg.conn.main_room)
+
+    rooms: Dict[str, str] = {}
+
+    for room in msg.user.rooms:
+        rooms[room.roomid] = msg.user.rank(room) or " "
+
+    token_id = utils.create_token(rooms, 1, admin_rank)
+    userid = utils.to_user_id(msg.arg or msg.user.userid)
+
+    await msg.user.send(f"{msg.conn.domain}badges/{userid}?token={token_id}")
+
+
+@route_wrapper("/badges/<userid>", methods=("GET", "POST"), require_driver=True)
+def badges_route(userid: str) -> str:
     db = Database.open()
 
     with db.get_session() as session:
-        userid = utils.to_user_id(request.args.get("userid", ""))
+        userid = utils.to_user_id(userid)
 
         if request.method == "POST":
-
-            if "description" in request.form:
-                session.query(d.Users).filter_by(
-                    id=request.form.get("id"), userid=userid
-                ).update({"description": request.form.get("description")})
 
             if "labelnew" in request.form:
                 image = request.form.get("imagenew")
@@ -152,7 +164,7 @@ def profile_route() -> str:
             session.query(d.Badges).filter_by(userid=userid).order_by(d.Badges.id).all()
         )
 
-        return render_template("profile.html", user=user, badges=badges)
+        return render_template("badges.html", user=user, badges=badges)
 
 
 @command_wrapper()
