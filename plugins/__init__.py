@@ -142,10 +142,10 @@ routes: List[Tuple[RouteFunc, str, Optional[Iterable[str]]]] = []
 
 def route_require_driver(func: RouteFunc) -> RouteFunc:
     @wraps(func)
-    def wrapper(*args: str) -> str:
+    def wrapper(*args: str, **kwargs: str) -> str:
         if not utils.has_role("driver", web_session.get("_rank")):
             abort(401)
-        return func(*args)
+        return func(*args, **kwargs)
 
     return wrapper
 
