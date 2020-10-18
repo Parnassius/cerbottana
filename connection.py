@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Dict, List, Optional
 from weakref import WeakValueDictionary
 
 import websockets
-from environs import Env
 
 import utils
 from handlers import handlers
@@ -164,26 +163,3 @@ class Connection:
         self.lastmessage = now
         if self.websocket is not None:
             await self.websocket.send(message)
-
-
-env = Env()
-env.read_env()
-
-CONNECTION = Connection(
-    ("wss" if env("SHOWDOWN_PORT") == "443" else "ws")
-    + "://"
-    + env("SHOWDOWN_HOST")
-    + ":"
-    + env("SHOWDOWN_PORT")
-    + "/showdown/websocket",
-    env("USERNAME"),
-    env("PASSWORD"),
-    env("AVATAR", ""),
-    env("STATUSTEXT", ""),
-    env.list("ROOMS", []),
-    env.list("PRIVATE_ROOMS", []),
-    env("MAIN_ROOM", None),
-    env("COMMAND_CHARACTER"),
-    env.list("ADMINISTRATORS", []),
-    env("DOMAIN"),
-)

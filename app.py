@@ -5,27 +5,59 @@ import signal
 import threading
 from types import FrameType
 
-from connection import CONNECTION
-from server import SERVER
+from environs import Env
 
-
-def shutdown(
-    sig: signal.Signals, frame_type: FrameType  # pylint: disable=no-member
-) -> None:
-    if CONNECTION.websocket is not None and CONNECTION.loop is not None:
-        for task in asyncio.all_tasks(loop=CONNECTION.loop):
-            task.cancel()
-        coro = CONNECTION.websocket.close()
-        asyncio.run_coroutine_threadsafe(coro, CONNECTION.loop)
+from connection import Connection
+from server import initialize_server
 
 
 def main() -> None:
+    def shutdown(
+        sig: signal.Signals, frame_type: FrameType  # pylint: disable=no-member
+    ) -> None:
+        if conn.websocket is not None and conn.loop is not None:
+            for task in asyncio.all_tasks(loop=conn.loop):
+                task.cancel()
+            coro = conn.websocket.close()
+            asyncio.run_coroutine_threadsafe(coro, conn.loop)
+
+    env = Env()
+    env.read_env()
+
+    server = initialize_server(env("FLASK_SECRET_KEY"))
+
+    conn = Connection(
+        ("wss" if env("SHOWDOWN_PORT") == "443" else "ws")
+        + "://"
+        + env("SHOWDOWN_HOST")
+        + ":"
+        + env("SHOWDOWN_PORT")
+        + "/showdown/websocket",
+        env("USERNAME"),
+        env("PASSWORD"),
+        env("AVATAR", ""),
+        env("STATUSTEXT", ""),
+        env.list("ROOMS", []),
+        env.list("PRIVATE_ROOMS", []),
+        env("MAIN_ROOM", None),
+        env("COMMAND_CHARACTER"),
+        env.list("ADMINISTRATORS", []),
+        env("DOMAIN"),
+    )
+
+    signal.signal(signal.SIGINT, shutdown)
+
     threading.Thread(
-        target=SERVER.serve_forever, args=(CONNECTION,), daemon=True
+        target=server.serve_forever,
+        args=(
+            env.int("PORT"),
+            conn,
+        ),
+        daemon=True,
     ).start()
-    threading.Thread(target=CONNECTION.open_connection).start()
+    threading.Thread(target=conn.open_connection).start()
 
 
 if __name__ == "__main__":
-    signal.signal(signal.SIGINT, shutdown)
+
     main()
