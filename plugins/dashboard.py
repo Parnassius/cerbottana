@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING
 
-import utils
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
@@ -13,13 +12,11 @@ if TYPE_CHECKING:
 async def dashboard(msg: Message) -> None:
     if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
         return
-    admin_rank = msg.user.rank(msg.conn.main_room)
 
-    rooms: Dict[str, str] = {}
-
-    for room in msg.user.rooms:
-        rooms[room.roomid] = msg.user.rank(room) or " "
-
-    token_id = utils.create_token(rooms, 1, admin_rank)
-
-    await msg.user.send(f"{msg.conn.domain}?token={token_id}")
+    phrase = (
+        "``.dashboard`` è stato rimosso, "
+        "per gestire le badge di un utente usa ``.badges <utente>``, "
+        "per gestire le risposte di ``.8ball`` usa ``.8ballanswers``, "
+        "``.add8ballanswer`` e ``.remove8ballanswer``"
+    )
+    await msg.user.send(phrase)
