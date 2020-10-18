@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING
+import re
+import string
+from typing import TYPE_CHECKING, List
 
 from flask import abort, current_app, render_template
 from flask import session as web_session
@@ -15,6 +17,94 @@ from plugins import command_wrapper, parametrize_room, route_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
+
+
+def to_html_quotebox(quote: str) -> str:
+    """Generates HTML that shows a quote.
+
+    Args:
+        quote (str): Raw quote string, added through `.addquote`.
+
+    Raises:
+        BaseException: quote is empty.
+
+    Returns:
+        str: htmlbox.
+    """
+    if not quote:
+        # This shouldn't happen because empty quotes are ignored by `.addquote`.
+        raise BaseException("Trying to create quotebox for empty quote.")
+
+    # Valid timestamp formats: [xx:xx], [xx:xx:xx]
+    timestamp_regex = r"(\[\d{2}:\d{2}(?::\d{2})?\])"
+    splitted = re.split(timestamp_regex, quote)
+
+    # Return the quote unparsed if it has a custom format, aka one of these conditions
+    # applies:
+    # (1) Quote doesn't start with a timestamp.
+    # (2) Quote only has timestamps.
+    if splitted[0] or not any(part.lstrip() for part in splitted[::2]):
+        return utils.linkify(quote)
+
+    lines: List[str] = []
+    for timestamp, phrase in zip(splitted[1::2], splitted[2::2]):
+        # Wrap every line in a <div class="chat"></div> and if it is a regular chat
+        # message format it accordingly.
+
+        if not phrase:
+            # Timestamp with an empty phrase.
+            # Append the timestamp to the previous phrase, it was probably part of it.
+            if not lines:
+                lines.append(timestamp)
+            else:
+                lines[-1] += timestamp
+        elif ": " in phrase and phrase[0] != "(":
+            # phrase is a chat message.
+            # Example: "[03:56] @Plat0: Hi"
+
+            # userstring: Username, optionally preceded by its rank.
+            # body: Content of the message sent by the user.
+            userstring, body = phrase.split(": ", 1)
+            userstring = userstring.lstrip()
+
+            # rank: Character rank or "" (not " ") in case of a regular user.
+            # username: userstring variable stripped of the character rank.
+            if userstring[0] not in string.ascii_letters + string.digits:
+                rank = userstring[0]
+                username = userstring[1:]
+            else:
+                rank = ""
+                username = userstring
+
+            # Escape special characters: needs to be done last.
+            # Timestamp doesn't need to be escaped.
+            rank = utils.html_escape(rank)
+            username = utils.html_escape(username)
+            body = utils.linkify(body)
+
+            lines.append(
+                f"<small>{timestamp} {rank}</small>"
+                f"<username>{username}:</username>"
+                f"<q>{body}</q>"
+            )
+        else:
+            # phrase is a PS message that may span over multiple lines.
+            # Example: "[14:20:43] (plat0 forcibly ended a tournament.)"
+
+            # Text contained within round parentheses is considered a separated line.
+            # This is true for most use-cases but it's still euristic.
+            sublines = re.split(r"(\(.*\))", phrase)
+            sublines = [utils.linkify(s) for s in sublines if s.strip()]
+
+            # The timestamp is written only on the first subline.
+            sublines[0] = f"<small>{timestamp}</small><q>{sublines[0]}</q>"
+            lines += sublines
+    # Merge lines
+    html = '<div class="message-log" style="float: left">'
+    for line in lines:
+        html += f'<div class="chat">{line}</div>'
+    html += "</div>"
+    return html
 
 
 @command_wrapper(aliases=("newquote", "quote"))
@@ -75,7 +165,7 @@ async def randquote(msg: Message) -> None:
             return
 
         quote = random.choice(quotes).message
-        await msg.reply(quote)
+        await msg.reply_htmlbox(to_html_quotebox(quote))
 
 
 @command_wrapper(aliases=("deletequote", "delquote", "rmquote"))
