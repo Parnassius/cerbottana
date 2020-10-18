@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import signal
 import threading
-from queue import SimpleQueue
 from types import FrameType
 
 from connection import CONNECTION
@@ -21,11 +20,10 @@ def shutdown(
 
 
 def main() -> None:
-    queue: SimpleQueue[str] = SimpleQueue()
     threading.Thread(
-        target=SERVER.serve_forever, args=(CONNECTION, queue), daemon=True
+        target=SERVER.serve_forever, args=(CONNECTION,), daemon=True
     ).start()
-    threading.Thread(target=CONNECTION.open_connection, args=(queue,)).start()
+    threading.Thread(target=CONNECTION.open_connection).start()
 
 
 if __name__ == "__main__":

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from datetime import date, datetime
 from functools import wraps
-from queue import SimpleQueue
 from typing import TYPE_CHECKING, Callable, Optional
 
 from environs import Env
@@ -27,11 +26,9 @@ class Server(Flask):
     def __init__(self, *args, **kwargs) -> None:  # type: ignore
         super().__init__(*args, **kwargs)
         self.conn: Optional[Connection] = None
-        self.queue: Optional[SimpleQueue[str]] = None
 
-    def serve_forever(self, conn: Connection, queue: SimpleQueue[str]) -> None:
+    def serve_forever(self, conn: Connection) -> None:
         self.conn = conn
-        self.queue = queue
         serve(self, listen="*:{}".format(env("PORT")))
 
 

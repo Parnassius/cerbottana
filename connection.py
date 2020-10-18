@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import re
-from queue import Empty as EmptyQueue
-from queue import SimpleQueue
 from time import time
 from typing import TYPE_CHECKING, Dict, List, Optional
 from weakref import WeakValueDictionary
@@ -61,14 +59,12 @@ class Connection:
         self.commands = commands
         self.timestamp: float = 0
         self.lastmessage: float = 0
-        self.queue: Optional[SimpleQueue[str]] = None
         self.loop: Optional[asyncio.AbstractEventLoop] = None
         self.websocket: Optional[websockets.client.WebSocketClientProtocol] = None
         self.connection_start: Optional[float] = None
         self.tiers: List[TiersDict] = []
 
-    def open_connection(self, queue: SimpleQueue[str]) -> None:
-        self.queue = queue
+    def open_connection(self) -> None:
         self.loop = asyncio.new_event_loop()
         try:
             self.loop.run_until_complete(self._start_websocket())
@@ -98,14 +94,6 @@ class Connection:
                 self.websocket = websocket
                 self.connection_start = time()
                 async for message in websocket:
-                    if self.queue is not None:
-                        try:
-                            data: Optional[str] = self.queue.get(False)
-                        except EmptyQueue:
-                            data = None
-
-                        print(data)
-
                     if isinstance(message, str):
                         print(f"<< {message}")
                         asyncio.ensure_future(self._parse_message(message))
