@@ -13,13 +13,13 @@ import databases.logs as l
 import utils
 from database import Database
 from handlers import handler_wrapper
+from models.room import Room
 from plugins import command_wrapper, parametrize_room, route_wrapper
 from tasks import recurring_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
     from models.message import Message
-    from models.room import Room
 
 
 @recurring_task_wrapper()
@@ -30,6 +30,9 @@ async def logger_task(conn: Connection) -> None:
             yesterday = datetime.date.today() - datetime.timedelta(days=1)
 
             for room in list(conn.rooms.keys()):
+                if not Room.get(conn, room).roombot:
+                    continue
+
                 last_date = (
                     session.query(func.max(l.Logs.date))  # type: ignore  # sqlalchemy
                     .filter_by(roomid=room)
