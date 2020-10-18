@@ -1,0 +1,32 @@
+{% import 'htmlpages/utils.html' as utils with context %}
+
+<h2>8ball answers</h2>
+{% if rs %}
+  <div class="ladder">
+    <table>
+      <thead>
+        <tr>
+          <th>Answer</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rs %}
+          <tr>
+            <td>{{ row.answer }}</td>
+            <td style="width: 1px; white-space: nowrap">
+              {% set cmd = "removeeightballanswerid " + row.id|string + ", " + current_page|string %}
+              {% call utils.btn_sendpm(cmd) %}
+                <i class="fa fa-trash"></i>
+                Delete
+              {% endcall %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {{ utils.pagination("eightballanswers", True) }}
+{% else %}
+  No results found
+{% endif %}
