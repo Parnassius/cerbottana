@@ -21,6 +21,8 @@ class Badges(Base):
 
 class EightBall(Base):
     __tablename__ = "eightball"
+    __table_opts__ = (UniqueConstraint("answer", sqlite_on_conflict="IGNORE"),)
+
     id = Column(Integer, primary_key=True)
     answer = Column(String, nullable=False)
 
