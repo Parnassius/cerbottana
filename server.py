@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 from datetime import date, datetime
-from functools import wraps
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING, Optional
 
-from flask import Flask, abort, render_template, request
+from flask import Flask, request
 from flask import session as web_session
 from sqlalchemy.sql import func
 from waitress import serve
 
 import databases.database as d
-import utils
 from database import Database
 from plugins import routes
 
@@ -62,52 +60,6 @@ def initialize_server(secret_key: str) -> Server:
                         web_session["_rank"] = row.rank
                     else:
                         web_session[row.room] = row.rank
-
-    def require_driver(f: Callable[[], str]) -> Callable[[], str]:
-        @wraps(f)
-        def wrapper() -> str:
-            if not utils.has_role("driver", web_session.get("_rank")):
-                abort(401)
-            return f()
-
-        return wrapper
-
-    @server.route("/", methods=("GET", "POST"))
-    @require_driver
-    def dashboard() -> str:
-
-        db = Database.open()
-
-        with db.get_session() as session:
-            if request.method == "POST":
-
-                if "approva" in request.form:
-                    parts = request.form["approva"].split(",")
-                    session.query(d.Users).filter_by(
-                        id=parts[0], description_pending=",".join(parts[1:])
-                    ).update(
-                        {
-                            "description": d.Users.description_pending,
-                            "description_pending": "",
-                        }
-                    )
-
-                if "rifiuta" in request.form:
-                    parts = request.form["rifiuta"].split(",")
-                    session.query(d.Users).filter_by(
-                        id=parts[0], description_pending=",".join(parts[1:])
-                    ).update({"description_pending": ""})
-
-            descriptions_pending = (
-                session.query(d.Users)
-                .filter(d.Users.description_pending != "")
-                .order_by(d.Users.userid)
-                .all()
-            )
-
-            return render_template(
-                "dashboard.html", descriptions_pending=descriptions_pending
-            )
 
     for view_func, rule, methods in routes:
         server.add_url_rule(rule, view_func=view_func, methods=methods)
