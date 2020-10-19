@@ -91,7 +91,7 @@ async def edgummet(msg: Message) -> None:
     await msg.reply("soccontro")
 
 
-@command_wrapper(aliases=("francy",))
+@command_wrapper(aliases=("francino", "francy"))
 async def francyy(msg: Message) -> None:
     await msg.reply("aiuto ho riso irl")
 
