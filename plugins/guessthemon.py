@@ -32,19 +32,23 @@ async def guessthemon(msg: Message) -> None:
 
         # Get localized pokemon name
         species_name = next(
-            (i.name for i in species.pokemon_species_name if i.local_language_id == 8),
+            (
+                i.name
+                for i in species.pokemon_species_name
+                if i.local_language_id == msg.room.language_id
+            ),
             None,
         )
         if species_name is None:
             raise SQLAlchemyError(
-                f"Missing italian localization for PokemonSpecies row {species.id}"
+                f"PokemonSpecies row {species.id}: no {msg.room.language} localization"
             )
 
         # Get pokedex flavor text
         dex_entries = [
             i.flavor_text
             for i in species.pokemon_species_flavor_text
-            if i.language_id == 8 and len(i.flavor_text) <= 150  # PS limit
+            if i.language_id == msg.room.language_id and len(i.flavor_text) <= 150
         ]
         if not dex_entries:  # This might fail but practically it never should
             return
