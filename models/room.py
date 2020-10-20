@@ -29,6 +29,8 @@ class Room:
         autojoin (bool, optional): Whether the bot should join the room on startup.
             Defaults to False.
         buffer (Deque[str]): Fixed list of the last room messages.
+        language (str): Room language.
+        language_id (int): Veekun id for language.
         modchat (bool): True if modchat level is at least "+".
         roombot (bool): True if cerbottana is roombot in this room.
         title (str): Formatted variant of roomid.
@@ -56,6 +58,7 @@ class Room:
 
         # Attributes initialized through handlers
         self.dynamic_buffer: Deque[str] = deque(maxlen=20)
+        self.language = "English"
         self.modchat = False
         self.roombot = False
         self.title = ""
@@ -75,6 +78,24 @@ class Room:
     @property
     def buffer(self) -> Deque[str]:
         return self.dynamic_buffer.copy()
+
+    @property
+    def language_id(self) -> int:
+        table = {
+            "Japanese": 1,
+            "Korean": 3,
+            "Traditional Chinese": 4,
+            "French": 5,
+            "German": 6,
+            "Spanish": 7,
+            "Italian": 8,
+            "English": 9,
+            "Simplified Chinese": 12,
+            "Portuguese": 13,
+        }
+        if self.language in table:
+            return table[self.language]
+        return table["English"]  # Default to English if language is not available.
 
     @property
     def users(self) -> Dict[User, str]:
