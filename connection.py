@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import re
 from queue import Empty as EmptyQueue
 from queue import SimpleQueue
 from time import time
@@ -136,6 +137,11 @@ class Connection:
             await room.try_modchat()
 
         for msg in message.split("\n"):
+
+            language = re.match(r"This room's primary language is (.*)", msg)
+            if language:
+                room.language = language.group(1)
+                continue
 
             if not msg or msg[0] != "|":
                 continue

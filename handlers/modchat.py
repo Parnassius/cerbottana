@@ -12,15 +12,6 @@ if TYPE_CHECKING:
     from connection import Connection
 
 
-@handler_wrapper(["init"])
-async def get_roominfo(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 1:
-        return
-
-    if args[0] == "chat":
-        await conn.send(f"|/cmd roominfo {room.roomid}")
-
-
 @handler_wrapper(["queryresponse"])
 async def queryresponse(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 2:

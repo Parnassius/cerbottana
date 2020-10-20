@@ -40,6 +40,16 @@ async def remove_user(conn: Connection, room: Room, userstring: str) -> None:
     room.remove_user(user)
 
 
+@handler_wrapper(["init"])
+async def init(conn: Connection, room: Room, *args: str) -> None:
+    if len(args) < 1:
+        return
+
+    if args[0] == "chat":
+        await conn.send(f"|/cmd roominfo {room.roomid}")
+        await room.send("/roomlanguage", False)
+
+
 @handler_wrapper(["title"])
 async def title(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 1:
