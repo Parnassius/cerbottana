@@ -123,6 +123,60 @@ def html_escape(text: Optional[str]) -> str:
     return escape(text).replace("\n", "<br>")
 
 
+def linkify(text: str) -> str:
+    """Transforms a text containing URLs into HTML code.
+
+    Args:
+        text (str): Raw text.
+
+    Returns:
+        str: Escaped HTML, possibly containing <a> tags.
+    """
+    # Partially translated from https://github.com/smogon/pokemon-showdown, chat parser.
+    # The original code is released under the MIT License.
+
+    # linkify requires a custom translation table because "/" is left unescaped.
+    table = {ord(char): escape(char) for char in "&<>\"'"}
+    table[ord("\n")] = "<br>"
+    text = text.translate(table)
+
+    # pylint: disable=line-too-long
+    url_regex = r'(?i)(?:(?:https?:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)*|www\.[a-z0-9-]+(?:\.[a-z0-9-]+)+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com?|org|net|edu|info|us|jp|[a-z]{2,3}(?=[:/])))(?::[0-9]+)?(?:\/(?:(?:[^\s()&<>]|&amp;|&quot;|\((?:[^\\s()<>&]|&amp;)*\))*(?:[^\s()[\]{}".,!?;:&<>*`^~\\]|\((?:[^\s()<>&]|&amp;)*\)))?)?|[a-z0-9.]+@[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,})(?![^ ]*&gt;)'
+    return re.sub(url_regex, lambda m: _linkify_uri(m.group()), text)
+
+
+def _linkify_uri(uri: str) -> str:
+    # Partially translated from https://github.com/smogon/pokemon-showdown, chat parser.
+    # The original code is released under the MIT License.
+
+    if re.match(r"^[a-z0-9.]+@", uri, re.IGNORECASE):
+        fulluri = f"mailto:{uri}"
+    else:
+        fulluri = re.sub(r"^([a-z]*[^a-z:])", r"http://\1", uri)
+        if uri.startswith("https://docs.google.com/") or uri.startswith(
+            "docs.google.com/"
+        ):
+            if uri.startswith("https"):
+                uri = uri[8:]
+            if uri.endswith("?usp=sharing") or uri.endswith("&usp=sharing"):
+                uri = uri[:-12]
+            if uri.endswith("#gid=0"):
+                uri = uri[:-6]
+
+            slash_index = uri.rindex("/")
+            if len(uri) - slash_index > 18:
+                slash_index = len(uri)
+            if slash_index - 4 > 22:
+                uri = (
+                    uri[:19]
+                    + '<small class="message-overflow">'
+                    + uri[19 : slash_index - 4]
+                    + "</small>"
+                    + uri[slash_index - 4 :]
+                )
+    return f'<a href="{fulluri}">{uri}</a>'
+
+
 def render_template(  # type: ignore[misc]  # allow any
     template_name: str, **template_vars: Any
 ) -> str:
