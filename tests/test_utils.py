@@ -1,7 +1,7 @@
 import pytest
 
+import utils
 from typedefs import Role
-from utils import has_role
 
 
 @pytest.mark.parametrize(
@@ -50,5 +50,5 @@ from utils import has_role
         ("voice", "§", True),
     ],
 )
-def test_role(role: Role, userrank: str, expected: bool) -> None:
-    assert has_role(role, userrank) == expected
+def test_has_role(role: Role, userrank: str, expected: bool) -> None:
+    assert utils.has_role(role, userrank) == expected
