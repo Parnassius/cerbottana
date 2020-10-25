@@ -1039,6 +1039,30 @@
     {
       "en": "Unseen Fist",
       "it": "Pugni Invisibili"
+    },
+    {
+      "en": "Curious Medicine",
+      "it": "Stranofarmaco"
+    },
+    {
+      "en": "Transistor",
+      "it": "Transistor"
+    },
+    {
+      "en": "Dragon\u2019s Maw",
+      "it": "Dragomascelle"
+    },
+    {
+      "en": "Chilling Neigh",
+      "it": "Nitrito Bianco"
+    },
+    {
+      "en": "Grim Neigh",
+      "it": "Nitrito Nero"
+    },
+    {
+      "en": "As One",
+      "it": "Sintonia Equina"
     }
   ],
   "item": [
@@ -6021,6 +6045,70 @@
     {
       "en": "Mark Charm",
       "it": "Emblemamuleto"
+    },
+    {
+      "en": "Reins of Unity",
+      "it": "Briglie legame"
+    },
+    {
+      "en": "Galarica Wreath",
+      "it": "Corona Galarnoce"
+    },
+    {
+      "en": "Legendary Clue 1",
+      "it": "Leggenda 1"
+    },
+    {
+      "en": "Legendary Clue 2",
+      "it": "Leggenda 2"
+    },
+    {
+      "en": "Legendary Clue 3",
+      "it": "Leggenda 3"
+    },
+    {
+      "en": "Legendary Clue?",
+      "it": "Leggenda ?"
+    },
+    {
+      "en": "Crown Pass",
+      "it": "Pass Corona"
+    },
+    {
+      "en": "Wooden Crown",
+      "it": "Corona di legno"
+    },
+    {
+      "en": "Radiant Petal",
+      "it": "Petalo lucente"
+    },
+    {
+      "en": "White Mane Hair",
+      "it": "Crini bianchi"
+    },
+    {
+      "en": "Black Mane Hair",
+      "it": "Crini neri"
+    },
+    {
+      "en": "Iceroot Carrot",
+      "it": "Carota algida"
+    },
+    {
+      "en": "Shaderoot Carrot",
+      "it": "Carota oscura"
+    },
+    {
+      "en": "Dynite Ore",
+      "it": "Rocciamax"
+    },
+    {
+      "en": "Carrot Seeds",
+      "it": "Semi di carota"
+    },
+    {
+      "en": "Ability Patch",
+      "it": "Cerotto abilit\u00e0"
     }
   ],
   "move": [
@@ -9223,6 +9311,38 @@
     {
       "en": "Surging Strikes",
       "it": "Idroraffica"
+    },
+    {
+      "en": "Thunder Cage",
+      "it": "Elettrogabbia"
+    },
+    {
+      "en": "Dragon Energy",
+      "it": "Dragoenergia"
+    },
+    {
+      "en": "Freezing Glare",
+      "it": "Sguardo Gelido"
+    },
+    {
+      "en": "Fiery Wrath",
+      "it": "Furia Ardente"
+    },
+    {
+      "en": "Thunderous Kick",
+      "it": "Calcio Tonante"
+    },
+    {
+      "en": "Glacial Lance",
+      "it": "Lancia Glaciale"
+    },
+    {
+      "en": "Astral Barrage",
+      "it": "Schegge Astrali"
+    },
+    {
+      "en": "Eerie Spell",
+      "it": "Inquietantesimo"
     },
     {
       "en": "G-Max Wildfire",
