@@ -82,16 +82,14 @@ class Room:
     @property
     def language_id(self) -> int:
         table = {
-            "Japanese": 1,
-            "Korean": 3,
-            "Traditional Chinese": 4,
+            # "Japanese": 1,
+            # "Traditional Chinese": 4,
             "French": 5,
             "German": 6,
             "Spanish": 7,
             "Italian": 8,
             "English": 9,
-            "Simplified Chinese": 12,
-            "Portuguese": 13,
+            # "Simplified Chinese": 12,
         }
         if self.language in table:
             return table[self.language]

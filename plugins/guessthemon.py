@@ -8,6 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql.expression import func
 
 import databases.veekun as v
+import utils
 from database import Database
 from plugins import command_wrapper
 
@@ -26,7 +27,16 @@ async def guessthemon(msg: Message) -> None:
     db = Database.open("veekun")
     with db.get_session() as session:
         # Retrieve a random pokemon
-        species = session.query(v.PokemonSpecies).order_by(func.random()).first()
+        # Hangman words can only have ascii letters, so a few pokemon names wouldn't be
+        # parsed correctly. Punctuation signs are preserved.
+        # Some exceptions pass silently for simplicity, i.e. Nidoran♂ / Nidoran♀.
+        invalid_identifiers = ("porygon2",)
+        species = (
+            session.query(v.PokemonSpecies)
+            .filter(v.PokemonSpecies.identifier.notin_(invalid_identifiers))
+            .order_by(func.random())
+            .first()
+        )
         if not species:
             raise SQLAlchemyError("Missing PokemonSpecies data")
 
@@ -43,6 +53,7 @@ async def guessthemon(msg: Message) -> None:
             raise SQLAlchemyError(
                 f"PokemonSpecies row {species.id}: no {msg.room.language} localization"
             )
+        species_name = utils.remove_accents(species_name)
 
         # Get pokedex flavor text
         dex_entries = [
