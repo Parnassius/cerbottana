@@ -47,6 +47,40 @@ async def create_tour(
         await room.send(f"/tour rules {rules_str}", False)
 
 
+# --- Commands for generic tours ---
+
+
+@command_wrapper(
+    aliases=("randomtour",),
+    helpstr="Avvia un torneo di una tier scelta a caso tra quelle con team random",
+    is_unlisted=True,
+)
+async def randtour(msg: Message) -> None:
+    if msg.room is None or not msg.user.has_role("driver", msg.room):
+        return
+
+    tiers = [x["name"] for x in msg.conn.tiers if x["random"]]
+
+    rules = []
+
+    if random.randint(1, 100) <= 10:
+        rules.append("Blitz")
+
+    if random.randint(1, 100) <= 10:
+        rules.append("Inverse Mod")
+
+    await create_tour(
+        msg.room,
+        formatid=random.choice(tiers),
+        autostart=3.5,
+        allow_scouting=True,
+        rules=rules,
+    )
+
+
+# --- Commands for tours with custom rules ---
+
+
 @command_wrapper(
     helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
 )
@@ -102,31 +136,3 @@ async def waffletour(msg: Message) -> None:
     )
 
     await msg.room.send("!viewfaq sibb", False)
-
-
-@command_wrapper(
-    aliases=("randomtour",),
-    helpstr="Avvia un torneo di una tier scelta a caso tra quelle con team random",
-    is_unlisted=True,
-)
-async def randtour(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
-    tiers = [x["name"] for x in msg.conn.tiers if x["random"]]
-
-    rules = []
-
-    if random.randint(1, 100) <= 10:
-        rules.append("Blitz")
-
-    if random.randint(1, 100) <= 10:
-        rules.append("Inverse Mod")
-
-    await create_tour(
-        msg.room,
-        formatid=random.choice(tiers),
-        autostart=3.5,
-        allow_scouting=True,
-        rules=rules,
-    )
