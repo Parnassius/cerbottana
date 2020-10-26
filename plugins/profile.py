@@ -59,8 +59,8 @@ async def setprofile(msg: Message) -> None:
         await msg.reply("Specifica una frase da inserire nel tuo profilo")
         return
 
-    if len(msg.arg) > 200:
-        await msg.reply("Errore: lunghezza massima 200 caratteri")
+    if len(msg.arg) > 250:
+        await msg.reply("Errore: lunghezza massima 250 caratteri")
         return
 
     # authorized: True if msg.user can approve new descriptions.
