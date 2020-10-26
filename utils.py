@@ -111,7 +111,7 @@ def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
             role == "voice"
             and not strict_voice_check
             and user[0] not in "*★☆^ "
-            and not user[0].isalnum()
+            and user[0] not in string.ascii_letters + string.digits
         ):
             return True
     return False

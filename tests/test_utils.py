@@ -48,6 +48,8 @@ from typedefs import Role
         ("prizewinner", "^", True),
         ("driver", "§", False),
         ("voice", "§", True),
+        ("driver", "Ω", False),
+        ("voice", "Ω", True),
     ],
 )
 def test_has_role(role: Role, userrank: str, expected: bool) -> None:
