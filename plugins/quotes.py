@@ -109,7 +109,10 @@ def to_html_quotebox(quote: str) -> str:
 
 @command_wrapper(aliases=("newquote", "quote"))
 async def addquote(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
+    # Permissions for this command are temporarily lowered to voice level.
+    # if msg.room is None or not msg.user.has_role("driver", msg.room):
+    #   return
+    if msg.room is None:
         return
 
     if not msg.arg:
@@ -170,7 +173,10 @@ async def randquote(msg: Message) -> None:
 
 @command_wrapper(aliases=("deletequote", "delquote", "rmquote"))
 async def removequote(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
+    # Permissions for this command are temporarily lowered to voice level.
+    # if msg.room is None or not msg.user.has_role("driver", msg.room):
+    #   return
+    if msg.room is None:
         return
 
     if not msg.arg:
