@@ -4,18 +4,19 @@ import re
 import string
 from typing import TYPE_CHECKING, List
 
-from flask import abort, current_app, render_template
-from flask import session as web_session
+from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.sql import func
 
 import databases.database as d
 import utils
 from database import Database
-from plugins import command_wrapper, parametrize_room, route_wrapper
+from plugins import command_wrapper, htmlpage_wrapper, parametrize_room
 
 if TYPE_CHECKING:
     from models.message import Message
+    from models.room import Room
+    from models.user import User
 
 
 def to_html_quotebox(quote: str) -> str:
@@ -187,14 +188,39 @@ async def removequote(msg: Message) -> None:
             await msg.room.send("Quote inesistente.")
 
 
+@command_wrapper()
+@parametrize_room
+async def removequoteid(msg: Message) -> None:
+    room = msg.parametrized_room
+
+    if not msg.user.has_role("driver", room):
+        return
+
+    if len(msg.args) != 2:
+        return
+
+    db = Database.open()
+    with db.get_session() as session:
+        session.query(d.Quotes).filter_by(id=msg.args[0], roomid=room.roomid).delete()
+
+    try:
+        page = int(msg.args[1])
+    except ValueError:
+        page = 1
+
+    await msg.user.send_htmlpage("quotelist", room, page)
+
+
 @command_wrapper(aliases=("quotes", "quoteslist"))
 @parametrize_room
 async def quotelist(msg: Message) -> None:
+    room = msg.parametrized_room
+
     db = Database.open()
     with db.get_session() as session:
         quotes_n = (
             session.query(func.count(d.Quotes.id))  # type: ignore  # sqlalchemy
-            .filter_by(roomid=msg.parametrized_room.roomid)
+            .filter_by(roomid=room.roomid)
             .scalar()
         )
 
@@ -202,25 +228,14 @@ async def quotelist(msg: Message) -> None:
         await msg.reply("Nessuna quote da visualizzare.")
         return
 
-    phrase = f"{msg.conn.domain}quotes/{msg.parametrized_room}"
-    if msg.parametrized_room.is_private:
-        token_id = utils.create_token({msg.parametrized_room.roomid: " "})
-        phrase += f"?token={token_id}"
+    try:
+        page = int(msg.arg)
+    except ValueError:
+        page = 1
 
-    await msg.reply(phrase)
+    await msg.reply_htmlpage("quotelist", room, page)
 
 
-@route_wrapper("/quotes/<room>")
-def quotes_route(room: str) -> str:
-    if room not in current_app.conn.rooms or current_app.conn.rooms[room].is_private:
-        if not web_session.get(room):
-            abort(401)
-
-    db = Database.open()
-
-    with db.get_session() as session:
-        rs = session.query(d.Quotes).filter_by(roomid=room).all()
-        if not rs:
-            abort(401)  # no quotes for this room
-
-        return render_template("quotes.html", rs=rs, room=room)
+@htmlpage_wrapper("quotelist")
+def quotelist_htmlpage(user: User, room: Room) -> Query:  # type: ignore[type-arg]
+    return Query(d.Quotes).filter_by(roomid=room.roomid)
