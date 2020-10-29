@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import math
 from typing import TYPE_CHECKING, Optional, Set
 
 import htmlmin  # type: ignore
 
 import utils
+from database import Database
+from plugins import htmlpages
 from typedefs import Role, UserId
 
 if TYPE_CHECKING:
@@ -158,6 +161,58 @@ class User:
             await self.send(simple_message)
         else:
             await room.send(f"/pminfobox {self.userid}, {message}", False)
+
+    async def send_htmlpage(self, pageid: str, page_room: Room, page: int = 1) -> None:
+        """Sends an HTML page to user.
+
+        Args:
+            pageid (str): id of the htmlpage.
+            page_room (Room): Room to be passed to the function.
+            page (int, optional): Page number. Defaults to 1.
+        """
+        if pageid not in htmlpages:
+            return
+        room = self.can_pminfobox_to()
+        if room is None:
+            simple_message = "Questo comando è disponibile in PM "
+            simple_message += "solo se sei online in una room dove sono Roombot"
+            await self.send(simple_message)
+        else:
+            query = htmlpages[pageid](self, page_room)
+            if query is None:
+                return
+
+            db = Database.open()
+
+            with db.get_session() as session:
+                query = query.with_session(session)
+
+                last_page = math.ceil(query.count() / 100)
+                page = min(page, last_page)
+                rs = query.limit(100).offset(100 * (page - 1)).all()
+
+                message = utils.render_template(
+                    f"htmlpages/{pageid}.html",
+                    rs=rs,
+                    current_page=page,
+                    last_page=last_page,
+                    can_delete=self.has_role("driver", page_room),
+                    room=page_room,
+                    botname=self.conn.username,
+                    cmd_char=self.conn.command_character,
+                )
+
+                message = '<div class="pad">' + htmlmin.minify(message) + "</div>"
+                if page_room:
+                    pageid += "0" + page_room.roomid
+
+                # Ugly hack to scroll to top when changing page
+                # https://github.com/smogon/pokemon-showdown-client/pull/1645
+                await room.send(f"/sendhtmlpage {self.userid}, {pageid}, <br>", False)
+
+                await room.send(
+                    f"/sendhtmlpage {self.userid}, {pageid}, {message}", False
+                )
 
     @classmethod
     def get(cls, conn: Connection, userstring: str) -> User:

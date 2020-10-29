@@ -84,6 +84,9 @@ async def pm(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 3:
         return
 
+    if len(args) >= 4 and args[3] == "requestpage":
+        return
+
     sender = User.get(conn, args[0])
     receiver = User.get(conn, args[1])
     message = "|".join(args[2:]).strip()

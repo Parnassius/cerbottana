@@ -6,6 +6,7 @@ from functools import wraps
 from os.path import basename, dirname, isfile, join
 from typing import (
     TYPE_CHECKING,
+    Any,
     Awaitable,
     Callable,
     Dict,
@@ -18,16 +19,19 @@ from typing import (
 
 from flask import abort
 from flask import session as web_session
+from sqlalchemy.orm import Query
 
 import utils
 from models.room import Room
-from typedefs import RoomId
+from typedefs import Role, RoomId
 
 if TYPE_CHECKING:
     from connection import Connection
     from models.message import Message
+    from models.user import User
 
     CommandFunc = Callable[[Message], Awaitable[None]]
+    HTMLPageFunc = Callable[[User, Room], Optional[Query[Any]]]  # type: ignore[misc]  # pylint: disable=unsubscriptable-object
     RouteFunc = Callable[..., str]  # type: ignore[misc]
 
 
@@ -131,6 +135,46 @@ def parametrize_room(func: CommandFunc) -> CommandFunc:
 
         # Every check passed: wrap the original function
         await func(msg)
+
+    return wrapper
+
+
+# --- HTML pages ---
+
+
+htmlpages: Dict[str, HTMLPageFunc] = {}
+
+
+def htmlpage_check_permission(
+    func: HTMLPageFunc, required_rank: Optional[Role], main_room_only: bool
+) -> HTMLPageFunc:
+    @wraps(func)
+    def wrapper(  # type: ignore[misc]
+        user: User, room: Room
+    ) -> Optional[Query[Any]]:  # pylint: disable=unsubscriptable-object
+        if main_room_only and (
+            not room.conn.main_room or room is not room.conn.main_room
+        ):
+            return None
+
+        if required_rank is None:
+            if user not in room:
+                return None
+        elif not user.has_role(required_rank, room):
+            return None
+
+        return func(user, room)
+
+    return wrapper
+
+
+def htmlpage_wrapper(
+    pageid: str, required_rank: Optional[Role] = None, main_room_only: bool = False
+) -> Callable[[HTMLPageFunc], HTMLPageFunc]:
+    def wrapper(func: HTMLPageFunc) -> HTMLPageFunc:
+        func = htmlpage_check_permission(func, required_rank, main_room_only)
+        htmlpages[pageid] = func
+        return func
 
     return wrapper
 
