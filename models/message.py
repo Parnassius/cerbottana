@@ -85,3 +85,17 @@ class Message:
             await self.user.send_htmlbox(message, simple_message)
         else:
             await self.room.send_htmlbox(message)
+
+    async def reply_htmlpage(self, pageid: str, room: Room, page: int = 1) -> None:
+        """Sends a link to an HTML page to a room or directly to a user, depending on
+        the context.
+
+        Args:
+            pageid (str): id of the htmlpage.
+            room (Room): Room to be passed to the function.
+            page (int, optional): Page number. Defaults to 1.
+        """
+        if self.room is None:
+            await self.user.send_htmlpage(pageid, room, page)
+        else:
+            await self.room.send_htmlpage(pageid, room)

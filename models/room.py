@@ -201,6 +201,17 @@ class Room:
         message = htmlmin.minify(message)
         await self.send(f"/addhtmlbox {message}", False)
 
+    async def send_htmlpage(self, pageid: str, page_room: Room) -> None:
+        """Sends link to an HTML page in a room.
+
+        Args:
+            pageid (str): id of the htmlpage.
+            page_room (Room): Room to be passed to the function.
+        """
+        if page_room:
+            pageid += "0" + page_room.roomid
+        await self.send(f"<<view-bot-{utils.to_user_id(self.conn.username)}-{pageid}>>")
+
     @classmethod
     def get(cls, conn: Connection, room: str) -> Room:
         """Safely retrieves a Room instance, if it exists, or creates a new one.
