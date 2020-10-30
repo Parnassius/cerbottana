@@ -161,6 +161,12 @@ async def parnassius(msg: Message) -> None:
     await msg.reply("allora, intanto ti calmi")
 
 
+@command_wrapper(aliases=("lartedipissog",))
+async def pissog(msg: Message) -> None:
+    phrase = msg.arg[::-1] if msg.arg else "gossip"
+    await msg.reply(phrase)
+
+
 @command_wrapper(aliases=("palt0", "palto", "plato"))
 async def plat0(msg: Message) -> None:
     text = "oh {} non mi spoilerare".format(
