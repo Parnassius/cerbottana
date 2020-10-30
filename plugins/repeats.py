@@ -26,6 +26,9 @@ if TYPE_CHECKING:
 # validity check for the command syntax.
 WHITELISTED_CMD = (
     "daily",
+    "events",
+    "roomevent",
+    "roomevents",
     "rfaq",
     "roomfaq",
     "viewfaq",
