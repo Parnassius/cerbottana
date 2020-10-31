@@ -84,8 +84,8 @@ def to_html_quotebox(quote: str) -> str:
 
             lines.append(
                 f"<small>{timestamp} {rank}</small>"
-                f"<username>{username}:</username>"
-                f"<q>{body}</q>"
+                f"<username>{username}:</username> "
+                f"<em>{body}</em>"
             )
         else:
             # phrase is a PS message that may span over multiple lines.
@@ -97,7 +97,7 @@ def to_html_quotebox(quote: str) -> str:
             sublines = [utils.linkify(s) for s in sublines if s.strip()]
 
             # The timestamp is written only on the first subline.
-            sublines[0] = f"<small>{timestamp}</small><q>{sublines[0]}</q>"
+            sublines[0] = f"<small>{timestamp}</small> <em>{sublines[0]}</em>"
             lines += sublines
     # Merge lines
     html = '<div class="message-log" style="float: left">'
