@@ -1,3 +1,6 @@
+# pylint: disable=line-too-long
+
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -13,6 +16,13 @@ if TYPE_CHECKING:
 )
 async def avatars(msg: Message) -> None:
     await msg.reply("https://play.pokemonshowdown.com/sprites/trainers/")
+
+
+@command_wrapper(aliases=("tournamentrules", "tourrules"))
+async def customrules(msg: Message) -> None:
+    await msg.reply(
+        "https://github.com/smogon/pokemon-showdown/blob/master/config/CUSTOM-RULES.md#custom-rules"
+    )
 
 
 @command_wrapper(aliases=("github",))
