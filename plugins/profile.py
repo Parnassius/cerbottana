@@ -3,14 +3,17 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from flask import render_template, request
+from sqlalchemy.orm import Query
 
 import databases.database as d
 import utils
 from database import Database
-from plugins import command_wrapper, route_wrapper
+from plugins import command_wrapper, htmlpage_wrapper, route_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
+    from models.room import Room
+    from models.user import User
 
 
 @command_wrapper(aliases=("profilo",), helpstr="Visualizza il tuo profilo.")
@@ -82,11 +85,13 @@ async def setprofile(msg: Message) -> None:
     await msg.reply("Salvato")
 
     if msg.conn.main_room is not None and not authorized:
-        message = "Qualcuno ha aggiornato la sua frase del profilo. "
-        message += (
-            'Usa <button name="send" value="/pm '
-            + msg.conn.username
-            + ', .dashboard">.dashboard</button> per approvarla o rifiutarla'
+        username = utils.html_escape(msg.user.username)
+        botname = msg.conn.username
+        cmd = f"{msg.conn.command_character}pendingdescriptions"
+        message = (
+            f"{username} ha aggiornato la sua frase del profilo.<br>"
+            f'Usa <button name="send" value="/pm {botname}, {cmd}">{cmd}</button> '
+            "per approvarla o rifiutarla"
         )
         await msg.conn.main_room.send_rankhtmlbox("%", message)
 
@@ -148,3 +153,59 @@ def profile_route() -> str:
         )
 
         return render_template("profile.html", user=user, badges=badges)
+
+
+@command_wrapper()
+async def pendingdescriptions(msg: Message) -> None:
+    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+        return
+
+    await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
+
+
+@command_wrapper()
+async def approvaprofilo(msg: Message) -> None:
+    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+        return
+
+    db = Database.open()
+
+    with db.get_session() as session:
+        parts = msg.arg.split(",")
+        session.query(d.Users).filter_by(
+            id=parts[0], description_pending=",".join(parts[1:])
+        ).update(
+            {
+                "description": d.Users.description_pending,
+                "description_pending": "",
+            }
+        )
+
+    await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
+
+
+@command_wrapper()
+async def rifiutaprofilo(msg: Message) -> None:
+    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+        return
+
+    db = Database.open()
+
+    with db.get_session() as session:
+        parts = msg.arg.split(",")
+        session.query(d.Users).filter_by(
+            id=parts[0], description_pending=",".join(parts[1:])
+        ).update({"description_pending": ""})
+
+    await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
+
+
+@htmlpage_wrapper("pendingdescriptions", required_rank="driver", main_room_only=True)
+def pendingdescriptions_htmlpage(
+    user: User, room: Room
+) -> Query:  # type: ignore[type-arg]
+    return (
+        Query(d.Users)
+        .filter(d.Users.description_pending != "")
+        .order_by(d.Users.userid)
+    )
