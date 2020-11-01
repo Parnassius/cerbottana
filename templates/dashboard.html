@@ -2,43 +2,6 @@
 
 {% block content %}
 
-  {% if descriptions_pending %}
-    <form action="" method="POST">
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Utente</th>
-            <th>Descrizione attuale</th>
-            <th>Nuova descrizione</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for row in descriptions_pending %}
-            <tr>
-              <td>{{ row.username }}</td>
-              <td>{{ row.description }}</td>
-              <td>{{ row.description_pending }}</td>
-              <td style="width: 1px; white-space: nowrap">
-                <button name="approva" value="{{ row.id }},{{ row.description_pending }}">
-                  Approva
-                </button>
-                <button name="rifiuta" value="{{ row.id }},{{ row.description_pending }}">
-                  Rifiuta
-                </button>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
-    </form>
-
-    <hr>
-  {% endif %}
-
-
   <form action="profile" method="GET">
 
     <label for="userid">Cerca utente</label>
