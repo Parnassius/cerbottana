@@ -91,6 +91,20 @@ async def setprofile(msg: Message) -> None:
         await msg.conn.main_room.send_rankhtmlbox("%", message)
 
 
+@command_wrapper(
+    aliases=("clearprofilo",), helpstr="Rimuovi la frase personalizzata dal profilo."
+)
+async def clearprofile(msg: Message) -> None:
+    db = Database.open()
+    with db.get_session() as session:
+        userid = msg.user.userid
+        session.add(d.Users(userid=userid))
+        query_ = session.query(d.Users).filter_by(userid=userid)
+        query_.update({"description": "", "description_pending": ""})
+
+    await msg.reply("Frase rimossa")
+
+
 @route_wrapper("/profile", methods=("GET", "POST"), require_driver=True)
 def profile_route() -> str:
     db = Database.open()
