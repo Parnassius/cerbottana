@@ -34,6 +34,7 @@ class Connection:
         command_character: str,
         administrators: List[str],
         domain: str,
+        unittesting: bool = False,
     ) -> None:
         self.url = url
         self.username = username
@@ -49,6 +50,7 @@ class Connection:
         self.command_character = command_character
         self.administrators = [utils.to_user_id(user) for user in administrators]
         self.domain = domain
+        self.unittesting = unittesting
         self.users: WeakValueDictionary[  # pylint: disable=unsubscriptable-object
             UserId, User
         ] = WeakValueDictionary()

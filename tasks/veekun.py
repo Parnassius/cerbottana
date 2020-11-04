@@ -19,6 +19,9 @@ if TYPE_CHECKING:
 
 @init_task_wrapper()
 async def csv_to_sqlite(conn: Connection) -> None:
+    if conn.unittesting:
+        return
+
     latest_veekun_commit = ""
     try:
         latest_veekun_commit = (
