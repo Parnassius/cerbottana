@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import random
 import re
 import string
 from typing import TYPE_CHECKING, List
@@ -147,28 +146,19 @@ async def addquote(msg: Message) -> None:
 @command_wrapper(aliases=("q",))
 @parametrize_room
 async def randquote(msg: Message) -> None:
-    if msg.arg:
-        phrase = "Non ho capito."
-        if msg.room is not None:
-            phrase += (
-                f" Usa ``{msg.conn.command_character}quote messaggio``"
-                " per salvare una quote."
-            )
-        await msg.reply(phrase)
-        return
-
     db = Database.open()
     with db.get_session() as session:
-        quotes = (
-            session.query(d.Quotes).filter_by(roomid=msg.parametrized_room.roomid).all()
-        )
+        query_ = session.query(d.Quotes).filter_by(roomid=msg.parametrized_room.roomid)
+        if msg.arg:
+            # LIKE wildcards are supported and "*" is considered an alias for "%".
+            keyword = msg.arg.replace("*", "%")
+            query_ = query_.filter(d.Quotes.message.ilike(f"%{keyword}%"))
 
-        if not quotes:
-            await msg.reply("Nessuna quote registrata per questa room.")
+        quote_row = query_.order_by(func.random()).first()
+        if not quote_row:
+            await msg.reply("Nessuna quote trovata.")
             return
-
-        quote = random.choice(quotes).message
-        await msg.reply_htmlbox(to_html_quotebox(quote))
+        await msg.reply_htmlbox(to_html_quotebox(quote_row.message))
 
 
 @command_wrapper(aliases=("deletequote", "delquote", "rmquote"))
