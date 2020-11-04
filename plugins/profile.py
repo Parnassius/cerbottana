@@ -92,7 +92,8 @@ async def setprofile(msg: Message) -> None:
 
 
 @command_wrapper(
-    aliases=("clearprofilo",), helpstr="Rimuovi la frase personalizzata dal profilo."
+    aliases=("clearprofilo", "resetprofile", "resetprofilo"),
+    helpstr="Rimuovi la frase personalizzata dal profilo.",
 )
 async def clearprofile(msg: Message) -> None:
     db = Database.open()
