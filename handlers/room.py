@@ -18,10 +18,14 @@ async def add_user(
     conn: Connection,
     room: Room,
     userstring: str,
-    skip_avatar_check: bool = False,
+    from_userlist: bool = False,
 ) -> None:
     rank = userstring[0]
     user = User.get(conn, userstring[1:])  # Strip leading character rank
+
+    if not from_userlist:
+        user.userstring = userstring[1:]  # Always update userstring on |j| and |n|
+
     room.add_user(user)  # Rank will be retrieved from userdetails, if necessary
 
     if user.userid == utils.to_user_id(conn.username):
@@ -31,7 +35,7 @@ async def add_user(
     with db.get_session() as session:
         session.add(d.Users(userid=user.userid, username=user.username))
 
-    if not skip_avatar_check or rank != " ":
+    if not from_userlist or rank != " ":
         await conn.send(f"|/cmd userdetails {user.username}")
 
 
