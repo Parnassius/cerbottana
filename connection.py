@@ -95,7 +95,7 @@ class Connection:
                 async for message in websocket:
                     if isinstance(message, str):
                         print(f"<< {message}")
-                        asyncio.ensure_future(self._parse_message(message))
+                        asyncio.create_task(self._parse_message(message))
         except (
             websockets.exceptions.WebSocketException,
             OSError,  # https://github.com/aaugustin/websockets/issues/593

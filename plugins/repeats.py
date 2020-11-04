@@ -136,7 +136,7 @@ class Repeat:
                 # no need to previous._unlist(), we'll just update the SQL row
         self._instances[self.key] = self
 
-        self.task = asyncio.ensure_future(self.coro(), loop=self.room.conn.loop)
+        self.task = asyncio.create_task(self.coro())
 
         if self.is_new:
             # if the task has just been created, register it into the SQL db
