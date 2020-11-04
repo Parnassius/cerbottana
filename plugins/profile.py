@@ -100,8 +100,9 @@ async def clearprofile(msg: Message) -> None:
     with db.get_session() as session:
         userid = msg.user.userid
         session.add(d.Users(userid=userid))
-        query_ = session.query(d.Users).filter_by(userid=userid)
-        query_.update({"description": "", "description_pending": ""})
+        session.query(d.Users).filter_by(userid=userid).update(
+            {"description": "", "description_pending": ""}
+        )
 
     await msg.reply("Frase rimossa")
 
