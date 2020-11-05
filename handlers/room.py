@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import string
 from typing import TYPE_CHECKING
 
 import databases.database as d
@@ -134,5 +135,7 @@ async def queryresponse(conn: Connection, room: Room, *args: str) -> None:
         user.global_rank = data["group"]
         for r in data["rooms"]:
             room = Room.get(conn, utils.to_room_id(r))
-            room_rank = r[0] if utils.has_role("voice", r[0]) else " "
+            room_rank = (
+                r[0] if r[0] not in string.ascii_letters + string.digits else " "
+            )
             room.add_user(user, room_rank)
