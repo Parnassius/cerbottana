@@ -46,6 +46,17 @@ async def annika(msg: Message) -> None:
     await msg.reply("enjoy ur italian joke punishment room")
 
 
+@command_wrapper(
+    aliases=("ave", "avedo", "averado", "grandefigliodiputtana", "leo", "leoshad")
+)
+async def averardo(msg: Message) -> None:
+    yt_url = "https://youtu.be/kB4qteLP4uI"
+    if msg.room is None:
+        await msg.reply(yt_url)
+    else:
+        await msg.reply(f"!show {yt_url}", False)
+
+
 @command_wrapper()
 async def azyzyz(msg: Message) -> None:
     text = "CAIO AZ" + "YZ" * random.randint(1, 5)
