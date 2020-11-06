@@ -7,6 +7,12 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
+class LatestCommit(Base):
+    __tablename__ = "latest_commit"
+
+    commit_id = Column(String, primary_key=True, nullable=False)
+
+
 class Languages(Base):
     __tablename__ = "languages"
 
