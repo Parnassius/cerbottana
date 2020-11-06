@@ -154,7 +154,8 @@ async def maurizio(msg: Message) -> None:
 
 @command_wrapper(aliases=("gr",))
 async def megagr(msg: Message) -> None:
-    await msg.reply("GRRRRRR")
+    text = "G" + "R" * random.randint(3, 10)
+    await msg.reply(text)
 
 
 @command_wrapper()
