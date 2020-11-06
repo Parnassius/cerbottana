@@ -105,6 +105,7 @@ async def waffletour(msg: Message) -> None:
 
 
 @command_wrapper(
+    aliases=("randomtour",),
     helpstr="Avvia un torneo di una tier scelta a caso tra quelle con team random",
     is_unlisted=True,
 )

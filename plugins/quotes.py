@@ -143,7 +143,7 @@ async def addquote(msg: Message) -> None:
         await msg.room.send("Quote già esistente.")
 
 
-@command_wrapper(aliases=("q",))
+@command_wrapper(aliases=("q", "randomquote"))
 @parametrize_room
 async def randquote(msg: Message) -> None:
     db = Database.open()

@@ -10,20 +10,24 @@ if TYPE_CHECKING:
     from models.message import Message
 
 
-@command_wrapper(helpstr="Saluta un utente a caso presente nella room.")
-async def randomcaio(msg: Message) -> None:
+@command_wrapper(
+    aliases=("randomcaio",), helpstr="Saluta un utente a caso presente nella room."
+)
+async def randcaio(msg: Message) -> None:
     if msg.room is None:
         return
-    randuser = random.choice(list(msg.room.users.keys()))
-    await msg.reply(f"caio {randuser}")
+    user = random.choice(list(msg.room.users.keys()))
+    await msg.reply(f"caio {user}")
 
 
-@command_wrapper(helpstr="Seleziona un utente a caso presente nella room.")
-async def randomuser(msg: Message) -> None:
+@command_wrapper(
+    aliases=("randomuser",), helpstr="Seleziona un utente a caso presente nella room."
+)
+async def randuser(msg: Message) -> None:
     if msg.room is None:
         return
-    randuser = random.choice(list(msg.room.users.keys()))
-    await msg.reply(f"{randuser}")
+    user = random.choice(list(msg.room.users.keys()))
+    await msg.reply(f"{user}")
 
 
 @command_wrapper()
