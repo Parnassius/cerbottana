@@ -39,6 +39,11 @@ async def altcauseiminsecure(msg: Message) -> None:
 
 
 @command_wrapper()
+async def ang(msg: Message) -> None:
+    await msg.reply("Aura Luna")
+
+
+@command_wrapper()
 async def annika(msg: Message) -> None:
     if msg.room is None or not msg.room.is_private:
         return
