@@ -44,6 +44,8 @@ async def csv_to_sqlite(conn: Connection) -> None:
         OperationalError,  # table does not exist
     ):
         pass  # always rebuild on error
+    
+    print("Rebuilding veekun database...")
 
     open("./veekun.sqlite", "w").close()  # truncate database
 
@@ -84,3 +86,4 @@ async def csv_to_sqlite(conn: Connection) -> None:
                                 },
                                 synchronize_session=False,
                             )
+    print("Done.")
