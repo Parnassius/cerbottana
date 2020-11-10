@@ -44,7 +44,7 @@ async def tell(msg: Message) -> None:
     author = msg.user.roomname(msg.parametrized_room)
     html = (
         f"<b>{utils.to_obfuscated_html(msg.arg)}</b><br>"
-        + '<div style="float: left; color: #888; font-size: 8pt">'
+        + '<div style="display: inline-block; color: #888; font-size: 8pt">'
         + f"[inviato da {author}]"
         + "</div>"
     )

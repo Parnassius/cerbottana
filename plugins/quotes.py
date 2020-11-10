@@ -99,7 +99,7 @@ def to_html_quotebox(quote: str) -> str:
             sublines[0] = f"<small>{timestamp}</small> <em>{sublines[0]}</em>"
             lines += sublines
     # Merge lines
-    html = '<div class="message-log" style="float: left">'
+    html = '<div class="message-log" style="display: inline-block">'
     for line in lines:
         html += f'<div class="chat">{line}</div>'
     html += "</div>"
