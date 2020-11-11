@@ -17,6 +17,11 @@ async def acher(msg: Message) -> None:
     await msg.reply("lo acher che bontà ♫")
 
 
+@command_wrapper(aliases=("aeo",))
+async def aeonic(msg: Message) -> None:
+    await msg.reply("Guys the emoji movie wasn't __that__ bad")
+
+
 @command_wrapper(aliases=("aeth", "eterno"))
 async def aethernum(msg: Message) -> None:
     await msg.reply("__eterno__ indeciso :^)")
