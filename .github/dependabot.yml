@@ -4,4 +4,7 @@ updates:
   directory: "/"
   schedule:
     interval: daily
+  allow:
+    # Enable updates for indirect dependencies
+    - dependency-type: "all"
   open-pull-requests-limit: 10
