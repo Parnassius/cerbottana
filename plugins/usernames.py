@@ -117,7 +117,7 @@ async def edgummet(msg: Message) -> None:
     await msg.reply("soccontro")
 
 
-@command_wrapper(aliases=("francino", "francy"))
+@command_wrapper(aliases=("francino", "franco", "francy"))
 async def francyy(msg: Message) -> None:
     await msg.reply("aiuto ho riso irl")
 
@@ -211,7 +211,7 @@ async def r0spe(msg: Message) -> None:
     await msg.reply("buondì")
 
 
-@command_wrapper(aliases=("boiler",))
+@command_wrapper(aliases=("bigolo", "boiler"))
 async def roiler(msg: Message) -> None:
     await msg.reply("ehm volevo dire")
 
