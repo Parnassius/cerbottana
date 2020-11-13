@@ -78,6 +78,12 @@ async def azyzyz(msg: Message) -> None:
     await msg.reply(text)
 
 
+@command_wrapper(aliases=("bizzozero",))
+async def bizzo(msg: Message) -> None:
+    text = "gr{}ve".format("e" * random.randint(1, 4))
+    await msg.reply(text)
+
+
 @command_wrapper()
 async def ciarizardmille(msg: Message) -> None:
     user = random.choice(
