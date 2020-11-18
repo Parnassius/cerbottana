@@ -153,6 +153,12 @@ async def lange(msg: Message) -> None:
     await msg.reply("Haund mi traduci questo post?")
 
 
+@command_wrapper(aliases=("lillo",))
+async def lillo2000(msg: Message) -> None:
+    phrase = random.choice(["che vita di merda", "ke belo vivere mama \\('w')/"])
+    await msg.reply(phrase)
+
+
 @command_wrapper()
 async def mammalu(msg: Message) -> None:
     await msg.reply("clicca la stab")
