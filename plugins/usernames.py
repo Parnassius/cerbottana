@@ -56,8 +56,8 @@ async def annika(msg: Message) -> None:
     await msg.reply("enjoy ur italian joke punishment room")
 
 
-@command_wrapper(aliases=("luna",))
-async def auraluna(msg: Message) -> None:
+@command_wrapper(aliases=("auraluna", "luna"))
+async def aulu(msg: Message) -> None:
     await msg.reply("ang")
 
 
