@@ -175,6 +175,11 @@ async def megagr(msg: Message) -> None:
     await msg.reply(text)
 
 
+@command_wrapper(aliases=("melody",))
+async def melodyl(msg: Message) -> None:
+    await msg.reply("Beh che dire")
+
+
 @command_wrapper()
 async def milak(msg: Message) -> None:
     await msg.reply("I just salmonella gurl")
