@@ -45,7 +45,7 @@ async def altcauseiminsecure(msg: Message) -> None:
 
 @command_wrapper()
 async def ang(msg: Message) -> None:
-    await msg.reply("Aura Luna")
+    await msg.reply("aulu")
 
 
 @command_wrapper()
