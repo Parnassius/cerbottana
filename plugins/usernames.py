@@ -60,8 +60,8 @@ async def annika(msg: Message) -> None:
     await msg.reply("enjoy ur italian joke punishment room")
 
 
-@command_wrapper(aliases=("anto",))
-async def antonio(msg: Message) -> None:
+@command_wrapper(aliases=("anto", "antonio"))
+async def antonio200509(msg: Message) -> None:
     db = Database.open("veekun")
     with db.get_session() as session:
         species = (
