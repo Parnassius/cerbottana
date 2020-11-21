@@ -69,6 +69,12 @@ async def randtour(msg: Message) -> None:
     if random.randint(1, 100) <= 10:
         rules.append("Inverse Mod")
 
+    if random.randint(1, 100) <= 10:
+        rules.append("Scalemons Mod")
+
+    if random.randint(1, 100) <= 10:
+        rules.append("Gen 8 Camomons")
+
     await create_tour(
         msg.room,
         formatid=random.choice(tiers),
