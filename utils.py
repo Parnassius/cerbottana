@@ -123,6 +123,13 @@ def html_escape(text: Optional[str]) -> str:
     return escape(text).replace("\n", "<br>")
 
 
+def is_youtube_link(url: str) -> bool:
+    """Returns True if url is a youtube link, based on PS' regex."""
+    # Note: You should let PS display youtube links natively with "!show {url}".
+    youtube_regex = r"^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)(\/|$)"
+    return re.match(youtube_regex, url, re.IGNORECASE) is not None
+
+
 def linkify(text: str) -> str:
     """Transforms a text containing URLs into HTML code.
 
