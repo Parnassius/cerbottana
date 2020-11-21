@@ -223,6 +223,11 @@ async def plat0(msg: Message) -> None:
     await msg.reply(text)
 
 
+@command_wrapper(aliases=("moku", "mokuujin"))
+async def pyukumoku(msg: Message) -> None:
+    await msg.reply("baobab")
+
+
 @command_wrapper(aliases=("rospe",))
 async def r0spe(msg: Message) -> None:
     await msg.reply("buondì")
