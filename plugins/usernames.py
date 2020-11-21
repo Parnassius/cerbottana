@@ -62,22 +62,23 @@ async def annika(msg: Message) -> None:
 
 @command_wrapper(aliases=("anto", "antonio"))
 async def antonio200509(msg: Message) -> None:
+    if msg.room is None:
+        language_id = 9
+    else:
+        language_id = msg.room.language_id
     db = Database.open("veekun")
     with db.get_session() as session:
         species = (
             session.query(v.PokemonSpeciesNames)
-            .filter_by(local_language_id=8)
+            .filter_by(local_language_id=language_id)
             .order_by(func.random())
             .first()
         )
         if not species:
             raise SQLAlchemyError("Missing PokemonSpecies data")
         species_name = species.name
-    text = ""
-    for _ in range(6):
-        text += str(random.randint(0, 9))
-    text = "Antonio" + text + ' guessed "' + species_name + '"!'
-    await msg.reply(text)
+    numbers = str(random.randint(0, 999999)).zfill(6)
+    await msg.reply(f'Antonio{numbers} guessed "{species_name}"!')
 
 
 @command_wrapper(aliases=("auraluna", "luna"))
