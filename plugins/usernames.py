@@ -5,7 +5,11 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 import pytz
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.sql.expression import func
 
+import databases.veekun as v
+from database import Database
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
@@ -54,6 +58,26 @@ async def annika(msg: Message) -> None:
         return
 
     await msg.reply("enjoy ur italian joke punishment room")
+
+
+@command_wrapper(aliases=("anto",))
+async def antonio(msg: Message) -> None:
+    db = Database.open("veekun")
+    with db.get_session() as session:
+        species = (
+            session.query(v.PokemonSpeciesNames)
+            .filter_by(local_language_id=8)
+            .order_by(func.random())
+            .first()
+        )
+        if not species:
+            raise SQLAlchemyError("Missing PokemonSpecies data")
+        species_name = species.name
+    text = ""
+    for _ in range(6):
+        text += str(random.randint(0, 9))
+    text = "Antonio" + text + ' guessed "' + species_name + '"!'
+    await msg.reply(text)
 
 
 @command_wrapper(aliases=("auraluna", "luna"))
