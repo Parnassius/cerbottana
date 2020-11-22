@@ -93,7 +93,7 @@ async def averardo(msg: Message) -> None:
     yt_url = "https://youtu.be/kB4qteLP4uI"
     if msg.room is None:
         await msg.reply(yt_url)
-    else:
+    elif msg.room.is_private:
         await msg.reply(f"!show {yt_url}", False)
 
 
