@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import re
 from time import time
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional, Set
 from weakref import WeakValueDictionary
 
 import websockets
@@ -29,7 +29,6 @@ class Connection:
         avatar: str,
         statustext: str,
         rooms: List[str],
-        private_rooms: List[str],
         main_room: Optional[str],
         command_character: str,
         administrators: List[str],
@@ -42,15 +41,15 @@ class Connection:
         self.avatar = avatar
         self.statustext = statustext
         self.rooms: Dict[RoomId, Room] = {}  # roomid, Room
-        for roomid in [utils.to_room_id(room) for room in rooms]:
-            self.rooms[roomid] = Room(self, roomid, is_private=False, autojoin=True)
-        for roomid in [utils.to_room_id(room) for room in private_rooms]:
-            self.rooms[roomid] = Room(self, roomid, is_private=True, autojoin=True)
+        for roomname in rooms:
+            roomid = utils.to_room_id(roomname)
+            self.rooms[roomid] = Room(self, roomid, autojoin=True)
         self.main_room = Room.get(self, main_room) if main_room else None
         self.command_character = command_character
         self.administrators = [utils.to_user_id(user) for user in administrators]
         self.domain = domain
         self.unittesting = unittesting
+        self.public_roomids: Set[str] = set()
         self.users: WeakValueDictionary[  # pylint: disable=unsubscriptable-object
             UserId, User
         ] = WeakValueDictionary()
