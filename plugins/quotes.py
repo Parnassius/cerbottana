@@ -238,4 +238,8 @@ async def quotelist(msg: Message) -> None:
 
 @htmlpage_wrapper("quotelist")
 def quotelist_htmlpage(user: User, room: Room) -> Query:  # type: ignore[type-arg]
-    return Query(d.Quotes).filter_by(roomid=room.roomid)
+    return (
+        Query(d.Quotes)
+        .filter_by(roomid=room.roomid)
+        .order_by(d.Quotes.date.desc(), d.Quotes.id.desc())
+    )
