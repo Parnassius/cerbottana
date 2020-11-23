@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import string
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Set
 
 import databases.database as d
 import utils
@@ -10,6 +10,7 @@ from database import Database
 from handlers import handler_wrapper
 from models.room import Room
 from models.user import User
+from typedefs import JsonDict
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -117,12 +118,44 @@ async def queryresponse(conn: Connection, room: Room, *args: str) -> None:
     querytype = args[0]
     querydata = args[1]
 
-    if querytype != "userdetails":
-        return
+    parsers = {
+        "rooms": _parse_rooms,
+        "userdetails": _parse_userdetails,
+    }
 
-    data = json.loads(querydata)
-    user = User.get(conn, data["name"])
-    avatar = str(data["avatar"])
+    if querytype in parsers:
+        jsondata = json.loads(querydata)
+        await parsers[querytype](conn, room, jsondata)
+
+
+async def _parse_rooms(conn: Connection, room: Room, jsondata: JsonDict) -> None:
+    """|queryresponse|rooms| sub-handler"""
+    public_roomids: Set[str] = set()
+    for roomgroup in jsondata.values():
+        # Skip node if it isn't a roomgroup
+        if not isinstance(roomgroup, list):
+            continue
+
+        # Save roomids for public rooms and subrooms
+        for room_ in roomgroup:
+            roomid = utils.to_room_id(room_["title"])
+            public_roomids.add(roomid)
+
+            if "subRooms" in room_:
+                for subroom in room_["subRooms"]:
+                    roomid = utils.to_room_id(subroom)
+                    public_roomids.add(roomid)
+
+    # For future reference, reassigning `conn.public_roomids` instead of adding elements
+    # directly is better because it removes deleted rooms. As of now the difference is
+    # irrelevant because `|/rooms` is called only once.
+    conn.public_roomids = public_roomids
+
+
+async def _parse_userdetails(conn: Connection, room: Room, jsondata: JsonDict) -> None:
+    """|queryresponse|userdetails| sub-handler"""
+    user = User.get(conn, jsondata["name"])
+    avatar = str(jsondata["avatar"])
     if avatar in utils.AVATAR_IDS:
         avatar = utils.AVATAR_IDS[avatar]
 
@@ -131,9 +164,9 @@ async def queryresponse(conn: Connection, room: Room, *args: str) -> None:
         session.add(d.Users(userid=user.userid))
         session.query(d.Users).filter_by(userid=user.userid).update({"avatar": avatar})
 
-    if data["rooms"] is not False:
-        user.global_rank = data["group"]
-        for r in data["rooms"]:
+    if jsondata["rooms"] is not False:
+        user.global_rank = jsondata["group"]
+        for r in jsondata["rooms"]:
             room = Room.get(conn, utils.to_room_id(r))
             room_rank = (
                 r[0] if r[0] not in string.ascii_letters + string.digits else " "

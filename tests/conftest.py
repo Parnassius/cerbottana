@@ -168,7 +168,6 @@ def mock_connection(
             avatar,
             statustext,
             rooms or [],
-            private_rooms or [],
             main_room,
             command_character,
             administrators or [],

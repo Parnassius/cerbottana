@@ -25,7 +25,7 @@ class Room:
     Attributes:
         conn (Connection): Used to access the websocket.
         roomid (str): Uniquely identifies a room, see utils.to_room_id.
-        is_private (bool, optional): Determined from environs. Defaults to True.
+        is_private (bool): True if room is unlisted/private.
         autojoin (bool, optional): Whether the bot should join the room on startup.
             Defaults to False.
         buffer (Deque[str]): Fixed list of the last room messages.
@@ -39,7 +39,6 @@ class Room:
         last_modchat_command (float)
 
     Todo:
-        `is_private` should be determined dynamically from protocol communication.
         Rooms should be removed from conn.rooms if they |deinit|.
     """
 
@@ -47,13 +46,11 @@ class Room:
         self,
         conn: Connection,
         roomid: RoomId,
-        is_private: bool = True,
         autojoin: bool = False,
     ) -> None:
         # Attributes initialized directly
         self.conn = conn
         self.roomid = roomid
-        self.is_private = is_private
         self.autojoin = autojoin
 
         # Attributes initialized through handlers
@@ -78,6 +75,10 @@ class Room:
     @property
     def buffer(self) -> Deque[str]:
         return self.dynamic_buffer.copy()
+
+    @property
+    def is_private(self) -> bool:
+        return self.roomid not in self.conn.public_roomids
 
     @property
     def language_id(self) -> int:
@@ -215,8 +216,6 @@ class Room:
     @classmethod
     def get(cls, conn: Connection, room: str) -> Room:
         """Safely retrieves a Room instance, if it exists, or creates a new one.
-
-        New rooms are private by default.
 
         Args:
             conn (Connection): Used to access the websocket.

@@ -39,6 +39,9 @@ async def challstr(conn: Connection, room: Room, *args: str) -> None:
     if assertion:
         await conn.send(f"|/trn {conn.username},0,{assertion}")
 
+    # Startup commands
+    await conn.send("|/cmd rooms")
+
 
 @handler_wrapper(["updateuser"])
 async def updateuser(conn: Connection, room: Room, *args: str) -> None:
