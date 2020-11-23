@@ -2,18 +2,16 @@ from __future__ import annotations
 
 import re
 import urllib
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Optional
 
 import aiohttp
 
 import utils
 from plugins import command_wrapper
+from typedefs import JsonDict
 
 if TYPE_CHECKING:
     from models.message import Message
-
-
-JsonDict = Dict[str, Any]  # type: ignore[misc]
 
 
 async def query_scryfall(url: str, resp_type: str) -> Optional[JsonDict]:

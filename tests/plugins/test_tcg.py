@@ -31,7 +31,7 @@ def test_thumbnail_layout(layout: str) -> None:
 
 def test_thumbnail_missing_image_uris() -> None:
     """Tests whether a card with missing image_uris triggers a fallback."""
-    card_json: tcg.JsonDict = {
+    card_json = {
         "name": "Dummy Card Name",
         "scryfall_uri": "https://dummy.url/",
     }
