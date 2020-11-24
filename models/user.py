@@ -202,7 +202,11 @@ class User:
                     cmd_char=self.conn.command_character,
                 )
 
-                message = '<div class="pad">' + htmlmin.minify(message) + "</div>"
+                message = (
+                    '<div class="pad">'
+                    + htmlmin.minify(message, convert_charrefs=False)
+                    + "</div>"
+                )
                 if page_room:
                     pageid += "0" + page_room.roomid
 
