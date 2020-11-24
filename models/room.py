@@ -133,8 +133,7 @@ class Room:
         """
         if user in self._users:
             self._users.pop(user)
-            if user.has_role("driver", self):
-                self._check_no_mods_online()
+            self._check_no_mods_online()
 
     def __str__(self) -> str:
         return self.roomid
@@ -149,6 +148,7 @@ class Room:
             if user.idle:
                 continue
             if user.has_role("driver", self):
+                self.no_mods_online = None
                 return
             self.no_mods_online = time()
 
