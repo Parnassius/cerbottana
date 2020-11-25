@@ -119,11 +119,6 @@ async def addquote(msg: Message) -> None:
         await msg.room.send("Cosa devo salvare?")
         return
 
-    maxlen = 250  # lower than the message limit to have space for metadata
-    if len(msg.arg) > maxlen:
-        await msg.room.send(f"Quote troppo lunga, max {maxlen} caratteri.")
-        return
-
     db = Database.open()
     with db.get_session() as session:
         result = d.Quotes(
