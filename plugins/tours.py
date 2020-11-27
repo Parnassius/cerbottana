@@ -54,11 +54,10 @@ async def create_tour(
     aliases=("randomtour",),
     helpstr="Avvia un torneo di una tier scelta a caso tra quelle con team random",
     is_unlisted=True,
+    allow_pm=False,
+    required_rank="driver",
 )
 async def randtour(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
     tiers = [x["name"] for x in msg.conn.tiers if x["random"]]
 
     formatid = random.choice(tiers)
@@ -120,9 +119,6 @@ async def monopoketour(msg: Message) -> None:
     helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
 )
 async def randpoketour(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
     if not msg.arg:
         await msg.room.send("Inserisci almeno un Pokémon")
         return

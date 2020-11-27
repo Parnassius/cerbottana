@@ -4,7 +4,7 @@ import random
 from typing import TYPE_CHECKING
 
 import utils
-from plugins import command_wrapper, parametrize_room
+from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
@@ -30,15 +30,10 @@ async def randuser(msg: Message) -> None:
     await msg.reply(f"{user}")
 
 
-@command_wrapper()
-@parametrize_room
+@command_wrapper(parametrize_room=True, required_rank="driver")
 async def tell(msg: Message) -> None:
     if not msg.arg:
         await msg.reply("Cosa devo inviare?")
-        return
-
-    if not msg.user.has_role("driver", msg.parametrized_room):
-        await msg.reply("Devi essere almeno driver")
         return
 
     author = msg.user.roomname(msg.parametrized_room)

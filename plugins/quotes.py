@@ -11,7 +11,7 @@ from sqlalchemy.sql import func
 import databases.database as d
 import utils
 from database import Database
-from plugins import command_wrapper, htmlpage_wrapper, parametrize_room
+from plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
@@ -110,8 +110,6 @@ def to_html_quotebox(quote: str) -> str:
 @command_wrapper(aliases=("newquote", "quote"))
 async def addquote(msg: Message) -> None:
     # Permissions for this command are temporarily lowered to voice level.
-    # if msg.room is None or not msg.user.has_role("driver", msg.room):
-    #   return
     if msg.room is None:
         return
 
@@ -139,8 +137,7 @@ async def addquote(msg: Message) -> None:
         await msg.room.send("Quote già esistente.")
 
 
-@command_wrapper(aliases=("q", "randomquote"))
-@parametrize_room
+@command_wrapper(aliases=("q", "randomquote"), parametrize_room=True)
 async def randquote(msg: Message) -> None:
     db = Database.open()
     with db.get_session() as session:
@@ -160,8 +157,6 @@ async def randquote(msg: Message) -> None:
 @command_wrapper(aliases=("deletequote", "delquote", "rmquote"))
 async def removequote(msg: Message) -> None:
     # Permissions for this command are temporarily lowered to voice level.
-    # if msg.room is None or not msg.user.has_role("driver", msg.room):
-    #   return
     if msg.room is None:
         return
 
@@ -183,13 +178,9 @@ async def removequote(msg: Message) -> None:
             await msg.room.send("Quote inesistente.")
 
 
-@command_wrapper()
-@parametrize_room
+@command_wrapper(parametrize_room=True, required_rank="driver")
 async def removequoteid(msg: Message) -> None:
     room = msg.parametrized_room
-
-    if not msg.user.has_role("driver", room):
-        return
 
     if len(msg.args) != 2:
         return
@@ -206,8 +197,7 @@ async def removequoteid(msg: Message) -> None:
     await msg.user.send_htmlpage("quotelist", room, page)
 
 
-@command_wrapper(aliases=("quotes", "quoteslist"))
-@parametrize_room
+@command_wrapper(aliases=("quotes", "quoteslist"), parametrize_room=True)
 async def quotelist(msg: Message) -> None:
     room = msg.parametrized_room
 

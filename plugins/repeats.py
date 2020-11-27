@@ -12,7 +12,7 @@ from sqlalchemy.sql import func
 import databases.database as d
 from database import Database
 from models.room import Room
-from plugins import command_wrapper, htmlpage_wrapper, parametrize_room
+from plugins import command_wrapper, htmlpage_wrapper
 from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
@@ -207,11 +207,10 @@ async def load_old_repeats(conn: Connection) -> None:
     Repeat.pull_db(conn)
 
 
-@command_wrapper(aliases=("addrepeat", "ripeti"))
+@command_wrapper(
+    aliases=("addrepeat", "ripeti"), allow_pm=False, required_rank="driver"
+)
 async def repeat(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
     ch = msg.conn.command_character
     errmsg = "Sintassi: "
     errmsg += f"``{ch}repeat testo, distanza in minuti, scadenza`` "
@@ -253,9 +252,13 @@ async def repeat(msg: Message) -> None:
         await msg.room.send(errmsg)
 
 
-@command_wrapper(aliases=("clearrepeat", "deleterepeat", "rmrepeat"))
+@command_wrapper(
+    aliases=("clearrepeat", "deleterepeat", "rmrepeat"),
+    allow_pm=False,
+    required_rank="driver",
+)
 async def stoprepeat(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room) or not msg.arg:
+    if not msg.arg:
         return
 
     query = None if msg.arg.lower().strip() == "all" else msg.arg
@@ -271,14 +274,9 @@ async def stoprepeat(msg: Message) -> None:
     await msg.room.send("Fatto.")
 
 
-@command_wrapper(aliases=("repeats",))
-@parametrize_room
+@command_wrapper(aliases=("repeats",), parametrize_room=True, required_rank="driver")
 async def showrepeats(msg: Message) -> None:
     room = msg.parametrized_room
-
-    if not msg.user.has_role("driver", room):
-        await msg.user.send(f"Devi essere almeno driver in {room.title}.")
-        return
 
     db = Database.open()
     with db.get_session() as session:

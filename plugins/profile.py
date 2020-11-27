@@ -110,10 +110,8 @@ async def clearprofile(msg: Message) -> None:
     await msg.reply("Frase rimossa")
 
 
-@command_wrapper(aliases=("badges",))
+@command_wrapper(aliases=("badges",), main_room_only=True, required_rank="driver")
 async def badge(msg: Message) -> None:
-    if not msg.user.has_role("driver", msg.conn.main_room):
-        return
     admin_rank = msg.user.rank(msg.conn.main_room)
 
     rooms: Dict[str, str] = {}
@@ -127,7 +125,7 @@ async def badge(msg: Message) -> None:
     await msg.user.send(f"{msg.conn.domain}badges/{userid}?token={token_id}")
 
 
-@route_wrapper("/badges/<userid>", methods=("GET", "POST"), require_driver=True)
+@route_wrapper("/badges/<userid>", methods=("GET", "POST"), required_rank="driver")
 def badges_route(userid: str) -> str:
     db = Database.open()
 
@@ -165,19 +163,13 @@ def badges_route(userid: str) -> str:
         return render_template("badges.html", user=user, badges=badges)
 
 
-@command_wrapper()
+@command_wrapper(main_room_only=True, required_rank="driver")
 async def pendingdescriptions(msg: Message) -> None:
-    if not msg.user.has_role("driver", msg.conn.main_room):
-        return
-
     await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
 
 
-@command_wrapper()
+@command_wrapper(main_room_only=True, required_rank="driver")
 async def approvaprofilo(msg: Message) -> None:
-    if not msg.user.has_role("driver", msg.conn.main_room):
-        return
-
     db = Database.open()
 
     with db.get_session() as session:
@@ -194,11 +186,8 @@ async def approvaprofilo(msg: Message) -> None:
     await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
 
 
-@command_wrapper()
+@command_wrapper(main_room_only=True, required_rank="driver")
 async def rifiutaprofilo(msg: Message) -> None:
-    if not msg.user.has_role("driver", msg.conn.main_room):
-        return
-
     db = Database.open()
 
     with db.get_session() as session:

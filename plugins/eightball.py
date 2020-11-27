@@ -30,11 +30,8 @@ async def eightball(msg: Message) -> None:
         await msg.reply(answer)
 
 
-@command_wrapper(aliases=("8ballanswers",))
+@command_wrapper(aliases=("8ballanswers",), main_room_only=True, required_rank="driver")
 async def eightballanswers(msg: Message) -> None:
-    if not msg.user.has_role("driver", msg.conn.main_room):
-        return
-
     try:
         page = int(msg.arg)
     except ValueError:
@@ -43,11 +40,12 @@ async def eightballanswers(msg: Message) -> None:
     await msg.user.send_htmlpage("eightball", msg.conn.main_room, page)
 
 
-@command_wrapper(aliases=("add8ballanswer", "neweightballanswer", "new8ballanswer"))
+@command_wrapper(
+    aliases=("add8ballanswer", "neweightballanswer", "new8ballanswer"),
+    main_room_only=True,
+    required_rank="driver",
+)
 async def addeightballanswer(msg: Message) -> None:
-    if not msg.user.has_role("driver", msg.conn.main_room):
-        return
-
     if not msg.arg:
         await msg.reply("Cosa devo salvare?")
         return
@@ -76,12 +74,11 @@ async def addeightballanswer(msg: Message) -> None:
         "del8ballanswer",
         "rmeightballanswer",
         "rm8ballanswer",
-    )
+    ),
+    main_room_only=True,
+    required_rank="driver",
 )
 async def removeeightballanswer(msg: Message) -> None:
-    if not msg.user.has_role("driver", msg.conn.main_room):
-        return
-
     if not msg.arg:
         await msg.reply("Che risposta devo cancellare?")
         return
@@ -96,11 +93,8 @@ async def removeeightballanswer(msg: Message) -> None:
             await msg.reply("Risposta inesistente.")
 
 
-@command_wrapper()
+@command_wrapper(main_room_only=True, required_rank="driver")
 async def removeeightballanswerid(msg: Message) -> None:
-    if not msg.user.has_role("driver", msg.conn.main_room):
-        return
-
     if len(msg.args) != 2:
         return
 
