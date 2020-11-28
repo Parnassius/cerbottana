@@ -148,11 +148,11 @@ def command_wrapper(
     parametrize_room: bool = False,
 ) -> Callable[[CommandFunc], Command]:
     def cls_wrapper(func: CommandFunc) -> Command:
-        if parametrize_room:
-            func = parametrize_room_wrapper(func)
         func = command_check_permission(
             func, required_rank, allow_pm, main_room_only, parametrize_room
-        )  # manual decorator binding
+        )
+        if parametrize_room:
+            func = parametrize_room_wrapper(func)
         return Command(func, aliases, helpstr, is_unlisted)
 
     return cls_wrapper
