@@ -30,7 +30,7 @@ async def randuser(msg: MessageDisallowPM) -> None:
     await msg.reply(f"{user}")
 
 
-@command_wrapper(parametrize_room=True, required_rank="driver")
+@command_wrapper(required_rank="driver", parametrize_room=True)
 async def tell(msg: Message) -> None:
     if not msg.arg:
         await msg.reply("Cosa devo inviare?")
