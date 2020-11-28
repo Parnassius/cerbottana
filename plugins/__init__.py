@@ -18,11 +18,10 @@ from typing import (
     overload,
 )
 
-from typing_extensions import Literal
-
 from flask import abort
 from flask import session as web_session
 from sqlalchemy.orm import Query
+from typing_extensions import Literal
 
 import utils
 from models.room import Room
