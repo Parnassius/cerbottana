@@ -99,3 +99,9 @@ class Message:
             await self.user.send_htmlpage(pageid, room, page)
         else:
             await self.room.send_htmlpage(pageid, room)
+
+
+class MessageDisallowPM(Message):
+    def __init__(self, room: Room, user: User, arg: str) -> None:
+        self.room: Room
+        super().__init__(room, user, arg)

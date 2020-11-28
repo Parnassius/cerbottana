@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, List, Optional
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from models.message import Message
+    from models.message import Message, MessageDisallowPM
     from models.room import Room
 
 
@@ -57,7 +57,7 @@ async def create_tour(
     allow_pm=False,
     required_rank="driver",
 )
-async def randtour(msg: Message) -> None:
+async def randtour(msg: MessageDisallowPM) -> None:
     tiers = [x["name"] for x in msg.conn.tiers if x["random"]]
 
     formatid = random.choice(tiers)

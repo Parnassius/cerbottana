@@ -15,7 +15,10 @@ from typing import (
     Optional,
     Tuple,
     Union,
+    overload,
 )
+
+from typing_extensions import Literal
 
 from flask import abort
 from flask import session as web_session
@@ -27,10 +30,11 @@ from typedefs import Role, RoomId
 
 if TYPE_CHECKING:
     from connection import Connection
-    from models.message import Message
+    from models.message import Message, MessageDisallowPM
     from models.user import User
 
     CommandFunc = Callable[[Message], Awaitable[None]]
+    CommandFuncDisallowPM = Callable[[MessageDisallowPM], Awaitable[None]]
     HTMLPageFunc = Callable[[User, Room], Optional[Query[Any]]]  # type: ignore[misc]  # pylint: disable=unsubscriptable-object
     RouteFunc = Callable[..., str]  # type: ignore[misc]
 
@@ -97,7 +101,36 @@ def command_check_permission(
     return wrapper
 
 
+@overload
+def command_wrapper(  # type: ignore[misc]
+    *,
+    aliases: Any = ...,
+    helpstr: Any = ...,
+    is_unlisted: Any = ...,
+    required_rank: Any = ...,
+    allow_pm: Literal[False],
+    main_room_only: Any = ...,
+    parametrize_room: Any = ...,
+) -> Callable[[CommandFuncDisallowPM], Command]:
+    ...
+
+
+@overload
+def command_wrapper(  # type: ignore[misc]
+    *,
+    aliases: Any = ...,
+    helpstr: Any = ...,
+    is_unlisted: Any = ...,
+    required_rank: Any = ...,
+    allow_pm: Literal[True] = ...,
+    main_room_only: Any = ...,
+    parametrize_room: Any = ...,
+) -> Callable[[CommandFunc], Command]:
+    ...
+
+
 def command_wrapper(
+    *,
     aliases: Tuple[str, ...] = (),
     helpstr: str = "",
     is_unlisted: bool = False,
