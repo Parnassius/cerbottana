@@ -152,9 +152,7 @@ def htmlpage_check_permission(
     def wrapper(  # type: ignore[misc]
         user: User, room: Room
     ) -> Optional[Query[Any]]:  # pylint: disable=unsubscriptable-object
-        if main_room_only and (
-            not room.conn.main_room or room is not room.conn.main_room
-        ):
+        if main_room_only and room is not room.conn.main_room:
             return None
 
         if required_rank is None:

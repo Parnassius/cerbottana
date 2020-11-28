@@ -64,7 +64,7 @@ def mock_connection(
         statustext: str = "",
         rooms: Optional[List[str]] = None,
         private_rooms: Optional[List[str]] = None,
-        main_room: Optional[str] = None,
+        main_room: str = "lobby",
         command_character: str = ".",
         administrators: Optional[List[str]] = None,
         domain: str = "http://localhost:8080/",

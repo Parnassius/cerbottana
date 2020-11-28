@@ -29,7 +29,7 @@ class Connection:
         avatar: str,
         statustext: str,
         rooms: List[str],
-        main_room: Optional[str],
+        main_room: str,
         command_character: str,
         administrators: List[str],
         domain: str,
@@ -44,7 +44,7 @@ class Connection:
         for roomname in rooms:
             roomid = utils.to_room_id(roomname)
             self.rooms[roomid] = Room(self, roomid, autojoin=True)
-        self.main_room = Room.get(self, main_room) if main_room else None
+        self.main_room = Room.get(self, main_room)
         self.command_character = command_character
         self.administrators = [utils.to_user_id(user) for user in administrators]
         self.domain = domain

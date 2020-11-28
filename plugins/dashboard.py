@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 @command_wrapper(aliases=("token",))
 async def dashboard(msg: Message) -> None:
-    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+    if not msg.user.has_role("driver", msg.conn.main_room):
         return
 
     phrase = (

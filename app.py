@@ -38,7 +38,7 @@ def main() -> None:
         env("AVATAR", ""),
         env("STATUSTEXT", ""),
         env.list("ROOMS", []),
-        env("MAIN_ROOM", None),
+        env("MAIN_ROOM"),
         env("COMMAND_CHARACTER"),
         env.list("ADMINISTRATORS", []),
         env("DOMAIN"),

@@ -32,7 +32,7 @@ async def eightball(msg: Message) -> None:
 
 @command_wrapper(aliases=("8ballanswers",))
 async def eightballanswers(msg: Message) -> None:
-    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+    if not msg.user.has_role("driver", msg.conn.main_room):
         return
 
     try:
@@ -45,7 +45,7 @@ async def eightballanswers(msg: Message) -> None:
 
 @command_wrapper(aliases=("add8ballanswer", "neweightballanswer", "new8ballanswer"))
 async def addeightballanswer(msg: Message) -> None:
-    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+    if not msg.user.has_role("driver", msg.conn.main_room):
         return
 
     if not msg.arg:
@@ -79,7 +79,7 @@ async def addeightballanswer(msg: Message) -> None:
     )
 )
 async def removeeightballanswer(msg: Message) -> None:
-    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+    if not msg.user.has_role("driver", msg.conn.main_room):
         return
 
     if not msg.arg:
@@ -98,7 +98,7 @@ async def removeeightballanswer(msg: Message) -> None:
 
 @command_wrapper()
 async def removeeightballanswerid(msg: Message) -> None:
-    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+    if not msg.user.has_role("driver", msg.conn.main_room):
         return
 
     if len(msg.args) != 2:

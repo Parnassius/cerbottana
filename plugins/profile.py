@@ -67,9 +67,7 @@ async def setprofile(msg: Message) -> None:
         return
 
     # authorized: True if msg.user can approve new descriptions.
-    authorized = msg.conn.main_room is not None and msg.user.has_role(
-        "driver", msg.conn.main_room
-    )
+    authorized = msg.user.has_role("driver", msg.conn.main_room)
 
     db = Database.open()
     with db.get_session() as session:
@@ -84,7 +82,7 @@ async def setprofile(msg: Message) -> None:
 
     await msg.reply("Salvato")
 
-    if msg.conn.main_room is not None and not authorized:
+    if not authorized:
         username = utils.html_escape(msg.user.username)
         botname = msg.conn.username
         cmd = f"{msg.conn.command_character}pendingdescriptions"
@@ -114,7 +112,7 @@ async def clearprofile(msg: Message) -> None:
 
 @command_wrapper(aliases=("badges",))
 async def badge(msg: Message) -> None:
-    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+    if not msg.user.has_role("driver", msg.conn.main_room):
         return
     admin_rank = msg.user.rank(msg.conn.main_room)
 
@@ -169,7 +167,7 @@ def badges_route(userid: str) -> str:
 
 @command_wrapper()
 async def pendingdescriptions(msg: Message) -> None:
-    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+    if not msg.user.has_role("driver", msg.conn.main_room):
         return
 
     await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
@@ -177,7 +175,7 @@ async def pendingdescriptions(msg: Message) -> None:
 
 @command_wrapper()
 async def approvaprofilo(msg: Message) -> None:
-    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+    if not msg.user.has_role("driver", msg.conn.main_room):
         return
 
     db = Database.open()
@@ -198,7 +196,7 @@ async def approvaprofilo(msg: Message) -> None:
 
 @command_wrapper()
 async def rifiutaprofilo(msg: Message) -> None:
-    if not msg.conn.main_room or not msg.user.has_role("driver", msg.conn.main_room):
+    if not msg.user.has_role("driver", msg.conn.main_room):
         return
 
     db = Database.open()
