@@ -13,17 +13,15 @@ from database import Database
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from models.message import Message
+    from models.message import Message, MessageDisallowPM
 
 
 @command_wrapper(
     aliases=("gtm", "hangmanpokemon", "pokemonhangman"),
     helpstr="Indovina un pokemon da una sua entry del pokedex!",
+    allow_pm=False,
 )
-async def guessthemon(msg: Message) -> None:
-    if msg.room is None:
-        return
-
+async def guessthemon(msg: MessageDisallowPM) -> None:
     db = Database.open("veekun")
     with db.get_session() as session:
         # Retrieve a random pokemon

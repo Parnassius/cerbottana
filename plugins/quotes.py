@@ -14,7 +14,7 @@ from database import Database
 from plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
-    from models.message import Message
+    from models.message import Message, MessageDisallowPM
     from models.room import Room
     from models.user import User
 
@@ -107,11 +107,9 @@ def to_html_quotebox(quote: str) -> str:
     return html
 
 
-@command_wrapper(aliases=("newquote", "quote"))
-async def addquote(msg: Message) -> None:
+@command_wrapper(aliases=("newquote", "quote"), allow_pm=False)
+async def addquote(msg: MessageDisallowPM) -> None:
     # Permissions for this command are temporarily lowered to voice level.
-    if msg.room is None:
-        return
 
     if not msg.arg:
         await msg.room.send("Cosa devo salvare?")
@@ -154,11 +152,9 @@ async def randquote(msg: Message) -> None:
         await msg.reply_htmlbox(to_html_quotebox(quote_row.message))
 
 
-@command_wrapper(aliases=("deletequote", "delquote", "rmquote"))
-async def removequote(msg: Message) -> None:
+@command_wrapper(aliases=("deletequote", "delquote", "rmquote"), allow_pm=False)
+async def removequote(msg: MessageDisallowPM) -> None:
     # Permissions for this command are temporarily lowered to voice level.
-    if msg.room is None:
-        return
 
     if not msg.arg:
         await msg.room.send("Che quote devo cancellare?")
@@ -178,7 +174,7 @@ async def removequote(msg: Message) -> None:
             await msg.room.send("Quote inesistente.")
 
 
-@command_wrapper(parametrize_room=True, required_rank="driver")
+@command_wrapper(required_rank="driver", parametrize_room=True)
 async def removequoteid(msg: Message) -> None:
     room = msg.parametrized_room
 

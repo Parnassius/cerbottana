@@ -7,25 +7,25 @@ import utils
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from models.message import Message
+    from models.message import Message, MessageDisallowPM
 
 
 @command_wrapper(
-    aliases=("randomcaio",), helpstr="Saluta un utente a caso presente nella room."
+    aliases=("randomcaio",),
+    helpstr="Saluta un utente a caso presente nella room.",
+    allow_pm=False,
 )
-async def randcaio(msg: Message) -> None:
-    if msg.room is None:
-        return
+async def randcaio(msg: MessageDisallowPM) -> None:
     user = random.choice(list(msg.room.users.keys()))
     await msg.reply(f"caio {user}")
 
 
 @command_wrapper(
-    aliases=("randomuser",), helpstr="Seleziona un utente a caso presente nella room."
+    aliases=("randomuser",),
+    helpstr="Seleziona un utente a caso presente nella room.",
+    allow_pm=False,
 )
-async def randuser(msg: Message) -> None:
-    if msg.room is None:
-        return
+async def randuser(msg: MessageDisallowPM) -> None:
     user = random.choice(list(msg.room.users.keys()))
     await msg.reply(f"{user}")
 
@@ -46,11 +46,8 @@ async def tell(msg: Message) -> None:
     await msg.parametrized_room.send_htmlbox(html)
 
 
-@command_wrapper(helpstr="<i>[blitz]</i> Avvia una partita di UNO.")
-async def uno(msg: Message) -> None:
-    if msg.room is None:
-        return
-
+@command_wrapper(helpstr="<i>[blitz]</i> Avvia una partita di UNO.", allow_pm=False)
+async def uno(msg: MessageDisallowPM) -> None:
     blitz_keywords = ("blitz", "fast", "veloce")
     timer = 5 if msg.arg.lower() in blitz_keywords else 30
 

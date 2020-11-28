@@ -13,7 +13,7 @@ from database import Database
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from models.message import Message
+    from models.message import Message, MessageDisallowPM
 
 
 @command_wrapper()
@@ -52,9 +52,9 @@ async def ang(msg: Message) -> None:
     await msg.reply("aulu")
 
 
-@command_wrapper()
-async def annika(msg: Message) -> None:
-    if msg.room is None or not msg.room.is_private:
+@command_wrapper(allow_pm=False)
+async def annika(msg: MessageDisallowPM) -> None:
+    if not msg.room.is_private:
         return
 
     await msg.reply("enjoy ur italian joke punishment room")

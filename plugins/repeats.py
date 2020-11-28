@@ -17,7 +17,7 @@ from tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
-    from models.message import Message
+    from models.message import Message, MessageDisallowPM
     from models.user import User
 
 
@@ -208,9 +208,11 @@ async def load_old_repeats(conn: Connection) -> None:
 
 
 @command_wrapper(
-    aliases=("addrepeat", "ripeti"), allow_pm=False, required_rank="driver"
+    aliases=("addrepeat", "ripeti"),
+    allow_pm=False,
+    required_rank="driver",
 )
-async def repeat(msg: Message) -> None:
+async def repeat(msg: MessageDisallowPM) -> None:
     ch = msg.conn.command_character
     errmsg = "Sintassi: "
     errmsg += f"``{ch}repeat testo, distanza in minuti, scadenza`` "
@@ -257,7 +259,7 @@ async def repeat(msg: Message) -> None:
     allow_pm=False,
     required_rank="driver",
 )
-async def stoprepeat(msg: Message) -> None:
+async def stoprepeat(msg: MessageDisallowPM) -> None:
     if not msg.arg:
         return
 
@@ -274,7 +276,7 @@ async def stoprepeat(msg: Message) -> None:
     await msg.room.send("Fatto.")
 
 
-@command_wrapper(aliases=("repeats",), parametrize_room=True, required_rank="driver")
+@command_wrapper(aliases=("repeats",), required_rank="driver", parametrize_room=True)
 async def showrepeats(msg: Message) -> None:
     room = msg.parametrized_room
 

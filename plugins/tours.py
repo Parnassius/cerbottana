@@ -116,9 +116,12 @@ async def monopoketour(msg: Message) -> None:
 
 
 @command_wrapper(
-    helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
+    helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.",
+    is_unlisted=True,
+    allow_pm=False,
+    required_rank="driver",
 )
-async def randpoketour(msg: Message) -> None:
+async def randpoketour(msg: MessageDisallowPM) -> None:
     if not msg.arg:
         await msg.room.send("Inserisci almeno un Pokémon")
         return
@@ -145,11 +148,10 @@ async def randpoketour(msg: Message) -> None:
     aliases=("sibb",),
     helpstr="Avvia un torneo Super Italian Bros. Brawl",
     is_unlisted=True,
+    allow_pm=False,
+    required_rank="driver",
 )
-async def waffletour(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
+async def waffletour(msg: MessageDisallowPM) -> None:
     name = "Super Italian Bros. Brawl"
     rules = [
         "Cancel Mod",

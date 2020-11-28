@@ -8,17 +8,13 @@ import utils
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from models.message import Message
+    from models.message import MessageDisallowPM
 
 
 @command_wrapper(
-    aliases=("say",),
-    helpstr="FOR THE MIMMMSSS",
-    is_unlisted=True,
+    aliases=("say",), helpstr="FOR THE MIMMMSSS", is_unlisted=True, allow_pm=False
 )
-async def shitpost(msg: Message) -> None:
-    if msg.room is None:
-        return
+async def shitpost(msg: MessageDisallowPM) -> None:
     phrase = utils.remove_accents(msg.arg.strip())
     if len(phrase) > 50:
         await msg.reply("Testo troppo lungo")
@@ -51,9 +47,9 @@ async def shitpost(msg: Message) -> None:
     await msg.reply_htmlbox(html.format(text0, text1, text2))
 
 
-@command_wrapper(aliases=("meme", "memes", "mims"))
-async def memes(msg: Message) -> None:
-    if msg.room is None or not msg.room.is_private:
+@command_wrapper(aliases=("meme", "memes", "mims"), allow_pm=False)
+async def memes(msg: MessageDisallowPM) -> None:
+    if not msg.room.is_private:
         return
 
     await msg.room.send(random.choice(MEMES))

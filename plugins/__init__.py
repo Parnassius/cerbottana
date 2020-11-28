@@ -80,7 +80,11 @@ class Command:
 
 
 def command_check_permission(
-    func: CommandFunc, required_rank: Role, allow_pm: bool, main_room_only: bool
+    func: CommandFunc,
+    required_rank: Role,
+    allow_pm: bool,
+    main_room_only: bool,
+    parametrize_room: bool,
 ) -> CommandFunc:
     @wraps(func)
     async def wrapper(msg: Message) -> None:
@@ -93,7 +97,12 @@ def command_check_permission(
         if not allow_pm and msg.room is None:
             return None
 
-        if msg.room is not None and not msg.user.has_role(required_rank, msg.room):
+        if parametrize_room:
+            if msg.user not in msg.parametrized_room.users or not msg.user.has_role(
+                required_rank, msg.parametrized_room
+            ):
+                return None
+        elif msg.room is not None and not msg.user.has_role(required_rank, msg.room):
             return None
 
         await func(msg)
@@ -143,7 +152,7 @@ def command_wrapper(
         if parametrize_room:
             func = parametrize_room_wrapper(func)
         func = command_check_permission(
-            func, required_rank, allow_pm, main_room_only
+            func, required_rank, allow_pm, main_room_only, parametrize_room
         )  # manual decorator binding
         return Command(func, aliases, helpstr, is_unlisted)
 
