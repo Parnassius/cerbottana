@@ -1,12 +1,14 @@
+from typing import Counter
+
 from models.room import Room
 from models.user import User
 
 
 def test_room(mock_connection) -> None:
-    conn, queue = mock_connection()
+    conn, recv_queue, send_queue = mock_connection()
 
     # Join a room with only an user in it
-    queue.add_messages(
+    recv_queue.add_messages(
         [
             ">room1",
             "|init|chat",
@@ -25,8 +27,16 @@ def test_room(mock_connection) -> None:
     # Check if the only user in the room has been added to the room
     assert User.get(conn, "cerbottana") in room1
 
+    assert send_queue.get_all() == Counter(
+        [
+            "|/cmd roominfo room1",
+            "room1|/roomlanguage",
+            "|/cmd userdetails cerbottana",
+        ]
+    )
+
     # Users enter the room
-    queue.add_messages(
+    recv_queue.add_messages(
         [
             ">room1",
             "|j| User 1",
@@ -44,8 +54,16 @@ def test_room(mock_connection) -> None:
     assert User.get(conn, "user2") in room1
     assert User.get(conn, "user3") in room1
 
+    assert send_queue.get_all() == Counter(
+        [
+            "|/cmd userdetails User 1",
+            "|/cmd userdetails User 2",
+            "|/cmd userdetails User 3",
+        ]
+    )
+
     # Users change names
-    queue.add_messages(
+    recv_queue.add_messages(
         [
             ">room1",
             "|n| User 4|user1",
@@ -66,8 +84,16 @@ def test_room(mock_connection) -> None:
     assert User.get(conn, "user5") in room1
     assert User.get(conn, "user6") in room1
 
+    assert send_queue.get_all() == Counter(
+        [
+            "|/cmd userdetails User 4",
+            "|/cmd userdetails User 5",
+            "|/cmd userdetails User 6",
+        ]
+    )
+
     # Users change names without changing userid
-    queue.add_messages(
+    recv_queue.add_messages(
         [
             ">room1",
             "|n| USER 4|user4",
@@ -85,8 +111,16 @@ def test_room(mock_connection) -> None:
     assert User.get(conn, "user5") in room1
     assert User.get(conn, "user6") in room1
 
+    assert send_queue.get_all() == Counter(
+        [
+            "|/cmd userdetails USER 4",
+            "|/cmd userdetails USER 5",
+            "|/cmd userdetails USER 6",
+        ]
+    )
+
     # Users leave the room
-    queue.add_messages(
+    recv_queue.add_messages(
         [
             ">room1",
             "|l| User 4",
@@ -104,8 +138,10 @@ def test_room(mock_connection) -> None:
     assert User.get(conn, "user5") not in room1
     assert User.get(conn, "user6") not in room1
 
+    assert send_queue.get_all() == Counter()
+
     # Global and room rank
-    queue.add_messages(
+    recv_queue.add_messages(
         [
             "|queryresponse|userdetails|{"
             + '  "id": "cerbottana",'
@@ -124,4 +160,6 @@ def test_room(mock_connection) -> None:
     assert User.get(conn, "cerbottana").global_rank == "+"
     assert User.get(conn, "cerbottana").rank(room1) == "*"
 
-    queue.close()
+    assert send_queue.get_all() == Counter()
+
+    recv_queue.close()

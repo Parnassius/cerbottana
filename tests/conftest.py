@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import threading
+from queue import Empty as EmptyQueue
 from queue import Queue
 from types import TracebackType
 from typing import (
@@ -9,6 +10,7 @@ from typing import (
     Any,
     AsyncIterator,
     Callable,
+    Counter,
     Dict,
     Generator,
     List,
@@ -28,9 +30,11 @@ from connection import Connection
 from database import Database
 
 if TYPE_CHECKING:
-    BaseMessagesQueue = Queue[Tuple[int, str]]  # pylint: disable=unsubscriptable-object
+    BaseRecvQueue = Queue[Tuple[int, str]]  # pylint: disable=unsubscriptable-object
+    BaseSendQueue = Queue[str]  # pylint: disable=unsubscriptable-object
 else:
-    BaseMessagesQueue = Queue
+    BaseRecvQueue = Queue
+    BaseSendQueue = Queue
 
 
 database_metadata: Dict[str, Any] = {
@@ -39,7 +43,7 @@ database_metadata: Dict[str, Any] = {
 }
 
 
-class MessagesQueue(BaseMessagesQueue):
+class RecvQueue(BaseRecvQueue):
     def add_messages(self, *items: List[str]) -> None:
         for item in items:
             self.put((0, "\n".join(item)))
@@ -51,10 +55,22 @@ class MessagesQueue(BaseMessagesQueue):
         self.put((2, ""))  # close fake websocket connection
 
 
+class SendQueue(BaseSendQueue):
+    # pylint: disable=too-few-public-methods
+    def get_all(self) -> Counter[str]:
+        messages: Counter[str] = Counter()
+        try:
+            while True:
+                messages.update([self.get_nowait()])
+        except EmptyQueue:
+            pass
+        return messages
+
+
 @pytest.fixture()
 def mock_connection(
     mocker,
-) -> Callable[[], Tuple[Connection, MessagesQueue]]:
+) -> Callable[[], Tuple[Connection, RecvQueue, SendQueue]]:
     def make_mock_connection(
         *,
         url: str = "ws://localhost:80/showdown/websocket",
@@ -68,10 +84,11 @@ def mock_connection(
         command_character: str = ".",
         administrators: Optional[List[str]] = None,
         domain: str = "http://localhost:8080/",
-    ) -> Tuple[Connection, MessagesQueue]:
+    ) -> Tuple[Connection, RecvQueue, SendQueue]:
         class MockProtocol:
-            def __init__(self, messages: MessagesQueue) -> None:
-                self.messages = messages
+            def __init__(self, recv_queue: RecvQueue, send_queue: SendQueue) -> None:
+                self.recv_queue = recv_queue
+                self.send_queue = send_queue
 
             def __await__(self) -> "MockProtocol":
                 return self
@@ -86,7 +103,7 @@ def mock_connection(
                     return
 
             async def recv(self) -> str:
-                msg_type, msg = self.messages.get()
+                msg_type, msg = self.recv_queue.get()
 
                 if msg_type == 0:
                     pass
@@ -105,11 +122,11 @@ def mock_connection(
                         task.cancel()
                     raise ConnectionClosedOK(1000, "Connection closed")
 
-                self.messages.task_done()
+                self.recv_queue.task_done()
                 return msg
 
             async def send(self, message: str) -> None:
-                pass
+                self.send_queue.put(message)
 
         class MockConnect:
             def __init__(self, url: str, **kwargs: Any) -> None:
@@ -135,7 +152,7 @@ def mock_connection(
                 return self.__await_impl__().__await__()
 
             async def __await_impl__(self) -> MockProtocol:
-                return MockProtocol(queue)
+                return MockProtocol(recv_queue, send_queue)
 
         mocker.patch("websockets.connect", MockConnect)
 
@@ -162,7 +179,8 @@ def mock_connection(
         mocker.patch.object(Database, "__init__", mock_database_init)
         mocker.patch.object(Database, "open", mock_database_open)
 
-        queue: MessagesQueue = MessagesQueue()
+        recv_queue: RecvQueue = RecvQueue()
+        send_queue: SendQueue = SendQueue()
 
         conn = Connection(
             url,
@@ -180,8 +198,8 @@ def mock_connection(
 
         threading.Thread(target=conn.open_connection).start()
 
-        queue.add_messages(["|updateuser|*cerbottana|1|0|{}"])
+        recv_queue.add_messages(["|updateuser|*cerbottana|1|0|{}"])
 
-        return (conn, queue)
+        return (conn, recv_queue, send_queue)
 
     return make_mock_connection
