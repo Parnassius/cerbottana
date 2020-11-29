@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, List, Optional
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from models.message import Message, MessageDisallowPM
+    from models.message import MessageDisallowPM
     from models.room import Room
 
 
@@ -54,8 +54,8 @@ async def create_tour(
     aliases=("randomtour",),
     helpstr="Avvia un torneo di una tier scelta a caso tra quelle con team random",
     is_unlisted=True,
-    allow_pm=False,
     required_rank="driver",
+    allow_pm=False,
 )
 async def randtour(msg: MessageDisallowPM) -> None:
     tiers = [x["name"] for x in msg.conn.tiers if x["random"]]
@@ -118,8 +118,8 @@ async def monopoketour(msg: Message) -> None:
 @command_wrapper(
     helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.",
     is_unlisted=True,
-    allow_pm=False,
     required_rank="driver",
+    allow_pm=False,
 )
 async def randpoketour(msg: MessageDisallowPM) -> None:
     if not msg.arg:
@@ -148,8 +148,8 @@ async def randpoketour(msg: MessageDisallowPM) -> None:
     aliases=("sibb",),
     helpstr="Avvia un torneo Super Italian Bros. Brawl",
     is_unlisted=True,
-    allow_pm=False,
     required_rank="driver",
+    allow_pm=False,
 )
 async def waffletour(msg: MessageDisallowPM) -> None:
     name = "Super Italian Bros. Brawl"

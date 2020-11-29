@@ -13,7 +13,7 @@ from database import Database
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from models.message import Message, MessageDisallowPM
+    from models.message import MessageDisallowPM
 
 
 @command_wrapper(

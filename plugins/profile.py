@@ -110,7 +110,7 @@ async def clearprofile(msg: Message) -> None:
     await msg.reply("Frase rimossa")
 
 
-@command_wrapper(aliases=("badges",), main_room_only=True, required_rank="driver")
+@command_wrapper(aliases=("badges",), required_rank="driver", main_room_only=True)
 async def badge(msg: Message) -> None:
     admin_rank = msg.user.rank(msg.conn.main_room)
 
@@ -163,12 +163,12 @@ def badges_route(userid: str) -> str:
         return render_template("badges.html", user=user, badges=badges)
 
 
-@command_wrapper(main_room_only=True, required_rank="driver")
+@command_wrapper(required_rank="driver", main_room_only=True)
 async def pendingdescriptions(msg: Message) -> None:
     await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
 
 
-@command_wrapper(main_room_only=True, required_rank="driver")
+@command_wrapper(required_rank="driver", main_room_only=True)
 async def approvaprofilo(msg: Message) -> None:
     db = Database.open()
 
@@ -186,7 +186,7 @@ async def approvaprofilo(msg: Message) -> None:
     await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
 
 
-@command_wrapper(main_room_only=True, required_rank="driver")
+@command_wrapper(required_rank="driver", main_room_only=True)
 async def rifiutaprofilo(msg: Message) -> None:
     db = Database.open()
 

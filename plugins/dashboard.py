@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from models.message import Message
 
 
-@command_wrapper(aliases=("token",), main_room_only=True, required_rank="driver")
+@command_wrapper(aliases=("token",), required_rank="driver", main_room_only=True)
 async def dashboard(msg: Message) -> None:
     phrase = (
         "``.dashboard`` è stato rimosso, "

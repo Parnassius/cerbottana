@@ -11,7 +11,7 @@ from plugins import command_wrapper
 from typedefs import JsonDict
 
 if TYPE_CHECKING:
-    from models.message import Message, MessageDisallowPM
+    from models.message import MessageDisallowPM
 
 
 async def query_scryfall(url: str, resp_type: str) -> Optional[JsonDict]:

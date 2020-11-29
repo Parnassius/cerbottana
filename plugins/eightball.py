@@ -30,7 +30,7 @@ async def eightball(msg: Message) -> None:
         await msg.reply(answer)
 
 
-@command_wrapper(aliases=("8ballanswers",), main_room_only=True, required_rank="driver")
+@command_wrapper(aliases=("8ballanswers",), required_rank="driver", main_room_only=True)
 async def eightballanswers(msg: Message) -> None:
     try:
         page = int(msg.arg)
@@ -42,8 +42,8 @@ async def eightballanswers(msg: Message) -> None:
 
 @command_wrapper(
     aliases=("add8ballanswer", "neweightballanswer", "new8ballanswer"),
-    main_room_only=True,
     required_rank="driver",
+    main_room_only=True,
 )
 async def addeightballanswer(msg: Message) -> None:
     if not msg.arg:
@@ -75,8 +75,8 @@ async def addeightballanswer(msg: Message) -> None:
         "rmeightballanswer",
         "rm8ballanswer",
     ),
-    main_room_only=True,
     required_rank="driver",
+    main_room_only=True,
 )
 async def removeeightballanswer(msg: Message) -> None:
     if not msg.arg:
@@ -93,7 +93,7 @@ async def removeeightballanswer(msg: Message) -> None:
             await msg.reply("Risposta inesistente.")
 
 
-@command_wrapper(main_room_only=True, required_rank="driver")
+@command_wrapper(required_rank="driver", main_room_only=True)
 async def removeeightballanswerid(msg: Message) -> None:
     if len(msg.args) != 2:
         return

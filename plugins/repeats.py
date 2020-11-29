@@ -208,9 +208,7 @@ async def load_old_repeats(conn: Connection) -> None:
 
 
 @command_wrapper(
-    aliases=("addrepeat", "ripeti"),
-    allow_pm=False,
-    required_rank="driver",
+    aliases=("addrepeat", "ripeti"), required_rank="driver", allow_pm=False
 )
 async def repeat(msg: MessageDisallowPM) -> None:
     ch = msg.conn.command_character
@@ -256,8 +254,8 @@ async def repeat(msg: MessageDisallowPM) -> None:
 
 @command_wrapper(
     aliases=("clearrepeat", "deleterepeat", "rmrepeat"),
-    allow_pm=False,
     required_rank="driver",
+    allow_pm=False,
 )
 async def stoprepeat(msg: MessageDisallowPM) -> None:
     if not msg.arg:
