@@ -51,6 +51,7 @@ def to_html_quotebox(quote: str) -> str:
         # Wrap every line in a <div class="chat"></div> and if it is a regular chat
         # message format it accordingly.
 
+        phrase = phrase.lstrip()
         if not phrase:
             # Timestamp with an empty phrase.
             # Append the timestamp to the previous phrase, it was probably part of it.
@@ -65,7 +66,6 @@ def to_html_quotebox(quote: str) -> str:
             # userstring: Username, optionally preceded by its rank.
             # body: Content of the message sent by the user.
             userstring, body = phrase.split(": ", 1)
-            userstring = userstring.lstrip()
 
             # rank: Character rank or "" (not " ") in case of a regular user.
             # username: userstring variable stripped of the character rank.
