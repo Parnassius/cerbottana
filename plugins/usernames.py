@@ -174,6 +174,11 @@ async def inflikted(msg: Message) -> None:
 
 
 @command_wrapper()
+async def instruct(msg: Message) -> None:
+    await msg.reply("INStruct found one Leppa Berry!")
+
+
+@command_wrapper()
 async def lange(msg: Message) -> None:
     await msg.reply("Haund mi traduci questo post?")
 
@@ -302,6 +307,11 @@ async def ultrasuca(msg: Message) -> None:
 @command_wrapper(aliases=("useless", "usy"))
 async def uselesstrainer(msg: Message) -> None:
     await msg.reply("kek")
+
+
+@command_wrapper(aliases=("vel",))
+async def velvet(msg: Message) -> None:
+    await msg.reply(":pain:")
 
 
 @command_wrapper(aliases=("volca",))
