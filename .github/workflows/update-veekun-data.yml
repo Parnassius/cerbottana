@@ -17,7 +17,7 @@ jobs:
     - name: Update veekun data
       run: cp veekun/pokedex/data/csv/*.csv cerbottana/data/veekun/
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@ff0beed1b2103611f5bdb7dfb1b23956763bf79a
+      uses: peter-evans/create-pull-request@ce699aa2d108e9d04fde047a71e44b2bf444b6dc
       with:
         path: cerbottana
         commit-message: 'Veekun: update data'
