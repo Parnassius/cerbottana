@@ -23,9 +23,9 @@ click==7.1.2 \
     --hash=sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a \
     --hash=sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc \
     # via -c requirements.txt, black, pip-tools
-importlib-metadata==3.1.0 \
-    --hash=sha256:590690d61efdd716ff82c39ca9a9d4209252adfe288a4b5721181050acbd4175 \
-    --hash=sha256:d9b8a46a0885337627a6430db287176970fff18ad421becec1d64cfc763c2099 \
+importlib-metadata==3.1.1 \
+    --hash=sha256:6112e21359ef8f344e7178aa5b72dc6e62b38b0d008e6d3cb212c5b84df72013 \
+    --hash=sha256:b0c2d3b226157ae4517d9625decf63591461c66b3a808c2666d538946519d170 \
     # via pluggy, pytest
 iniconfig==1.1.1 \
     --hash=sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3 \
