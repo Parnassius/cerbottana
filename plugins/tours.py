@@ -61,6 +61,8 @@ async def randtour(msg: Message) -> None:
 
     tiers = [x["name"] for x in msg.conn.tiers if x["random"]]
 
+    tour_format = random.choice(tiers)
+
     rules = []
 
     if random.randint(1, 100) <= 10:
@@ -75,9 +77,15 @@ async def randtour(msg: Message) -> None:
     if random.randint(1, 100) <= 10:
         rules.append("Gen 8 Camomons")
 
+    if "1v1" in tour_format or "2v2" in tour_format:
+        tour_type = "roundrobin"
+    else:
+        tour_type = "elimination"
+
     await create_tour(
         msg.room,
-        formatid=random.choice(tiers),
+        formatid=tour_format,
+        generator=tour_type,
         autostart=3.5,
         allow_scouting=True,
         rules=rules,
