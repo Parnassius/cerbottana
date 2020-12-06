@@ -102,7 +102,7 @@ async def randpoketour(msg: Message) -> None:
     if msg.room is None or not msg.user.has_role("driver", msg.room):
         return
 
-    if msg.arg.strip() == "":
+    if not msg.arg:
         await msg.room.send("Inserisci almeno un Pokémon")
         return
 
