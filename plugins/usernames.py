@@ -159,6 +159,11 @@ async def haund(msg: Message) -> None:
 
 
 @command_wrapper()
+async def havi(msg: Message) -> None:
+    await msg.reply("heat vice")
+
+
+@command_wrapper()
 async def howkings(msg: Message) -> None:
     await msg.reply("Che si vinca o si perda, v0lca merda :3")
 
