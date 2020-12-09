@@ -98,6 +98,24 @@ async def randtour(msg: Message) -> None:
 # --- Commands for tours with custom rules ---
 
 
+@command_wrapper(aliases=("monopoke",), is_unlisted=True)
+async def monopoketour(msg: Message) -> None:
+    if msg.room is None or not msg.user.has_role("driver", msg.room):
+        return
+
+    if len(msg.args) != 1:
+        await msg.reply("Specifica un (solo) Pokémon")
+        return
+
+    await create_tour(
+        msg.room,
+        formatid="nationaldex",
+        name="MONOPOKE TOUR",
+        autostart=6.5,
+        rules=["-All Pokemon", f"+{msg.arg}-base", "-Focus Sash", "Z-Move Clause"],
+    )
+
+
 @command_wrapper(
     helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
 )
