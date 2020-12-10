@@ -90,7 +90,7 @@ async def aulu(msg: Message) -> None:
     aliases=("ave", "avedo", "averado", "grandefigliodiputtana", "leo", "leoshad")
 )
 async def averardo(msg: Message) -> None:
-    yt_url = "https://youtu.be/kB4qteLP4uI"
+    yt_url = "https://www.youtube.com/watch?v=kB4qteLP4uI"
     if msg.room is None:
         await msg.reply(yt_url)
     elif msg.room.is_private:
