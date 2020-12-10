@@ -150,7 +150,21 @@ async def edgummet(msg: Message) -> None:
 
 @command_wrapper(aliases=("francino", "franco", "francy"))
 async def francyy(msg: Message) -> None:
-    await msg.reply("aiuto ho riso irl")
+    thing = random.choice(
+        [
+            "il controller",
+            "il muro",
+            "il piatto",
+            "l'albero di natale",
+            "la casa",
+            "la switch",
+            "la tastiera del computer spruzzandoci sopra il vetril",
+            "la televisione",
+            "showdown",
+            "tutto",
+        ]
+    )
+    await msg.reply(f"Ho rotto {thing}")
 
 
 @command_wrapper()
