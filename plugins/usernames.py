@@ -94,7 +94,7 @@ async def averardo(msg: Message) -> None:
     if msg.room is None:
         await msg.reply(yt_url)
     elif msg.room.is_private:
-        await msg.reply(f"!show {yt_url}", False)
+        await msg.reply_htmlbox(f'<youtube src="{yt_url}"></youtube>', yt_url)
 
 
 @command_wrapper()
