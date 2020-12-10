@@ -15,7 +15,7 @@
           <tr>
             <td>{{ row.answer }}</td>
             <td style="width: 1px; white-space: nowrap">
-              {% set cmd = "removeeightballanswerid " + row.id|string + ", " + current_page|string %}
+              {% set cmd = "removeeightballanswerid " + room.roomid + ", " + row.id|string + ", " + current_page|string %}
               {% call utils.btn_sendpm(cmd) %}
                 <i class="fa fa-trash"></i>
                 Delete
