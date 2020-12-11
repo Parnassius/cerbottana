@@ -150,21 +150,21 @@ async def edgummet(msg: Message) -> None:
 
 @command_wrapper(aliases=("francino", "franco", "francy"))
 async def francyy(msg: Message) -> None:
-    thing = random.choice(
-        [
-            "il controller",
-            "il muro",
-            "il piatto",
-            "l'albero di natale",
-            "la casa",
-            "la switch",
-            "la tastiera del computer spruzzandoci sopra il vetril",
-            "la televisione",
-            "showdown",
-            "tutto",
-        ]
-    )
-    await msg.reply(f"Ho rotto {thing}")
+    things = [
+        "il controller",
+        "il muro",
+        "il piatto",
+        "l'albero di natale",
+        "la casa",
+        "la switch",
+        "la tastiera del computer spruzzandoci sopra il vetril",
+        "la televisione",
+        "showdown",
+        "tutto",
+    ]
+    if msg.room is not None and msg.room.is_private:
+        things.append("le palle")  # Blame Aeth.
+    await msg.reply(f"Ho rotto {random.choice(things)}")
 
 
 @command_wrapper()
