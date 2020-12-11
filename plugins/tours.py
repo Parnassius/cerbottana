@@ -97,11 +97,10 @@ async def randtour(msg: MessageDisallowPM) -> None:
 # --- Commands for tours with custom rules ---
 
 
-@command_wrapper(aliases=("monopoke",), is_unlisted=True)
-async def monopoketour(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
+@command_wrapper(
+    aliases=("monopoke",), is_unlisted=True, required_rank="driver", allow_pm=False
+)
+async def monopoketour(msg: MessageDisallowPM) -> None:
     if len(msg.args) != 1:
         await msg.reply("Specifica un (solo) Pokémon")
         return
