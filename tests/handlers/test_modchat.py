@@ -113,7 +113,9 @@ def test_modchat(mock_connection) -> None:
         ]
     )
     assert room1.no_mods_online is not None
-    time = room1.no_mods_online
+
+    time = room1.no_mods_online  # type: ignore
+    # see https://github.com/python/mypy/issues/9457
 
     # another regular user joins then leaves the room, no_mods_online shouldn't change
     recv_queue.add_messages(
