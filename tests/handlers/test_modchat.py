@@ -327,4 +327,29 @@ def test_modchat(mock_connection) -> None:
     )
     assert room1.no_mods_online is not None
 
+    # a gmod enters the room, no_mods_online should still be not None because gstaff is
+    # ignored
+    recv_queue.add_messages(
+        [
+            ">room1",
+            "|j|@gmod",
+        ],
+        [
+            "|queryresponse|userdetails|{"
+            + "  "
+            + '  "id": "gmod",'
+            + '  "userid": "gmod",'
+            + '  "name": "gmod",'
+            + '  "avatar": "1",'
+            + '  "group": "@",'
+            + '  "autoconfirmed": true,'
+            + '  "status": "",'
+            + '  "rooms": {'
+            + '    "room1": {}'
+            + "  }"
+            + "}"
+        ],
+    )
+    assert room1.no_mods_online is not None
+
     recv_queue.close()

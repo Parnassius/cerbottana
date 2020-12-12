@@ -87,7 +87,7 @@ class User:
         """
         return room.users[self] if self in room else None
 
-    def has_role(self, role: Role, room: Room) -> bool:
+    def has_role(self, role: Role, room: Room, ignore_grole: bool = False) -> bool:
         """Check if user has a PS room role or higher.
 
         Higher global roles ovveride room roles.
@@ -95,11 +95,16 @@ class User:
         Args:
             role (Role): PS role (i.e. "voice", "driver").
             room (Room): Room to check.
+            ignore_grole (bool, optional): True if global roles should be ignored.
 
         Returns:
             bool: True if user meets the required criteria.
         """
-        if self.global_rank and utils.has_role(role, self.global_rank):
+        if (
+            not ignore_grole
+            and self.global_rank
+            and utils.has_role(role, self.global_rank)
+        ):
             return True
 
         room_rank = self.rank(room)

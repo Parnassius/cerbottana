@@ -114,7 +114,7 @@ class Room:
             rank = self._users[user] if user in self._users else " "
         self._users[user] = rank
 
-        if user.has_role("driver", self):
+        if user.has_role("driver", self, ignore_grole=True):
             if not user.idle:
                 self.no_mods_online = None
             else:
@@ -148,7 +148,7 @@ class Room:
         for user in self._users:
             if user.idle:
                 continue
-            if user.has_role("driver", self):
+            if user.has_role("driver", self, ignore_grole=True):
                 self.no_mods_online = None
                 return
             self.no_mods_online = time()
