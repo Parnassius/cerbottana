@@ -303,6 +303,21 @@ async def specn(msg: Message) -> None:
     await msg.reply("Vi muto tutti")
 
 
+@command_wrapper(aliases=("sprinto",))
+async def sprinto99(msg: Message) -> None:
+    phrase = random.choice(
+        [
+            "Buonasera",
+            "Buongiorno",
+            "Caio a tutti",
+            "Eccomi",
+            "Francyy",
+            "Vabbè dai vado",
+        ]
+    )
+    await msg.reply(f"{phrase}ù")  # Not a typo
+
+
 @command_wrapper(aliases=("cul1", "culone", "kul1", "swcul1", "swkul1"))
 async def swculone(msg: Message) -> None:
     await msg.reply("hue")
