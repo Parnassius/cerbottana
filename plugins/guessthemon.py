@@ -45,13 +45,13 @@ async def guessthemon(msg: Message) -> None:
             (
                 i.name
                 for i in species.pokemon_species_name
-                if i.local_language_id == msg.room.language_id
+                if i.local_language_id == msg.language_id
             ),
             None,
         )
         if species_name is None:
             raise SQLAlchemyError(
-                f"PokemonSpecies row {species.id}: no {msg.room.language} localization"
+                f"PokemonSpecies row {species.id}: no {msg.language} localization"
             )
         species_name = utils.remove_accents(species_name)
 
@@ -59,7 +59,7 @@ async def guessthemon(msg: Message) -> None:
         dex_entries = [
             i.flavor_text
             for i in species.pokemon_species_flavor_text
-            if i.language_id == msg.room.language_id and len(i.flavor_text) <= 150
+            if i.language_id == msg.language_id and len(i.flavor_text) <= 150
         ]
         if not dex_entries:  # This might fail but practically it never should
             return

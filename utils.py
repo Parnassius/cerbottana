@@ -212,6 +212,22 @@ def to_obfuscated_html(text: Optional[str]) -> str:
     return obfuscated
 
 
+def get_language_id(language_name: str) -> int:
+    table = {
+        # "Japanese": 1,
+        # "Traditional Chinese": 4,
+        "French": 5,
+        "German": 6,
+        "Spanish": 7,
+        "Italian": 8,
+        "English": 9,
+        # "Simplified Chinese": 12,
+    }
+    if language_name in table:
+        return table[language_name]
+    return table["English"]  # Default to English if language is not available.
+
+
 AVATAR_IDS: Dict[str, str] = {
     "1": "lucas",
     "2": "dawn",

@@ -62,15 +62,11 @@ async def annika(msg: Message) -> None:
 
 @command_wrapper(aliases=("anto", "antonio"))
 async def antonio200509(msg: Message) -> None:
-    if msg.room is None:
-        language_id = 9
-    else:
-        language_id = msg.room.language_id
     db = Database.open("veekun")
     with db.get_session() as session:
         species = (
             session.query(v.PokemonSpeciesNames)
-            .filter_by(local_language_id=language_id)
+            .filter_by(local_language_id=msg.language_id)
             .order_by(func.random())
             .first()
         )

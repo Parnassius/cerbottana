@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List, Optional
 
+import utils
+
 from .room import Room
 from .user import User
 
@@ -21,6 +23,8 @@ class Message:
         args (List[str]): arg attribute splitted by commas.
         parametrized_room (Optional[Room]): See plugins.parametrize_room decorator.
             Defaults to None.
+        language (str): Room language if room is not None, defaults to English.
+        language_id (int): Veekun id for language.
     """
 
     def __init__(self, room: Optional[Room], user: User, arg: str) -> None:
@@ -59,6 +63,16 @@ class Message:
     @parametrized_room.setter
     def parametrized_room(self, room: Room) -> None:
         self._parametrized_room = room
+
+    @property
+    def language(self) -> str:
+        if self.room:
+            return self.room.language
+        return "English"
+
+    @property
+    def language_id(self) -> int:
+        return utils.get_language_id(self.language)
 
     async def reply(self, message: str, escape: bool = True) -> None:
         """Sends a text message to a room or in PM to a user, depending on the context.

@@ -82,19 +82,7 @@ class Room:
 
     @property
     def language_id(self) -> int:
-        table = {
-            # "Japanese": 1,
-            # "Traditional Chinese": 4,
-            "French": 5,
-            "German": 6,
-            "Spanish": 7,
-            "Italian": 8,
-            "English": 9,
-            # "Simplified Chinese": 12,
-        }
-        if self.language in table:
-            return table[self.language]
-        return table["English"]  # Default to English if language is not available.
+        return utils.get_language_id(self.language)
 
     @property
     def users(self) -> Dict[User, str]:
