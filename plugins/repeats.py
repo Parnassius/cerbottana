@@ -219,7 +219,7 @@ async def repeat(msg: Message) -> None:
 
     # parse command args
     if len(msg.args) > 3 or len(msg.args) < 2:
-        await msg.room.send(errmsg)
+        await msg.reply(errmsg)
         return
 
     phrase = msg.args[0]
@@ -228,11 +228,11 @@ async def repeat(msg: Message) -> None:
         or phrase[0] == "/"  # Repeats should always be broadcasted.
         or (phrase[0] == "!" and phrase.split()[0][1:].lower() not in WHITELISTED_CMD)
     ):
-        await msg.room.send("Testo del repeat non valido.")
+        await msg.reply("Testo del repeat non valido.")
         return
 
     if not msg.args[1].isdigit():
-        await msg.room.send(errmsg)
+        await msg.reply(errmsg)
         return
     delta_minutes = int(msg.args[1])
 
@@ -245,12 +245,12 @@ async def repeat(msg: Message) -> None:
             expire_dt = parse(msg.args[2], default=datetime.now(), dayfirst=True)
             instance = Repeat(phrase, msg.room, delta_minutes, expire_dt=expire_dt)
         except ValueError:
-            await msg.room.send(errmsg)
+            await msg.reply(errmsg)
             return
 
     # start repeat and report result
     if not instance.start():
-        await msg.room.send(errmsg)
+        await msg.reply(errmsg)
 
 
 @command_wrapper(aliases=("clearrepeat", "deleterepeat", "rmrepeat"))
@@ -262,13 +262,13 @@ async def stoprepeat(msg: Message) -> None:
     instances = Repeat.get(msg.room, query)
 
     if not instances:
-        await msg.room.send("Nessun repeat da cancellare.")
+        await msg.reply("Nessun repeat da cancellare.")
         return
 
     for instance in instances:
         instance.stop()
 
-    await msg.room.send("Fatto.")
+    await msg.reply("Fatto.")
 
 
 @command_wrapper(aliases=("repeats",))

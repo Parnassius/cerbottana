@@ -56,7 +56,7 @@ async def memes(msg: Message) -> None:
     if msg.room is None or not msg.room.is_private:
         return
 
-    await msg.room.send(random.choice(MEMES))
+    await msg.reply(random.choice(MEMES))
 
 
 # fmt: off

@@ -66,4 +66,4 @@ async def uno(msg: Message) -> None:
     )
 
     for ps_command in ps_commands:
-        await msg.room.send(ps_command, False)
+        await msg.reply(ps_command, False)

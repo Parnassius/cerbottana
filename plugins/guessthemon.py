@@ -72,6 +72,4 @@ async def guessthemon(msg: Message) -> None:
         # Flavor text strings usually have unneeded newlines
         dex_entry = dex_entry.replace("\n", " ")
 
-        await msg.room.send(
-            f"/hangman create {species_name}, {dex_entry}", escape=False
-        )
+        await msg.reply(f"/hangman create {species_name}, {dex_entry}", escape=False)

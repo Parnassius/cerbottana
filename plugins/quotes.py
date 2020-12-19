@@ -116,7 +116,7 @@ async def addquote(msg: Message) -> None:
         return
 
     if not msg.arg:
-        await msg.room.send("Cosa devo salvare?")
+        await msg.reply("Cosa devo salvare?")
         return
 
     db = Database.open()
@@ -132,11 +132,11 @@ async def addquote(msg: Message) -> None:
 
         try:
             if result.id:
-                await msg.room.send("Quote salvata.")
+                await msg.reply("Quote salvata.")
                 return
         except ObjectDeletedError:
             pass
-        await msg.room.send("Quote già esistente.")
+        await msg.reply("Quote già esistente.")
 
 
 @command_wrapper(aliases=("q", "randomquote"))
@@ -166,7 +166,7 @@ async def removequote(msg: Message) -> None:
         return
 
     if not msg.arg:
-        await msg.room.send("Che quote devo cancellare?")
+        await msg.reply("Che quote devo cancellare?")
         return
 
     db = Database.open()
@@ -178,9 +178,9 @@ async def removequote(msg: Message) -> None:
         )
 
         if result:
-            await msg.room.send("Quote cancellata.")
+            await msg.reply("Quote cancellata.")
         else:
-            await msg.room.send("Quote inesistente.")
+            await msg.reply("Quote inesistente.")
 
 
 @command_wrapper()

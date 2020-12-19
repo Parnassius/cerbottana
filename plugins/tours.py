@@ -7,11 +7,10 @@ from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
-    from models.room import Room
 
 
 async def create_tour(
-    room: Room,
+    msg: Message,
     formatid: str = "customgame",
     generator: str = "elimination",
     playercap: Optional[int] = None,
@@ -24,7 +23,7 @@ async def create_tour(
     rules: Optional[List[str]] = None,
 ) -> None:
     tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
-    await room.send(
+    await msg.reply(
         tournew.format(
             formatid=formatid,
             generator=generator,
@@ -35,16 +34,16 @@ async def create_tour(
         False,
     )
     if autostart is not None:
-        await room.send(f"/tour autostart {autostart}", False)
+        await msg.reply(f"/tour autostart {autostart}", False)
     if autodq is not None:
-        await room.send(f"/tour autodq {autodq}", False)
+        await msg.reply(f"/tour autodq {autodq}", False)
     if not allow_scouting:
-        await room.send("/tour scouting off", False)
+        await msg.reply("/tour scouting off", False)
     if forcetimer:
-        await room.send("/tour forcetimer on", False)
+        await msg.reply("/tour forcetimer on", False)
     if rules:
         rules_str = ",".join(rules)
-        await room.send(f"/tour rules {rules_str}", False)
+        await msg.reply(f"/tour rules {rules_str}", False)
 
 
 # --- Commands for generic tours ---
@@ -85,7 +84,7 @@ async def randtour(msg: Message) -> None:
         generator = "elimination"
 
     await create_tour(
-        msg.room,
+        msg,
         formatid=formatid,
         generator=generator,
         autostart=3.5,
@@ -108,7 +107,7 @@ async def monopoketour(msg: Message) -> None:
         return
 
     await create_tour(
-        msg.room,
+        msg,
         formatid="nationaldex",
         name="MONOPOKE TOUR",
         autostart=6.5,
@@ -124,7 +123,7 @@ async def randpoketour(msg: Message) -> None:
         return
 
     if not msg.arg:
-        await msg.room.send("Inserisci almeno un Pokémon")
+        await msg.reply("Inserisci almeno un Pokémon")
         return
 
     formatid = "nationaldex"
@@ -142,7 +141,7 @@ async def randpoketour(msg: Message) -> None:
     rules.extend(["-" + i for i in bans])
     rules.extend(["+" + i for i in unbans])
 
-    await create_tour(msg.room, formatid=formatid, name=name, autostart=12, rules=rules)
+    await create_tour(msg, formatid=formatid, name=name, autostart=12, rules=rules)
 
 
 @command_wrapper(
@@ -167,7 +166,7 @@ async def waffletour(msg: Message) -> None:
     ]
 
     await create_tour(
-        msg.room, name=name, autostart=5, autodq=3, forcetimer=True, rules=rules
+        msg, name=name, autostart=5, autodq=3, forcetimer=True, rules=rules
     )
 
-    await msg.room.send("!viewfaq sibb", False)
+    await msg.reply("!viewfaq sibb", False)

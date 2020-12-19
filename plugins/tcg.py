@@ -165,7 +165,7 @@ async def guessthecard(msg: Message) -> None:
         hint = hint_with_flavor if len(hint_with_flavor) <= 150 else hint
     hint = hint.replace("\n", " ")
 
-    await msg.room.send(f"/hangman create {cardname}, {hint}", False)
+    await msg.reply(f"/hangman create {cardname}, {hint}", False)
 
 
 @command_wrapper(aliases=("randomcard",))
