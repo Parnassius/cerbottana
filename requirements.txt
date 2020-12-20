@@ -164,9 +164,9 @@ markupsafe==1.1.1 \
     --hash=sha256:e249096428b3ae81b08327a63a485ad0878de3fb939049038579ac0ef61e17e7 \
     --hash=sha256:e8313f01ba26fbbe36c7be1966a7b7424942f670f38e666995b88d012765b9be \
     # via jinja2, mako
-marshmallow==3.9.1 \
-    --hash=sha256:73facc37462dfc0b27f571bdaffbef7709e19f7a616beb3802ea425b07843f4e \
-    --hash=sha256:e26763201474b588d144dae9a32bdd945cd26a06c943bc746a6882e850475378 \
+marshmallow==3.10.0 \
+    --hash=sha256:4ab2fdb7f36eb61c3665da67a7ce281c8900db08d72ba6bf0e695828253581f7 \
+    --hash=sha256:eca81d53aa4aafbc0e20566973d0d2e50ce8bf0ee15165bb799bec0df1e50177 \
     # via environs
 multidict==5.1.0 \
     --hash=sha256:018132dbd8688c7a69ad89c4a3f39ea2f9f33302ebe567a879da8f4ca73f0d0a \
