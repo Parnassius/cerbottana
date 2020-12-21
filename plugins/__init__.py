@@ -44,9 +44,9 @@ class Command:
     def __init__(
         self,
         func: CommandFunc,
-        aliases: Tuple[str, ...] = (),
-        helpstr: str = "",
-        is_unlisted: bool = False,
+        aliases: Tuple[str, ...],
+        helpstr: str,
+        is_unlisted: bool,
     ) -> None:
         self.name = func.__name__
         self.callback = func
@@ -75,27 +75,55 @@ class Command:
         return {k: d[k] for k in sorted(d)}  # python 3.7+
 
 
-def scope_checker(func: CommandFunc) -> CommandFunc:
+def command_check_permission(
+    func: CommandFunc,
+    required_rank: Role,
+    allow_pm: bool,
+    main_room_only: bool,
+    parametrize_room: bool,
+) -> CommandFunc:
     @wraps(func)
-    async def scope_wrapper(msg: Message) -> None:
-        if msg.room is not None and not msg.user.has_role("voice", msg.room):
+    async def wrapper(msg: Message) -> None:
+        if main_room_only and not msg.user.has_role(required_rank, msg.conn.main_room):
             return
+
+        if not allow_pm and msg.room is None:
+            return
+
+        if parametrize_room:
+            if msg.user not in msg.parametrized_room.users or not msg.user.has_role(
+                required_rank, msg.parametrized_room
+            ):
+                return
+        elif msg.room is not None and not msg.user.has_role(required_rank, msg.room):
+            return
+
         await func(msg)
 
-    return scope_wrapper
+    return wrapper
 
 
 def command_wrapper(
-    aliases: Tuple[str, ...] = (), helpstr: str = "", is_unlisted: bool = False
+    aliases: Tuple[str, ...] = (),
+    helpstr: str = "",
+    is_unlisted: bool = False,
+    required_rank: Role = "voice",
+    allow_pm: bool = True,
+    main_room_only: bool = False,
+    parametrize_room: bool = False,
 ) -> Callable[[CommandFunc], Command]:
     def cls_wrapper(func: CommandFunc) -> Command:
-        func = scope_checker(func)  # manual decorator binding
+        func = command_check_permission(
+            func, required_rank, allow_pm, main_room_only, parametrize_room
+        )
+        if parametrize_room:
+            func = parametrize_room_wrapper(func)
         return Command(func, aliases, helpstr, is_unlisted)
 
     return cls_wrapper
 
 
-def parametrize_room(func: CommandFunc) -> CommandFunc:
+def parametrize_room_wrapper(func: CommandFunc) -> CommandFunc:
     """
     Enriches a command depending on its context:
     (1) If it's used in a room, it saves such room in msg.parametrized_room.
@@ -183,22 +211,28 @@ def htmlpage_wrapper(
 routes: List[Tuple[RouteFunc, str, Optional[Iterable[str]]]] = []
 
 
-def route_require_driver(func: RouteFunc) -> RouteFunc:
+def route_check_permission(func: RouteFunc, required_rank: Optional[Role]) -> RouteFunc:
     @wraps(func)
     def wrapper(**kwargs: str) -> str:
-        if not utils.has_role("driver", web_session.get("_rank")):
+        rank_check = kwargs.get("room", "_rank")
+        if required_rank is None:
+            if rank_check not in web_session:
+                abort(401)
+        elif not utils.has_role(required_rank, web_session.get(rank_check)):
             abort(401)
+
         return func(**kwargs)
 
     return wrapper
 
 
 def route_wrapper(
-    rule: str, methods: Optional[Iterable[str]] = None, require_driver: bool = False
+    rule: str,
+    methods: Optional[Iterable[str]] = None,
+    required_rank: Optional[Role] = None,
 ) -> Callable[[RouteFunc], RouteFunc]:
     def wrapper(func: RouteFunc) -> RouteFunc:
-        if require_driver:
-            func = route_require_driver(func)  # manual decorator binding
+        func = route_check_permission(func, required_rank)
         routes.append((func, rule, methods))
         return func
 

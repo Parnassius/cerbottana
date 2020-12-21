@@ -19,11 +19,9 @@ if TYPE_CHECKING:
 @command_wrapper(
     aliases=("gtm", "hangmanpokemon", "pokemonhangman"),
     helpstr="Indovina un pokemon da una sua entry del pokedex!",
+    allow_pm=False,
 )
 async def guessthemon(msg: Message) -> None:
-    if msg.room is None:
-        return
-
     db = Database.open("veekun")
     with db.get_session() as session:
         # Retrieve a random pokemon

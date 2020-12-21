@@ -8,11 +8,8 @@ if TYPE_CHECKING:
     from models.message import Message
 
 
-@command_wrapper(aliases=("token",))
+@command_wrapper(aliases=("token",), required_rank="driver", main_room_only=True)
 async def dashboard(msg: Message) -> None:
-    if not msg.user.has_role("driver", msg.conn.main_room):
-        return
-
     phrase = (
         "``.dashboard`` è stato rimosso, "
         "per gestire le badge di un utente usa ``.badges <utente>``, "

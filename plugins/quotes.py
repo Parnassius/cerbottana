@@ -11,7 +11,7 @@ from sqlalchemy.sql import func
 import databases.database as d
 import utils
 from database import Database
-from plugins import command_wrapper, htmlpage_wrapper, parametrize_room
+from plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
@@ -107,13 +107,9 @@ def to_html_quotebox(quote: str) -> str:
     return html
 
 
-@command_wrapper(aliases=("newquote", "quote"))
+@command_wrapper(aliases=("newquote", "quote"), parametrize_room=True)
 async def addquote(msg: Message) -> None:
     # Permissions for this command are temporarily lowered to voice level.
-    # if msg.room is None or not msg.user.has_role("driver", msg.room):
-    #   return
-    if msg.room is None:
-        return
 
     if not msg.arg:
         await msg.reply("Cosa devo salvare?")
@@ -123,7 +119,7 @@ async def addquote(msg: Message) -> None:
     with db.get_session() as session:
         result = d.Quotes(
             message=msg.arg,
-            roomid=msg.room.roomid,
+            roomid=msg.parametrized_room.roomid,
             author=msg.user.userid,
             date=func.date(),
         )
@@ -139,8 +135,7 @@ async def addquote(msg: Message) -> None:
         await msg.reply("Quote già esistente.")
 
 
-@command_wrapper(aliases=("q", "randomquote"))
-@parametrize_room
+@command_wrapper(aliases=("q", "randomquote"), parametrize_room=True)
 async def randquote(msg: Message) -> None:
     db = Database.open()
     with db.get_session() as session:
@@ -157,13 +152,9 @@ async def randquote(msg: Message) -> None:
         await msg.reply_htmlbox(to_html_quotebox(quote_row.message))
 
 
-@command_wrapper(aliases=("deletequote", "delquote", "rmquote"))
+@command_wrapper(aliases=("deletequote", "delquote", "rmquote"), parametrize_room=True)
 async def removequote(msg: Message) -> None:
     # Permissions for this command are temporarily lowered to voice level.
-    # if msg.room is None or not msg.user.has_role("driver", msg.room):
-    #   return
-    if msg.room is None:
-        return
 
     if not msg.arg:
         await msg.reply("Che quote devo cancellare?")
@@ -173,7 +164,7 @@ async def removequote(msg: Message) -> None:
     with db.get_session() as session:
         result = (
             session.query(d.Quotes)
-            .filter_by(message=msg.arg, roomid=msg.room.roomid)
+            .filter_by(message=msg.arg, roomid=msg.parametrized_room.roomid)
             .delete()
         )
 
@@ -183,13 +174,9 @@ async def removequote(msg: Message) -> None:
             await msg.reply("Quote inesistente.")
 
 
-@command_wrapper()
-@parametrize_room
+@command_wrapper(required_rank="driver", parametrize_room=True)
 async def removequoteid(msg: Message) -> None:
     room = msg.parametrized_room
-
-    if not msg.user.has_role("driver", room):
-        return
 
     if len(msg.args) != 2:
         return
@@ -206,8 +193,7 @@ async def removequoteid(msg: Message) -> None:
     await msg.user.send_htmlpage("quotelist", room, page)
 
 
-@command_wrapper(aliases=("quotes", "quoteslist"))
-@parametrize_room
+@command_wrapper(aliases=("quotes", "quoteslist"), parametrize_room=True)
 async def quotelist(msg: Message) -> None:
     room = msg.parametrized_room
 
