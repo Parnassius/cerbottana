@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import deque
 from datetime import datetime
+from textwrap import shorten
 from time import time
 from typing import TYPE_CHECKING, Deque, Dict, Optional
 
@@ -200,6 +201,22 @@ class Room:
         if page_room:
             pageid += "0" + page_room.roomid
         await self.send(f"<<view-bot-{utils.to_user_id(self.conn.username)}-{pageid}>>")
+
+    async def send_modnote(self, action: str, user: User, note: str = "") -> None:
+        """Adds a modnote to a room.
+
+        Args:
+            action (str): id of the action performed.
+            user (User): User who performed the action.
+            note (str, optional): additional notes.
+        """
+        if not self.roombot:
+            return
+
+        arg = f"[{action}] {user.userid}"
+        if note:
+            arg += f": {note}"
+        await self.send(f"/modnote {shorten(arg, 300)}", False)
 
     @classmethod
     def get(cls, conn: Connection, room: str) -> Room:

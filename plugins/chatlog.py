@@ -14,7 +14,7 @@ import utils
 from database import Database
 from handlers import handler_wrapper
 from models.room import Room
-from plugins import command_wrapper, parametrize_room, route_wrapper
+from plugins import command_wrapper, route_wrapper
 from tasks import recurring_task_wrapper
 
 if TYPE_CHECKING:
@@ -120,8 +120,7 @@ async def logger(conn: Connection, room: Room, *args: str) -> None:
         )
 
 
-@command_wrapper()
-@parametrize_room
+@command_wrapper(parametrize_room=True)
 async def getlogs(msg: Message) -> None:
     if msg.user.userid in msg.conn.administrators:
         logsroom = msg.parametrized_room.roomid
@@ -129,18 +128,11 @@ async def getlogs(msg: Message) -> None:
         await msg.conn.send(f"|/join view-chatlog-{logsroom}--{date}")
 
 
-@command_wrapper(aliases=("linecount",))
-@parametrize_room
+@command_wrapper(aliases=("linecount",), required_rank="driver", parametrize_room=True)
 async def linecounts(msg: Message) -> None:
     logsroom = msg.parametrized_room.roomid
 
-    users = msg.parametrized_room.users
-    if msg.user not in users:
-        return
-
-    rank = users[msg.user]
-    if not utils.has_role("driver", rank):
-        return
+    rank = msg.parametrized_room.users[msg.user]
 
     token_id = utils.create_token({logsroom: rank}, 1)
 
@@ -152,18 +144,11 @@ async def linecounts(msg: Message) -> None:
     await msg.user.send(message)
 
 
-@command_wrapper()
-@parametrize_room
+@command_wrapper(required_rank="driver", parametrize_room=True)
 async def topusers(msg: Message) -> None:
     logsroom = msg.parametrized_room.roomid
 
-    users = msg.parametrized_room.users
-    if msg.user not in users:
-        return
-
-    rank = users[msg.user]
-    if not utils.has_role("driver", rank):
-        return
+    rank = msg.parametrized_room.users[msg.user]
 
     token_id = utils.create_token({logsroom: rank}, 1)
 

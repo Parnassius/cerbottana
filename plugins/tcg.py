@@ -85,11 +85,9 @@ def to_card_thumbnail(card_json: JsonDict) -> str:
 @command_wrapper(
     aliases=("carta", "magic", "mtg"),
     helpstr="Mostra una carta di Magic: the Gathering",
+    allow_pm=False,
 )
 async def card(msg: Message) -> None:
-    if msg.room is None:
-        return
-
     if not msg.arg:
         await msg.reply("Che carta devo cercare?")
         return
@@ -132,11 +130,9 @@ async def card(msg: Message) -> None:
 @command_wrapper(
     aliases=("cardhangman", "gtc", "hangmancard"),
     helpstr="Indovina una carta di Magic: the Gathering!",
+    allow_pm=False,
 )
 async def guessthecard(msg: Message) -> None:
-    if msg.room is None:
-        return
-
     filters = (
         "legal:standard",
         "-type:basic",  # Basic lands
@@ -168,11 +164,8 @@ async def guessthecard(msg: Message) -> None:
     await msg.reply(f"/hangman create {cardname}, {hint}", False)
 
 
-@command_wrapper(aliases=("randomcard",))
+@command_wrapper(aliases=("randomcard",), allow_pm=False)
 async def randcard(msg: Message) -> None:
-    if msg.room is None:
-        return
-
     url = "https://api.scryfall.com/cards/random"
     if msg.arg:
         # Users can input an optional query to restrict the cardpool.

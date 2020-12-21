@@ -4,41 +4,36 @@ import random
 from typing import TYPE_CHECKING
 
 import utils
-from plugins import command_wrapper, parametrize_room
+from plugins import command_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
 
 
 @command_wrapper(
-    aliases=("randomcaio",), helpstr="Saluta un utente a caso presente nella room."
+    aliases=("randomcaio",),
+    helpstr="Saluta un utente a caso presente nella room.",
+    parametrize_room=True,
 )
 async def randcaio(msg: Message) -> None:
-    if msg.room is None:
-        return
-    user = random.choice(list(msg.room.users.keys()))
+    user = random.choice(list(msg.parametrized_room.users.keys()))
     await msg.reply(f"caio {user}")
 
 
 @command_wrapper(
-    aliases=("randomuser",), helpstr="Seleziona un utente a caso presente nella room."
+    aliases=("randomuser",),
+    helpstr="Seleziona un utente a caso presente nella room.",
+    parametrize_room=True,
 )
 async def randuser(msg: Message) -> None:
-    if msg.room is None:
-        return
-    user = random.choice(list(msg.room.users.keys()))
+    user = random.choice(list(msg.parametrized_room.users.keys()))
     await msg.reply(f"{user}")
 
 
-@command_wrapper()
-@parametrize_room
+@command_wrapper(required_rank="driver", parametrize_room=True)
 async def tell(msg: Message) -> None:
     if not msg.arg:
         await msg.reply("Cosa devo inviare?")
-        return
-
-    if not msg.user.has_role("driver", msg.parametrized_room):
-        await msg.reply("Devi essere almeno driver")
         return
 
     author = msg.user.roomname(msg.parametrized_room)
@@ -51,11 +46,8 @@ async def tell(msg: Message) -> None:
     await msg.parametrized_room.send_htmlbox(html)
 
 
-@command_wrapper(helpstr="<i>[blitz]</i> Avvia una partita di UNO.")
+@command_wrapper(helpstr="<i>[blitz]</i> Avvia una partita di UNO.", allow_pm=False)
 async def uno(msg: Message) -> None:
-    if msg.room is None:
-        return
-
     blitz_keywords = ("blitz", "fast", "veloce")
     timer = 5 if msg.arg.lower() in blitz_keywords else 30
 

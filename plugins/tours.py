@@ -53,11 +53,10 @@ async def create_tour(
     aliases=("randomtour",),
     helpstr="Avvia un torneo di una tier scelta a caso tra quelle con team random",
     is_unlisted=True,
+    required_rank="driver",
+    allow_pm=False,
 )
 async def randtour(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
     tiers = [x["name"] for x in msg.conn.tiers if x["random"]]
 
     formatid = random.choice(tiers)
@@ -97,11 +96,10 @@ async def randtour(msg: Message) -> None:
 # --- Commands for tours with custom rules ---
 
 
-@command_wrapper(aliases=("monopoke",), is_unlisted=True)
+@command_wrapper(
+    aliases=("monopoke",), is_unlisted=True, required_rank="driver", allow_pm=False
+)
 async def monopoketour(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
     if len(msg.args) != 1:
         await msg.reply("Specifica un (solo) Pokémon")
         return
@@ -116,12 +114,12 @@ async def monopoketour(msg: Message) -> None:
 
 
 @command_wrapper(
-    helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.", is_unlisted=True
+    helpstr="<i> poke1, poke2, ... </i> Avvia un randpoketour.",
+    is_unlisted=True,
+    required_rank="driver",
+    allow_pm=False,
 )
 async def randpoketour(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
     if not msg.arg:
         await msg.reply("Inserisci almeno un Pokémon")
         return
@@ -148,11 +146,10 @@ async def randpoketour(msg: Message) -> None:
     aliases=("sibb",),
     helpstr="Avvia un torneo Super Italian Bros. Brawl",
     is_unlisted=True,
+    required_rank="driver",
+    allow_pm=False,
 )
 async def waffletour(msg: Message) -> None:
-    if msg.room is None or not msg.user.has_role("driver", msg.room):
-        return
-
     name = "Super Italian Bros. Brawl"
     rules = [
         "Cancel Mod",
