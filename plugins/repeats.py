@@ -252,7 +252,10 @@ async def repeat(msg: Message) -> None:
             return
 
     # start repeat and report result
-    if not instance.start():
+    if instance.start():
+        if msg.room is None:
+            await msg.parametrized_room.send_modnote("REPEAT ADDED", msg.user, phrase)
+    else:
         await msg.reply(errmsg)
 
 
@@ -276,6 +279,11 @@ async def stoprepeat(msg: Message) -> None:
         instance.stop()
 
     await msg.reply("Fatto.")
+    if msg.room is None:
+        if query is None:
+            await msg.parametrized_room.send_modnote("REPEATS CLEARED", msg.user)
+        else:
+            await msg.parametrized_room.send_modnote("REPEAT REMOVED", msg.user, query)
 
 
 @command_wrapper(aliases=("repeats",), required_rank="driver", parametrize_room=True)
