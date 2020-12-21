@@ -129,6 +129,10 @@ async def addquote(msg: Message) -> None:
         try:
             if result.id:
                 await msg.reply("Quote salvata.")
+                if msg.room is None:
+                    await msg.parametrized_room.send_modnote(
+                        "QUOTE ADDED", msg.user, msg.arg
+                    )
                 return
         except ObjectDeletedError:
             pass
@@ -170,6 +174,10 @@ async def removequote(msg: Message) -> None:
 
         if result:
             await msg.reply("Quote cancellata.")
+            if msg.room is None:
+                await msg.parametrized_room.send_modnote(
+                    "QUOTE REMOVED", msg.user, msg.arg
+                )
         else:
             await msg.reply("Quote inesistente.")
 
@@ -183,7 +191,16 @@ async def removequoteid(msg: Message) -> None:
 
     db = Database.open()
     with db.get_session() as session:
-        session.query(d.Quotes).filter_by(id=msg.args[0], roomid=room.roomid).delete()
+        quote = (
+            session.query(d.Quotes)
+            .filter_by(id=msg.args[0], roomid=room.roomid)
+            .first()
+        )
+        if quote:
+            await msg.parametrized_room.send_modnote(
+                "QUOTE REMOVED", msg.user, quote.message
+            )
+            session.query(d.Quotes).filter_by(id=quote.id).delete()
 
     try:
         page = int(msg.args[1])
