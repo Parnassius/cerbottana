@@ -79,7 +79,6 @@ def mock_connection(
         avatar: str = "",
         statustext: str = "",
         rooms: Optional[List[str]] = None,
-        private_rooms: Optional[List[str]] = None,
         main_room: str = "lobby",
         command_character: str = ".",
         administrators: Optional[List[str]] = None,
@@ -182,16 +181,21 @@ def mock_connection(
         recv_queue: RecvQueue = RecvQueue()
         send_queue: SendQueue = SendQueue()
 
+        if rooms is None:
+            rooms = ["room1"]
+        if administrators is None:
+            administrators = ["parnassius"]
+
         conn = Connection(
             url,
             username,
             password,
             avatar,
             statustext,
-            rooms or [],
+            rooms,
             main_room,
             command_character,
-            administrators or [],
+            administrators,
             domain,
             True,  # unittesting
         )
@@ -199,6 +203,9 @@ def mock_connection(
         threading.Thread(target=conn.open_connection).start()
 
         recv_queue.add_messages(["|updateuser|*cerbottana|1|0|{}"])
+
+        # Clear send queue
+        send_queue.get_all()
 
         return (conn, recv_queue, send_queue)
 
