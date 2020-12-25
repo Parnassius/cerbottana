@@ -107,7 +107,7 @@ class Connection:
         """Extracts a Room object from a raw message.
 
         Args:
-            message (raw): Raw message received from the websocket.
+            message (str): Raw message received from the websocket.
         """
         if not message:
             return
