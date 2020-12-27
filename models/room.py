@@ -27,7 +27,7 @@ class Room:
         conn (Connection): Used to access the websocket.
         roomid (str): Uniquely identifies a room, see utils.to_room_id.
         is_private (bool): True if room is unlisted/private.
-        autojoin (bool, optional): Whether the bot should join the room on startup.
+        autojoin (bool): Whether the bot should join the room on startup.
             Defaults to False.
         buffer (Deque[str]): Fixed list of the last room messages.
         language (str): Room language.
@@ -96,8 +96,8 @@ class Room:
 
         Args:
             user (User): User to add.
-            rank (Optional[str], optional): Room rank of user. Defaults to None if rank
-               is unchanged.
+            rank (Optional[str]): Room rank of user. Defaults to None if rank is
+                unchanged.
         """
         if not rank:
             rank = self._users[user] if user in self._users else " "
@@ -162,7 +162,7 @@ class Room:
 
         Args:
             message (str): Text to be sent.
-            escape (bool, optional): True if PS commands should be escaped. Defaults to
+            escape (bool): True if PS commands should be escaped. Defaults to
                 True.
         """
         if escape:
@@ -208,7 +208,7 @@ class Room:
         Args:
             action (str): id of the action performed.
             user (User): User who performed the action.
-            note (str, optional): additional notes.
+            note (str): additional notes.
         """
         if not self.roombot:
             return

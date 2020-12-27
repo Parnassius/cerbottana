@@ -95,7 +95,7 @@ class User:
         Args:
             role (Role): PS role (i.e. "voice", "driver").
             room (Room): Room to check.
-            ignore_grole (bool, optional): True if global roles should be ignored.
+            ignore_grole (bool): True if global roles should be ignored.
 
         Returns:
             bool: True if user meets the required criteria.
@@ -143,7 +143,7 @@ class User:
 
         Args:
             message (str): Text to be sent.
-            escape (bool, optional): True if PS commands should be escaped. Defaults to
+            escape (bool): True if PS commands should be escaped. Defaults to
                 True.
         """
         if escape and message[0] == "/":
@@ -155,7 +155,7 @@ class User:
 
         Args:
             message (str): HTML to be sent.
-            simple_message (str, optional): Alt text. Defaults to a generic message.
+            simple_message (str): Alt text. Defaults to a generic message.
         """
         message = htmlmin.minify(message)
         room = self.can_pminfobox_to()
@@ -173,7 +173,7 @@ class User:
         Args:
             pageid (str): id of the htmlpage.
             page_room (Room): Room to be passed to the function.
-            page (int, optional): Page number. Defaults to 1.
+            page (int): Page number. Defaults to 1.
         """
         if pageid not in htmlpages:
             return
