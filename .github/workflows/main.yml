@@ -27,9 +27,7 @@ jobs:
     - name: Test with mypy
       run: mypy .
     - name: Test with pylint
-      run: |
-        shopt -s globstar
-        pylint **/*.py --disable=fixme
+      run: find . -name '*.py' -not -path './.*' | xargs pylint --disable=fixme
     - name: Test with pytest
       run: pytest --cov
     - name: Upload coverage to Codecov
