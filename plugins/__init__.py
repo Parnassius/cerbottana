@@ -112,6 +112,25 @@ def command_wrapper(
     main_room_only: bool = False,
     parametrize_room: bool = False,
 ) -> Callable[[CommandFunc], Command]:
+    """
+    Decorates a function to generate a Command instance.
+
+    Args:
+        aliases (Tuple[str, ...]): List of aliases for the command, besides the function
+            name.
+        helpstr (str): Short description of the command.
+        is_unlisted (bool): Whether the command should be listed in the `.help` summary.
+        required_rank (Role): Minimum PS rank required to trigger the command.
+        allow_pm (bool): True if the command can be used in PM (and not only in a room).
+        main_room_only (bool): Whether the main room should be used to check if the user
+            has relevant auth.
+        parametrize_room (bool): Allows room-dependent commands to be used in PM. See
+            the docstring of `parametrize_room_wrapper`.
+
+    Returns:
+        Callable[[CommandFunc], Command]: Wrapper.
+    """
+
     def cls_wrapper(func: CommandFunc) -> Command:
         func = command_check_permission(
             func, required_rank, allow_pm, main_room_only, parametrize_room
