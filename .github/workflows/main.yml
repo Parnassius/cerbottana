@@ -24,6 +24,8 @@ jobs:
       run: isort --check .
     - name: Check formatting using black
       run: black --check .
+    - name: Check docstrings with darglint
+      run: find . -name '*.py' -not -path './.*' | xargs darglint -v 2
     - name: Test with mypy
       run: mypy .
     - name: Test with pylint
