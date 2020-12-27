@@ -74,6 +74,10 @@ coverage==5.3.1 \
     --hash=sha256:fda29412a66099af6d6de0baa6bd7c52674de177ec2ad2630ca264142d69c6c7 \
     --hash=sha256:ff1330e8bc996570221b450e2d539134baa9465f5cb98aff0e0f73f34172e0ae \
     # via pytest-cov
+darglint==1.5.8 \
+    --hash=sha256:2e1012945a09d19a15cc87f9d15e7b14c18473ec9cf7769c641951b348de1353 \
+    --hash=sha256:529f4969029d5ff5f74bfec48adc14b6f003409141f722b6cc4b787dddc8a4dd \
+    # via -r requirements-dev.in
 importlib-metadata==3.3.0 \
     --hash=sha256:5c5a2720817414a6c41f0a49993908068243ae02c1635a228126519b509c8aed \
     --hash=sha256:bf792d480abbd5eda85794e4afb09dd538393f7d6e6ffef6e9f03d2014cf9450 \
