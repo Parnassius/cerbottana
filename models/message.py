@@ -79,7 +79,7 @@ class Message:
 
         Args:
             message (str): Text to be sent.
-            escape (bool, optional): True if PS commands should be escaped. Defaults to
+            escape (bool): True if PS commands should be escaped. Defaults to
                 True.
         """
         if self.room is None:
@@ -107,7 +107,7 @@ class Message:
         Args:
             pageid (str): id of the htmlpage.
             room (Room): Room to be passed to the function.
-            page (int, optional): Page number. Defaults to 1.
+            page (int): Page number. Defaults to 1.
         """
         if self.room is None:
             await self.user.send_htmlpage(pageid, room, page)
