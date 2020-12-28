@@ -1,7 +1,41 @@
+from datetime import datetime
+from typing import Dict, Optional
+
 import pytest
 
+import databases.database as d
 import utils
+from database import Database
 from typedefs import Role
+
+
+@pytest.mark.parametrize(
+    "rooms, expire_minutes, admin",
+    [
+        ({"room1": " ", "room2": "+"}, 30, None),
+        ({"room1": " ", "room2": "+"}, 30, "%"),
+        ({"room2": "+"}, 30, "+"),
+        ({}, 5, "&"),
+    ],
+)
+def test_create_token(
+    rooms: Dict[str, str], expire_minutes: int, admin: Optional[str]
+) -> None:
+    token_id = utils.create_token(rooms, expire_minutes, admin)
+    db = Database.open()
+    with db.get_session() as session:
+        tokens = session.query(d.Tokens).filter_by(token=token_id).all()
+        room_tokens = {i.room: i.rank for i in tokens if i.room is not None}
+        global_tokens = [i.rank for i in tokens if i.room is None]
+        assert room_tokens == rooms
+        if admin is not None:
+            assert global_tokens == [admin]
+        else:
+            assert global_tokens == []
+        for token in tokens:
+            delta = datetime.utcnow() - datetime.fromisoformat(token.expiry)
+            # 5 seconds should be more than enough
+            assert abs(delta.total_seconds()) - expire_minutes * 60 < 5
 
 
 @pytest.mark.parametrize(
