@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import urllib.parse
 import urllib.request
@@ -65,4 +66,5 @@ async def updateuser(conn: Connection, room: Room, *args: str) -> None:
 
     for roomid in list(conn.rooms.keys()):
         if Room.get(conn, roomid).autojoin:
+            await asyncio.sleep(0.15)
             await conn.send(f"|/join {roomid}")
