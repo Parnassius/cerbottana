@@ -153,29 +153,6 @@ def mock_connection(
 
         mocker.patch("websockets.connect", MockConnect)
 
-        database_instances: Dict[str, Database] = {}
-
-        def mock_database_init(self, dbname: str) -> None:
-            self.engine = create_engine("sqlite://")  # :memory: database
-            self.metadata = MetaData(bind=self.engine)
-            self.session_factory = sessionmaker(bind=self.engine)
-            self.Session = scoped_session(self.session_factory)
-            database_instances[dbname] = self
-
-        @classmethod  # type: ignore
-        def mock_database_open(cls, dbname: str = "database") -> Database:
-            if dbname not in database_instances:
-                cls(dbname)  # pylint: disable=too-many-function-args
-                if dbname in database_metadata:
-                    # Create schemas
-                    database_metadata[dbname].create_all(
-                        database_instances[dbname].engine
-                    )
-            return database_instances[dbname]
-
-        mocker.patch.object(Database, "__init__", mock_database_init)
-        mocker.patch.object(Database, "open", mock_database_open)
-
         recv_queue: RecvQueue = RecvQueue()
         send_queue: SendQueue = SendQueue()
 
@@ -208,3 +185,28 @@ def mock_connection(
         return (conn, recv_queue, send_queue)
 
     return make_mock_connection
+
+
+@pytest.fixture(autouse=True)
+def mock_database(mocker) -> None:
+    database_instances: Dict[str, Database] = {}
+
+    def mock_database_init(self, dbname: str) -> None:
+        self.engine = create_engine("sqlite://")  # :memory: database
+        self.metadata = MetaData(bind=self.engine)
+        self.session_factory = sessionmaker(bind=self.engine)
+        self.Session = scoped_session(self.session_factory)
+        database_instances[dbname] = self
+
+    @classmethod  # type: ignore
+    def mock_database_open(cls, dbname: str = "database") -> Database:
+        print("e")
+        if dbname not in database_instances:
+            cls(dbname)  # pylint: disable=too-many-function-args
+            if dbname in database_metadata:
+                # Create schemas
+                database_metadata[dbname].create_all(database_instances[dbname].engine)
+        return database_instances[dbname]
+
+    mocker.patch.object(Database, "__init__", mock_database_init)
+    mocker.patch.object(Database, "open", mock_database_open)
