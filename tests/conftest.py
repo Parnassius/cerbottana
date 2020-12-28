@@ -25,7 +25,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from websockets import ConnectionClosedOK
 
 import databases.database as d
-import databases.logs as l
 from connection import Connection
 from database import Database
 
@@ -39,7 +38,6 @@ else:
 
 database_metadata: Dict[str, Any] = {
     "database": d.db.metadata,
-    "logs": l.db.metadata,
 }
 
 
