@@ -200,7 +200,6 @@ def mock_database(mocker) -> None:
 
     @classmethod  # type: ignore
     def mock_database_open(cls, dbname: str = "database") -> Database:
-        print("e")
         if dbname not in database_instances:
             cls(dbname)  # pylint: disable=too-many-function-args
             if dbname in database_metadata:
