@@ -74,13 +74,6 @@ def remove_accents(text: str) -> str:
     return text
 
 
-def date_format(text: str) -> str:
-    dd = text[-2:]
-    mm = text[5:7]
-    yyyy = text[:4]
-    return f"{dd}/{mm}/{yyyy}"
-
-
 def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
     """Checks if a user has a PS role or higher.
 
