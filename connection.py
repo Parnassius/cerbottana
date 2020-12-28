@@ -75,7 +75,11 @@ class Connection:
         itasks: List[asyncio.Task[None]]
         for prio in range(5):
             itasks = []
-            for func in [t[1] for t in self.init_tasks if t[0] == prio + 1]:
+            for func, skip_unittesting in [
+                t[1:3] for t in self.init_tasks if t[0] == prio + 1
+            ]:
+                if self.unittesting and skip_unittesting:
+                    continue
                 itasks.append(asyncio.create_task(func(self)))
             for itask in itasks:
                 await itask
