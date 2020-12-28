@@ -4,5 +4,4 @@ __pycache__/
 /.mypy_cache
 /.venv
 /database.sqlite
-/logs.sqlite
 /veekun.sqlite

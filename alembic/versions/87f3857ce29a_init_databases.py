@@ -17,15 +17,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade(engine_name):
-    globals()["upgrade_%s" % engine_name]()
-
-
-def downgrade(engine_name):
-    globals()["downgrade_%s" % engine_name]()
-
-
-def upgrade_database():
+def upgrade():
     op.create_table(
         "badges",
         Column("id", Integer, primary_key=True),
@@ -80,29 +72,10 @@ def upgrade_database():
     )
 
 
-def downgrade_database():
+def downgrade():
     op.drop_table("badges")
     op.drop_table("eightball")
     op.drop_table("quotes")
     op.drop_table("repeats")
     op.drop_table("tokens")
     op.drop_table("users")
-
-
-def upgrade_logs():
-    op.create_table(
-        "logs",
-        Column("id", Integer, primary_key=True),
-        Column("roomid", String),
-        Column("date", String, index=True),
-        Column("time", String),
-        Column("userrank", String),
-        Column("userid", String),
-        Column("message", String),
-        Index("ix_logs_roomid_userid_date", "roomid", "userid", "date"),
-        Index("ix_logs_roomid_userrank_date", "roomid", "userrank", "date"),
-    )
-
-
-def downgrade_logs():
-    op.drop_table("logs")

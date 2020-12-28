@@ -17,15 +17,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade(engine_name):
-    globals()["upgrade_%s" % engine_name]()
-
-
-def downgrade(engine_name):
-    globals()["downgrade_%s" % engine_name]()
-
-
-def upgrade_database():
+def upgrade():
     meta = MetaData()
 
     with op.batch_alter_table(
@@ -102,14 +94,6 @@ def upgrade_database():
         batch_op.alter_column("id")
 
 
-def downgrade_database():
+def downgrade():
     with op.batch_alter_table("eightball") as batch_op:
         batch_op.drop_constraint("unique_answer")
-
-
-def upgrade_logs():
-    pass
-
-
-def downgrade_logs():
-    pass

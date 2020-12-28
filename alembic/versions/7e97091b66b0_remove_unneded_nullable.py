@@ -12,20 +12,12 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "7e97091b66b0"
-down_revision = "c5b59a5d8dd6"
+down_revision = "87f3857ce29a"
 branch_labels = None
 depends_on = None
 
 
-def upgrade(engine_name):
-    globals()["upgrade_%s" % engine_name]()
-
-
-def downgrade(engine_name):
-    globals()["downgrade_%s" % engine_name]()
-
-
-def upgrade_database():
+def upgrade():
     with op.batch_alter_table("badges") as batch_op:
         batch_op.alter_column("image", nullable=False)
         batch_op.alter_column("label", nullable=False)
@@ -65,7 +57,7 @@ def upgrade_database():
         batch_op.alter_column("userid", nullable=False)
 
 
-def downgrade_database():
+def downgrade():
     with op.batch_alter_table("badges") as batch_op:
         batch_op.alter_column("image", nullable=True)
         batch_op.alter_column("label", nullable=True)
@@ -103,99 +95,3 @@ def downgrade_database():
         "users", table_args=(UniqueConstraint("userid", sqlite_on_conflict="IGNORE"),)
     ) as batch_op:
         batch_op.alter_column("userid", nullable=True)
-
-
-def upgrade_logs():
-    op.drop_index("ix_logs_roomid_userid_date")
-    op.drop_index("ix_logs_roomid_userrank_date")
-    with op.batch_alter_table(
-        "logs",
-        table_args=(
-            Index("ix_logs_roomid_userid_date", "roomid", "userid", "date"),
-            Index("ix_logs_roomid_userrank_date", "roomid", "userrank", "date"),
-        ),
-    ) as batch_op:
-        batch_op.alter_column("roomid", nullable=False)
-        batch_op.alter_column("date", nullable=False)
-
-    op.drop_index("ix_daily_totals_per_rank_roomid_userrank_date")
-    with op.batch_alter_table(
-        "daily_totals_per_rank",
-        table_args=(
-            Index(
-                "ix_daily_totals_per_rank_roomid_userrank_date",
-                "roomid",
-                "userrank",
-                "date",
-            ),
-        ),
-    ) as batch_op:
-        batch_op.alter_column("roomid", nullable=False)
-        batch_op.alter_column("date", nullable=False)
-        batch_op.alter_column("userrank", nullable=False)
-        batch_op.alter_column("messages", nullable=False)
-
-    op.drop_index("ix_daily_totals_per_rank_roomid_userid_date")
-    with op.batch_alter_table(
-        "daily_totals_per_user",
-        table_args=(
-            Index(
-                "ix_daily_totals_per_rank_roomid_userid_date",
-                "roomid",
-                "userid",
-                "date",
-            ),
-        ),
-    ) as batch_op:
-        batch_op.alter_column("roomid", nullable=False)
-        batch_op.alter_column("date", nullable=False)
-        batch_op.alter_column("userid", nullable=False)
-        batch_op.alter_column("messages", nullable=False)
-
-
-def downgrade_logs():
-    op.drop_index("ix_logs_roomid_userid_date")
-    op.drop_index("ix_logs_roomid_userrank_date")
-    with op.batch_alter_table(
-        "logs",
-        table_args=(
-            Index("ix_logs_roomid_userid_date", "roomid", "userid", "date"),
-            Index("ix_logs_roomid_userrank_date", "roomid", "userrank", "date"),
-        ),
-    ) as batch_op:
-        batch_op.alter_column("roomid", nullable=True)
-        batch_op.alter_column("date", nullable=True)
-
-    op.drop_index("ix_daily_totals_per_rank_roomid_userrank_date")
-    with op.batch_alter_table(
-        "daily_totals_per_rank",
-        table_args=(
-            Index(
-                "ix_daily_totals_per_rank_roomid_userrank_date",
-                "roomid",
-                "userrank",
-                "date",
-            ),
-        ),
-    ) as batch_op:
-        batch_op.alter_column("roomid", nullable=True)
-        batch_op.alter_column("date", nullable=True)
-        batch_op.alter_column("userrank", nullable=True)
-        batch_op.alter_column("messages", nullable=True)
-
-    op.drop_index("ix_daily_totals_per_rank_roomid_userid_date")
-    with op.batch_alter_table(
-        "daily_totals_per_user",
-        table_args=(
-            Index(
-                "ix_daily_totals_per_rank_roomid_userid_date",
-                "roomid",
-                "userid",
-                "date",
-            ),
-        ),
-    ) as batch_op:
-        batch_op.alter_column("roomid", nullable=True)
-        batch_op.alter_column("date", nullable=True)
-        batch_op.alter_column("userid", nullable=True)
-        batch_op.alter_column("messages", nullable=True)
