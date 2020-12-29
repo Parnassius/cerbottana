@@ -27,6 +27,7 @@ from websockets import ConnectionClosedOK
 import databases.database as d
 from connection import Connection
 from database import Database
+from tasks.veekun import csv_to_sqlite
 
 if TYPE_CHECKING:
     BaseRecvQueue = Queue[Tuple[int, str]]  # pylint: disable=unsubscriptable-object
@@ -192,7 +193,11 @@ def mock_database(mocker) -> None:
     database_instances: Dict[str, Database] = {}
 
     def mock_database_init(self, dbname: str) -> None:
-        self.engine = create_engine("sqlite://")  # :memory: database
+        if dbname == "veekun":
+            engine = f"sqlite:///{dbname}.sqlite"
+        else:
+            engine = "sqlite://"  # :memory: database
+        self.engine = create_engine(engine)
         self.metadata = MetaData(bind=self.engine)
         self.session_factory = sessionmaker(bind=self.engine)
         self.Session = scoped_session(self.session_factory)
@@ -209,3 +214,10 @@ def mock_database(mocker) -> None:
 
     mocker.patch.object(Database, "__init__", mock_database_init)
     mocker.patch.object(Database, "open", mock_database_open)
+
+
+@pytest.fixture(scope="session")
+def veekun_database() -> None:
+    # csv_to_sqlite is an init_task, and as such it expects an instance of Connection as
+    # its first parameter. However it is never used so we just pass None instead.
+    asyncio.run(csv_to_sqlite(None))  # type: ignore[arg-type]
