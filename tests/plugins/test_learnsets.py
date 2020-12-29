@@ -21,7 +21,7 @@ def test_learnsets(mock_connection, veekun_database):
             + '  "autoconfirmed": true,'
             + '  "status": "",'
             + '  "rooms": {'
-            + '    "*@room1": {}'
+            + '    "*room1": {}'
             + "  }"
             + "}"
         ],

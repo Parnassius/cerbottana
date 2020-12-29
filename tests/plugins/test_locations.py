@@ -21,7 +21,7 @@ def test_locations(mock_connection, veekun_database):
             + '  "autoconfirmed": true,'
             + '  "status": "",'
             + '  "rooms": {'
-            + '    "*@room1": {}'
+            + '    "*room1": {}'
             + "  }"
             + "}"
         ],
@@ -81,7 +81,7 @@ def test_encounters(mock_connection, veekun_database):
             + '  "autoconfirmed": true,'
             + '  "status": "",'
             + '  "rooms": {'
-            + '    "*@room1": {}'
+            + '    "*room1": {}'
             + "  }"
             + "}"
         ],
