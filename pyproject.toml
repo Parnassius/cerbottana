@@ -26,5 +26,18 @@ max-line-length = "88"
 min-similarity-lines = "6"
 ignore-imports = "yes"
 
+
 [tool.isort]
 profile = "black"
+
+
+[tool.coverage.run]
+omit = [
+    ".venv/*",
+    "tests/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "if TYPE_CHECKING:"
+]
