@@ -3,8 +3,6 @@ from __future__ import annotations
 import math
 from typing import TYPE_CHECKING, Optional, Set
 
-import htmlmin  # type: ignore
-
 import utils
 from database import Database
 from plugins import htmlpages
@@ -157,7 +155,6 @@ class User:
             message (str): HTML to be sent.
             simple_message (str): Alt text. Defaults to a generic message.
         """
-        message = htmlmin.minify(message)
         room = self.can_pminfobox_to()
         if room is None:
             if simple_message == "":
@@ -207,11 +204,7 @@ class User:
                     cmd_char=self.conn.command_character,
                 )
 
-                message = (
-                    '<div class="pad">'
-                    + htmlmin.minify(message, convert_charrefs=False)
-                    + "</div>"
-                )
+                message = f'<div class="pad">{message}</div>'
                 if page_room:
                     pageid += "0" + page_room.roomid
 

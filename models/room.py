@@ -6,7 +6,6 @@ from textwrap import shorten
 from time import time
 from typing import TYPE_CHECKING, Deque, Dict, Optional
 
-import htmlmin  # type: ignore
 import pytz
 
 import utils
@@ -179,7 +178,6 @@ class Room:
             rank (str): Minimum rank required to see the HTML box.
             message (str): HTML to be sent.
         """
-        message = htmlmin.minify(message)
         await self.send(f"/addrankhtmlbox {rank}, {message}", False)
 
     async def send_htmlbox(self, message: str) -> None:
@@ -188,7 +186,6 @@ class Room:
         Args:
             message (str): HTML to be sent.
         """
-        message = htmlmin.minify(message)
         await self.send(f"/addhtmlbox {message}", False)
 
     async def send_htmlpage(self, pageid: str, page_room: Room) -> None:

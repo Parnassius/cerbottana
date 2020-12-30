@@ -7,6 +7,7 @@ import string
 from html import escape
 from typing import Any, Dict, Optional
 
+import htmlmin  # type: ignore
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.sql import func
 
@@ -187,7 +188,8 @@ def render_template(  # type: ignore[misc]  # allow any
         lstrip_blocks=True,
     )
     template = env.get_template(template_name)
-    return template.render(**template_vars)
+    html = template.render(**template_vars)
+    return htmlmin.minify(html, convert_charrefs=False)  # type: ignore[no-any-return]
 
 
 def to_obfuscated_html(text: Optional[str]) -> str:
