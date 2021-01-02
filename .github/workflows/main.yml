@@ -16,6 +16,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.7.9
+    - name: Cache Poetry virtualenv
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pypoetry/virtualenvs
+        key: poetry-${{ hashFiles('**/poetry.lock') }}
     - name: Install Poetry
       run: |
         curl -fsS https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - -y
