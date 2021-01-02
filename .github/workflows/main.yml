@@ -16,22 +16,24 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.7.9
-    - name: Install dependencies
+    - name: Install Poetry
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt -r requirements-dev.txt
+        curl -fsS https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - -y
+        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+    - name: Install dependencies
+      run: poetry install --no-interaction
     - name: Check import order
-      run: isort --check .
+      run: make isort_check
     - name: Check formatting using black
-      run: black --check .
+      run: make black_check
     - name: Check docstrings with darglint
-      run: find . -name '*.py' -not -path './.*' | xargs darglint -v 2
+      run: make darglint
     - name: Test with mypy
-      run: mypy .
+      run: make mypy
     - name: Test with pylint
-      run: find . -name '*.py' -not -path './.*' | xargs pylint --disable=fixme
+      run: make pylint
     - name: Test with pytest
-      run: pytest --cov
+      run: make pytest
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@1fc7722ded4708880a5aea49f2bfafb9336f0c8d
       with:
