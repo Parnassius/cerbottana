@@ -17,6 +17,7 @@ jobs:
       with:
         python-version: 3.7.9
     - name: Cache Poetry virtualenv
+      id: virtualenv-cache
       uses: actions/cache@v2
       with:
         path: ~/.cache/pypoetry/virtualenvs
@@ -27,6 +28,7 @@ jobs:
         echo "$HOME/.poetry/bin" >> $GITHUB_PATH
     - name: Install dependencies
       run: poetry install --no-interaction
+      if: steps.virtualenv-cache.outputs.cache-hit != 'true'
     - name: Check import order
       run: make isort_check
     - name: Check formatting using black
