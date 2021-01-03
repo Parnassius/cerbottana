@@ -141,21 +141,8 @@ def test_room(mock_connection) -> None:
     assert send_queue.get_all() == Counter()
 
     # Global and room rank
-    recv_queue.add_messages(
-        [
-            "|queryresponse|userdetails|{"
-            + '  "id": "cerbottana",'
-            + '  "userid": "cerbottana",'
-            + '  "name": "cerbottana",'
-            + '  "avatar": "supernerd",'
-            + '  "group": "+",'
-            + '  "autoconfirmed": true,'
-            + '  "status": "",'
-            + '  "rooms": {'
-            + '    "*room1": {}'
-            + "  }"
-            + "}",
-        ]
+    recv_queue.add_queryresponse_userdetails(
+        "cerbottana", group="+", rooms={"room1": "*"}
     )
     assert User.get(conn, "cerbottana").global_rank == "+"
     assert User.get(conn, "cerbottana").rank(room1) == "*"

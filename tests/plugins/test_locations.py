@@ -1,31 +1,8 @@
 def test_locations(mock_connection, veekun_database):
     conn, recv_queue, send_queue = mock_connection()
 
-    recv_queue.add_messages(
-        [
-            ">room1",
-            "|j| user1",
-        ],
-        [
-            ">room1",
-            "|j|*cerbottana",
-        ],
-        [
-            "|queryresponse|userdetails|{"
-            + "  "
-            + '  "id": "cerbottana",'
-            + '  "userid": "cerbottana",'
-            + '  "name": "cerbottana",'
-            + '  "avatar": "1",'
-            + '  "group": " ",'
-            + '  "autoconfirmed": true,'
-            + '  "status": "",'
-            + '  "rooms": {'
-            + '    "*room1": {}'
-            + "  }"
-            + "}"
-        ],
-    )
+    recv_queue.add_user_join("room1", "user1")
+    recv_queue.add_user_join("room1", "cerbottana", "*")
     send_queue.get_all()
 
     recv_queue.add_messages(
@@ -61,31 +38,8 @@ def test_locations(mock_connection, veekun_database):
 def test_encounters(mock_connection, veekun_database):
     conn, recv_queue, send_queue = mock_connection()
 
-    recv_queue.add_messages(
-        [
-            ">room1",
-            "|j| user1",
-        ],
-        [
-            ">room1",
-            "|j|*cerbottana",
-        ],
-        [
-            "|queryresponse|userdetails|{"
-            + "  "
-            + '  "id": "cerbottana",'
-            + '  "userid": "cerbottana",'
-            + '  "name": "cerbottana",'
-            + '  "avatar": "1",'
-            + '  "group": " ",'
-            + '  "autoconfirmed": true,'
-            + '  "status": "",'
-            + '  "rooms": {'
-            + '    "*room1": {}'
-            + "  }"
-            + "}"
-        ],
-    )
+    recv_queue.add_user_join("room1", "user1")
+    recv_queue.add_user_join("room1", "cerbottana", "*")
     send_queue.get_all()
 
     recv_queue.add_messages(

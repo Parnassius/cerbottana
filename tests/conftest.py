@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import threading
 from queue import Empty as EmptyQueue
 from queue import Queue
@@ -25,6 +26,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from websockets import ConnectionClosedOK
 
 import databases.database as d
+import utils
 from connection import Connection
 from database import Database
 from tasks.veekun import csv_to_sqlite
@@ -43,6 +45,86 @@ database_metadata: Dict[str, Any] = {
 
 
 class RecvQueue(BaseRecvQueue):
+    def add_user_join(
+        self,
+        room: str,
+        user: str,
+        rank: str = " ",
+        *,
+        group: str = " ",
+    ) -> None:
+        roomid = utils.to_room_id(room)
+        userid = utils.to_user_id(user)
+
+        self.add_messages(
+            [
+                f">{roomid}",
+                f"|j|{rank}{userid}",
+            ]
+        )
+        self.add_queryresponse_userdetails(user, group=group, rooms={roomid: rank})
+
+    def add_user_namechange(
+        self,
+        room: str,
+        user: str,
+        olduser: str,
+        rank: str = " ",
+        *,
+        group: str = " ",
+    ) -> None:
+        roomid = utils.to_room_id(room)
+        userid = utils.to_user_id(user)
+        olduserid = utils.to_user_id(olduser)
+
+        self.add_messages(
+            [
+                f">{roomid}",
+                f"|n|{rank}{userid}|{olduserid}",
+            ]
+        )
+        self.add_queryresponse_userdetails(user, group=group, rooms={roomid: rank})
+
+    def add_user_leave(self, room: str, user: str) -> None:
+        roomid = utils.to_room_id(room)
+        userid = utils.to_user_id(user)
+
+        self.add_messages(
+            [
+                f">{roomid}",
+                f"|l|{userid}",
+            ]
+        )
+
+    def add_queryresponse_userdetails(
+        self,
+        user: str,
+        *,
+        group: str = " ",
+        rooms: Optional[Dict[str, str]] = None,
+    ) -> None:
+        userid = utils.to_user_id(user)
+
+        if rooms is None:
+            rooms = {}
+
+        data = {
+            "id": user,
+            "userid": userid,
+            "name": user,
+            "avatar": "1",
+            "group": group,
+            "autoconfirmed": True,
+            "status": "",
+            "rooms": {rooms[room].strip() + room: {} for room in rooms},
+        }
+
+        self.add_messages(
+            [
+                f"|queryresponse|userdetails|{json.dumps(data)}",
+            ]
+        )
+
     def add_messages(self, *items: List[str]) -> None:
         for item in items:
             self.put((0, "\n".join(item)))
