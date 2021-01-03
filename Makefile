@@ -1,6 +1,6 @@
 .PHONY: deps
 deps:
-	poetry install
+	poetry install --remove-untracked
 
 
 .PHONY: database
