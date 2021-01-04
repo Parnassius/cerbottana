@@ -331,7 +331,11 @@ async def trev(msg: Message) -> None:
 
 @command_wrapper()
 async def ultrasuca(msg: Message) -> None:
-    await msg.reply("@Ultrasuca left")
+    yt_url = "https://www.youtube.com/watch?v=FlH97kbzSAY"
+    if msg.room is None:
+        await msg.reply(yt_url)
+    else:
+        await msg.reply_htmlbox(f'<youtube src="{yt_url}"></youtube>', yt_url)
 
 
 @command_wrapper(aliases=("useless", "usy"))
