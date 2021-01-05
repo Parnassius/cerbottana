@@ -1,0 +1,8 @@
+comment:
+  layout: "diff,flags,files"
+
+coverage:
+  status:
+    project:
+      default:
+        informational: true
