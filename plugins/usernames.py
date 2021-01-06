@@ -39,11 +39,9 @@ async def alpha(msg: Message) -> None:
 @command_wrapper(aliases=("acii",))
 async def altcauseiminsecure(msg: Message) -> None:
     await msg.reply(
-        (
-            "A, wi, we. La fortuna viene a me. "
-            "Wi, we, wa. La fortuna viene qua. "
-            "A, we, wi. La fortuna non va lì"
-        )
+        "A, wi, we. La fortuna viene a me. "
+        "Wi, we, wa. La fortuna viene qua. "
+        "A, we, wi. La fortuna non va lì"
     )
 
 
