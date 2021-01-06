@@ -10,11 +10,8 @@ Role = Literal[
 
 JsonDict = Dict[str, Any]  # type: ignore[misc]
 
-TiersDict = TypedDict(
-    "TiersDict",
-    {
-        "name": str,
-        "section": str,
-        "random": bool,
-    },
-)
+
+class TiersDict(TypedDict):
+    name: str
+    section: str
+    random: bool
