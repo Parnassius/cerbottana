@@ -512,5 +512,5 @@ LETTERS: Dict[str, List[str]] = {
 # fmt: on
 
 
-with open("./data/memes.json", "r") as f:
+with open("./data/memes.json") as f:
     MEMES = json.load(f)

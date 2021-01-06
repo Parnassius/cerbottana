@@ -41,5 +41,5 @@ async def trad(msg: Message) -> None:
     await msg.reply("Non trovato")
 
 
-with open("./data/translations.json", "r") as f:
+with open("./data/translations.json") as f:
     TRANSLATIONS: Dict[str, List[Dict[str, str]]] = json.load(f)
