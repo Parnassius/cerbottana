@@ -1,24 +1,34 @@
+.PHONY: all
+all: tests
+
+
+poetry.lock: pyproject.toml
+	@poetry lock --no-update
+
+.venv/.flag: poetry.lock
+	@poetry config --local virtualenvs.in-project true
+	@poetry install --remove-untracked
+	@touch .venv/.flag
+
 .PHONY: deps
-deps:
-	poetry install --remove-untracked
+deps: .venv/.flag
 
 
 .PHONY: database
 database: deps
 	poetry run alembic upgrade head
 
+
 .PHONY: format
 format: isort black
 
 .PHONY: isort
-isort:
-	@poetry show isort --quiet || make deps
+isort: deps
 	poetry run isort .
 	@echo ''
 
 .PHONY: black
-black:
-	@poetry show black --quiet || make deps
+black: deps
 	poetry run black .
 	@echo ''
 
@@ -28,38 +38,32 @@ test: tests
 tests: isort_check black_check darglint mypy pylint pytest
 
 .PHONY: isort_check
-isort_check:
-	@poetry show isort --quiet || make deps
+isort_check: deps
 	poetry run isort --check .
 	@echo ''
 
 .PHONY: black_check
-black_check:
-	@poetry show black --quiet || make deps
+black_check: deps
 	poetry run black --check .
 	@echo ''
 
 .PHONY: darglint
-darglint:
-	@poetry show darglint --quiet || make deps
+darglint: deps
 	find . -name '*.py' -not -path './.*' | xargs poetry run darglint -v 2
 	@echo ''
 
 .PHONY: mypy
-mypy:
-	@poetry show mypy --quiet || make deps
+mypy: deps
 	poetry run mypy .
 	@echo ''
 
 .PHONY: pylint
-pylint:
-	@poetry show pylint --quiet || make deps
+pylint: deps
 	find . -name '*.py' -not -path './.*' | xargs poetry run pylint --disable=fixme
 	@echo ''
 
 .PHONY: pytest
-pytest:
-	@poetry show pytest --quiet || make deps
+pytest: deps
 	if test -z "$$CI"; then poetry run pytest; else poetry run pytest --cov --cov-report=xml; fi
 	@echo ''
 
