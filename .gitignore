@@ -4,4 +4,5 @@ __pycache__/
 /.mypy_cache
 /.venv
 /database.sqlite
+/poetry.toml
 /veekun.sqlite
