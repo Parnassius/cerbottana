@@ -2,9 +2,6 @@
 all: tests
 
 
-poetry.lock: pyproject.toml
-	@poetry lock --no-update
-
 .venv/.flag: poetry.lock
 	@poetry config --local virtualenvs.in-project true
 	@poetry install --remove-untracked
