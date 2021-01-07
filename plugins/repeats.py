@@ -41,24 +41,24 @@ class Repeat:
     also registers a task to the base asyncio loop of the Connection param.
     """
 
-    _instances: Dict[Tuple[str, Room], Repeat] = {}  # record of active instances
+    _instances: Dict[Tuple[str, Room], Repeat] = {}  # Record of active instances
 
     def __init__(
         self,
         message: str,
         room: Room,
         delta_minutes: int,
-        initial_dt: Optional[datetime] = None,  # if None, then it's a new task
+        initial_dt: Optional[datetime] = None,  # If None, then it's a new task.
         expire_dt: Optional[datetime] = None,
         max_iters: Optional[int] = None,
     ) -> None:
-        now = datetime.now()  # fixes the time for calculations within this method
+        now = datetime.now()  # Fixes the time for calculations within this method.
 
         self.message = message
         self.room = room
 
         self.delta = timedelta(minutes=delta_minutes)
-        self.delta_minutes = delta_minutes  # kept only as an external property
+        self.delta_minutes = delta_minutes  # Kept only as an external property
 
         self.initial_dt = initial_dt if initial_dt else now
 
@@ -67,12 +67,12 @@ class Repeat:
             max_iters_dt = self.delta * (max_iters - 1) + now
             self.expire_dt = max(expire_dt, max_iters_dt) if expire_dt else max_iters_dt
 
-        # is_new: True if the repeat has just been created with a chat command
+        # is_new: True if the repeat has just been created with a chat command.
         self.is_new = not initial_dt
 
-        self.offset = timedelta(0)  # waiting time before the first repeat
+        self.offset = timedelta(0)  # Waiting time before the first repeat
         if not self.is_new:
-            # make old repeats fire at the scheduled time, not instantly
+            # Make old repeats fire at the scheduled time, not instantly.
             offline_period = now - self.initial_dt
             shift = self.delta * math.ceil(offline_period / self.delta)
             self.offset += shift - offline_period
@@ -110,9 +110,9 @@ class Repeat:
         while not self.expired:
             start = datetime.now()
             if (
-                # conditions that cause a repeat to skip a call but not to stop forever
-                not self.room.modchat  # don't send if modchat is active
-                and self.message not in self.room.buffer  # throttling
+                # Conditions that cause a repeat to skip a call but not to stop forever
+                not self.room.modchat  # Don't send if modchat is active
+                and self.message not in self.room.buffer  # Throttling
             ):
                 await self.room.send(self.message, False)
             else:
@@ -128,17 +128,17 @@ class Repeat:
                 self._unlist()
             return False
 
-        if self.key in self._instances:  # this instance updates a previous one
+        if self.key in self._instances:  # This instance updates a previous one.
             previous = self._instances[self.key]
-            if previous.task:  # safety check: should never fail
+            if previous.task:  # Safety check: should never fail.
                 previous.task.cancel()
-                # no need to previous._unlist(), we'll just update the SQL row
+                # No need to previous._unlist(), we'll just update the SQL row.
         self._instances[self.key] = self
 
         self.task = asyncio.create_task(self.coro())
 
         if self.is_new:
-            # if the task has just been created, register it into the SQL db
+            # If the task has just been created, register it into the SQL db.
             print(f"Registering {self.message} into db.")
             db = Database.open()
             with db.get_session() as session:
@@ -155,19 +155,19 @@ class Repeat:
         return True
 
     def stop(self) -> None:
-        if self.task:  # safety check: should never fail
+        if self.task:  # Safety check: should never fail.
             self.task.cancel()
         self._unlist()
 
     def _unlist(self) -> None:
-        # remove corresponding SQL row
+        # Remove corresponding SQL row
         db = Database.open()
         with db.get_session() as session:
             session.query(d.Repeats).filter_by(
                 message=self.message, roomid=self.room.roomid
             ).delete()
 
-        # remove from _instances dict
+        # Remove from _instances dict
         self._instances.pop(self.key, None)
 
     @classmethod
@@ -216,7 +216,7 @@ async def repeat(msg: Message) -> None:
     errmsg += f"``{ch}repeat testo, distanza in minuti, scadenza`` "
     errmsg += "La scadenza può essere una data o il numero totale di ripetizioni."
 
-    # parse command args
+    # Parse command args
     if len(msg.args) > 3 or len(msg.args) < 2:
         await msg.reply(errmsg)
         return
@@ -235,14 +235,14 @@ async def repeat(msg: Message) -> None:
         return
     delta_minutes = int(msg.args[1])
 
-    if len(msg.args) == 2:  # no third param: repeat never expires
+    if len(msg.args) == 2:  # No third param: repeat never expires.
         instance = Repeat(phrase, msg.parametrized_room, delta_minutes)
     elif msg.args[2].isdigit():
         instance = Repeat(
             phrase, msg.parametrized_room, delta_minutes, max_iters=int(msg.args[2])
         )
     else:
-        try:  # is the third param an expire date string?
+        try:  # Is the third param an expire date string?
             expire_dt = parse(msg.args[2], default=datetime.now(), dayfirst=True)
             instance = Repeat(
                 phrase, msg.parametrized_room, delta_minutes, expire_dt=expire_dt
@@ -251,7 +251,7 @@ async def repeat(msg: Message) -> None:
             await msg.reply(errmsg)
             return
 
-    # start repeat and report result
+    # Start repeat and report result
     if instance.start():
         if msg.room is None:
             await msg.parametrized_room.send_modnote("REPEAT ADDED", msg.user, phrase)
