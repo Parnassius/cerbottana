@@ -58,5 +58,6 @@ def test_to_html_quotebox_colorize(chatline: str, is_colorized: bool) -> None:
 
 def test_to_html_quotebox_empty() -> None:
     """Tests that empty quotes raise an exception."""
-    with pytest.raises(BaseException):
+    with pytest.raises(BaseException) as excinfo:
         quotes.to_html_quotebox("")
+    assert str(excinfo.value) == "Trying to create quotebox for empty quote."
