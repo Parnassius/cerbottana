@@ -56,8 +56,8 @@ async def memes(msg: Message) -> None:
     await msg.reply(random.choice(MEMES))
 
 
-# fmt: off
 LETTERS: Dict[str, List[str]] = {
+    # fmt: off
     "a": [
         "┌─┐",
         "├─┤",
@@ -509,7 +509,6 @@ LETTERS: Dict[str, List[str]] = {
         "  ",
     ],
 }
-# fmt: on
 
 
 with open("./data/memes.json") as f:
