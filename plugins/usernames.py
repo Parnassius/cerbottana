@@ -69,7 +69,7 @@ async def antonio200509(msg: Message) -> None:
             .first()
         )
         if not species:
-            raise SQLAlchemyError("Missing PokemonSpecies data")
+            raise SQLAlchemyError("Missing PokemonSpeciesNames data")
         species_name = species.name
     numbers = str(random.randint(0, 999999)).zfill(6)
     await msg.reply(f'Antonio{numbers} guessed "{species_name}"!')
