@@ -10,10 +10,9 @@ if TYPE_CHECKING:
 
 @command_wrapper(aliases=("token",), required_rank="driver", main_room_only=True)
 async def dashboard(msg: Message) -> None:
-    phrase = (
+    await msg.user.send(
         "``.dashboard`` è stato rimosso, "
         "per gestire le badge di un utente usa ``.badges <utente>``, "
         "per gestire le risposte di ``.8ball`` usa ``.8ballanswers``, "
         "``.add8ballanswer`` e ``.remove8ballanswer``"
     )
-    await msg.user.send(phrase)
