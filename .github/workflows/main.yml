@@ -28,6 +28,12 @@ jobs:
       run: |
         curl -fsS https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - -y
         echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+    - name: Install dependencies on a cache miss...
+      if: steps.virtualenv-cache.outputs.cache-hit != 'true'
+      run: make deps
+    - name: ...or mark them as up-to-date on a cache hit
+      if: steps.virtualenv-cache.outputs.cache-hit == 'true'
+      run: make deps --touch
     - name: Check import order
       run: make isort_check
     - name: Check formatting using black
