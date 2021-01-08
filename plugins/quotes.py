@@ -124,7 +124,7 @@ async def addquote(msg: Message) -> None:
             date=func.date(),
         )
         session.add(result)
-        session.commit()  # type: ignore  # sqlalchemy
+        session.commit()
 
         try:
             if result.id:
