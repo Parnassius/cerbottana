@@ -61,7 +61,7 @@ async def addeightballanswer(msg: Message) -> None:
     with db.get_session() as session:
         result = d.EightBall(answer=msg.arg, roomid=msg.parametrized_room.roomid)
         session.add(result)
-        session.commit()  # type: ignore  # sqlalchemy
+        session.commit()
 
         try:
             if result.id:
