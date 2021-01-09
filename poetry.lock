@@ -202,6 +202,17 @@ optional = false
 python-versions = ">=3.4"
 
 [[package]]
+name = "imageprobe"
+version = "0.1.2"
+description = "Asynchronous image probing library. Fetch only as much as you need!"
+category = "main"
+optional = false
+python-versions = ">=3.6.2,<3.9"
+
+[package.dependencies]
+aiohttp = ">=3.7.3,<4.0.0"
+
+[[package]]
 name = "importlib-metadata"
 version = "3.3.0"
 description = "Read metadata from Python packages"
@@ -645,7 +656,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "3.7.9"
-content-hash = "223413621a6ece579232623b79554cb5b05f35a93242835e4739faa65004e702"
+content-hash = "d64facf7ab40e23057ad8e8f63ee92cc28eb6ff877294d81ec328caf5faff211"
 
 [metadata.files]
 aiohttp = [
@@ -795,6 +806,10 @@ htmlmin = [
 idna = [
     {file = "idna-3.1-py3-none-any.whl", hash = "sha256:5205d03e7bcbb919cc9c19885f9920d622ca52448306f2377daede5cf3faac16"},
     {file = "idna-3.1.tar.gz", hash = "sha256:c5b02147e01ea9920e6b0a3f1f7bb833612d507592c837a6c49552768f4054e1"},
+]
+imageprobe = [
+    {file = "imageprobe-0.1.2-py3-none-any.whl", hash = "sha256:e81605e08d14a502b483111808ce1b3eae8b00726f45d2a478d5867193642dab"},
+    {file = "imageprobe-0.1.2.tar.gz", hash = "sha256:b9bb35fb15f49256c962e5cdba440112b79fe5487c9f0bc5e04580cc8ae6a5c2"},
 ]
 importlib-metadata = [
     {file = "importlib_metadata-3.3.0-py3-none-any.whl", hash = "sha256:bf792d480abbd5eda85794e4afb09dd538393f7d6e6ffef6e9f03d2014cf9450"},
