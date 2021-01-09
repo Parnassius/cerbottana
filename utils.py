@@ -8,6 +8,7 @@ from html import escape
 from typing import Any, Dict, Optional
 
 import htmlmin  # type: ignore
+from imageprobe import probe
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.sql import func
 
@@ -115,6 +116,12 @@ def html_escape(text: Optional[str]) -> str:
     if text is None:
         return ""
     return escape(text).replace("\n", "<br>")
+
+
+async def image_url_to_html(url: str) -> str:
+    """Generates an <img> tag from an image url."""
+    image = await probe(url)
+    return f'<img src="{url}" width="{image.width}" height="{image.height}">'
 
 
 def is_youtube_link(url: str) -> bool:
