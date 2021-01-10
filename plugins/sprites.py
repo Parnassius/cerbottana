@@ -3,7 +3,6 @@ from __future__ import annotations
 import random
 import re
 from typing import TYPE_CHECKING
-from urllib.parse import quote
 
 from imageprobe.errors import UnsupportedFormat
 from sqlalchemy.exc import SQLAlchemyError
@@ -28,11 +27,31 @@ def generate_sprite_url(pokemon: str, shiny: bool = False) -> str:
     Returns:
         str: URL.
     """
-    pokemon = re.sub(r"[':\.\s]", "", pokemon.lower())
+    # Remove any non-alphanumeric characters besides hyphens.
     pokemon = utils.remove_accents(pokemon)
-    pokemon = quote(pokemon)
+    pokemon = re.sub(r"[^a-z0-9-]", "", pokemon.lower())
+
+    exceptions = (  # Base forms containing a hyphen
+        "ho-oh",
+        "jangmo-o",
+        "hakamo-o",
+        "kommo-o",
+        "nidoran-m",
+        "nidoran-f",
+        "porygon-z",
+    )
+    if pokemon.startswith(exceptions):
+        pokemon = pokemon.replace("-", "", 1)  # Remove hyphen from base form.
+
+    parts = pokemon.split("-", 1)
+    if len(parts) > 1 and parts[1]:  # base name + form suffix
+        # Remove additional hyphens from the suffix.
+        dexname = parts[0] + "-" + parts[1].replace("-", "")
+    else:  # only base name
+        dexname = pokemon
+
     category = "ani-shiny" if shiny else "ani"
-    return f"https://play.pokemonshowdown.com/sprites/{category}/{pokemon}.gif"
+    return f"https://play.pokemonshowdown.com/sprites/{category}/{dexname}.gif"
 
 
 @command_wrapper(helpstr="Mostra lo sprite di un pokemon")
