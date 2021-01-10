@@ -1,0 +1,40 @@
+name: update-showdown-data
+
+on:
+  schedule:
+  - cron: '0 0 * * 0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: cerbottana
+    - name: Clone pokemon showdown
+      uses: actions/checkout@v2
+      with:
+        repository: smogon/pokemon-showdown
+        path: pokemon-showdown
+    - name: Set up node
+      uses: actions/setup-node@v2
+    - name: Build pokemon showdown
+      run: pokemon-showdown/build
+    - name: Update showdown data
+      run: |
+        echo 'const fs = require("fs");
+              const Sim = require("./pokemon-showdown");
+              fs.writeFileSync("cerbottana/data/showdown/aliases.json", JSON.stringify(Sim.Dex.data.Aliases, null, 2) + "\n");
+              fs.writeFileSync("cerbottana/data/showdown/pokedex.json", JSON.stringify(Sim.Dex.data.Pokedex, null, 2) + "\n");
+        ' | node -
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@45c510e1f68ba052e3cd911f661a799cfb9ba3a3
+      with:
+        path: cerbottana
+        token: ${{ secrets.MACHINE_USER_PAT }}
+        push-to-fork: prnss/cerbottana
+        committer: prns <77806190+prnss@users.noreply.github.com>
+        author: prns <77806190+prnss@users.noreply.github.com>
+        commit-message: 'Showdown: update data'
+        title: 'Showdown: update data'
+        branch: showdown-update-data
