@@ -63,17 +63,8 @@ def to_room_id(room: str, fallback: RoomId = RoomId("lobby")) -> RoomId:
 
 
 def remove_accents(text: str) -> str:
-    text = re.sub(r"à", "a", text)
-    text = re.sub(r"è|é", "e", text)
-    text = re.sub(r"ì", "i", text)
-    text = re.sub(r"ò", "o", text)
-    text = re.sub(r"ù", "u", text)
-    text = re.sub(r"À", "A", text)
-    text = re.sub(r"È|É", "E", text)
-    text = re.sub(r"Ì", "I", text)
-    text = re.sub(r"Ò", "O", text)
-    text = re.sub(r"Ù", "U", text)
-    return text
+    rule = str.maketrans("àèéìòùÀÈÉÌÒÙ", "aeeiouAEEIOU")
+    return text.translate(rule)
 
 
 def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
