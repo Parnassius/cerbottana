@@ -59,4 +59,4 @@ async def memes(msg: Message) -> None:
 with open("./data/letters.json") as f:
     LETTERS: Dict[str, List[str]] = json.load(f)
 with open("./data/memes.json") as f:
-    MEMES = json.load(f)
+    MEMES: List[str] = json.load(f)
