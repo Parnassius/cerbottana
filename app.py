@@ -16,7 +16,7 @@ def main() -> None:
         sig: signal.Signals, frame_type: FrameType  # pylint: disable=no-member
     ) -> None:
         if conn.websocket is not None and conn.loop is not None:
-            for task in asyncio.all_tasks(loop=conn.loop):
+            for task in asyncio.all_tasks(conn.loop):
                 task.cancel()
             coro = conn.websocket.close()
             asyncio.run_coroutine_threadsafe(coro, conn.loop)

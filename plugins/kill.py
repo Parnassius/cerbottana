@@ -12,6 +12,6 @@ if TYPE_CHECKING:
 @command_wrapper(aliases=("ammaz", "ammazz"))
 async def kill(msg: Message) -> None:
     if msg.user.is_administrator and msg.conn.websocket is not None:
-        for task in asyncio.all_tasks(loop=msg.conn.loop):
+        for task in asyncio.all_tasks():
             task.cancel()
         await msg.conn.websocket.close()

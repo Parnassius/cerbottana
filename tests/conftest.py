@@ -198,7 +198,7 @@ def mock_connection(
                     )
                 elif msg_type == 2:
                     # cancel all running tasks
-                    for task in asyncio.all_tasks(loop=conn.loop):
+                    for task in asyncio.all_tasks():
                         task.cancel()
                     raise ConnectionClosedOK(1000, "Connection closed")
 
