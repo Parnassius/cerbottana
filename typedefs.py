@@ -1,6 +1,4 @@
-from typing import Any, Dict
-
-from typing_extensions import Literal, NewType, TypedDict
+from typing import Any, Dict, Literal, NewType, TypedDict
 
 RoomId = NewType("RoomId", str)
 UserId = NewType("UserId", str)

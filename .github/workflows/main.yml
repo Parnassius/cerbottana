@@ -12,10 +12,10 @@ jobs:
     continue-on-error: true
     steps:
     - uses: actions/checkout@v2
-    - name: Set up python 3.7.9
+    - name: Set up python 3.8.7
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7.9
+        python-version: 3.8.7
     - name: Cache Poetry virtualenv
       id: virtualenv-cache
       uses: actions/cache@v2
