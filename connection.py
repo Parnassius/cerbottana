@@ -62,13 +62,13 @@ class Connection:
         self.tiers: list[TiersDict] = []
 
     def open_connection(self) -> None:
-        self.loop = asyncio.new_event_loop()
         try:
-            self.loop.run_until_complete(self._start_websocket())
+            asyncio.run(self._start_websocket())
         except asyncio.CancelledError:
             pass
 
     async def _start_websocket(self) -> None:
+        self.loop = asyncio.get_running_loop()
         itasks: list[asyncio.Task[None]]
         for prio in range(5):
             itasks = []
