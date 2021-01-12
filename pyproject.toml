@@ -44,7 +44,7 @@ mypy = "0.790"
 pylint = "2.6.0"
 pytest = "6.2.1"
 pytest-cov = "2.10.1"
-pytest-mock = "3.5.0"
+pytest-mock = "3.5.1"
 [tool.poetry.dev-dependencies.sqlalchemy-stubs]
 git = "https://github.com/dropbox/sqlalchemy-stubs.git"
 rev = "55470ceab8149db983411d5c094c9fe16343c58b"
