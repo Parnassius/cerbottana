@@ -180,10 +180,10 @@ def mock_connection(
                 elif msg_type == 1:
                     # await conn._parse_message() tasks
                     await asyncio.gather(
-                        *[  # pylint: disable=protected-access
+                        *[
                             task
-                            for task in asyncio.all_tasks(conn.loop)
-                            if task._coro.__name__ == "_parse_message"  # type: ignore
+                            for task in asyncio.all_tasks()
+                            if task.get_coro().__name__ == "_parse_message"
                         ]
                     )
                 elif msg_type == 2:
