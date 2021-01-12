@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 from sqlalchemy.orm import joinedload
-from typing_extensions import TypedDict
 
 import databases.veekun as v
 import utils
