@@ -77,9 +77,7 @@ class Repeat:
             shift = self.delta * math.ceil(offline_period / self.delta)
             self.offset += shift - offline_period
 
-        self.task: Optional[
-            asyncio.Future[None]  # pylint: disable=unsubscriptable-object
-        ] = None
+        self.task: Optional[asyncio.Task[None]] = None
 
         log = [
             "----- REPEAT -----",
