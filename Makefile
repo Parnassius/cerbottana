@@ -4,8 +4,9 @@ all: tests
 
 .venv/.flag: poetry.lock
 	@poetry config --local virtualenvs.in-project true
+	@cmp --silent .python-version .venv/.flag || rm -rf .venv
 	@poetry install --remove-untracked
-	@touch .venv/.flag
+	@cp .python-version .venv/.flag
 
 .PHONY: deps
 deps: .venv/.flag
