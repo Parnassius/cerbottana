@@ -71,7 +71,3 @@ disable = [
 
 [tool.pylint.format]
 max-line-length = "88"
-
-[tool.pylint.similarities]
-min-similarity-lines = "6"
-ignore-imports = "yes"
