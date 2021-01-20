@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import asyncio
 import json
-import urllib.parse
-import urllib.request
 from typing import TYPE_CHECKING
+
+import aiohttp
 
 import utils
 from handlers import handler_wrapper
@@ -19,23 +19,17 @@ async def challstr(conn: Connection, room: Room, *args: str) -> None:
     if len(args) < 1:
         return
 
-    challstring = "|".join(args)
+    url = "https://play.pokemonshowdown.com/action.php"
+    payload = {
+        "act": "login",
+        "name": conn.username,
+        "pass": conn.password,
+        "challstr": "|".join(args),
+    }
 
-    payload = (
-        "act=login&"
-        f"name={conn.username}"
-        f"&pass={conn.password}"
-        f"&challstr={challstring}"
-    ).encode()
-
-    req = urllib.request.Request(
-        "https://play.pokemonshowdown.com/action.php",
-        payload,
-        {"User-Agent": "Mozilla"},
-    )
-    resp = urllib.request.urlopen(req)
-
-    assertion = json.loads(resp.read().decode("utf-8")[1:])["assertion"]
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, data=payload) as resp:
+            assertion = json.loads((await resp.text("utf-8"))[1:])["assertion"]
 
     if assertion:
         await conn.send(f"|/trn {conn.username},0,{assertion}")
