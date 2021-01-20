@@ -457,8 +457,8 @@ class PokemonFormNames(Base):
     local_language_id = Column(
         Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
     )
-    form_name = Column(Integer, nullable=False)
-    pokemon_name = Column(Integer, nullable=False)
+    form_name = Column(String, nullable=False)
+    pokemon_name = Column(String, nullable=False)
 
     pokemon_form = relationship("PokemonForms", uselist=False)
     local_language = relationship("Languages", uselist=False)
