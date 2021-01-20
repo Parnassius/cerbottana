@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from functools import total_ordering
-from typing import cast
+from typing import Literal, cast, overload
 
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
@@ -40,6 +40,7 @@ class HashableMixin:
 
 
 class TranslatableMixin:
+    @overload
     def get_translation(
         self,
         translation_table: str,
@@ -48,8 +49,36 @@ class TranslatableMixin:
         translation_column: str | None = None,
         language_column: str | None = None,
         fallback_column: str | None = None,
+        fallback_english: Literal[True] = True,
         fallback: str | None = None,
     ) -> str:
+        ...
+
+    @overload
+    def get_translation(
+        self,
+        translation_table: str,
+        *,
+        language_id: int | None = None,
+        translation_column: str | None = None,
+        language_column: str | None = None,
+        fallback_column: str | None = None,
+        fallback_english: Literal[False] = False,
+        fallback: str | None = None,
+    ) -> str | None:
+        ...
+
+    def get_translation(
+        self,
+        translation_table: str,
+        *,
+        language_id: int | None = None,
+        translation_column: str | None = None,
+        language_column: str | None = None,
+        fallback_column: str | None = None,
+        fallback_english: bool = True,
+        fallback: str | None = None,
+    ) -> str | None:
         if language_id is None:
             language_id = (
                 self._sa_instance_state.session.info.get(  # type: ignore[attr-defined]
@@ -65,7 +94,7 @@ class TranslatableMixin:
             fallback_column = "identifier"
 
         languages = [language_id]
-        if language_id != 9:
+        if fallback_english and language_id != 9:
             languages.append(9)  # Fallback to english.
         for lang in languages:
             if name := next(
@@ -77,6 +106,9 @@ class TranslatableMixin:
                 None,
             ):
                 return str(name)
+
+        if not fallback_english:
+            return None
 
         if fallback is not None:
             return fallback
