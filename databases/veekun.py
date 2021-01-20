@@ -116,6 +116,8 @@ class AbilityNames(Base):
     local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
     name = Column(String, index=True, nullable=False)
 
+    name_normalized = Column(String)
+
     ability = relationship("Abilities", uselist=False, viewonly=True)
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
@@ -282,6 +284,8 @@ class ItemNames(Base):
     local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
     name = Column(String, index=True, nullable=False)
 
+    name_normalized = Column(String)
+
     item = relationship("Items", uselist=False, viewonly=True)
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
@@ -409,6 +413,8 @@ class MoveNames(Base):
     local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
     name = Column(String, index=True, nullable=False)
 
+    name_normalized = Column(String)
+
     move = relationship("Moves", uselist=False, viewonly=True)
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
@@ -448,6 +454,8 @@ class NatureNames(Base):
     nature_id = Column(Integer, ForeignKey("natures.id"), primary_key=True)
     local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
     name = Column(String, index=True, nullable=False)
+
+    name_normalized = Column(String)
 
     nature = relationship("Natures", uselist=False, viewonly=True)
     local_language = relationship("Languages", uselist=False, viewonly=True)

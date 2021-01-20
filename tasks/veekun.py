@@ -11,6 +11,7 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import func
 
 import databases.veekun as v
+import utils
 from database import Database
 from tasks import init_task_wrapper
 
@@ -84,6 +85,12 @@ async def csv_to_sqlite(conn: Connection) -> None:
 
                     if csv_keys is not None:
                         data = [dict(i) for i in csv_data]
+
+                        if hasattr(table.columns, "name_normalized"):
+                            for row in data:
+                                row["name_normalized"] = utils.to_user_id(
+                                    utils.remove_diacritics(row["name"])
+                                )
 
                         if tname == "locations":
                             for row in data:
