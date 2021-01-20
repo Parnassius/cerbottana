@@ -442,6 +442,35 @@ class Moves(HashableMixin, TranslatableMixin, Base):
         return self.get_translation("move_names")
 
 
+class NatureNames(Base):
+    __tablename__ = "nature_names"
+
+    nature_id = Column(Integer, ForeignKey("natures.id"), primary_key=True)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True, nullable=False)
+
+    nature = relationship("Natures", uselist=False, viewonly=True)
+    local_language = relationship("Languages", uselist=False, viewonly=True)
+
+
+class Natures(HashableMixin, TranslatableMixin, Base):
+    __tablename__ = "natures"
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(String, nullable=False)
+    decreased_stat_id = Column(Integer, nullable=False)
+    increased_stat_id = Column(Integer, nullable=False)
+    hates_flavor_id = Column(Integer, nullable=False)
+    likes_flavor_id = Column(Integer, nullable=False)
+    game_index = Column(Integer, unique=True, nullable=False)
+
+    nature_names = relationship("NatureNames", uselist=True, viewonly=True)
+
+    @property
+    def name(self) -> str:
+        return self.get_translation("nature_names")
+
+
 class Pokemon(HashableMixin, Base):
     __tablename__ = "pokemon"
 
