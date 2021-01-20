@@ -23,7 +23,15 @@ async def csv_to_sqlite(conn: Connection) -> None:
     try:
         latest_veekun_commit = (
             subprocess.run(
-                ["git", "rev-list", "-1", "HEAD", "--", "data/veekun"],
+                [
+                    "git",
+                    "rev-list",
+                    "-1",
+                    "HEAD",
+                    "--",
+                    "data/veekun",
+                    "databases/veekun.py",
+                ],
                 capture_output=True,
                 check=True,
             )

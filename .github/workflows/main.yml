@@ -29,7 +29,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: veekun.sqlite
-        key: veekun-${{ hashFiles('data/veekun/*.csv') }}
+        key: veekun-${{ hashFiles('data/veekun/*.csv', 'databases/veekun.py') }}
     - name: Install Poetry
       run: |
         curl -fsS https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - -y
