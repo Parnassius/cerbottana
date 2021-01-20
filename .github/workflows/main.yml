@@ -24,6 +24,12 @@ jobs:
         key: poetry-${{ hashFiles('**/poetry.lock') }}
         restore-keys: |
           poetry-
+    - name: Cache veekun database
+      id: veekun-cache
+      uses: actions/cache@v2
+      with:
+        path: veekun.sqlite
+        key: veekun-${{ hashFiles('data/veekun/*.csv') }}
     - name: Install Poetry
       run: |
         curl -fsS https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - -y
@@ -34,6 +40,9 @@ jobs:
     - name: ...or mark them as up-to-date on a cache hit
       if: steps.virtualenv-cache.outputs.cache-hit == 'true'
       run: make deps --touch
+    - name: Mark the veekun database as up-to-date on a cache hit
+      if: steps.veekun-cache.outputs.cache-hit == 'true'
+      run: sqlite3 veekun.sqlite "UPDATE latest_commit SET commit_id = '$GITHUB_SHA';"
     - name: Check import order
       run: make isort_check
     - name: Check formatting using black
