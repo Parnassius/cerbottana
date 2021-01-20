@@ -213,19 +213,20 @@ def to_obfuscated_html(text: str | None) -> str:
 
 
 def get_language_id(language_name: str) -> int:
+    language_name = to_user_id(language_name)
     table = {
-        # "Japanese": 1,
-        # "Traditional Chinese": 4,
-        "French": 5,
-        "German": 6,
-        "Spanish": 7,
-        "Italian": 8,
-        "English": 9,
-        # "Simplified Chinese": 12,
+        # "japanese": 1,
+        # "traditionalchinese": 4,
+        "french": 5,
+        "german": 6,
+        "spanish": 7,
+        "italian": 8,
+        "english": 9,
+        # "simplifiedchinese": 12,
     }
     if language_name in table:
         return table[language_name]
-    return table["English"]  # Default to English if language is not available.
+    return table["english"]  # Default to English if language is not available.
 
 
 def get_ps_dex_entry(query: str) -> JsonDict | None:
