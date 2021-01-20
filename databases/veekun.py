@@ -92,6 +92,34 @@ class LatestCommit(Base):
     commit_id = Column(String, primary_key=True)
 
 
+class Abilities(HashableMixin, TranslatableMixin, Base):
+    __tablename__ = "abilities"
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(String, nullable=False)
+    generation_id = Column(Integer, ForeignKey("generations.id"), nullable=False)
+    is_main_series = Column(Integer, index=True, nullable=False)
+
+    generation = relationship("Generations", uselist=False, viewonly=True)
+
+    ability_names = relationship("AbilityNames", uselist=True, viewonly=True)
+
+    @property
+    def name(self) -> str:
+        return self.get_translation("ability_names")
+
+
+class AbilityNames(Base):
+    __tablename__ = "ability_names"
+
+    ability_id = Column(Integer, ForeignKey("abilities.id"), primary_key=True)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True, nullable=False)
+
+    ability = relationship("Abilities", uselist=False, viewonly=True)
+    local_language = relationship("Languages", uselist=False, viewonly=True)
+
+
 class EncounterConditionValueMap(Base):
     __tablename__ = "encounter_condition_value_map"
 
