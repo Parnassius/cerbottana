@@ -217,10 +217,15 @@ def get_language_id(language_name: str) -> int:
     table = {
         # "japanese": 1,
         # "traditionalchinese": 4,
+        "fr": 5,
         "french": 5,
+        "de": 6,
         "german": 6,
+        "es": 7,
         "spanish": 7,
+        "it": 8,
         "italian": 8,
+        "en": 9,
         "english": 9,
         # "simplifiedchinese": 12,
     }
