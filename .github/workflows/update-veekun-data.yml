@@ -22,6 +22,8 @@ jobs:
       uses: peter-evans/create-pull-request@45c510e1f68ba052e3cd911f661a799cfb9ba3a3
       with:
         path: cerbottana
+        token: ${{ secrets.MACHINE_USER_PAT }}
+        push-to-fork: prnss/cerbottana
         commit-message: 'Veekun: update data'
         title: 'Veekun: update data'
         branch: veekun-update-data
