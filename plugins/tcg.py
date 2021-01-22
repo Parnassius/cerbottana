@@ -22,7 +22,7 @@ async def query_scryfall(url: str, resp_type: str) -> JsonDict | None:
         resp_type (str): Expected Scryfall API object type.
 
     Returns:
-        Optional[JsonDict]: Valid JSON received from the API, None if data is not valid.
+        JsonDict | None: Valid JSON received from the API, None if data is not valid.
     """
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:

@@ -24,11 +24,11 @@ class User:
         conn (Connection): Used to access the websocket.
         userstring (str): Unparsed user string without leading character rank.
         username (str): Parsed user string without leading character and status text.
-        userid (str): Uniquely identifies a user, see utils.to_user_id.
-        self.global_rank (str): PS global rank, defaults to None if rank is unknown.
+        userid (UserId): Uniquely identifies a user, see utils.to_user_id.
+        global_rank (str): PS global rank, defaults to " " if rank is unknown.
         idle (bool): True if user is marked as idle.
         is_administrator (bool): True if user is a bot administrator.
-        rooms (List[room]): List of rooms the user is in.
+        rooms (set[Room]): List of rooms the user is in.
     """
 
     def __init__(
@@ -81,7 +81,7 @@ class User:
             room (Room): Room to check.
 
         Returns:
-            Optional[str]: Returns rank string, None if user is not in room.
+            str | None: Returns rank string, None if user is not in room.
         """
         return room.users[self] if self in room else None
 
@@ -93,7 +93,8 @@ class User:
         Args:
             role (Role): PS role (i.e. "voice", "driver").
             room (Room): Room to check.
-            ignore_grole (bool): True if global roles should be ignored.
+            ignore_grole (bool): True if global roles should be ignored. Default to
+                False.
 
         Returns:
             bool: True if user meets the required criteria.
@@ -118,7 +119,7 @@ class User:
             room (Room): Room to check.
 
         Returns:
-            str: User string, None if user is not in room.
+            str | None: User string, None if user is not in room.
         """
         # TODO: Cover local / global rank interaction
         rank_ = self.rank(room)
@@ -132,7 +133,7 @@ class User:
         """Finds a room that can be used to cast private infoboxes to user.
 
         Returns:
-            Optional[Room]: Valid room, None if no room satisfies the conditions.
+            Room | None: Valid room, None if no room satisfies the conditions.
         """
         return next((room for room in self.rooms if room.roombot), None)
 

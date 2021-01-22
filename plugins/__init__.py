@@ -101,20 +101,22 @@ def command_wrapper(
     main_room_only: bool = False,
     parametrize_room: bool = False,
 ) -> Callable[[CommandFunc], Command]:
-    """
-    Decorates a function to generate a Command instance.
+    """Decorates a function to generate a Command instance.
 
     Args:
-        aliases (Tuple[str, ...]): List of aliases for the command, besides the function
-            name.
-        helpstr (str): Short description of the command.
+        aliases (tuple[str, ...]): List of aliases for the command, besides the function
+            name. Defaults to ().
+        helpstr (str): Short description of the command. Defaults to "".
         is_unlisted (bool): Whether the command should be listed in the `.help` summary.
-        required_rank (Role): Minimum PS rank required to trigger the command.
+            Defaults to False.
+        required_rank (Role): Minimum PS rank required to trigger the command. Defaults
+            to "voice".
         allow_pm (bool): True if the command can be used in PM (and not only in a room).
+            Defaults to True.
         main_room_only (bool): Whether the main room should be used to check if the user
-            has relevant auth.
+            has relevant auth. Defaults to False.
         parametrize_room (bool): Allows room-dependent commands to be used in PM. See
-            the docstring of `parametrize_room_wrapper`.
+            the docstring of `parametrize_room_wrapper`. Defaults to False.
 
     Returns:
         Callable[[CommandFunc], Command]: Wrapper.
@@ -132,8 +134,7 @@ def command_wrapper(
 
 
 def parametrize_room_wrapper(func: CommandFunc) -> CommandFunc:
-    """
-    Enriches a command depending on its context:
+    """Enriches a command depending on its context:
     (1) If it's used in a room, it saves such room in msg.parametrized_room.
     (2) If it's used in PM, it requires to specify a temporary parameter representing
         a room that'll be saved in msg.parametrized_room.

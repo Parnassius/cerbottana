@@ -16,13 +16,12 @@ class Message:
 
     Attributes:
         conn (Connection): Used to access the websocket.
-        room: (Optional[Room]): Room in which the message was sent to. None if the
-            message is a PM.
+        room: (Room | None): Room in which the message was sent to. None if the message
+            is a PM.
         user (User): Message author.
         arg (str): Text body of the message without the initial command keyword.
-        args (List[str]): arg attribute splitted by commas.
-        parametrized_room (Optional[Room]): See plugins.parametrize_room decorator.
-            Defaults to None.
+        args (list[str]): arg attribute splitted by commas.
+        parametrized_room (Room): See plugins.parametrize_room decorator.
         language (str): Room language if room is not None, defaults to English.
         language_id (int): Veekun id for language.
     """
@@ -79,8 +78,7 @@ class Message:
 
         Args:
             message (str): Text to be sent.
-            escape (bool): True if PS commands should be escaped. Defaults to
-                True.
+            escape (bool): True if PS commands should be escaped. Defaults to True.
         """
         if self.room is None:
             await self.user.send(message, escape)
