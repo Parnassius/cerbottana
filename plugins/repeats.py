@@ -36,8 +36,7 @@ WHITELISTED_CMD = (
 
 
 class Repeat:
-    """
-    Implements an active record pattern to interact with the SQL database;
+    """Implements an active record pattern to interact with the SQL database;
     also registers a task to the base asyncio loop of the Connection param.
     """
 
@@ -179,8 +178,7 @@ class Repeat:
 
     @classmethod
     def pull_db(cls, conn: Connection) -> None:
-        """
-        In a future implementation that supports changes via a Flask webpage, this
+        """In a future implementation that supports changes via a Flask webpage, this
         method could be called multiple times to sync Repeat._instances with the
         modified SQL db.
         """

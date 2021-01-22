@@ -22,7 +22,7 @@ def generate_sprite_url(pokemon: str, shiny: bool = False) -> str:
 
     Args:
         pokemon (str): Pokemon name.
-        shiny (bool): Whether the required sprite should be shiny.
+        shiny (bool): Whether the required sprite should be shiny. Defaults to False.
 
     Returns:
         str: URL.

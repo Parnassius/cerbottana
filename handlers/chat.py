@@ -19,7 +19,7 @@ async def parse_chat_message(
 
     Args:
         conn (Connection): Used to access the websocket.
-        room (Optional[Room]): Command room if it isn't a PM. Defaults to None.
+        room (Room | None): Command room if it isn't a PM. Defaults to None.
         user (User): User that requested the command.
         message (str): Command argument.
     """

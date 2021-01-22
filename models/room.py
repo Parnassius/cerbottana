@@ -24,18 +24,18 @@ class Room:
 
     Attributes:
         conn (Connection): Used to access the websocket.
-        roomid (str): Uniquely identifies a room, see utils.to_room_id.
+        roomid (RoomId): Uniquely identifies a room, see utils.to_room_id.
         is_private (bool): True if room is unlisted/private.
-        autojoin (bool): Whether the bot should join the room on startup.
-            Defaults to False.
-        buffer (Deque[str]): Fixed list of the last room messages.
+        autojoin (bool): Whether the bot should join the room on startup. Defaults to
+            False.
+        buffer (deque[str]): Fixed list of the last room messages.
         language (str): Room language.
         language_id (int): Veekun id for language.
         modchat (bool): True if modchat level is at least "+".
         roombot (bool): True if cerbottana is roombot in this room.
         title (str): Formatted variant of roomid.
-        users (Dict[User, str]): User instance, rank string.
-        no_mods_online (Optional[float])
+        users (dict[User, str]): User instance, rank string.
+        no_mods_online (float | None)
         last_modchat_command (float)
 
     Todo:
@@ -95,8 +95,7 @@ class Room:
 
         Args:
             user (User): User to add.
-            rank (Optional[str]): Room rank of user. Defaults to None if rank is
-                unchanged.
+            rank (str | None): Room rank of user. Defaults to None if rank is unchanged.
         """
         if not rank:
             rank = self._users[user] if user in self._users else " "
@@ -161,8 +160,7 @@ class Room:
 
         Args:
             message (str): Text to be sent.
-            escape (bool): True if PS commands should be escaped. Defaults to
-                True.
+            escape (bool): True if PS commands should be escaped. Defaults to True.
         """
         if escape:
             if message[0] == "/":
@@ -205,7 +203,7 @@ class Room:
         Args:
             action (str): id of the action performed.
             user (User): User who performed the action.
-            note (str): additional notes.
+            note (str): additional notes. Defaults to "".
         """
         if not self.roombot:
             return
