@@ -6,7 +6,7 @@ import random
 import re
 import string
 from html import escape
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import htmlmin  # type: ignore
 from imageprobe import probe
@@ -19,7 +19,7 @@ from typedefs import Role, RoomId, UserId
 
 
 def create_token(
-    rooms: Dict[str, str], expire_minutes: int = 30, admin: Optional[str] = None
+    rooms: dict[str, str], expire_minutes: int = 30, admin: Optional[str] = None
 ) -> str:
     token_id = os.urandom(16).hex()
     expiry = f"+{expire_minutes} minute"
@@ -80,7 +80,7 @@ def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
     Returns:
         bool: True if user meets the required criteria.
     """
-    roles: Dict[Role, str] = {
+    roles: dict[Role, str] = {
         "admin": "~&",
         "owner": "~&#",
         "bot": "*",
@@ -223,4 +223,4 @@ def get_language_id(language_name: str) -> int:
 
 
 with open("./data/avatars.json") as f:
-    AVATAR_IDS: Dict[str, str] = json.load(f)
+    AVATAR_IDS: dict[str, str] = json.load(f)

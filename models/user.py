@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import TYPE_CHECKING, Optional, Set
+from typing import TYPE_CHECKING, Optional
 
 import utils
 from database import Database
@@ -60,7 +60,7 @@ class User:
         return self.userid in self.conn.administrators
 
     @property
-    def rooms(self) -> Set[Room]:
+    def rooms(self) -> set[Room]:
         return {room for room in self.conn.rooms.values() if self in room}
 
     def __eq__(self, other: object) -> bool:

@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import math
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 from dateutil.parser import parse
 from sqlalchemy.orm import Query
@@ -41,7 +41,7 @@ class Repeat:
     also registers a task to the base asyncio loop of the Connection param.
     """
 
-    _instances: Dict[Tuple[str, Room], Repeat] = {}  # Record of active instances
+    _instances: dict[tuple[str, Room], Repeat] = {}  # Record of active instances
 
     def __init__(
         self,
@@ -99,7 +99,7 @@ class Repeat:
         return False
 
     @property
-    def key(self) -> Tuple[str, Room]:
+    def key(self) -> tuple[str, Room]:
         return (self.message, self.room)
 
     async def coro(self) -> None:
@@ -169,7 +169,7 @@ class Repeat:
         self._instances.pop(self.key, None)
 
     @classmethod
-    def get(cls, room: Room, message: Optional[str] = None) -> List[Repeat]:
+    def get(cls, room: Room, message: Optional[str] = None) -> list[Repeat]:
         if message:
             key = (message, room)
             return [cls._instances[key]] if key in cls._instances else []

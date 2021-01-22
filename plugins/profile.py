@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING
 
 from flask import render_template, request
 from sqlalchemy.orm import Query
@@ -114,7 +114,7 @@ async def clearprofile(msg: Message) -> None:
 async def badge(msg: Message) -> None:
     admin_rank = msg.user.rank(msg.conn.main_room)
 
-    rooms: Dict[str, str] = {}
+    rooms: dict[str, str] = {}
 
     for room in msg.user.rooms:
         rooms[room.roomid] = msg.user.rank(room) or " "

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Dict, Iterator
 
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -9,7 +9,7 @@ from sqlalchemy.orm.session import Session
 
 
 class Database:
-    _instances: Dict[str, Database] = {}
+    _instances: dict[str, Database] = {}
 
     def __init__(self, dbname: str) -> None:
         self.engine = create_engine(f"sqlite:///{dbname}.sqlite")

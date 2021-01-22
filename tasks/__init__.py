@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import glob
 import importlib
+from collections.abc import Awaitable, Callable
 from os.path import basename, dirname, isfile, join
-from typing import TYPE_CHECKING, Awaitable, Callable, List, Tuple
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -11,7 +12,7 @@ if TYPE_CHECKING:
     InitTaskFunc = Callable[[Connection], Awaitable[None]]
 
 
-init_tasks: List[Tuple[int, InitTaskFunc, bool]] = []
+init_tasks: list[tuple[int, InitTaskFunc, bool]] = []
 
 
 def init_task_wrapper(

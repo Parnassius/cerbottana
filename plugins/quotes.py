@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import string
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import ObjectDeletedError
@@ -46,7 +46,7 @@ def to_html_quotebox(quote: str) -> str:
     if splitted[0] or not any(part.lstrip() for part in splitted[::2]):
         return utils.linkify(quote)
 
-    lines: List[str] = []
+    lines: list[str] = []
     for timestamp, phrase in zip(splitted[1::2], splitted[2::2]):
         # Wrap every line in a <div class="chat"></div> and if it is a regular chat
         # message format it accordingly.

@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import re
 from time import time
-from typing import TYPE_CHECKING, Dict, List, Optional, Set
+from typing import TYPE_CHECKING, Optional
 from weakref import WeakValueDictionary
 
 import websockets
@@ -28,10 +28,10 @@ class Connection:
         password: str,
         avatar: str,
         statustext: str,
-        rooms: List[str],
+        rooms: list[str],
         main_room: str,
         command_character: str,
-        administrators: List[str],
+        administrators: list[str],
         domain: str,
         unittesting: bool = False,
     ) -> None:
@@ -40,7 +40,7 @@ class Connection:
         self.password = password
         self.avatar = avatar
         self.statustext = statustext
-        self.rooms: Dict[RoomId, Room] = {}  # roomid, Room
+        self.rooms: dict[RoomId, Room] = {}  # roomid, Room
         for roomname in rooms:
             roomid = utils.to_room_id(roomname)
             self.rooms[roomid] = Room(self, roomid, autojoin=True)
@@ -49,10 +49,8 @@ class Connection:
         self.administrators = [utils.to_user_id(user) for user in administrators]
         self.domain = domain
         self.unittesting = unittesting
-        self.public_roomids: Set[str] = set()
-        self.users: WeakValueDictionary[  # pylint: disable=unsubscriptable-object
-            UserId, User
-        ] = WeakValueDictionary()
+        self.public_roomids: set[str] = set()
+        self.users: WeakValueDictionary[UserId, User] = WeakValueDictionary()
         self.init_tasks = init_tasks
         self.handlers = handlers
         self.commands = commands
@@ -61,7 +59,7 @@ class Connection:
         self.loop: Optional[asyncio.AbstractEventLoop] = None
         self.websocket: Optional[websockets.client.WebSocketClientProtocol] = None
         self.connection_start: Optional[float] = None
-        self.tiers: List[TiersDict] = []
+        self.tiers: list[TiersDict] = []
 
     def open_connection(self) -> None:
         self.loop = asyncio.new_event_loop()
@@ -71,7 +69,7 @@ class Connection:
             pass
 
     async def _start_websocket(self) -> None:
-        itasks: List[asyncio.Task[None]]
+        itasks: list[asyncio.Task[None]]
         for prio in range(5):
             itasks = []
             for func, skip_unittesting in [
@@ -145,7 +143,7 @@ class Connection:
                 return
 
             if command in self.handlers:
-                tasks: List[asyncio.Task[None]] = []
+                tasks: list[asyncio.Task[None]] = []
                 for func in self.handlers[command]:
                     tasks.append(asyncio.create_task(func(self, room, *parts[2:])))
                 for task in tasks:

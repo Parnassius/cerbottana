@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 import utils
 
@@ -40,7 +40,7 @@ class Message:
         self._parametrized_room: Optional[Room] = None
 
     @property
-    def args(self) -> List[str]:
+    def args(self) -> list[str]:
         # Special case to preserve msg.arg's truth.
         # An empty string (False) would be translated to [""] (True).
         if not self.arg:
@@ -49,7 +49,7 @@ class Message:
         return [word.strip() for word in self.arg.split(",")]
 
     @args.setter
-    def args(self, new: List[str]) -> None:
+    def args(self, new: list[str]) -> None:
         self.arg = ",".join(new)
 
     @property

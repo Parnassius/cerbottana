@@ -56,6 +56,8 @@ disable = [
     "missing-module-docstring",
     "ungrouped-imports",
     "unused-argument",
+    
+    "unsubscriptable-object",  # too many false positives in type annotations
 
     # temporarily disabled, should be re-enabled sooner or later
     "duplicate-code",  # encounters / locations plugins

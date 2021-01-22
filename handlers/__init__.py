@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import glob
 import importlib
+from collections.abc import Awaitable, Callable
 from os.path import basename, dirname, isfile, join
-from typing import TYPE_CHECKING, Awaitable, Callable, Dict, List
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -12,10 +13,10 @@ if TYPE_CHECKING:
     HandlerFunc = Callable[[Connection, Room, str], Awaitable[None]]
 
 
-handlers: Dict[str, List[HandlerFunc]] = {}
+handlers: dict[str, list[HandlerFunc]] = {}
 
 
-def handler_wrapper(message_types: List[str]) -> Callable[[HandlerFunc], HandlerFunc]:
+def handler_wrapper(message_types: list[str]) -> Callable[[HandlerFunc], HandlerFunc]:
     def cls_wrapper(func: HandlerFunc) -> HandlerFunc:
         for message_type in message_types:
             if not message_type in handlers:

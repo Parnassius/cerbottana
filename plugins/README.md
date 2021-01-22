@@ -41,7 +41,7 @@ async def foo(msg: Message) -> None:
     pass
 ```
 
-`aliases` is the `Tuple[str]` parameter that populates the dictionary of commands; the decorated function name is automatically included as an alias.
+`aliases` is the `tuple[str]` parameter that populates the dictionary of commands; the decorated function name is automatically included as an alias.
 
 A `Command` object can also yield useful metadata: `helpstr` is a string that describes the callback function. It is used to generate a help document with data from every instance that doesn't have the boolean parameter `is_unlisted` explicitly set to `True`.
 
