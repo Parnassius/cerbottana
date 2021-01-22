@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import utils
 
@@ -27,7 +27,7 @@ class Message:
         language_id (int): Veekun id for language.
     """
 
-    def __init__(self, room: Optional[Room], user: User, arg: str) -> None:
+    def __init__(self, room: Room | None, user: User, arg: str) -> None:
         # Core attributes
         # Note: `self.conn` should become a property if it's not treated a singleton
         # anymore.
@@ -37,7 +37,7 @@ class Message:
         self.arg = arg
 
         # Attributes to support supplementary functionalities
-        self._parametrized_room: Optional[Room] = None
+        self._parametrized_room: Room | None = None
 
     @property
     def args(self) -> list[str]:

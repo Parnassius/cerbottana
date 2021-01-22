@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from flask import Flask, request
 from flask import session as web_session
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 class Server(Flask):
     def __init__(self, *args, **kwargs) -> None:  # type: ignore
         super().__init__(*args, **kwargs)
-        self.conn: Optional[Connection] = None
+        self.conn: Connection | None = None
 
     def serve_forever(self, port: int, conn: Connection) -> None:
         self.conn = conn

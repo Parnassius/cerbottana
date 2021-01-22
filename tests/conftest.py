@@ -8,7 +8,7 @@ from collections.abc import AsyncIterator, Callable, Generator
 from queue import Empty as EmptyQueue
 from queue import Queue
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Tuple
 
 import pytest
 from sqlalchemy import MetaData, create_engine
@@ -91,7 +91,7 @@ class RecvQueue(BaseRecvQueue):
         user: str,
         *,
         group: str = " ",
-        rooms: Optional[dict[str, str]] = None,
+        rooms: dict[str, str] | None = None,
     ) -> None:
         userid = utils.to_user_id(user)
 
@@ -149,10 +149,10 @@ def mock_connection(
         password: str = "",
         avatar: str = "",
         statustext: str = "",
-        rooms: Optional[list[str]] = None,
+        rooms: list[str] | None = None,
         main_room: str = "lobby",
         command_character: str = ".",
-        administrators: Optional[list[str]] = None,
+        administrators: list[str] | None = None,
         domain: str = "http://localhost:8080/",
     ) -> tuple[Connection, RecvQueue, SendQueue]:
         class MockProtocol:
@@ -209,9 +209,9 @@ def mock_connection(
 
             async def __aexit__(
                 self,
-                exc_type: Optional[type[BaseException]],
-                exc_value: Optional[BaseException],
-                traceback: Optional[TracebackType],
+                exc_type: type[BaseException] | None,
+                exc_value: BaseException | None,
+                traceback: TracebackType | None,
             ) -> None:
                 pass
 

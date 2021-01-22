@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import urllib
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import aiohttp
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from models.message import Message
 
 
-async def query_scryfall(url: str, resp_type: str) -> Optional[JsonDict]:
+async def query_scryfall(url: str, resp_type: str) -> JsonDict | None:
     """Queries the Scryfall API.
 
     Args:

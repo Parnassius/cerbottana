@@ -4,7 +4,7 @@ from collections import deque
 from datetime import datetime
 from textwrap import shorten
 from time import time
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import pytz
 
@@ -62,7 +62,7 @@ class Room:
 
         # Attributes updated within this instance
         self._users: dict[User, str] = {}  # user, rank
-        self.no_mods_online: Optional[float] = None
+        self.no_mods_online: float | None = None
         self.last_modchat_command: float = 0
 
         # Register new initialized room
@@ -88,7 +88,7 @@ class Room:
     def users(self) -> dict[User, str]:
         return self._users
 
-    def add_user(self, user: User, rank: Optional[str] = None) -> None:
+    def add_user(self, user: User, rank: str | None = None) -> None:
         """Adds a user to the room or updates it if it's already stored.
 
         If it's the first room joined by the user, it saves its instance in conn.users.

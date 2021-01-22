@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import utils
 from handlers import handler_wrapper
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 async def parse_chat_message(
-    conn: Connection, room: Optional[Room], user: User, message: str
+    conn: Connection, room: Room | None, user: User, message: str
 ) -> None:
     """Parses potential bot commands to their respective callback.
 

@@ -19,7 +19,7 @@ handlers: dict[str, list[HandlerFunc]] = {}
 def handler_wrapper(message_types: list[str]) -> Callable[[HandlerFunc], HandlerFunc]:
     def cls_wrapper(func: HandlerFunc) -> HandlerFunc:
         for message_type in message_types:
-            if not message_type in handlers:
+            if message_type not in handlers:
                 handlers[message_type] = []
             handlers[message_type].append(func)
         return func
