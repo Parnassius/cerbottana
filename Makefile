@@ -52,7 +52,7 @@ darglint: deps
 
 .PHONY: mypy
 mypy: deps
-	poetry run mypy .
+	poetry run mypy --namespace-packages --explicit-package-bases .
 	@echo ''
 
 .PHONY: pylint
