@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import utils
 from database import Database
@@ -74,7 +74,7 @@ class User:
     def __str__(self) -> str:
         return self.username
 
-    def rank(self, room: Room) -> Optional[str]:
+    def rank(self, room: Room) -> str | None:
         """Retrieves user's rank.
 
         Args:
@@ -111,7 +111,7 @@ class User:
 
         return False
 
-    def roomname(self, room: Room) -> Optional[str]:
+    def roomname(self, room: Room) -> str | None:
         """Parses the username as it's seen in a room list (i.e.: "@Plat0").
 
         Args:
@@ -128,7 +128,7 @@ class User:
             return self.username
         return rank_ + self.username
 
-    def can_pminfobox_to(self) -> Optional[Room]:
+    def can_pminfobox_to(self) -> Room | None:
         """Finds a room that can be used to cast private infoboxes to user.
 
         Returns:

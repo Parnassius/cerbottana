@@ -6,7 +6,7 @@ import random
 import re
 import string
 from html import escape
-from typing import Any, Optional
+from typing import Any
 
 import htmlmin  # type: ignore
 from imageprobe import probe
@@ -19,7 +19,7 @@ from typedefs import Role, RoomId, UserId
 
 
 def create_token(
-    rooms: dict[str, str], expire_minutes: int = 30, admin: Optional[str] = None
+    rooms: dict[str, str], expire_minutes: int = 30, admin: str | None = None
 ) -> str:
     token_id = os.urandom(16).hex()
     expiry = f"+{expire_minutes} minute"
@@ -104,7 +104,7 @@ def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
     return False
 
 
-def html_escape(text: Optional[str]) -> str:
+def html_escape(text: str | None) -> str:
     if text is None:
         return ""
     return escape(text).replace("\n", "<br>")
@@ -191,7 +191,7 @@ def render_template(  # type: ignore[misc]  # allow any
     return htmlmin.minify(html, convert_charrefs=False)  # type: ignore[no-any-return]
 
 
-def to_obfuscated_html(text: Optional[str]) -> str:
+def to_obfuscated_html(text: str | None) -> str:
     """Converts a string to HTML code and adds invisible obfuscation text."""
     if text is None:
         return ""

@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import re
 from time import time
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 from weakref import WeakValueDictionary
 
 import websockets
@@ -56,9 +56,9 @@ class Connection:
         self.commands = commands
         self.timestamp: float = 0
         self.lastmessage: float = 0
-        self.loop: Optional[asyncio.AbstractEventLoop] = None
-        self.websocket: Optional[websockets.client.WebSocketClientProtocol] = None
-        self.connection_start: Optional[float] = None
+        self.loop: asyncio.AbstractEventLoop | None = None
+        self.websocket: websockets.client.WebSocketClientProtocol | None = None
+        self.connection_start: float | None = None
         self.tiers: list[TiersDict] = []
 
     def open_connection(self) -> None:

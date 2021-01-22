@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from plugins import command_wrapper
 
@@ -13,14 +13,14 @@ async def create_tour(
     msg: Message,
     formatid: str = "customgame",
     generator: str = "elimination",
-    playercap: Optional[int] = None,
+    playercap: int | None = None,
     generatormod: str = "",
     name: str = "",
     autostart: float = 2,
     autodq: float = 1.5,
     allow_scouting: bool = False,
     forcetimer: bool = False,
-    rules: Optional[list[str]] = None,
+    rules: list[str] | None = None,
 ) -> None:
     tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
     await msg.reply(

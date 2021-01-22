@@ -5,7 +5,7 @@ import importlib
 from collections.abc import Awaitable, Callable, Iterable
 from functools import wraps
 from os.path import basename, dirname, isfile, join
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 from flask import abort
 from flask import session as web_session
@@ -16,7 +16,6 @@ from models.room import Room
 from typedefs import Role, RoomId
 
 if TYPE_CHECKING:
-    from connection import Connection
     from models.message import Message
     from models.user import User
 
@@ -183,10 +182,10 @@ htmlpages: dict[str, HTMLPageFunc] = {}
 
 
 def htmlpage_check_permission(
-    func: HTMLPageFunc, required_rank: Optional[Role], main_room_only: bool
+    func: HTMLPageFunc, required_rank: Role | None, main_room_only: bool
 ) -> HTMLPageFunc:
     @wraps(func)
-    def wrapper(user: User, room: Room) -> Optional[Query[Any]]:  # type: ignore[misc]
+    def wrapper(user: User, room: Room) -> Query[Any] | None:  # type: ignore[misc]
         if main_room_only and room is not room.conn.main_room:
             return None
 
@@ -202,7 +201,7 @@ def htmlpage_check_permission(
 
 
 def htmlpage_wrapper(
-    pageid: str, required_rank: Optional[Role] = None, main_room_only: bool = False
+    pageid: str, required_rank: Role | None = None, main_room_only: bool = False
 ) -> Callable[[HTMLPageFunc], HTMLPageFunc]:
     def wrapper(func: HTMLPageFunc) -> HTMLPageFunc:
         func = htmlpage_check_permission(func, required_rank, main_room_only)
@@ -215,10 +214,10 @@ def htmlpage_wrapper(
 # --- Flask implementation ---
 
 
-routes: list[tuple[RouteFunc, str, Optional[Iterable[str]]]] = []
+routes: list[tuple[RouteFunc, str, Iterable[str] | None]] = []
 
 
-def route_check_permission(func: RouteFunc, required_rank: Optional[Role]) -> RouteFunc:
+def route_check_permission(func: RouteFunc, required_rank: Role | None) -> RouteFunc:
     @wraps(func)
     def wrapper(**kwargs: str) -> str:
         rank_check = kwargs.get("room", "_rank")
@@ -235,8 +234,8 @@ def route_check_permission(func: RouteFunc, required_rank: Optional[Role]) -> Ro
 
 def route_wrapper(
     rule: str,
-    methods: Optional[Iterable[str]] = None,
-    required_rank: Optional[Role] = None,
+    methods: Iterable[str] | None = None,
+    required_rank: Role | None = None,
 ) -> Callable[[RouteFunc], RouteFunc]:
     def wrapper(func: RouteFunc) -> RouteFunc:
         func = route_check_permission(func, required_rank)

@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import math
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from dateutil.parser import parse
 from sqlalchemy.orm import Query
@@ -48,9 +48,9 @@ class Repeat:
         message: str,
         room: Room,
         delta_minutes: int,
-        initial_dt: Optional[datetime] = None,  # If None, then it's a new task.
-        expire_dt: Optional[datetime] = None,
-        max_iters: Optional[int] = None,
+        initial_dt: datetime | None = None,  # If None, then it's a new task.
+        expire_dt: datetime | None = None,
+        max_iters: int | None = None,
     ) -> None:
         now = datetime.now()  # Fixes the time for calculations within this method.
 
@@ -77,7 +77,7 @@ class Repeat:
             shift = self.delta * math.ceil(offline_period / self.delta)
             self.offset += shift - offline_period
 
-        self.task: Optional[asyncio.Task[None]] = None
+        self.task: asyncio.Task[None] | None = None
 
         log = [
             "----- REPEAT -----",
@@ -169,7 +169,7 @@ class Repeat:
         self._instances.pop(self.key, None)
 
     @classmethod
-    def get(cls, room: Room, message: Optional[str] = None) -> list[Repeat]:
+    def get(cls, room: Room, message: str | None = None) -> list[Repeat]:
         if message:
             key = (message, room)
             return [cls._instances[key]] if key in cls._instances else []

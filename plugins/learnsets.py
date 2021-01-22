@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import joinedload
 from typing_extensions import TypedDict
@@ -25,7 +25,7 @@ async def learnset(msg: Message) -> None:
     db = Database.open("veekun")
 
     with db.get_session() as session:
-        version_group_id: Optional[int] = (
+        version_group_id: int | None = (
             session.query(v.VersionGroups.id)  # type: ignore  # sqlalchemy
             .filter_by(identifier=version)
             .scalar()
@@ -42,8 +42,8 @@ async def learnset(msg: Message) -> None:
 
         class MovesDict(TypedDict):
             name: str
-            level: Optional[int]
-            machine: Optional[str]
+            level: int | None
+            machine: str | None
 
         class ResultsDict(TypedDict):
             name: str
