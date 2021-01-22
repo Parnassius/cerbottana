@@ -1,4 +1,4 @@
-from typing import Counter
+from collections import Counter
 
 from models.room import Room
 from models.user import User

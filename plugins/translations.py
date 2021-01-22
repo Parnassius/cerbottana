@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING
 
 import utils
 from plugins import command_wrapper
@@ -17,7 +17,7 @@ async def trad(msg: Message) -> None:
         await msg.reply("Cosa devo tradurre?")
         return
 
-    results: List[Dict[str, str]] = []
+    results: list[dict[str, str]] = []
 
     for i in TRANSLATIONS:
         for j in TRANSLATIONS[i]:
@@ -42,4 +42,4 @@ async def trad(msg: Message) -> None:
 
 
 with open("./data/translations.json") as f:
-    TRANSLATIONS: Dict[str, List[Dict[str, str]]] = json.load(f)
+    TRANSLATIONS: dict[str, list[dict[str, str]]] = json.load(f)

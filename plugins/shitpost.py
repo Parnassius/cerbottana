@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import random
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING
 
 import utils
 from plugins import command_wrapper
@@ -57,6 +57,6 @@ async def memes(msg: Message) -> None:
 
 
 with open("./data/letters.json") as f:
-    LETTERS: Dict[str, List[str]] = json.load(f)
+    LETTERS: dict[str, list[str]] = json.load(f)
 with open("./data/memes.json") as f:
-    MEMES: List[str] = json.load(f)
+    MEMES: list[str] = json.load(f)

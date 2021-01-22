@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import string
-from typing import TYPE_CHECKING, Set
+from typing import TYPE_CHECKING
 
 import databases.database as d
 import utils
@@ -130,7 +130,7 @@ async def queryresponse(conn: Connection, room: Room, *args: str) -> None:
 
 async def _parse_rooms(conn: Connection, room: Room, jsondata: JsonDict) -> None:
     """|queryresponse|rooms| sub-handler"""
-    public_roomids: Set[str] = set()
+    public_roomids: set[str] = set()
     for roomgroup in jsondata.values():
         # Skip node if it isn't a roomgroup
         if not isinstance(roomgroup, list):

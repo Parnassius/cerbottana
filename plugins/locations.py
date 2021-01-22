@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Tuple
+from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import joinedload
 from typing_extensions import TypedDict
@@ -31,14 +31,14 @@ async def locations(msg: Message) -> None:
             method: str
             min_level: int
             max_level: int
-            conditions: Dict[Tuple[int, ...], ConditionsDict]
+            conditions: dict[tuple[int, ...], ConditionsDict]
             rarity: int
 
         class ResultsDict(TypedDict):
             name: str
-            slots: Dict[Tuple[int, int], SlotsDict]
+            slots: dict[tuple[int, int], SlotsDict]
 
-        results: Dict[int, ResultsDict] = {}
+        results: dict[int, ResultsDict] = {}
 
         pokemon_species = (
             session.query(v.PokemonSpecies)  # type: ignore  # sqlalchemy
@@ -206,18 +206,18 @@ async def encounters(msg: Message) -> None:
             method: str
             min_level: int
             max_level: int
-            conditions: Dict[Tuple[int, ...], ConditionsDict]
+            conditions: dict[tuple[int, ...], ConditionsDict]
             rarity: int
 
         class AreasDict(TypedDict):
             name: str
-            slots: Dict[Tuple[int, int], SlotsDict]
+            slots: dict[tuple[int, int], SlotsDict]
 
         class ResultsDict(TypedDict):
             name: str
-            areas: Dict[int, AreasDict]
+            areas: dict[int, AreasDict]
 
-        results: Dict[int, ResultsDict] = {}
+        results: dict[int, ResultsDict] = {}
 
         location = (
             session.query(v.Locations)  # type: ignore  # sqlalchemy

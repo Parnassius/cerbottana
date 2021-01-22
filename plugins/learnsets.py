@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy.orm import joinedload
 from typing_extensions import TypedDict
@@ -47,9 +47,9 @@ async def learnset(msg: Message) -> None:
 
         class ResultsDict(TypedDict):
             name: str
-            moves: List[MovesDict]
+            moves: list[MovesDict]
 
-        results: Dict[int, ResultsDict] = {}
+        results: dict[int, ResultsDict] = {}
 
         pokemon_species = (
             session.query(v.PokemonSpecies)  # type: ignore  # sqlalchemy

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from handlers import handler_wrapper
 
@@ -17,7 +17,7 @@ async def formats(conn: Connection, room: Room, *args: str) -> None:
 
     formatslist = args
 
-    tiers: List[TiersDict] = []
+    tiers: list[TiersDict] = []
     section: Optional[str] = None
     section_next = False
     for tier in formatslist:

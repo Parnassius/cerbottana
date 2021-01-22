@@ -4,7 +4,7 @@ from collections import deque
 from datetime import datetime
 from textwrap import shorten
 from time import time
-from typing import TYPE_CHECKING, Deque, Dict, Optional
+from typing import TYPE_CHECKING, Optional
 
 import pytz
 
@@ -54,14 +54,14 @@ class Room:
         self.autojoin = autojoin
 
         # Attributes initialized through handlers
-        self.dynamic_buffer: Deque[str] = deque(maxlen=20)
+        self.dynamic_buffer: deque[str] = deque(maxlen=20)
         self.language = "English"
         self.modchat = False
         self.roombot = False
         self.title = ""
 
         # Attributes updated within this instance
-        self._users: Dict[User, str] = {}  # user, rank
+        self._users: dict[User, str] = {}  # user, rank
         self.no_mods_online: Optional[float] = None
         self.last_modchat_command: float = 0
 
@@ -73,7 +73,7 @@ class Room:
         self.conn.rooms[self.roomid] = self
 
     @property
-    def buffer(self) -> Deque[str]:
+    def buffer(self) -> deque[str]:
         return self.dynamic_buffer.copy()
 
     @property
@@ -85,7 +85,7 @@ class Room:
         return utils.get_language_id(self.language)
 
     @property
-    def users(self) -> Dict[User, str]:
+    def users(self) -> dict[User, str]:
         return self._users
 
     def add_user(self, user: User, rank: Optional[str] = None) -> None:

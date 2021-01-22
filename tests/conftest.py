@@ -3,22 +3,12 @@ from __future__ import annotations
 import asyncio
 import json
 import threading
+from collections import Counter
+from collections.abc import AsyncIterator, Callable, Generator
 from queue import Empty as EmptyQueue
 from queue import Queue
 from types import TracebackType
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    AsyncIterator,
-    Callable,
-    Counter,
-    Dict,
-    Generator,
-    List,
-    Optional,
-    Tuple,
-    Type,
-)
+from typing import TYPE_CHECKING, Any, Optional, Tuple
 
 import pytest
 from sqlalchemy import MetaData, create_engine
@@ -32,14 +22,14 @@ from database import Database
 from tasks.veekun import csv_to_sqlite
 
 if TYPE_CHECKING:
-    BaseRecvQueue = Queue[Tuple[int, str]]  # pylint: disable=unsubscriptable-object
-    BaseSendQueue = Queue[str]  # pylint: disable=unsubscriptable-object
+    BaseRecvQueue = Queue[Tuple[int, str]]
+    BaseSendQueue = Queue[str]
 else:
     BaseRecvQueue = Queue
     BaseSendQueue = Queue
 
 
-database_metadata: Dict[str, Any] = {
+database_metadata: dict[str, Any] = {
     "database": d.db.metadata,
 }
 
@@ -101,7 +91,7 @@ class RecvQueue(BaseRecvQueue):
         user: str,
         *,
         group: str = " ",
-        rooms: Optional[Dict[str, str]] = None,
+        rooms: Optional[dict[str, str]] = None,
     ) -> None:
         userid = utils.to_user_id(user)
 
@@ -125,7 +115,7 @@ class RecvQueue(BaseRecvQueue):
             ]
         )
 
-    def add_messages(self, *items: List[str]) -> None:
+    def add_messages(self, *items: list[str]) -> None:
         for item in items:
             self.put((0, "\n".join(item)))
 
@@ -151,7 +141,7 @@ class SendQueue(BaseSendQueue):
 @pytest.fixture()
 def mock_connection(
     mocker,
-) -> Callable[[], Tuple[Connection, RecvQueue, SendQueue]]:
+) -> Callable[[], tuple[Connection, RecvQueue, SendQueue]]:
     def make_mock_connection(
         *,
         url: str = "ws://localhost:80/showdown/websocket",
@@ -159,12 +149,12 @@ def mock_connection(
         password: str = "",
         avatar: str = "",
         statustext: str = "",
-        rooms: Optional[List[str]] = None,
+        rooms: Optional[list[str]] = None,
         main_room: str = "lobby",
         command_character: str = ".",
-        administrators: Optional[List[str]] = None,
+        administrators: Optional[list[str]] = None,
         domain: str = "http://localhost:8080/",
-    ) -> Tuple[Connection, RecvQueue, SendQueue]:
+    ) -> tuple[Connection, RecvQueue, SendQueue]:
         class MockProtocol:
             def __init__(self, recv_queue: RecvQueue, send_queue: SendQueue) -> None:
                 self.recv_queue = recv_queue
@@ -219,7 +209,7 @@ def mock_connection(
 
             async def __aexit__(
                 self,
-                exc_type: Optional[Type[BaseException]],
+                exc_type: Optional[type[BaseException]],
                 exc_value: Optional[BaseException],
                 traceback: Optional[TracebackType],
             ) -> None:
@@ -272,7 +262,7 @@ def mock_connection(
 
 @pytest.fixture(autouse=True)
 def mock_database(mocker) -> None:
-    database_instances: Dict[str, Database] = {}
+    database_instances: dict[str, Database] = {}
 
     def mock_database_init(self, dbname: str) -> None:
         if dbname == "veekun":

@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Optional
 
 import pytest
 
@@ -19,7 +21,7 @@ from typedefs import Role
     ],
 )
 def test_create_token(
-    rooms: Dict[str, str], expire_minutes: int, admin: Optional[str]
+    rooms: dict[str, str], expire_minutes: int, admin: Optional[str]
 ) -> None:
     token_id = utils.create_token(rooms, expire_minutes, admin)
     db = Database.open()

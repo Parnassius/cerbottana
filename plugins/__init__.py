@@ -2,20 +2,10 @@ from __future__ import annotations
 
 import glob
 import importlib
+from collections.abc import Awaitable, Callable, Iterable
 from functools import wraps
 from os.path import basename, dirname, isfile, join
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Awaitable,
-    Callable,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Tuple,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from flask import abort
 from flask import session as web_session
@@ -31,7 +21,7 @@ if TYPE_CHECKING:
     from models.user import User
 
     CommandFunc = Callable[[Message], Awaitable[None]]
-    HTMLPageFunc = Callable[[User, Room], Optional[Query[Any]]]  # type: ignore[misc]  # pylint: disable=unsubscriptable-object
+    HTMLPageFunc = Callable[[User, Room], Optional[Query[Any]]]  # type: ignore[misc]
     RouteFunc = Callable[..., str]  # type: ignore[misc]
 
 
@@ -39,12 +29,12 @@ if TYPE_CHECKING:
 
 
 class Command:
-    _instances: Dict[str, Command] = {}
+    _instances: dict[str, Command] = {}
 
     def __init__(
         self,
         func: CommandFunc,
-        aliases: Tuple[str, ...],
+        aliases: tuple[str, ...],
         helpstr: str,
         is_unlisted: bool,
     ) -> None:
@@ -56,19 +46,19 @@ class Command:
         self._instances[func.__name__] = self
 
     @property
-    def splitted_aliases(self) -> Dict[str, Command]:
+    def splitted_aliases(self) -> dict[str, Command]:
         return {alias: self for alias in self.aliases}
 
     @classmethod
-    def get_all_aliases(cls) -> Dict[str, Command]:
-        d: Dict[str, Command] = {}
+    def get_all_aliases(cls) -> dict[str, Command]:
+        d: dict[str, Command] = {}
         for command in cls._instances.values():
             d.update(command.splitted_aliases)
         return d
 
     @classmethod
-    def get_all_helpstrings(cls) -> Dict[str, str]:
-        d: Dict[str, str] = {}
+    def get_all_helpstrings(cls) -> dict[str, str]:
+        d: dict[str, str] = {}
         for command in cls._instances.values():
             if command.helpstr and not command.is_unlisted:
                 d[command.name] = command.helpstr
@@ -104,7 +94,7 @@ def command_check_permission(
 
 
 def command_wrapper(
-    aliases: Tuple[str, ...] = (),
+    aliases: tuple[str, ...] = (),
     helpstr: str = "",
     is_unlisted: bool = False,
     required_rank: Role = "voice",
@@ -189,16 +179,14 @@ def parametrize_room_wrapper(func: CommandFunc) -> CommandFunc:
 # --- HTML pages ---
 
 
-htmlpages: Dict[str, HTMLPageFunc] = {}
+htmlpages: dict[str, HTMLPageFunc] = {}
 
 
 def htmlpage_check_permission(
     func: HTMLPageFunc, required_rank: Optional[Role], main_room_only: bool
 ) -> HTMLPageFunc:
     @wraps(func)
-    def wrapper(  # type: ignore[misc]
-        user: User, room: Room
-    ) -> Optional[Query[Any]]:  # pylint: disable=unsubscriptable-object
+    def wrapper(user: User, room: Room) -> Optional[Query[Any]]:  # type: ignore[misc]
         if main_room_only and room is not room.conn.main_room:
             return None
 
@@ -227,7 +215,7 @@ def htmlpage_wrapper(
 # --- Flask implementation ---
 
 
-routes: List[Tuple[RouteFunc, str, Optional[Iterable[str]]]] = []
+routes: list[tuple[RouteFunc, str, Optional[Iterable[str]]]] = []
 
 
 def route_check_permission(func: RouteFunc, required_rank: Optional[Role]) -> RouteFunc:
