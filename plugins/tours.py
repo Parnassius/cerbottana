@@ -3,10 +3,13 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING
 
+from handlers import handler_wrapper
 from plugins import command_wrapper
 
 if TYPE_CHECKING:
+    from connection import Connection
     from models.message import Message
+    from models.room import Room
 
 
 async def create_tour(
@@ -167,3 +170,27 @@ async def waffletour(msg: Message) -> None:
     )
 
     await msg.reply("!viewfaq sibb", False)
+
+
+# --- Tour generation enhancements ---
+
+
+@handler_wrapper(["tournament"])  # hooked on |tournament|create|
+async def tournament_create(conn: Connection, room: Room, *args: str) -> None:
+    if len(args) < 2 or args[0] != "create":
+        return
+
+    tierid = args[1]
+    if tierid.endswith("blitz"):
+        tierid = tierid[:-5]
+
+    tiersdict = next((k for k in conn.tiers if k["id"] == tierid), None)
+    if tiersdict is None:
+        print(f"Unrecognized tier: '{tierid}'")
+        return
+
+    # Ignore random formats and custom games
+    if tiersdict["random"] or tierid.endswith("customgame"):
+        return
+
+    await room.send(f'!tier {tiersdict["name"]}', False)
