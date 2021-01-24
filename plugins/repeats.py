@@ -78,18 +78,7 @@ class Repeat:
 
         self.task: asyncio.Task[None] | None = None
 
-        log = [
-            "----- REPEAT -----",
-            f"message: {self.message}",
-            f"room: {self.room.roomid}",
-            f"delta: {self.delta}",
-            f"initial_dt: {self.initial_dt}",
-            f"expire_dt: {self.expire_dt}",
-            f"now: {now}",
-            f"offset: {self.offset}",
-            "------------------",
-        ]
-        print("\n".join(log))
+        print(self)
 
     @property
     def expired(self) -> bool:
@@ -100,6 +89,20 @@ class Repeat:
     @property
     def key(self) -> tuple[str, Room]:
         return (self.message, self.room)
+
+    def __str__(self) -> str:
+        return "\n".join(
+            [
+                "----- REPEAT -----",
+                f"message: {self.message}",
+                f"room: {self.room.roomid}",
+                f"delta: {self.delta}",
+                f"initial_dt: {self.initial_dt}",
+                f"expire_dt: {self.expire_dt}",
+                f"offset: {self.offset}",
+                "------------------",
+            ]
+        )
 
     async def coro(self) -> None:
         await asyncio.sleep(self.offset.total_seconds())
