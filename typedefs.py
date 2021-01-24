@@ -10,6 +10,7 @@ JsonDict = Dict[str, Any]  # type: ignore[misc]
 
 
 class TiersDict(TypedDict):
+    id: str
     name: str
     section: str
     random: bool
