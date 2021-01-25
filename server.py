@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from datetime import date, datetime
 from typing import TYPE_CHECKING
 
 from flask import Flask, request
@@ -31,16 +30,6 @@ def initialize_server(secret_key: str) -> Server:
     server = Server(__name__)
 
     server.secret_key = secret_key
-
-    @server.template_filter("format_date")
-    def format_date(value: str) -> str:  # type: ignore
-        return date.fromisoformat(value).strftime("%d/%m/%Y")
-
-    @server.template_filter("format_datetime")
-    def format_datetime(value: str) -> str:  # type: ignore
-        return datetime.strptime(value, "%Y-%m-%d %H:%M:%S.%f").strftime(
-            "%d/%m/%Y %H:%M:%S"
-        )
 
     @server.before_request
     def before() -> None:
