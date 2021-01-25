@@ -235,17 +235,17 @@ def mock_connection(
             administrators = ["parnassius"]
 
         conn = Connection(
-            url,
-            username,
-            password,
-            avatar,
-            statustext,
-            rooms,
-            main_room,
-            command_character,
-            administrators,
-            domain,
-            True,  # unittesting
+            url=url,
+            username=username,
+            password=password,
+            avatar=avatar,
+            statustext=statustext,
+            rooms=rooms,
+            main_room=main_room,
+            command_character=command_character,
+            administrators=administrators,
+            domain=domain,
+            unittesting=True,
         )
 
         threading.Thread(target=conn.open_connection).start()

@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 class Connection:
     def __init__(
         self,
+        *,
         url: str,
         username: str,
         password: str,

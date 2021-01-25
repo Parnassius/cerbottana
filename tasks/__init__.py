@@ -16,7 +16,7 @@ init_tasks: list[tuple[int, InitTaskFunc, bool]] = []
 
 
 def init_task_wrapper(
-    priority: int = 3, skip_unittesting: bool = False
+    *, priority: int = 3, skip_unittesting: bool = False
 ) -> Callable[[InitTaskFunc], InitTaskFunc]:
     def wrapper(func: InitTaskFunc) -> InitTaskFunc:
         init_tasks.append((priority, func, skip_unittesting))

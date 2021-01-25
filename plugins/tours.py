@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 async def create_tour(
     msg: Message,
+    *,
     formatid: str = "customgame",
     generator: str = "elimination",
     playercap: int | None = None,

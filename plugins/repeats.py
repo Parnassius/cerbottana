@@ -47,6 +47,7 @@ class Repeat:
         message: str,
         room: Room,
         delta_minutes: int,
+        *,
         initial_dt: datetime | None = None,  # If None, then it's a new task.
         expire_dt: datetime | None = None,
         max_iters: int | None = None,

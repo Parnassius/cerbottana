@@ -93,6 +93,7 @@ def command_check_permission(
 
 
 def command_wrapper(
+    *,
     aliases: tuple[str, ...] = (),
     helpstr: str = "",
     is_unlisted: bool = False,
@@ -202,7 +203,7 @@ def htmlpage_check_permission(
 
 
 def htmlpage_wrapper(
-    pageid: str, required_rank: Role | None = None, main_room_only: bool = False
+    pageid: str, *, required_rank: Role | None = None, main_room_only: bool = False
 ) -> Callable[[HTMLPageFunc], HTMLPageFunc]:
     def wrapper(func: HTMLPageFunc) -> HTMLPageFunc:
         func = htmlpage_check_permission(func, required_rank, main_room_only)
@@ -235,6 +236,7 @@ def route_check_permission(func: RouteFunc, required_rank: Role | None) -> Route
 
 def route_wrapper(
     rule: str,
+    *,
     methods: Iterable[str] | None = None,
     required_rank: Role | None = None,
 ) -> Callable[[RouteFunc], RouteFunc]:

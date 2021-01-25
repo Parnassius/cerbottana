@@ -27,21 +27,23 @@ def main() -> None:
     server = initialize_server(env("FLASK_SECRET_KEY"))
 
     conn = Connection(
-        ("wss" if env("SHOWDOWN_PORT") == "443" else "ws")
-        + "://"
-        + env("SHOWDOWN_HOST")
-        + ":"
-        + env("SHOWDOWN_PORT")
-        + "/showdown/websocket",
-        env("USERNAME"),
-        env("PASSWORD"),
-        env("AVATAR", ""),
-        env("STATUSTEXT", ""),
-        env.list("ROOMS", []),
-        env("MAIN_ROOM"),
-        env("COMMAND_CHARACTER"),
-        env.list("ADMINISTRATORS", []),
-        env("DOMAIN"),
+        url=(
+            ("wss" if env("SHOWDOWN_PORT") == "443" else "ws")
+            + "://"
+            + env("SHOWDOWN_HOST")
+            + ":"
+            + env("SHOWDOWN_PORT")
+            + "/showdown/websocket"
+        ),
+        username=env("USERNAME"),
+        password=env("PASSWORD"),
+        avatar=env("AVATAR", ""),
+        statustext=env("STATUSTEXT", ""),
+        rooms=env.list("ROOMS", []),
+        main_room=env("MAIN_ROOM"),
+        command_character=env("COMMAND_CHARACTER"),
+        administrators=env.list("ADMINISTRATORS", []),
+        domain=env("DOMAIN"),
     )
 
     signal.signal(signal.SIGINT, shutdown)
