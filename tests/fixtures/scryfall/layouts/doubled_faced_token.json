@@ -1,132 +1,132 @@
 {
-    "object": "card",
-    "id": "60ca146d-4e88-4e87-a775-9cfbc9e6b9f2",
-    "oracle_id": "07bd569f-d14f-4cd7-9614-5131234a032a",
-    "multiverse_ids": [],
-    "tcgplayer_id": 158252,
-    "name": "City's Blessing // Elemental",
-    "lang": "en",
-    "released_at": "2017-12-27",
-    "uri": "https://api.scryfall.com/cards/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2",
-    "scryfall_uri": "https://scryfall.com/card/f18/2/citys-blessing-elemental?utm_source=api",
-    "layout": "double_faced_token",
-    "highres_image": true,
-    "cmc": 0.0,
-    "type_line": "Card // Token Creature — Elemental",
-    "color_identity": [
-        "R"
-    ],
-    "keywords": [],
-    "card_faces": [
-        {
-            "object": "card_face",
-            "name": "City's Blessing",
-            "mana_cost": "",
-            "type_line": "Card",
-            "oracle_text": "",
-            "colors": [],
-            "flavor_text": "Once you have ascended to the highest temple of Orazca, the power of the Immortal Sun is yours to wield forever.",
-            "artist": "Yeong-Hao Han",
-            "artist_id": "f8e7f8d6-6dde-4059-973c-30f1fd1bbe4e",
-            "illustration_id": "8c1be4a0-ecd2-42ca-bb5e-712668e6a831",
-            "image_uris": {
-                "small": "https://c1.scryfall.com/file/scryfall-cards/small/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
-                "normal": "https://c1.scryfall.com/file/scryfall-cards/normal/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
-                "large": "https://c1.scryfall.com/file/scryfall-cards/large/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
-                "png": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.png?1572258725",
-                "art_crop": "https://c1.scryfall.com/file/scryfall-cards/art_crop/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
-                "border_crop": "https://c1.scryfall.com/file/scryfall-cards/border_crop/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725"
-            }
-        },
-        {
-            "object": "card_face",
-            "name": "Elemental",
-            "mana_cost": "",
-            "type_line": "Token Creature — Elemental",
-            "oracle_text": "At the beginning of your upkeep, sacrifice this creature and return target card named Rekindling Phoenix from your graveyard to the battlefield. It gains haste until end of turn.",
-            "colors": [],
-            "power": "0",
-            "toughness": "1",
-            "artist": "Jason Rainville",
-            "artist_id": "6ed7e669-579b-443d-b223-e5cbcb2a7483",
-            "illustration_id": "37071500-1a8d-4298-9202-1931cd2bb073",
-            "image_uris": {
-                "small": "https://c1.scryfall.com/file/scryfall-cards/small/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
-                "normal": "https://c1.scryfall.com/file/scryfall-cards/normal/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
-                "large": "https://c1.scryfall.com/file/scryfall-cards/large/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
-                "png": "https://c1.scryfall.com/file/scryfall-cards/png/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.png?1572258725",
-                "art_crop": "https://c1.scryfall.com/file/scryfall-cards/art_crop/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
-                "border_crop": "https://c1.scryfall.com/file/scryfall-cards/border_crop/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725"
-            }
-        }
-    ],
-    "legalities": {
-        "standard": "not_legal",
-        "future": "not_legal",
-        "historic": "not_legal",
-        "pioneer": "not_legal",
-        "modern": "not_legal",
-        "legacy": "not_legal",
-        "pauper": "not_legal",
-        "vintage": "not_legal",
-        "penny": "not_legal",
-        "commander": "not_legal",
-        "brawl": "not_legal",
-        "duel": "not_legal",
-        "oldschool": "not_legal"
+  "object": "card",
+  "id": "60ca146d-4e88-4e87-a775-9cfbc9e6b9f2",
+  "oracle_id": "07bd569f-d14f-4cd7-9614-5131234a032a",
+  "multiverse_ids": [],
+  "tcgplayer_id": 158252,
+  "name": "City's Blessing // Elemental",
+  "lang": "en",
+  "released_at": "2017-12-27",
+  "uri": "https://api.scryfall.com/cards/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2",
+  "scryfall_uri": "https://scryfall.com/card/f18/2/citys-blessing-elemental?utm_source=api",
+  "layout": "double_faced_token",
+  "highres_image": true,
+  "cmc": 0.0,
+  "type_line": "Card // Token Creature — Elemental",
+  "color_identity": [
+    "R"
+  ],
+  "keywords": [],
+  "card_faces": [
+    {
+      "object": "card_face",
+      "name": "City's Blessing",
+      "mana_cost": "",
+      "type_line": "Card",
+      "oracle_text": "",
+      "colors": [],
+      "flavor_text": "Once you have ascended to the highest temple of Orazca, the power of the Immortal Sun is yours to wield forever.",
+      "artist": "Yeong-Hao Han",
+      "artist_id": "f8e7f8d6-6dde-4059-973c-30f1fd1bbe4e",
+      "illustration_id": "8c1be4a0-ecd2-42ca-bb5e-712668e6a831",
+      "image_uris": {
+        "small": "https://c1.scryfall.com/file/scryfall-cards/small/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
+        "normal": "https://c1.scryfall.com/file/scryfall-cards/normal/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
+        "large": "https://c1.scryfall.com/file/scryfall-cards/large/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
+        "png": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.png?1572258725",
+        "art_crop": "https://c1.scryfall.com/file/scryfall-cards/art_crop/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
+        "border_crop": "https://c1.scryfall.com/file/scryfall-cards/border_crop/front/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725"
+      }
     },
-    "games": [
-        "paper"
-    ],
-    "reserved": false,
-    "foil": true,
-    "nonfoil": false,
-    "oversized": false,
-    "promo": true,
-    "reprint": false,
-    "variation": false,
-    "set": "f18",
-    "set_name": "Friday Night Magic 2018",
-    "set_type": "promo",
-    "set_uri": "https://api.scryfall.com/sets/3a1c398c-c72b-4617-acae-3e6b06ae08d5",
-    "set_search_uri": "https://api.scryfall.com/cards/search?order=set\u0026q=e%3Af18\u0026unique=prints",
-    "scryfall_set_uri": "https://scryfall.com/sets/f18?utm_source=api",
-    "rulings_uri": "https://api.scryfall.com/cards/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2/rulings",
-    "prints_search_uri": "https://api.scryfall.com/cards/search?order=released\u0026q=oracleid%3A07bd569f-d14f-4cd7-9614-5131234a032a\u0026unique=prints",
-    "collector_number": "2",
-    "digital": false,
-    "rarity": "common",
-    "card_back_id": "0aeebaf5-8c7d-4636-9e82-8c27447861f7",
-    "artist": "Yeong-Hao Han \u0026 Jason Rainville",
-    "artist_ids": [
-        "f8e7f8d6-6dde-4059-973c-30f1fd1bbe4e",
-        "6ed7e669-579b-443d-b223-e5cbcb2a7483"
-    ],
-    "border_color": "black",
-    "frame": "2015",
-    "full_art": false,
-    "textless": false,
-    "booster": false,
-    "story_spotlight": false,
-    "promo_types": [
-        "fnm",
-        "tourney"
-    ],
-    "prices": {
-        "usd": null,
-        "usd_foil": "0.40",
-        "eur": null,
-        "eur_foil": null,
-        "tix": null
-    },
-    "related_uris": {
-        "tcgplayer_decks": "https://decks.tcgplayer.com/magic/deck/search?contains=City%27s+Blessing+%2F%2F+Elemental\u0026page=1\u0026utm_campaign=affiliate\u0026utm_medium=api\u0026utm_source=scryfall",
-        "edhrec": "https://edhrec.com/route/?cc=City%27s+Blessing+%2F%2F+Elemental",
-        "mtgtop8": "https://mtgtop8.com/search?MD_check=1\u0026SB_check=1\u0026cards=City%27s+Blessing+%2F%2F+Elemental"
-    },
-    "purchase_uris": {
-        "tcgplayer": "https://shop.tcgplayer.com/product/productsearch?id=158252\u0026utm_campaign=affiliate\u0026utm_medium=api\u0026utm_source=scryfall",
-        "cardmarket": "https://www.cardmarket.com/en/Magic/Products/Search?referrer=scryfall\u0026searchString=City%27s+Blessing+%2F%2F+Elemental\u0026utm_campaign=card_prices\u0026utm_medium=text\u0026utm_source=scryfall",
-        "cardhoarder": "https://www.cardhoarder.com/cards?affiliate_id=scryfall\u0026data%5Bsearch%5D=City%27s+Blessing+%2F%2F+Elemental\u0026ref=card-profile\u0026utm_campaign=affiliate\u0026utm_medium=card\u0026utm_source=scryfall"
+    {
+      "object": "card_face",
+      "name": "Elemental",
+      "mana_cost": "",
+      "type_line": "Token Creature — Elemental",
+      "oracle_text": "At the beginning of your upkeep, sacrifice this creature and return target card named Rekindling Phoenix from your graveyard to the battlefield. It gains haste until end of turn.",
+      "colors": [],
+      "power": "0",
+      "toughness": "1",
+      "artist": "Jason Rainville",
+      "artist_id": "6ed7e669-579b-443d-b223-e5cbcb2a7483",
+      "illustration_id": "37071500-1a8d-4298-9202-1931cd2bb073",
+      "image_uris": {
+        "small": "https://c1.scryfall.com/file/scryfall-cards/small/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
+        "normal": "https://c1.scryfall.com/file/scryfall-cards/normal/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
+        "large": "https://c1.scryfall.com/file/scryfall-cards/large/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
+        "png": "https://c1.scryfall.com/file/scryfall-cards/png/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.png?1572258725",
+        "art_crop": "https://c1.scryfall.com/file/scryfall-cards/art_crop/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725",
+        "border_crop": "https://c1.scryfall.com/file/scryfall-cards/border_crop/back/6/0/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2.jpg?1572258725"
+      }
     }
+  ],
+  "legalities": {
+    "standard": "not_legal",
+    "future": "not_legal",
+    "historic": "not_legal",
+    "pioneer": "not_legal",
+    "modern": "not_legal",
+    "legacy": "not_legal",
+    "pauper": "not_legal",
+    "vintage": "not_legal",
+    "penny": "not_legal",
+    "commander": "not_legal",
+    "brawl": "not_legal",
+    "duel": "not_legal",
+    "oldschool": "not_legal"
+  },
+  "games": [
+    "paper"
+  ],
+  "reserved": false,
+  "foil": true,
+  "nonfoil": false,
+  "oversized": false,
+  "promo": true,
+  "reprint": false,
+  "variation": false,
+  "set": "f18",
+  "set_name": "Friday Night Magic 2018",
+  "set_type": "promo",
+  "set_uri": "https://api.scryfall.com/sets/3a1c398c-c72b-4617-acae-3e6b06ae08d5",
+  "set_search_uri": "https://api.scryfall.com/cards/search?order=set\u0026q=e%3Af18\u0026unique=prints",
+  "scryfall_set_uri": "https://scryfall.com/sets/f18?utm_source=api",
+  "rulings_uri": "https://api.scryfall.com/cards/60ca146d-4e88-4e87-a775-9cfbc9e6b9f2/rulings",
+  "prints_search_uri": "https://api.scryfall.com/cards/search?order=released\u0026q=oracleid%3A07bd569f-d14f-4cd7-9614-5131234a032a\u0026unique=prints",
+  "collector_number": "2",
+  "digital": false,
+  "rarity": "common",
+  "card_back_id": "0aeebaf5-8c7d-4636-9e82-8c27447861f7",
+  "artist": "Yeong-Hao Han \u0026 Jason Rainville",
+  "artist_ids": [
+    "f8e7f8d6-6dde-4059-973c-30f1fd1bbe4e",
+    "6ed7e669-579b-443d-b223-e5cbcb2a7483"
+  ],
+  "border_color": "black",
+  "frame": "2015",
+  "full_art": false,
+  "textless": false,
+  "booster": false,
+  "story_spotlight": false,
+  "promo_types": [
+    "fnm",
+    "tourney"
+  ],
+  "prices": {
+    "usd": null,
+    "usd_foil": "0.40",
+    "eur": null,
+    "eur_foil": null,
+    "tix": null
+  },
+  "related_uris": {
+    "tcgplayer_decks": "https://decks.tcgplayer.com/magic/deck/search?contains=City%27s+Blessing+%2F%2F+Elemental\u0026page=1\u0026utm_campaign=affiliate\u0026utm_medium=api\u0026utm_source=scryfall",
+    "edhrec": "https://edhrec.com/route/?cc=City%27s+Blessing+%2F%2F+Elemental",
+    "mtgtop8": "https://mtgtop8.com/search?MD_check=1\u0026SB_check=1\u0026cards=City%27s+Blessing+%2F%2F+Elemental"
+  },
+  "purchase_uris": {
+    "tcgplayer": "https://shop.tcgplayer.com/product/productsearch?id=158252\u0026utm_campaign=affiliate\u0026utm_medium=api\u0026utm_source=scryfall",
+    "cardmarket": "https://www.cardmarket.com/en/Magic/Products/Search?referrer=scryfall\u0026searchString=City%27s+Blessing+%2F%2F+Elemental\u0026utm_campaign=card_prices\u0026utm_medium=text\u0026utm_source=scryfall",
+    "cardhoarder": "https://www.cardhoarder.com/cards?affiliate_id=scryfall\u0026data%5Bsearch%5D=City%27s+Blessing+%2F%2F+Elemental\u0026ref=card-profile\u0026utm_campaign=affiliate\u0026utm_medium=card\u0026utm_source=scryfall"
+  }
 }
