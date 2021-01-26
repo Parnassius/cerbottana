@@ -47,7 +47,7 @@ black_check: deps
 
 .PHONY: darglint
 darglint: deps
-	find . -name '*.py' -not -path './.*' | xargs poetry run darglint -v 2
+	find . -name '*.py' -not -path './.*' | xargs poetry run darglint -e DAR104 -v 2
 	@echo ''
 
 .PHONY: mypy
