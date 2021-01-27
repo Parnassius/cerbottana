@@ -42,7 +42,7 @@ async def guessthemon(msg: Message) -> None:
         species_name = next(
             (
                 i.name
-                for i in species.pokemon_species_name
+                for i in species.pokemon_species_names
                 if i.local_language_id == msg.language_id
             ),
             None,

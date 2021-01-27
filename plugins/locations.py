@@ -259,7 +259,7 @@ async def encounters(msg: Message) -> None:
                     pokemon_species_name = next(
                         (
                             i.name
-                            for i in pokemon_species.pokemon_species_name
+                            for i in pokemon_species.pokemon_species_names
                             if i.local_language_id == 9
                         ),
                         "",

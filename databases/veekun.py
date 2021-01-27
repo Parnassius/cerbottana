@@ -222,7 +222,7 @@ class PokemonSpecies(Base):
     evolution_chain = relationship("EvolutionChains", uselist=False)
 
     pokemon_species_flavor_text = relationship("PokemonSpeciesFlavorText", uselist=True)
-    pokemon_species_name = relationship("PokemonSpeciesNames", uselist=True)
+    pokemon_species_names = relationship("PokemonSpeciesNames", uselist=True)
     pokemon = relationship("Pokemon", uselist=True)
 
 
