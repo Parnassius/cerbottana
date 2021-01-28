@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import inspect
+import re
 import subprocess
 from os.path import isfile
 from typing import TYPE_CHECKING
@@ -82,9 +83,14 @@ async def csv_to_sqlite(conn: Connection) -> None:
                     csv_keys = csv_data.fieldnames
 
                     if csv_keys is not None:
-                        session.bulk_insert_mappings(
-                            tables_classes[tname], [dict(i) for i in csv_data]
-                        )
+                        data = [dict(i) for i in csv_data]
+
+                        if tname == "locations":
+                            for row in data:
+                                if num := re.search(r"route-(\d+)", row["identifier"]):
+                                    row["route_number"] = num[1]
+
+                        session.bulk_insert_mappings(tables_classes[tname], data)
 
                         if "identifier" in csv_keys:
                             session.query(tables_classes[tname]).update(
