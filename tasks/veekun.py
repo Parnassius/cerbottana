@@ -31,6 +31,7 @@ async def csv_to_sqlite(conn: Connection) -> None:
                     "--",
                     "data/veekun",
                     "databases/veekun.py",
+                    "tasks/veekun.py",
                 ],
                 capture_output=True,
                 check=True,
