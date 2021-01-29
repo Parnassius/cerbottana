@@ -122,8 +122,7 @@ async def removeeightballanswerid(msg: Message) -> None:
         query = session.query(d.EightBall).filter_by(
             id=msg.args[0], roomid=msg.parametrized_room.roomid
         )
-        answer = query.first()
-        if answer:
+        if answer := query.first():
             if msg.room is None:
                 await msg.parametrized_room.send_modnote(
                     "EIGHTBALL ANSWER REMOVED", msg.user, answer.answer

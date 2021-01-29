@@ -121,8 +121,7 @@ class Connection:
 
         for msg in message.split("\n"):
 
-            language = re.match(r"This room's primary language is (.*)", msg)
-            if language:
+            if language := re.match(r"This room's primary language is (.*)", msg):
                 room.language = language.group(1)
                 continue
 

@@ -106,8 +106,7 @@ class User:
         ):
             return True
 
-        room_rank = self.rank(room)
-        if room_rank:
+        if room_rank := self.rank(room):
             return utils.has_role(role, room_rank)
 
         return False
