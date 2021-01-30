@@ -220,7 +220,10 @@ async def megagr(msg: Message) -> None:
 
 @command_wrapper(aliases=("melody",))
 async def melodyl(msg: Message) -> None:
-    await msg.reply("Beh che dire")
+    if random.randint(1, 100) <= 5:
+        await msg.reply("Emh")
+    else:
+        await msg.reply("Beh che dire")
 
 
 @command_wrapper()
