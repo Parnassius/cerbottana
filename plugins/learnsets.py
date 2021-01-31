@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, TypedDict
 
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import selectinload
 
 import databases.veekun as v
 import utils
@@ -19,125 +19,110 @@ async def learnset(msg: Message) -> None:
         return
 
     pokemon_id = utils.to_id(utils.remove_diacritics(msg.args[0].lower()))
-    version = utils.to_id(utils.remove_diacritics(msg.args[1].lower()))
+    version_id = utils.to_id(utils.remove_diacritics(msg.args[1].lower()))
+
+    language_id = msg.language_id
+    if len(msg.args) >= 3:
+        language_id = utils.get_language_id(msg.args[2], fallback=language_id)
 
     db = Database.open("veekun")
 
-    with db.get_session() as session:
-        version_group_id: int | None = (
-            session.query(v.VersionGroups.id)  # type: ignore  # sqlalchemy
-            .filter_by(identifier=version)
-            .scalar()
-        )
-
-        if version_group_id is None:
-            version_group_id = (
-                session.query(v.Versions.version_group_id)  # type: ignore  # sqlalchemy
-                .filter_by(identifier=version)
-                .scalar()
-            )
-            if version_group_id is None:
-                return
+    with db.get_session(language_id) as session:
 
         class MovesDict(TypedDict):
-            name: str
-            level: int | None
-            machine: str | None
+            level: int
+            order: int
+            machine: v.Machines | None
+            forms: set[v.Pokemon]
 
         class ResultsDict(TypedDict):
-            name: str
-            moves: list[MovesDict]
+            moves: dict[v.Moves, MovesDict]
+            form_column: bool
 
-        results: dict[int, ResultsDict] = {}
+        version_group = (
+            session.query(v.VersionGroups)
+            .filter_by(identifier=version_id)
+            .one_or_none()
+        )
 
-        pokemon_species = (
-            session.query(v.PokemonSpecies)  # type: ignore  # sqlalchemy
-            .options(
-                joinedload(v.PokemonSpecies.pokemon)
-                .joinedload(v.Pokemon.pokemon_moves)
-                .joinedload(v.PokemonMoves.version_group)
-                .raiseload("*")
+        if version_group is None:
+            version = (
+                session.query(v.Versions)
+                .filter(v.Versions.identifier == version_id)
+                .one_or_none()
+            )
+            if version is None:
+                await msg.reply("Game version not found.")
+                return
+            version_group = version.version_group
+
+        pokemon_species: v.PokemonSpecies | None = (
+            session.query(v.PokemonSpecies)
+            .options(  # type: ignore  # sqlalchemy
+                selectinload(v.PokemonSpecies.pokemon)
+                .selectinload(
+                    v.Pokemon.pokemon_moves.and_(
+                        v.PokemonMoves.version_group_id == version_group.id
+                    )
+                )
+                .options(
+                    selectinload(v.PokemonMoves.move).options(
+                        selectinload(v.Moves.move_names),
+                        selectinload(
+                            v.Moves.machines.and_(
+                                v.Machines.version_group_id == version_group.id
+                            )
+                        )
+                        .selectinload(v.Machines.item)
+                        .selectinload(v.Items.item_names),
+                    ),
+                    selectinload(v.PokemonMoves.pokemon_move_method).selectinload(
+                        v.PokemonMoveMethods.pokemon_move_method_prose
+                    ),
+                )
             )
             .filter_by(identifier=pokemon_id)
-            .first()
+            .one_or_none()
         )
+        if pokemon_species is None:
+            await msg.reply("Pokémon not found.")
+            return
 
-        if pokemon_species:
+        results: dict[v.PokemonMoveMethods, ResultsDict] = {}
 
-            for pokemon in pokemon_species.pokemon:
+        all_forms = set(pokemon_species.pokemon)
 
-                for pokemon_move in pokemon.pokemon_moves:
+        for pokemon in pokemon_species.pokemon:
+            for pokemon_move in pokemon.pokemon_moves:
 
-                    version_group = pokemon_move.version_group
-
-                    if version_group.id != version_group_id:
-                        continue
-
-                    move = pokemon_move.move
-                    move_name = next(
-                        (i.name for i in move.move_names if i.local_language_id == 9),
-                        "",
-                    )
-
-                    method = pokemon_move.pokemon_move_method
-                    method_name = next(
-                        (
-                            i.name
-                            for i in method.pokemon_move_method_prose
-                            if i.local_language_id == 9
-                        ),
-                        "",
-                    )
-
-                    data: MovesDict = {
-                        "name": move_name,
-                        "level": None,
-                        "machine": None,
+                method = pokemon_move.pokemon_move_method
+                if method not in results:
+                    results[method] = {
+                        "moves": {},
+                        "form_column": False,
                     }
 
-                    if method.id == 1:  # level-up
-                        data["level"] = pokemon_move.level
-                    elif method.id == 4:  # machine
-                        machine = next(
-                            (
-                                i
-                                for i in move.machines
-                                if i.version_group_id == version_group.id
-                            ),
-                            None,
-                        )
-                        if machine:
-                            machine_name = next(
-                                (
-                                    i.name
-                                    for i in machine.item.item_names
-                                    if i.local_language_id == 9
-                                ),
-                                None,
-                            )
-                            data["machine"] = machine_name
+                move = pokemon_move.move
+                if move not in results[method]["moves"]:
+                    results[method]["moves"][move] = {
+                        "level": int(pokemon_move.level or 0),
+                        "order": int(pokemon_move.order or 0),
+                        "machine": move.machines[0] if move.machines else None,
+                        "forms": set(),
+                    }
+                results[method]["moves"][move]["forms"].add(pokemon)
 
-                    if method.id not in results:
-                        results[method.id] = {"name": method_name, "moves": []}
+        for method in results:
+            for move in results[method]["moves"]:
+                if results[method]["moves"][move]["forms"] == all_forms:
+                    results[method]["moves"][move]["forms"] = set()
+                else:
+                    results[method]["form_column"] = True
 
-                    results[method.id]["moves"].append(data)
-
-        for method_id in sorted(results.keys()):
-            if method_id == 1:  # level-up
-                results[method_id]["moves"].sort(key=lambda x: (x["level"], x["name"]))
-            elif method_id == 4:  # machine
-                results[method_id]["moves"].sort(
-                    key=lambda x: (x["machine"], x["name"])
-                )
-            else:
-                results[method_id]["moves"].sort(key=lambda x: x["name"])
-
-        html = utils.render_template(
-            "commands/learnsets.html", methods=sorted(results.keys()), results=results
-        )
+        html = utils.render_template("commands/learnsets.html", results=results)
 
         if not html:
-            await msg.reply("Nessun dato")
+            await msg.reply("No data available.")
             return
 
         await msg.reply_htmlbox('<div class="ladder">' + html + "</div>")
