@@ -8,7 +8,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql.expression import func
 
 import databases.veekun as v
-import utils
 from database import Database
 from plugins import command_wrapper
 
@@ -51,7 +50,6 @@ async def guessthemon(msg: Message) -> None:
             raise SQLAlchemyError(
                 f"PokemonSpecies row {species.id}: no {msg.language} localization"
             )
-        species_name = utils.remove_accents(species_name)
 
         # Get pokedex flavor text
         dex_entries = [
