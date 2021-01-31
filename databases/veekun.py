@@ -1,10 +1,61 @@
 # pylint: disable=too-few-public-methods
 
+from __future__ import annotations
+
+from typing import cast
+
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
+
+
+class TranslatableMixin:
+    def get_translation(
+        self,
+        translation_table: str,
+        *,
+        language_id: int | None = None,
+        translation_column: str | None = None,
+        language_column: str | None = None,
+        fallback_column: str | None = None,
+        fallback: str | None = None,
+    ) -> str:
+        if language_id is None:
+            language_id = (
+                self._sa_instance_state.session.info.get(  # type: ignore[attr-defined]
+                    "language_id", 9
+                )
+            )
+            language_id = cast(int, language_id)
+        if translation_column is None:
+            translation_column = "name"
+        if language_column is None:
+            language_column = "local_language_id"
+        if fallback_column is None:
+            fallback_column = "identifier"
+
+        languages = [language_id]
+        if language_id != 9:
+            languages.append(9)  # Fallback to english.
+        for lang in languages:
+            if name := next(
+                (
+                    getattr(i, translation_column)
+                    for i in getattr(self, translation_table)
+                    if getattr(i, language_column) == lang
+                ),
+                None,
+            ):
+                return str(name)
+
+        if fallback is not None:
+            return fallback
+
+        # If both the localized and the english name are unavailable then simply return
+        # the identifier.
+        return str(getattr(self, fallback_column))
 
 
 class LatestCommit(Base):
@@ -42,7 +93,7 @@ class EncounterConditionValueProse(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class EncounterConditionValues(Base):
+class EncounterConditionValues(TranslatableMixin, Base):
     __tablename__ = "encounter_condition_values"
 
     id = Column(Integer, primary_key=True)
@@ -59,6 +110,10 @@ class EncounterConditionValues(Base):
     encounter_condition_value_prose = relationship(
         "EncounterConditionValueProse", uselist=True, viewonly=True
     )
+
+    @property
+    def prose(self) -> str:
+        return self.get_translation("encounter_condition_value_prose")
 
 
 class EncounterConditions(Base):
@@ -85,7 +140,7 @@ class EncounterMethodProse(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class EncounterMethods(Base):
+class EncounterMethods(TranslatableMixin, Base):
     __tablename__ = "encounter_methods"
 
     id = Column(Integer, primary_key=True)
@@ -95,6 +150,10 @@ class EncounterMethods(Base):
     encounter_method_prose = relationship(
         "EncounterMethodProse", uselist=True, viewonly=True
     )
+
+    @property
+    def prose(self) -> str:
+        return self.get_translation("encounter_method_prose")
 
 
 class EncounterSlots(Base):
@@ -171,7 +230,7 @@ class ItemNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class Items(Base):
+class Items(TranslatableMixin, Base):
     __tablename__ = "items"
 
     id = Column(Integer, primary_key=True)
@@ -182,6 +241,10 @@ class Items(Base):
     fling_effect_id = Column(Integer)
 
     item_names = relationship("ItemNames", uselist=True, viewonly=True)
+
+    @property
+    def name(self) -> str:
+        return self.get_translation("item_names")
 
 
 class Languages(Base):
@@ -208,7 +271,7 @@ class LocationAreaProse(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class LocationAreas(Base):
+class LocationAreas(TranslatableMixin, Base):
     __tablename__ = "location_areas"
     __table_opts__ = (UniqueConstraint("location_id", "identifier"),)
 
@@ -221,6 +284,10 @@ class LocationAreas(Base):
     location_area_prose = relationship("LocationAreaProse", uselist=True, viewonly=True)
 
     encounters = relationship("Encounters", uselist=True, viewonly=True)
+
+    @property
+    def name(self) -> str:
+        return self.get_translation("location_area_prose")
 
 
 class LocationNames(Base):
@@ -235,7 +302,7 @@ class LocationNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class Locations(Base):
+class Locations(TranslatableMixin, Base):
     __tablename__ = "locations"
 
     id = Column(Integer, primary_key=True)
@@ -248,6 +315,16 @@ class Locations(Base):
 
     location_names = relationship("LocationNames", uselist=True, viewonly=True)
     location_areas = relationship("LocationAreas", uselist=True, viewonly=True)
+
+    @property
+    def name(self) -> str:
+        return self.get_translation("location_names")
+
+    @property
+    def subtitle(self) -> str:
+        return self.get_translation(
+            "location_names", translation_column="subtitle", fallback=""
+        )
 
 
 class Machines(Base):
@@ -276,7 +353,7 @@ class MoveNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class Moves(Base):
+class Moves(TranslatableMixin, Base):
     __tablename__ = "moves"
 
     id = Column(Integer, primary_key=True)
@@ -300,6 +377,10 @@ class Moves(Base):
     move_names = relationship("MoveNames", uselist=True, viewonly=True)
     machines = relationship("Machines", uselist=True, viewonly=True)
 
+    @property
+    def name(self) -> str:
+        return self.get_translation("move_names")
+
 
 class Pokemon(Base):
     __tablename__ = "pokemon"
@@ -319,6 +400,19 @@ class Pokemon(Base):
     pokemon_forms = relationship("PokemonForms", uselist=True, viewonly=True)
     pokemon_moves = relationship("PokemonMoves", uselist=True, viewonly=True)
 
+    @property
+    def name(self) -> str:
+        pokemon_name = self.species.name
+        for form in self.pokemon_forms:
+            if not form.is_default:
+                continue
+            pokemon_name = form.get_translation(
+                "pokemon_form_names",
+                translation_column="form_name",
+                fallback=pokemon_name,
+            )
+        return pokemon_name
+
 
 class PokemonFormNames(Base):
     __tablename__ = "pokemon_form_names"
@@ -332,7 +426,7 @@ class PokemonFormNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class PokemonForms(Base):
+class PokemonForms(TranslatableMixin, Base):
     __tablename__ = "pokemon_forms"
 
     id = Column(Integer, primary_key=True)
@@ -353,6 +447,12 @@ class PokemonForms(Base):
 
     pokemon_form_names = relationship("PokemonFormNames", uselist=True, viewonly=True)
 
+    @property
+    def name(self) -> str:
+        return self.get_translation(
+            "pokemon_form_names", translation_column="form_name"
+        )
+
 
 class PokemonMoveMethodProse(Base):
     __tablename__ = "pokemon_move_method_prose"
@@ -370,7 +470,7 @@ class PokemonMoveMethodProse(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class PokemonMoveMethods(Base):
+class PokemonMoveMethods(TranslatableMixin, Base):
     __tablename__ = "pokemon_move_methods"
 
     id = Column(Integer, primary_key=True)
@@ -379,6 +479,10 @@ class PokemonMoveMethods(Base):
     pokemon_move_method_prose = relationship(
         "PokemonMoveMethodProse", uselist=True, viewonly=True
     )
+
+    @property
+    def prose(self) -> str:
+        return self.get_translation("pokemon_move_method_prose")
 
 
 class PokemonMoves(Base):
@@ -403,7 +507,7 @@ class PokemonMoves(Base):
     )
 
 
-class PokemonSpecies(Base):
+class PokemonSpecies(TranslatableMixin, Base):
     __tablename__ = "pokemon_species"
 
     id = Column(Integer, primary_key=True)
@@ -438,6 +542,10 @@ class PokemonSpecies(Base):
         "PokemonSpeciesNames", uselist=True, viewonly=True
     )
     pokemon = relationship("Pokemon", uselist=True, viewonly=True)
+
+    @property
+    def name(self) -> str:
+        return self.get_translation("pokemon_species_names")
 
 
 class PokemonSpeciesFlavorText(Base):
@@ -500,7 +608,7 @@ class VersionNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class Versions(Base):
+class Versions(TranslatableMixin, Base):
     __tablename__ = "versions"
 
     id = Column(Integer, primary_key=True)
@@ -510,3 +618,7 @@ class Versions(Base):
     version_group = relationship("VersionGroups", uselist=False, viewonly=True)
 
     version_names = relationship("VersionNames", uselist=True, viewonly=True)
+
+    @property
+    def name(self) -> str:
+        return self.get_translation("version_names")
