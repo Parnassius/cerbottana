@@ -487,7 +487,7 @@ class PokemonMoves(Base):
         Integer, ForeignKey("pokemon_move_methods.id"), primary_key=True
     )
     level = Column(Integer, primary_key=True, nullable=False)
-    order = Column(String, nullable=False)
+    order = Column(Integer, nullable=False)
 
     pokemon = relationship("Pokemon", uselist=False)
     version_group = relationship("VersionGroups", uselist=False)
