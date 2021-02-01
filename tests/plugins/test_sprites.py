@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 
 import plugins.sprites as sprites
+import utils
 
 
 @pytest.mark.parametrize(
@@ -16,6 +17,9 @@ import plugins.sprites as sprites
     ),
 )
 def test_generate_sprite_url(pokemon: str, dexname: str) -> None:
-    """Tests PS sprite URLs are generated correctly from pokemon names."""
+    """Tests that PS sprite URLs are generated correctly from pokemon names."""
+    dex_entry = utils.get_ps_dex_entry(pokemon)
+    assert dex_entry is not None
+
     expected_url = f"https://play.pokemonshowdown.com/sprites/ani/{dexname}.gif"
-    assert sprites.generate_sprite_url(pokemon, False) == expected_url
+    assert sprites.generate_sprite_url(dex_entry, False) == expected_url
