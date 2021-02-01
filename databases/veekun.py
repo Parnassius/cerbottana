@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import total_ordering
 from typing import cast
 
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
@@ -9,6 +10,33 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
+
+
+@total_ordering
+class HashableMixin:
+    id: Column[int]
+
+    @property
+    def _id(self) -> int:
+        # Tables without an `id` column should override this property.
+        return self.id
+
+    def __eq__(self, other: object) -> bool:
+        if other is None:
+            return False
+        if not isinstance(other, type(self)):
+            raise NotImplementedError
+        return self._id == other._id
+
+    def __lt__(self, other: object) -> bool:
+        if other is None:
+            return True
+        if not isinstance(other, type(self)):
+            raise NotImplementedError
+        return self._id < other._id
+
+    def __hash__(self) -> int:
+        return hash(self._id)
 
 
 class TranslatableMixin:
@@ -93,7 +121,7 @@ class EncounterConditionValueProse(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class EncounterConditionValues(TranslatableMixin, Base):
+class EncounterConditionValues(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "encounter_condition_values"
 
     id = Column(Integer, primary_key=True)
@@ -116,7 +144,7 @@ class EncounterConditionValues(TranslatableMixin, Base):
         return self.get_translation("encounter_condition_value_prose")
 
 
-class EncounterConditions(Base):
+class EncounterConditions(HashableMixin, Base):
     __tablename__ = "encounter_conditions"
 
     id = Column(Integer, primary_key=True)
@@ -140,7 +168,7 @@ class EncounterMethodProse(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class EncounterMethods(TranslatableMixin, Base):
+class EncounterMethods(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "encounter_methods"
 
     id = Column(Integer, primary_key=True)
@@ -156,7 +184,7 @@ class EncounterMethods(TranslatableMixin, Base):
         return self.get_translation("encounter_method_prose")
 
 
-class EncounterSlots(Base):
+class EncounterSlots(HashableMixin, Base):
     __tablename__ = "encounter_slots"
 
     id = Column(Integer, primary_key=True)
@@ -173,7 +201,7 @@ class EncounterSlots(Base):
     encounter = relationship("Encounters", uselist=False, viewonly=True)
 
 
-class Encounters(Base):
+class Encounters(HashableMixin, Base):
     __tablename__ = "encounters"
 
     id = Column(Integer, primary_key=True)
@@ -196,7 +224,7 @@ class Encounters(Base):
     )
 
 
-class EvolutionChains(Base):
+class EvolutionChains(HashableMixin, Base):
     __tablename__ = "evolution_chains"
 
     id = Column(Integer, primary_key=True)
@@ -207,7 +235,7 @@ class EvolutionChains(Base):
     pokemon_species = relationship("PokemonSpecies", uselist=False, viewonly=True)
 
 
-class Generations(Base):
+class Generations(HashableMixin, Base):
     __tablename__ = "generations"
 
     id = Column(Integer, primary_key=True)
@@ -230,7 +258,7 @@ class ItemNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class Items(TranslatableMixin, Base):
+class Items(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "items"
 
     id = Column(Integer, primary_key=True)
@@ -247,7 +275,7 @@ class Items(TranslatableMixin, Base):
         return self.get_translation("item_names")
 
 
-class Languages(Base):
+class Languages(HashableMixin, Base):
     __tablename__ = "languages"
 
     id = Column(Integer, primary_key=True)
@@ -271,7 +299,7 @@ class LocationAreaProse(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class LocationAreas(TranslatableMixin, Base):
+class LocationAreas(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "location_areas"
     __table_opts__ = (UniqueConstraint("location_id", "identifier"),)
 
@@ -302,7 +330,7 @@ class LocationNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class Locations(TranslatableMixin, Base):
+class Locations(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "locations"
 
     id = Column(Integer, primary_key=True)
@@ -327,7 +355,7 @@ class Locations(TranslatableMixin, Base):
         )
 
 
-class Machines(Base):
+class Machines(HashableMixin, Base):
     __tablename__ = "machines"
 
     machine_number = Column(Integer, primary_key=True)
@@ -341,6 +369,10 @@ class Machines(Base):
     item = relationship("Items", uselist=False, viewonly=True)
     move = relationship("Moves", uselist=False, viewonly=True)
 
+    @property
+    def _id(self) -> int:
+        return self.machine_number
+
 
 class MoveNames(Base):
     __tablename__ = "move_names"
@@ -353,7 +385,7 @@ class MoveNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class Moves(TranslatableMixin, Base):
+class Moves(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "moves"
 
     id = Column(Integer, primary_key=True)
@@ -382,7 +414,7 @@ class Moves(TranslatableMixin, Base):
         return self.get_translation("move_names")
 
 
-class Pokemon(Base):
+class Pokemon(HashableMixin, Base):
     __tablename__ = "pokemon"
 
     id = Column(Integer, primary_key=True)
@@ -426,7 +458,7 @@ class PokemonFormNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class PokemonForms(TranslatableMixin, Base):
+class PokemonForms(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "pokemon_forms"
 
     id = Column(Integer, primary_key=True)
@@ -470,7 +502,7 @@ class PokemonMoveMethodProse(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class PokemonMoveMethods(TranslatableMixin, Base):
+class PokemonMoveMethods(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "pokemon_move_methods"
 
     id = Column(Integer, primary_key=True)
@@ -507,7 +539,7 @@ class PokemonMoves(Base):
     )
 
 
-class PokemonSpecies(TranslatableMixin, Base):
+class PokemonSpecies(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "pokemon_species"
 
     id = Column(Integer, primary_key=True)
@@ -575,7 +607,7 @@ class PokemonSpeciesNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class Regions(Base):
+class Regions(HashableMixin, Base):
     __tablename__ = "regions"
 
     id = Column(Integer, primary_key=True)
@@ -584,7 +616,7 @@ class Regions(Base):
     locations = relationship("Locations", uselist=True, viewonly=True)
 
 
-class VersionGroups(Base):
+class VersionGroups(HashableMixin, Base):
     __tablename__ = "version_groups"
 
     id = Column(Integer, primary_key=True)
@@ -608,7 +640,7 @@ class VersionNames(Base):
     local_language = relationship("Languages", uselist=False, viewonly=True)
 
 
-class Versions(TranslatableMixin, Base):
+class Versions(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "versions"
 
     id = Column(Integer, primary_key=True)
