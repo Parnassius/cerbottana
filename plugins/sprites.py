@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import random
-import re
 from typing import TYPE_CHECKING
 
 from imageprobe.errors import UnsupportedFormat
@@ -9,67 +8,57 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql.expression import func
 
 import databases.veekun as v
-import utils
 from database import Database
 from plugins import command_wrapper
+from typedefs import JsonDict
+from utils import get_ps_dex_entry, image_url_to_html, to_id
 
 if TYPE_CHECKING:
     from models.message import Message
 
 
-def generate_sprite_url(pokemon: str, shiny: bool = False) -> str:
+def generate_sprite_url(dex_entry: JsonDict, shiny: bool = False) -> str:
     """Returns an URL to the PS animated sprite of a pokemon.
 
     Args:
-        pokemon (str): Pokemon name.
+        dex_entry (JsonDict): Pokedex entry from the PS database.
         shiny (bool): Whether the required sprite should be shiny. Defaults to False.
 
     Returns:
         str: URL.
     """
-    # Remove any non-alphanumeric characters besides hyphens.
-    pokemon = utils.remove_accents(pokemon)
-    pokemon = re.sub(r"[^a-z0-9-]", "", pokemon.lower())
-
-    exceptions = (  # Base forms containing a hyphen
-        "ho-oh",
-        "jangmo-o",
-        "hakamo-o",
-        "kommo-o",
-        "nidoran-m",
-        "nidoran-f",
-        "porygon-z",
-    )
-    if pokemon.startswith(exceptions):
-        pokemon = pokemon.replace("-", "", 1)  # Remove hyphen from base form.
-
-    parts = pokemon.split("-", 1)
-    if len(parts) > 1 and parts[1]:  # base name + form suffix
-        # Remove additional hyphens from the suffix.
-        dexname = parts[0] + "-" + parts[1].replace("-", "")
-    else:  # only base name
-        dexname = pokemon
+    if "baseSpecies" in dex_entry:  # Alternate form, e.g. mega, gmax
+        dex_name = to_id(dex_entry["baseSpecies"]) + "-" + to_id(dex_entry["forme"])
+    else:  # Base form
+        dex_name = to_id(dex_entry["name"])
 
     category = "ani-shiny" if shiny else "ani"
-    return f"https://play.pokemonshowdown.com/sprites/{category}/{dexname}.gif"
+    return f"https://play.pokemonshowdown.com/sprites/{category}/{dex_name}.gif"
 
 
 @command_wrapper(helpstr="Mostra lo sprite di un pokemon")
 async def sprite(msg: Message) -> None:
     if len(msg.args) == 1:
-        url = generate_sprite_url(msg.arg)
+        shiny = False
     elif len(msg.args) == 2 and msg.args[1].lower() == "shiny":
-        url = generate_sprite_url(msg.args[0], True)
+        shiny = True
     else:
         await msg.reply("Sintassi non valida: ``.sprite nomepokemon[, shiny]``")
         return
 
+    dex_entry = get_ps_dex_entry(msg.args[0])
+    if dex_entry is None:
+        await msg.reply("Nome pokemon non valido")
+        return
+
+    url = generate_sprite_url(dex_entry, shiny)
+
     try:
-        html = await utils.image_url_to_html(url)
+        html = await image_url_to_html(url)
         await msg.reply_htmlbox(html)
     except UnsupportedFormat:
-        # We received a generic Apache error webpage.
-        await msg.reply("Nome pokemon non valido")
+        # Missing sprite. We received a generic Apache error webpage.
+        await msg.reply("Sprite non trovato")
 
 
 @command_wrapper(
@@ -89,13 +78,19 @@ async def randsprite(msg: Message) -> None:
         if not species:
             raise SQLAlchemyError("Missing PokemonSpeciesNames data")
 
-        # Pokemon has a 1/8192 chance of being shiny if it isn't explicitly requested.
-        shiny = msg.arg.lower() == "shiny" or not random.randint(0, 8192)
-        url = generate_sprite_url(species.name, shiny)
+        dex_entry = get_ps_dex_entry(species.name)
+        if dex_entry is None:
+            print(f"Missing PS data for {species.name}")
+            return
 
-        try:
-            html = await utils.image_url_to_html(url)
-            await msg.reply_htmlbox(html)
-        except UnsupportedFormat:
-            # Missing sprite, should be rather rare.
-            await msg.reply("Non ho trovato lo sprite di {species.name} :(")
+    # Pokemon has a 1/8192 chance of being shiny if it isn't explicitly requested.
+    shiny = msg.arg.lower() == "shiny" or not random.randint(0, 8192)
+
+    url = generate_sprite_url(dex_entry, shiny)
+
+    try:
+        html = await image_url_to_html(url)
+        await msg.reply_htmlbox(html)
+    except UnsupportedFormat:
+        # Missing sprite. We received a generic Apache error webpage.
+        await msg.reply("Sprite di {} non trovato".format(dex_entry["name"]))
