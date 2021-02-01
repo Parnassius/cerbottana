@@ -51,8 +51,12 @@ def create_token(
     return token_id
 
 
+def to_id(text: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", text.lower())
+
+
 def to_user_id(user: str) -> UserId:
-    userid = UserId(re.sub(r"[^a-z0-9]", "", user.lower()))
+    userid = UserId(to_id(user))
     return userid
 
 
