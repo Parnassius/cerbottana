@@ -212,7 +212,7 @@ def to_obfuscated_html(text: str | None) -> str:
     return obfuscated
 
 
-def get_language_id(language_name: str) -> int:
+def get_language_id(language_name: str, *, fallback: int = 9) -> int:
     language_name = to_user_id(language_name)
     table = {
         # "japanese": 1,
@@ -231,7 +231,7 @@ def get_language_id(language_name: str) -> int:
     }
     if language_name in table:
         return table[language_name]
-    return table["english"]  # Default to English if language is not available.
+    return fallback
 
 
 def get_ps_dex_entry(query: str) -> JsonDict | None:
