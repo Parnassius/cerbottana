@@ -15,7 +15,7 @@ from sqlalchemy.sql import func
 
 import databases.database as d
 from database import Database
-from typedefs import Role, RoomId, UserId
+from typedefs import JsonDict, Role, RoomId, UserId
 
 
 def create_token(
@@ -226,5 +226,33 @@ def get_language_id(language_name: str) -> int:
     return table["English"]  # Default to English if language is not available.
 
 
+def get_ps_dex_entry(query: str) -> JsonDict | None:
+    """Retrieves a pokemon entry from the PS pokedex.
+
+    Args:
+        query (str): Pokemon name (or forme variant).
+
+    Returns:
+        JsonDict | None: Dict with pokemon information or None if no pokemon was
+            recognized.
+    """
+    query = _escape(query)
+    if query in ALIASES:
+        query = _escape(ALIASES[query])
+    if query in POKEDEX:
+        return POKEDEX[query]
+    return None
+
+
+def _escape(text: str) -> str:
+    text = remove_accents(text)
+    text = to_id(text)
+    return text
+
+
 with open("./data/avatars.json") as f:
     AVATAR_IDS: dict[str, str] = json.load(f)
+with open("./data/showdown/aliases.json") as f:
+    ALIASES: dict[str, str] = json.load(f)
+with open("./data/showdown/pokedex.json") as f:
+    POKEDEX: dict[str, JsonDict] = json.load(f)
