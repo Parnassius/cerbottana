@@ -24,8 +24,10 @@ class Database:
         return cls._instances[dbname]
 
     @contextmanager
-    def get_session(self) -> Iterator[Session]:
+    def get_session(self, language_id: int | None = None) -> Iterator[Session]:
         session = self.Session()
+        if language_id:
+            session.info["language_id"] = language_id
         try:
             yield session
             session.commit()
