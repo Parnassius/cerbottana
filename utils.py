@@ -5,6 +5,7 @@ import os
 import random
 import re
 import string
+import unicodedata
 from html import escape
 from typing import Any
 
@@ -67,9 +68,10 @@ def to_room_id(room: str, fallback: RoomId = RoomId("lobby")) -> RoomId:
     return roomid
 
 
-def remove_accents(text: str) -> str:
-    rule = str.maketrans("àèéìòùÀÈÉÌÒÙ", "aeeiouAEEIOU")
-    return text.translate(rule)
+def remove_diacritics(text: str) -> str:
+    return "".join(
+        [c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c)]
+    )
 
 
 def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
@@ -245,7 +247,7 @@ def get_ps_dex_entry(query: str) -> JsonDict | None:
 
 
 def _escape(text: str) -> str:
-    text = remove_accents(text)
+    text = remove_diacritics(text)
     text = to_id(text)
     return text
 

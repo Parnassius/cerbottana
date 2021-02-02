@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 @command_wrapper(aliases=("location",))
 async def locations(msg: Message) -> None:
-    pokemon_id = utils.to_user_id(utils.remove_accents(msg.arg.lower()))
+    pokemon_id = utils.to_user_id(utils.remove_diacritics(msg.arg.lower()))
 
     db = Database.open("veekun")
 
@@ -190,7 +190,7 @@ async def locations(msg: Message) -> None:
 
 @command_wrapper(aliases=("encounter",))
 async def encounters(msg: Message) -> None:
-    location_id = utils.to_user_id(utils.remove_accents(msg.arg.lower()))
+    location_id = utils.to_user_id(utils.remove_diacritics(msg.arg.lower()))
 
     db = Database.open("veekun")
 

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 @command_wrapper(helpstr="Traduce abilità, mosse e strumenti.")
 async def trad(msg: Message) -> None:
-    parola = utils.to_user_id(utils.remove_accents(msg.arg.lower()))
+    parola = utils.to_user_id(utils.remove_diacritics(msg.arg.lower()))
     if parola == "":
         await msg.reply("Cosa devo tradurre?")
         return
@@ -21,9 +21,9 @@ async def trad(msg: Message) -> None:
 
     for i in TRANSLATIONS:
         for j in TRANSLATIONS[i]:
-            if utils.to_user_id(utils.remove_accents(j["en"].lower())) == parola:
+            if utils.to_user_id(utils.remove_diacritics(j["en"].lower())) == parola:
                 results.append({"trad": j["it"], "cat": i})
-            elif utils.to_user_id(utils.remove_accents(j["it"].lower())) == parola:
+            elif utils.to_user_id(utils.remove_diacritics(j["it"].lower())) == parola:
                 results.append({"trad": j["en"], "cat": i})
 
     if results:
