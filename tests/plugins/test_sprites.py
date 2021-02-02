@@ -22,4 +22,4 @@ def test_generate_sprite_url(pokemon: str, dexname: str) -> None:
     assert dex_entry is not None
 
     expected_url = f"https://play.pokemonshowdown.com/sprites/ani/{dexname}.gif"
-    assert sprites.generate_sprite_url(dex_entry, False) == expected_url
+    assert sprites.generate_sprite_url(dex_entry) == expected_url
