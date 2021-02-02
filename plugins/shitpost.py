@@ -16,7 +16,7 @@ async def shitpost(msg: Message) -> None:
     if msg.room is None:
         return
 
-    phrase = utils.remove_accents(msg.arg.strip())
+    phrase = utils.remove_diacritics(msg.arg.strip())
     if len(phrase) > 50:
         await msg.reply("Testo troppo lungo")
         return
