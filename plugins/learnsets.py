@@ -18,8 +18,8 @@ async def learnset(msg: Message) -> None:
     if len(msg.args) < 2:
         return
 
-    pokemon_id = utils.to_user_id(utils.remove_diacritics(msg.args[0].lower()))
-    version = utils.to_user_id(utils.remove_diacritics(msg.args[1].lower()))
+    pokemon_id = utils.to_id(utils.remove_diacritics(msg.args[0].lower()))
+    version = utils.to_id(utils.remove_diacritics(msg.args[1].lower()))
 
     db = Database.open("veekun")
 
