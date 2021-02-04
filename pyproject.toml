@@ -31,7 +31,7 @@ htmlmin = "0.1.12"
 imageprobe = "0.1.2"
 python-dateutil = "2.8.1"
 pytz = "2020.5"
-SQLAlchemy = "1.3.22"
+SQLAlchemy = "1.3.23"
 waitress = "1.4.4"
 websockets = "8.1"
 
