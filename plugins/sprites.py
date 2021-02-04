@@ -69,18 +69,13 @@ async def randsprite(msg: Message) -> None:
     # Get a random pokemon
     db = Database.open("veekun")
     with db.get_session() as session:
-        species = (
-            session.query(v.PokemonSpeciesNames)
-            .filter_by(local_language_id=9)  # English
-            .order_by(func.random())
-            .first()
-        )
+        species = session.query(v.PokemonSpecies).order_by(func.random()).first()
         if not species:
-            raise SQLAlchemyError("Missing PokemonSpeciesNames data")
+            raise SQLAlchemyError("Missing PokemonSpecies data")
 
-        dex_entry = get_ps_dex_entry(species.name)
+        dex_entry = get_ps_dex_entry(species.identifier)
         if dex_entry is None:
-            print(f"Missing PS data for {species.name}")
+            print(f"Missing PS data for {species.identifier}")
             return
 
     # Pokemon has a 1/8192 chance of being shiny if it isn't explicitly requested.
