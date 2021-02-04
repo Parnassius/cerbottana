@@ -1,2 +1,3 @@
 [darglint]
+enable=DAR104
 strictness=long
