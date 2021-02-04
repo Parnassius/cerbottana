@@ -1,6 +1,6 @@
 # pylint: disable=too-few-public-methods
 
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -10,15 +10,13 @@ Base = declarative_base()
 class LatestCommit(Base):
     __tablename__ = "latest_commit"
 
-    commit_id = Column(String, primary_key=True, nullable=False)
+    commit_id = Column(String, primary_key=True)
 
 
 class EncounterConditionValueMap(Base):
     __tablename__ = "encounter_condition_value_map"
 
-    encounter_id = Column(
-        Integer, ForeignKey("encounters.id"), primary_key=True, nullable=False
-    )
+    encounter_id = Column(Integer, ForeignKey("encounters.id"), primary_key=True)
     encounter_condition_value_id = Column(
         Integer, ForeignKey("encounter_condition_values.id"), primary_key=True
     )
@@ -33,10 +31,8 @@ class EncounterConditionValueProse(Base):
     encounter_condition_value_id = Column(
         Integer, ForeignKey("encounter_condition_values.id"), primary_key=True
     )
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    name = Column(String, nullable=False)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True, nullable=False)
 
     encounter_condition_value = relationship("EncounterConditionValues", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -45,7 +41,7 @@ class EncounterConditionValueProse(Base):
 class EncounterConditionValues(Base):
     __tablename__ = "encounter_condition_values"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     encounter_condition_id = Column(
         Integer, ForeignKey("encounter_conditions.id"), nullable=False
     )
@@ -62,7 +58,7 @@ class EncounterConditionValues(Base):
 class EncounterConditions(Base):
     __tablename__ = "encounter_conditions"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     identifier = Column(String, nullable=False)
 
     encounter_condition_values = relationship("EncounterConditionValues", uselist=True)
@@ -74,10 +70,8 @@ class EncounterMethodProse(Base):
     encounter_method_id = Column(
         Integer, ForeignKey("encounter_methods.id"), primary_key=True
     )
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    name = Column(String, nullable=False)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True, nullable=False)
 
     encounter_method = relationship("EncounterMethods", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -86,9 +80,9 @@ class EncounterMethodProse(Base):
 class EncounterMethods(Base):
     __tablename__ = "encounter_methods"
 
-    id = Column(Integer, primary_key=True, nullable=False)
-    identifier = Column(String, nullable=False)
-    order = Column(Integer, nullable=False)
+    id = Column(Integer, primary_key=True)
+    identifier = Column(String, unique=True, nullable=False)
+    order = Column(Integer, unique=True, nullable=False)
 
     encounter_method_prose = relationship("EncounterMethodProse", uselist=True)
 
@@ -96,13 +90,13 @@ class EncounterMethods(Base):
 class EncounterSlots(Base):
     __tablename__ = "encounter_slots"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     version_group_id = Column(Integer, ForeignKey("version_groups.id"), nullable=False)
     encounter_method_id = Column(
         Integer, ForeignKey("encounter_methods.id"), nullable=False
     )
-    slot = Column(Integer, nullable=False)
-    rarity = Column(Integer, nullable=False)
+    slot = Column(Integer)
+    rarity = Column(Integer)
 
     version_group = relationship("VersionGroups", uselist=False)
     encounter_method = relationship("EncounterMethods", uselist=False)
@@ -113,7 +107,7 @@ class EncounterSlots(Base):
 class Encounters(Base):
     __tablename__ = "encounters"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     version_id = Column(Integer, ForeignKey("versions.id"), nullable=False)
     location_area_id = Column(Integer, ForeignKey("location_areas.id"), nullable=False)
     encounter_slot_id = Column(
@@ -136,8 +130,8 @@ class Encounters(Base):
 class EvolutionChains(Base):
     __tablename__ = "evolution_chains"
 
-    id = Column(Integer, primary_key=True, nullable=False)
-    baby_trigger_item_id = Column(Integer, ForeignKey("items.id"), nullable=False)
+    id = Column(Integer, primary_key=True)
+    baby_trigger_item_id = Column(Integer, ForeignKey("items.id"))
 
     baby_trigger_item = relationship("Items", uselist=False)
 
@@ -147,7 +141,7 @@ class EvolutionChains(Base):
 class Generations(Base):
     __tablename__ = "generations"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     main_region_id = Column(Integer, ForeignKey("regions.id"), nullable=False)
     identifier = Column(String, nullable=False)
 
@@ -159,11 +153,9 @@ class Generations(Base):
 class ItemNames(Base):
     __tablename__ = "item_names"
 
-    item_id = Column(Integer, ForeignKey("items.id"), primary_key=True, nullable=False)
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    name = Column(String, nullable=False)
+    item_id = Column(Integer, ForeignKey("items.id"), primary_key=True)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True, nullable=False)
 
     item = relationship("Items", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -172,12 +164,12 @@ class ItemNames(Base):
 class Items(Base):
     __tablename__ = "items"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     identifier = Column(String, nullable=False)
     category_id = Column(Integer, nullable=False)
     cost = Column(Integer, nullable=False)
-    fling_power = Column(Integer, nullable=False)
-    fling_effect_id = Column(Integer, nullable=False)
+    fling_power = Column(Integer)
+    fling_effect_id = Column(Integer)
 
     item_names = relationship("ItemNames", uselist=True)
 
@@ -185,12 +177,12 @@ class Items(Base):
 class Languages(Base):
     __tablename__ = "languages"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     iso639 = Column(String, nullable=False)
     iso3166 = Column(String, nullable=False)
     identifier = Column(String, nullable=False)
-    official = Column(Integer, nullable=False)
-    order = Column(Integer, nullable=False)
+    official = Column(Integer, index=True, nullable=False)
+    order = Column(Integer)
 
 
 class LocationAreaProse(Base):
@@ -199,10 +191,8 @@ class LocationAreaProse(Base):
     location_area_id = Column(
         Integer, ForeignKey("location_areas.id"), primary_key=True
     )
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    name = Column(String, nullable=False)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True)
 
     location_area = relationship("LocationAreas", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -210,11 +200,12 @@ class LocationAreaProse(Base):
 
 class LocationAreas(Base):
     __tablename__ = "location_areas"
+    __table_opts__ = (UniqueConstraint("location_id", "identifier"),)
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     location_id = Column(Integer, ForeignKey("locations.id"), nullable=False)
     game_index = Column(Integer, nullable=False)
-    identifier = Column(String, nullable=False)
+    identifier = Column(String)
 
     location = relationship("Locations", uselist=False)
     location_area_prose = relationship("LocationAreaProse", uselist=True)
@@ -225,14 +216,10 @@ class LocationAreas(Base):
 class LocationNames(Base):
     __tablename__ = "location_names"
 
-    location_id = Column(
-        Integer, ForeignKey("locations.id"), primary_key=True, nullable=False
-    )
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    name = Column(String, nullable=False)
-    subtitle = Column(String, nullable=False)
+    location_id = Column(Integer, ForeignKey("locations.id"), primary_key=True)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True, nullable=False)
+    subtitle = Column(String)
 
     location = relationship("Locations", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -241,9 +228,9 @@ class LocationNames(Base):
 class Locations(Base):
     __tablename__ = "locations"
 
-    id = Column(Integer, primary_key=True, nullable=False)
-    region_id = Column(Integer, ForeignKey("regions.id"), nullable=False)
-    identifier = Column(String, nullable=False)
+    id = Column(Integer, primary_key=True)
+    region_id = Column(Integer, ForeignKey("regions.id"))
+    identifier = Column(String, unique=True, nullable=False)
 
     region = relationship("Regions", uselist=False)
 
@@ -254,7 +241,7 @@ class Locations(Base):
 class Machines(Base):
     __tablename__ = "machines"
 
-    machine_number = Column(Integer, primary_key=True, nullable=False)
+    machine_number = Column(Integer, primary_key=True)
     version_group_id = Column(
         Integer, ForeignKey("version_groups.id"), primary_key=True
     )
@@ -269,11 +256,9 @@ class Machines(Base):
 class MoveNames(Base):
     __tablename__ = "move_names"
 
-    move_id = Column(Integer, ForeignKey("moves.id"), primary_key=True, nullable=False)
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    name = Column(String, nullable=False)
+    move_id = Column(Integer, ForeignKey("moves.id"), primary_key=True)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True, nullable=False)
 
     move = relationship("Moves", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -282,21 +267,21 @@ class MoveNames(Base):
 class Moves(Base):
     __tablename__ = "moves"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     identifier = Column(String, nullable=False)
     generation_id = Column(Integer, ForeignKey("generations.id"), nullable=False)
     type_id = Column(Integer, nullable=False)
-    power = Column(Integer, nullable=False)
-    pp = Column(Integer, nullable=False)
-    accuracy = Column(Integer, nullable=False)
+    power = Column(Integer)
+    pp = Column(Integer)
+    accuracy = Column(Integer)
     priority = Column(Integer, nullable=False)
     target_id = Column(Integer, nullable=False)
     damage_class_id = Column(Integer, nullable=False)
     effect_id = Column(Integer, nullable=False)
-    effect_chance = Column(Integer, nullable=False)
-    contest_type_id = Column(Integer, nullable=False)
-    contest_effect_id = Column(Integer, nullable=False)
-    super_contest_effect_id = Column(Integer, nullable=False)
+    effect_chance = Column(Integer)
+    contest_type_id = Column(Integer)
+    contest_effect_id = Column(Integer)
+    super_contest_effect_id = Column(Integer)
 
     generation = relationship("Generations", uselist=False)
 
@@ -307,14 +292,14 @@ class Moves(Base):
 class Pokemon(Base):
     __tablename__ = "pokemon"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     identifier = Column(String, nullable=False)
-    species_id = Column(Integer, ForeignKey("pokemon_species.id"), nullable=False)
+    species_id = Column(Integer, ForeignKey("pokemon_species.id"))
     height = Column(Integer, nullable=False)
     weight = Column(Integer, nullable=False)
     base_experience = Column(Integer, nullable=False)
-    order = Column(Integer, nullable=False)
-    is_default = Column(Integer, nullable=False)
+    order = Column(Integer, index=True, nullable=False)
+    is_default = Column(Integer, index=True, nullable=False)
 
     species = relationship("PokemonSpecies", uselist=False)
 
@@ -326,14 +311,10 @@ class Pokemon(Base):
 class PokemonFormNames(Base):
     __tablename__ = "pokemon_form_names"
 
-    pokemon_form_id = Column(
-        Integer, ForeignKey("pokemon_forms.id"), primary_key=True, nullable=False
-    )
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    form_name = Column(String, nullable=False)
-    pokemon_name = Column(String, nullable=False)
+    pokemon_form_id = Column(Integer, ForeignKey("pokemon_forms.id"), primary_key=True)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    form_name = Column(String, index=True)
+    pokemon_name = Column(String, index=True)
 
     pokemon_form = relationship("PokemonForms", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -342,13 +323,11 @@ class PokemonFormNames(Base):
 class PokemonForms(Base):
     __tablename__ = "pokemon_forms"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     identifier = Column(String, nullable=False)
-    form_identifier = Column(String, nullable=False)
+    form_identifier = Column(String)
     pokemon_id = Column(Integer, ForeignKey("pokemon.id"), nullable=False)
-    introduced_in_version_group_id = Column(
-        Integer, ForeignKey("version_groups.id"), nullable=False
-    )
+    introduced_in_version_group_id = Column(Integer, ForeignKey("version_groups.id"))
     is_default = Column(Integer, nullable=False)
     is_battle_only = Column(Integer, nullable=False)
     is_mega = Column(Integer, nullable=False)
@@ -367,11 +346,9 @@ class PokemonMoveMethodProse(Base):
     pokemon_move_method_id = Column(
         Integer, ForeignKey("pokemon_move_methods.id"), primary_key=True
     )
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    name = Column(String, nullable=False)
-    description = Column(String, nullable=False)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True)
+    description = Column(String)
 
     pokemon_move_method = relationship("PokemonMoveMethods", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -380,7 +357,7 @@ class PokemonMoveMethodProse(Base):
 class PokemonMoveMethods(Base):
     __tablename__ = "pokemon_move_methods"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     identifier = Column(String, nullable=False)
 
     pokemon_move_method_prose = relationship("PokemonMoveMethodProse", uselist=True)
@@ -389,18 +366,16 @@ class PokemonMoveMethods(Base):
 class PokemonMoves(Base):
     __tablename__ = "pokemon_moves"
 
-    pokemon_id = Column(
-        Integer, ForeignKey("pokemon.id"), primary_key=True, nullable=False
-    )
+    pokemon_id = Column(Integer, ForeignKey("pokemon.id"), primary_key=True, index=True)
     version_group_id = Column(
-        Integer, ForeignKey("version_groups.id"), primary_key=True
+        Integer, ForeignKey("version_groups.id"), primary_key=True, index=True
     )
-    move_id = Column(Integer, ForeignKey("moves.id"), primary_key=True, nullable=False)
+    move_id = Column(Integer, ForeignKey("moves.id"), primary_key=True, index=True)
     pokemon_move_method_id = Column(
-        Integer, ForeignKey("pokemon_move_methods.id"), primary_key=True
+        Integer, ForeignKey("pokemon_move_methods.id"), primary_key=True, index=True
     )
-    level = Column(Integer, primary_key=True, nullable=False)
-    order = Column(Integer, nullable=False)
+    level = Column(Integer, primary_key=True, index=True, nullable=True)
+    order = Column(Integer)
 
     pokemon = relationship("Pokemon", uselist=False)
     version_group = relationship("VersionGroups", uselist=False)
@@ -411,16 +386,14 @@ class PokemonMoves(Base):
 class PokemonSpecies(Base):
     __tablename__ = "pokemon_species"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     identifier = Column(String, nullable=False)
-    generation_id = Column(Integer, ForeignKey("generations.id"), nullable=False)
-    evolves_from_species_id = Column(Integer, nullable=False)
-    evolution_chain_id = Column(
-        Integer, ForeignKey("evolution_chains.id"), nullable=False
-    )
+    generation_id = Column(Integer, ForeignKey("generations.id"))
+    evolves_from_species_id = Column(Integer, ForeignKey("pokemon_species.id"))
+    evolution_chain_id = Column(Integer, ForeignKey("evolution_chains.id"))
     color_id = Column(Integer, nullable=False)
     shape_id = Column(Integer, nullable=False)
-    habitat_id = Column(Integer, nullable=False)
+    habitat_id = Column(Integer)
     gender_rate = Column(Integer, nullable=False)
     capture_rate = Column(Integer, nullable=False)
     base_happiness = Column(Integer, nullable=False)
@@ -431,10 +404,11 @@ class PokemonSpecies(Base):
     forms_switchable = Column(Integer, nullable=False)
     is_legendary = Column(Integer, nullable=False)
     is_mythical = Column(Integer, nullable=False)
-    order = Column(Integer, nullable=False)
-    conquest_order = Column(Integer, nullable=False)
+    order = Column(Integer, index=True, nullable=False)
+    conquest_order = Column(Integer, index=True)
 
     generation = relationship("Generations", uselist=False)
+    evolves_from_species = relationship("PokemonSpecies", uselist=False)
     evolution_chain = relationship("EvolutionChains", uselist=False)
 
     pokemon_species_flavor_text = relationship("PokemonSpeciesFlavorText", uselist=True)
@@ -445,15 +419,9 @@ class PokemonSpecies(Base):
 class PokemonSpeciesFlavorText(Base):
     __tablename__ = "pokemon_species_flavor_text"
 
-    species_id = Column(
-        Integer, ForeignKey("pokemon_species.id"), primary_key=True, nullable=False
-    )
-    version_id = Column(
-        Integer, ForeignKey("versions.id"), primary_key=True, nullable=False
-    )
-    language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
+    species_id = Column(Integer, ForeignKey("pokemon_species.id"), primary_key=True)
+    version_id = Column(Integer, ForeignKey("versions.id"), primary_key=True)
+    language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
     flavor_text = Column(String, nullable=False)
 
     species = relationship("PokemonSpecies", uselist=False)
@@ -467,11 +435,9 @@ class PokemonSpeciesNames(Base):
     pokemon_species_id = Column(
         Integer, ForeignKey("pokemon_species.id"), primary_key=True
     )
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    name = Column(String, nullable=False)
-    genus = Column(String, nullable=False)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True)
+    genus = Column(String)
 
     pokemon_species = relationship("PokemonSpecies", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -480,7 +446,7 @@ class PokemonSpeciesNames(Base):
 class Regions(Base):
     __tablename__ = "regions"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     identifier = Column(String, nullable=False)
 
     locations = relationship("Locations", uselist=True)
@@ -489,10 +455,10 @@ class Regions(Base):
 class VersionGroups(Base):
     __tablename__ = "version_groups"
 
-    id = Column(Integer, primary_key=True, nullable=False)
-    identifier = Column(String, nullable=False)
+    id = Column(Integer, primary_key=True)
+    identifier = Column(String, unique=True, nullable=False)
     generation_id = Column(Integer, ForeignKey("generations.id"), nullable=False)
-    order = Column(Integer, nullable=False)
+    order = Column(Integer)
 
     generation = relationship("Generations", uselist=False)
 
@@ -502,13 +468,9 @@ class VersionGroups(Base):
 class VersionNames(Base):
     __tablename__ = "version_names"
 
-    version_id = Column(
-        Integer, ForeignKey("versions.id"), primary_key=True, nullable=False
-    )
-    local_language_id = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True, nullable=False
-    )
-    name = Column(String, nullable=False)
+    version_id = Column(Integer, ForeignKey("versions.id"), primary_key=True)
+    local_language_id = Column(Integer, ForeignKey("languages.id"), primary_key=True)
+    name = Column(String, index=True, nullable=False)
 
     version = relationship("Versions", uselist=False)
     local_language = relationship("Languages", uselist=False)
@@ -517,7 +479,7 @@ class VersionNames(Base):
 class Versions(Base):
     __tablename__ = "versions"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     version_group_id = Column(Integer, ForeignKey("version_groups.id"), nullable=False)
     identifier = Column(String, nullable=False)
 
