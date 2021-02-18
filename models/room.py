@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 from collections import deque
+from datetime import datetime
 from textwrap import shorten
+from time import time
 from typing import TYPE_CHECKING
+
+import pytz
 
 import utils
 from typedefs import RoomId
@@ -31,6 +35,8 @@ class Room:
         roombot (bool): True if cerbottana is roombot in this room.
         title (str): Formatted variant of roomid.
         users (dict[User, str]): User instance, rank string.
+        no_mods_online (float | None)
+        last_modchat_command (float)
 
     Todo:
         Rooms should be removed from conn.rooms if they |deinit|.
@@ -56,6 +62,8 @@ class Room:
 
         # Attributes updated within this instance
         self._users: dict[User, str] = {}  # user, rank
+        self.no_mods_online: float | None = None
+        self.last_modchat_command: float = 0
 
         # Register new initialized room
         if self.roomid in self.conn.rooms:
@@ -93,6 +101,12 @@ class Room:
             rank = self._users[user] if user in self._users else " "
         self._users[user] = rank
 
+        if user.has_role("driver", self, ignore_grole=True):
+            if not user.idle:
+                self.no_mods_online = None
+            else:
+                self._check_no_mods_online()
+
         # User persistance
         if user.userid not in self.conn.users:
             self.conn.users[user.userid] = user
@@ -107,12 +121,39 @@ class Room:
         """
         if user in self._users:
             self._users.pop(user)
+            self._check_no_mods_online()
 
     def __str__(self) -> str:
         return self.roomid
 
     def __contains__(self, user: User) -> bool:
         return user in self.users
+
+    def _check_no_mods_online(self) -> None:
+        if self.no_mods_online:
+            return
+        for user in self._users:
+            if user.idle:
+                continue
+            if user.has_role("driver", self, ignore_grole=True):
+                self.no_mods_online = None
+                return
+            self.no_mods_online = time()
+
+    async def try_modchat(self) -> None:
+        """Sets modchat in a specific time frame if the are no mods online."""
+        if not self.modchat and self.no_mods_online:
+            tz = pytz.timezone("Europe/Rome")
+            timestamp = datetime.now(tz)
+            minutes = timestamp.hour * 60 + timestamp.minute
+            # 00:30 - 08:00
+            if (
+                30 <= minutes < 8 * 60
+                and self.no_mods_online + (7 * 60) < time()
+                and self.last_modchat_command + 15 < time()
+            ):
+                self.last_modchat_command = time()
+                await self.send("/modchat +", False)
 
     async def send(self, message: str, escape: bool = True) -> None:
         """Sends a message to the room.

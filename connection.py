@@ -119,6 +119,10 @@ class Connection:
         roomid = utils.to_room_id(roomname)
         room = Room.get(self, roomid)
 
+        # Try to set modchat if it's a public room and cerbottana has relevant auth
+        if room.roombot and not room.is_private:
+            await room.try_modchat()
+
         for msg in message.split("\n"):
 
             if language := re.match(r"This room's primary language is (.*)", msg):
