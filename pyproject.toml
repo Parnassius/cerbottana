@@ -24,7 +24,7 @@ authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "3.8.7"
 aiohttp = "3.7.4.post0"
-alembic = "1.5.5"
+alembic = "1.5.6"
 environs = "9.3.1"
 Flask = "1.1.2"
 htmlmin = "0.1.12"
