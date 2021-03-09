@@ -32,7 +32,7 @@ imageprobe = "0.1.2"
 python-dateutil = "2.8.1"
 pytz = "2021.1"
 SQLAlchemy = "1.3.23"
-waitress = "1.4.4"
+waitress = "2.0.0"
 websockets = "8.1"
 
 [tool.poetry.dev-dependencies]
