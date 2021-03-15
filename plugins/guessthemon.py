@@ -62,7 +62,8 @@ async def guessthemon(msg: Message) -> None:
         dex_entry = random.choice(dex_entries)
 
         # Hide pokemon name from flavor text
-        regexp = re.compile(re.escape(species_name), re.IGNORECASE)
+        filtered_word = re.escape(species_name)
+        regexp = re.compile(rf"\b{filtered_word}\b", re.IGNORECASE)
         dex_entry = regexp.sub("???", dex_entry)
 
         # Flavor text strings usually have unneeded newlines
