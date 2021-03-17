@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 from contextlib import contextmanager
 
-from sqlalchemy import MetaData, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.session import Session
 
@@ -13,7 +13,6 @@ class Database:
 
     def __init__(self, dbname: str) -> None:
         self.engine = create_engine(f"sqlite:///{dbname}.sqlite")
-        self.metadata = MetaData(bind=self.engine)
         self.session_factory = sessionmaker(bind=self.engine)
         self.Session = scoped_session(self.session_factory)
         self._instances[dbname] = self

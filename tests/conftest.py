@@ -11,7 +11,7 @@ from types import TracebackType
 from typing import TYPE_CHECKING, Any, Tuple
 
 import pytest
-from sqlalchemy import MetaData, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from websockets import ConnectionClosedOK
 
@@ -28,9 +28,8 @@ else:
     BaseRecvQueue = Queue
     BaseSendQueue = Queue
 
-
 database_metadata: dict[str, Any] = {
-    "database": d.db.metadata,
+    "database": d.Base.metadata,
 }
 
 
@@ -270,7 +269,6 @@ def mock_database(mocker) -> None:
         else:
             engine = "sqlite://"  # :memory: database
         self.engine = create_engine(engine)
-        self.metadata = MetaData(bind=self.engine)
         self.session_factory = sessionmaker(bind=self.engine)
         self.Session = scoped_session(self.session_factory)
         database_instances[dbname] = self

@@ -3,11 +3,7 @@
 from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 
-from database import Database
-
-db = Database.open()
-
-Base = declarative_base(metadata=db.metadata)
+Base = declarative_base()
 
 
 class Badges(Base):
