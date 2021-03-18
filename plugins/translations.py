@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column
+from sqlalchemy.orm import Mapped
 from typing_extensions import Protocol
 
 import databases.veekun as v
@@ -16,8 +16,8 @@ if TYPE_CHECKING:
 
 class TranslatableTableNames(Protocol):
     # pylint: disable=too-few-public-methods,unsubscriptable-object
-    local_language_id: Column[int]
-    name_normalized: Column[str | None]
+    local_language_id: Mapped[int]
+    name_normalized: Mapped[str | None]
 
 
 @command_wrapper(
