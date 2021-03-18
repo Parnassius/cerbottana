@@ -11,8 +11,8 @@ class Database:
     _instances: dict[str, Database] = {}
 
     def __init__(self, dbname: str) -> None:
-        self.engine = create_engine(f"sqlite:///{dbname}.sqlite")
-        self.session_factory = sessionmaker(bind=self.engine)
+        self.engine = create_engine(f"sqlite:///{dbname}.sqlite", future=True)
+        self.session_factory = sessionmaker(self.engine, future=True)
         self.Session = scoped_session(self.session_factory)
         self._instances[dbname] = self
 
