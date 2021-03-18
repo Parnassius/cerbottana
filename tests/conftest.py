@@ -269,8 +269,8 @@ def mock_database(mocker) -> None:
             engine = f"sqlite:///{dbname}.sqlite"
         else:
             engine = "sqlite://"  # :memory: database
-        self.engine = create_engine(engine)
-        self.session_factory = sessionmaker(bind=self.engine)
+        self.engine = create_engine(engine, future=True)
+        self.session_factory = sessionmaker(self.engine, future=True)
         self.Session = scoped_session(self.session_factory)
         database_instances[dbname] = self
 
