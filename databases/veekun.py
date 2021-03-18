@@ -6,8 +6,7 @@ from functools import total_ordering
 from typing import Literal, cast, overload
 
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
