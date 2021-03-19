@@ -410,7 +410,7 @@ class PokemonSpecies(Base):
     evolves_from_species_id = Column(Integer, ForeignKey("pokemon_species.id"))
     evolution_chain_id = Column(Integer, ForeignKey("evolution_chains.id"))
     color_id = Column(Integer, nullable=False)
-    shape_id = Column(Integer, nullable=False)
+    shape_id = Column(Integer)
     habitat_id = Column(Integer)
     gender_rate = Column(Integer, nullable=False)
     capture_rate = Column(Integer, nullable=False)
