@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 
 from dateutil.parser import parse
 from sqlalchemy.orm import Query
-from sqlalchemy.sql import func
 
 import databases.database as d
 from database import Database
@@ -292,11 +291,7 @@ async def showrepeats(msg: Message) -> None:
 
     db = Database.open()
     with db.get_session() as session:
-        repeats_n = (
-            session.query(func.count(d.Repeats.id))  # type: ignore  # sqlalchemy
-            .filter_by(roomid=room.roomid)
-            .scalar()
-        )
+        repeats_n = session.query(d.Repeats).filter_by(roomid=room.roomid).count()
 
     if not repeats_n:
         await msg.user.send("Nessun repeat attivo.")

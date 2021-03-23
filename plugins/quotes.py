@@ -216,11 +216,7 @@ async def quotelist(msg: Message) -> None:
 
     db = Database.open()
     with db.get_session() as session:
-        quotes_n = (
-            session.query(func.count(d.Quotes.id))  # type: ignore  # sqlalchemy
-            .filter_by(roomid=room.roomid)
-            .scalar()
-        )
+        quotes_n = session.query(d.Quotes).filter_by(roomid=room.roomid).count()
 
     if not quotes_n:
         await msg.reply("Nessuna quote da visualizzare.")
