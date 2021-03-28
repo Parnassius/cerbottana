@@ -35146,6 +35146,7 @@
   "zacian": {
     "num": 888,
     "name": "Zacian",
+    "baseForme": "Hero",
     "types": [
       "Fairy"
     ],
@@ -35210,6 +35211,7 @@
   "zamazenta": {
     "num": 889,
     "name": "Zamazenta",
+    "baseForme": "Hero",
     "types": [
       "Fighting"
     ],
