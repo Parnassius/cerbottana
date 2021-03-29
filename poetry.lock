@@ -148,7 +148,7 @@ python-versions = ">=3.6,<4.0"
 
 [[package]]
 name = "environs"
-version = "9.3.1"
+version = "9.3.2"
 description = "simplified environment variable parsing"
 category = "main"
 optional = false
@@ -159,9 +159,9 @@ marshmallow = ">=2.7.0"
 python-dotenv = "*"
 
 [package.extras]
-dev = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url", "flake8 (==3.8.4)", "flake8-bugbear (==20.11.1)", "mypy (==0.800)", "pre-commit (>=2.4,<3.0)", "tox"]
+dev = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url", "flake8 (==3.9.0)", "flake8-bugbear (==21.3.2)", "mypy (==0.812)", "pre-commit (>=2.4,<3.0)", "tox"]
 django = ["dj-database-url", "dj-email-url", "django-cache-url"]
-lint = ["flake8 (==3.8.4)", "flake8-bugbear (==20.11.1)", "mypy (==0.800)", "pre-commit (>=2.4,<3.0)"]
+lint = ["flake8 (==3.9.0)", "flake8-bugbear (==21.3.2)", "mypy (==0.812)", "pre-commit (>=2.4,<3.0)"]
 tests = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url"]
 
 [[package]]
@@ -637,7 +637,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.8"
-content-hash = "d7c15af89f39234d246207c6010bef7531afab1d0a1bb115b0f2d22af3f6c8c0"
+content-hash = "6ea305316ba80bf614b86cf1b4f6d2061c2f7ebfbca566b69d7d64d4aafce7b0"
 
 [metadata.files]
 aiohttp = [
@@ -777,8 +777,8 @@ darglint = [
     {file = "darglint-1.7.0.tar.gz", hash = "sha256:e49b36ac9b4272a9a988b508d23e9f31c29f80a5fc030f1023b46740b5deab31"},
 ]
 environs = [
-    {file = "environs-9.3.1-py2.py3-none-any.whl", hash = "sha256:2da44b7c30114415aa858577fa6396ee326fc76a0a60f0f15e8260ba554f19dc"},
-    {file = "environs-9.3.1.tar.gz", hash = "sha256:3f6def554abb5455141b540e6e0b72fda3853404f2b0d31658aab1bf95410db3"},
+    {file = "environs-9.3.2-py2.py3-none-any.whl", hash = "sha256:6bef733b88cc901e787cf24fb2eaa72621b0656226ea4e332ab24ed0cba36fcf"},
+    {file = "environs-9.3.2.tar.gz", hash = "sha256:2eb671afd37e6e9820131b918bbbcaa6658d0fb420ebf35bdfb750ae39c51a66"},
 ]
 flask = [
     {file = "Flask-1.1.2-py2.py3-none-any.whl", hash = "sha256:8a4fdd8936eba2512e9c85df320a37e694c93945b33ef33c89946a340a238557"},
