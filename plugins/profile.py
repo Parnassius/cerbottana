@@ -164,11 +164,6 @@ def badges_route(userid: str) -> str:
 
 
 @command_wrapper(required_rank="driver", main_room_only=True)
-async def pendingdescriptions(msg: Message) -> None:
-    await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
-
-
-@command_wrapper(required_rank="driver", main_room_only=True)
 async def approvaprofilo(msg: Message) -> None:
     db = Database.open()
 

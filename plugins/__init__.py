@@ -67,13 +67,17 @@ class Command:
 def command_check_permission(
     func: CommandFunc,
     required_rank: Role,
-    allow_pm: bool,
+    allow_pm: bool | Role,
     main_room_only: bool,
     parametrize_room: bool,
 ) -> CommandFunc:
     @wraps(func)
     async def wrapper(msg: Message) -> None:
-        if main_room_only and not msg.user.has_role(required_rank, msg.conn.main_room):
+        req_rank = required_rank
+        if msg.room is None and isinstance(allow_pm, str):
+            req_rank = allow_pm
+
+        if main_room_only and not msg.user.has_role(req_rank, msg.conn.main_room):
             return
 
         if not allow_pm and msg.room is None:
@@ -81,10 +85,10 @@ def command_check_permission(
 
         if parametrize_room:
             if msg.user not in msg.parametrized_room.users or not msg.user.has_role(
-                required_rank, msg.parametrized_room
+                req_rank, msg.parametrized_room
             ):
                 return
-        elif msg.room is not None and not msg.user.has_role(required_rank, msg.room):
+        elif msg.room is not None and not msg.user.has_role(req_rank, msg.room):
             return
 
         await func(msg)
@@ -98,7 +102,7 @@ def command_wrapper(
     helpstr: str = "",
     is_unlisted: bool = False,
     required_rank: Role = "voice",
-    allow_pm: bool = True,
+    allow_pm: bool | Role = True,
     main_room_only: bool = False,
     parametrize_room: bool = False,
 ) -> Callable[[CommandFunc], Command]:
@@ -112,8 +116,9 @@ def command_wrapper(
             Defaults to False.
         required_rank (Role): Minimum PS rank required to trigger the command. Defaults
             to "voice".
-        allow_pm (bool): True if the command can be used in PM (and not only in a room).
-            Defaults to True.
+        allow_pm (bool | Role): True if the command can be used in PM (and not only in a
+            room). A role can be specified if using this command in PM should have a
+            different required rank. Defaults to True.
         main_room_only (bool): Whether the main room should be used to check if the user
             has relevant auth. Defaults to False.
         parametrize_room (bool): Allows room-dependent commands to be used in PM. See
@@ -203,10 +208,39 @@ def htmlpage_check_permission(
 
 
 def htmlpage_wrapper(
-    pageid: str, *, required_rank: Role | None = None, main_room_only: bool = False
+    pageid: str,
+    *,
+    aliases: tuple[str, ...] = (),
+    required_rank: Role = "voice",
+    allow_pm: bool | Role = True,
+    main_room_only: bool = False,
 ) -> Callable[[HTMLPageFunc], HTMLPageFunc]:
+    # Register a command sending a link to the htmlpage
+    async def cmd_func(msg: Message) -> None:
+        room = msg.conn.main_room if main_room_only else msg.parametrized_room
+        if allow_pm == "regularuser":
+            await msg.reply_htmlpage(pageid, room)
+        else:
+            await msg.user.send_htmlpage(pageid, room)
+
+    cmd_wrapper = command_wrapper(
+        aliases=aliases,
+        required_rank=required_rank,
+        allow_pm=allow_pm,
+        main_room_only=main_room_only,
+        parametrize_room=not main_room_only,
+    )
+
+    cmd_func.__name__ = pageid
+    cmd_wrapper(cmd_func)
+
+    # Register the htmlpage
+    req_rank = required_rank
+    if isinstance(allow_pm, str):
+        req_rank = allow_pm
+
     def wrapper(func: HTMLPageFunc) -> HTMLPageFunc:
-        func = htmlpage_check_permission(func, required_rank, main_room_only)
+        func = htmlpage_check_permission(func, req_rank, main_room_only)
         htmlpages[pageid] = func
         return func
 

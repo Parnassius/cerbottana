@@ -8,17 +8,12 @@
   </button>
 {% endmacro %}
 
-{% macro pagination(cmd, main_room_only=False) %}
+{% macro pagination(cmd) %}
   {% for i in range(last_page) %}
-    {% if main_room_only %}
-      {% set cmd_params = (i + 1)|string %}
-    {% else %}
-      {% set cmd_params = room.roomid + ", " + (i + 1)|string %}
-    {% endif %}
     <button
       class="option{% if current_page == i + 1 %} sel{% endif %}"
       name="send"
-      value="/pm {{ botname }}, {{ cmd_char }}{{ cmd }} {{ cmd_params }}"
+      value="/pm {{ botname }}, {{ cmd_char }}changepage {{ cmd }}, {{ room.roomid }}, {{ (i + 1)|string }}"
       {% if current_page == i + 1 %}disabled{% endif %}
     >
       {{ i + 1 }}

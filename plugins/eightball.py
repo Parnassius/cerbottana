@@ -37,18 +37,6 @@ async def eightball(msg: Message) -> None:
 
 
 @command_wrapper(
-    aliases=("8ballanswers",), required_rank="driver", parametrize_room=True
-)
-async def eightballanswers(msg: Message) -> None:
-    try:
-        page = int(msg.arg)
-    except ValueError:
-        page = 1
-
-    await msg.user.send_htmlpage("eightball", msg.parametrized_room, page)
-
-
-@command_wrapper(
     aliases=("add8ballanswer", "neweightballanswer", "new8ballanswer"),
     required_rank="driver",
     parametrize_room=True,
@@ -137,7 +125,7 @@ async def removeeightballanswerid(msg: Message) -> None:
     await msg.user.send_htmlpage("eightball", msg.parametrized_room, page)
 
 
-@htmlpage_wrapper("eightball", required_rank="driver")
+@htmlpage_wrapper("eightballanswers", aliases=("8ballanswers",), required_rank="driver")
 def eightball_htmlpage(user: User, room: Room) -> Query:  # type: ignore[type-arg]
     return Query(d.EightBall).filter_by(roomid=room.roomid).order_by(d.EightBall.answer)
 

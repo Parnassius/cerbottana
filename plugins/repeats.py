@@ -285,26 +285,6 @@ async def stoprepeat(msg: Message) -> None:
             await msg.parametrized_room.send_modnote("REPEAT REMOVED", msg.user, query)
 
 
-@command_wrapper(aliases=("repeats",), required_rank="driver", parametrize_room=True)
-async def showrepeats(msg: Message) -> None:
-    room = msg.parametrized_room
-
-    db = Database.open()
-    with db.get_session() as session:
-        repeats_n = session.query(d.Repeats).filter_by(roomid=room.roomid).count()
-
-    if not repeats_n:
-        await msg.user.send("Nessun repeat attivo.")
-        return
-
-    try:
-        page = int(msg.arg)
-    except ValueError:
-        page = 1
-
-    await msg.user.send_htmlpage("repeats", room, page)
-
-
-@htmlpage_wrapper("repeats", required_rank="driver")
+@htmlpage_wrapper("repeats", aliases=("showrepeats",), required_rank="driver")
 def repeats_htmlpage(user: User, room: Room) -> Query:  # type: ignore[type-arg]
     return Query(d.Repeats).filter_by(roomid=room.roomid).order_by(d.Repeats.message)

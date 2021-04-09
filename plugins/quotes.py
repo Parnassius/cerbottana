@@ -210,27 +210,7 @@ async def removequoteid(msg: Message) -> None:
     await msg.user.send_htmlpage("quotelist", room, page)
 
 
-@command_wrapper(aliases=("quotes", "quoteslist"), parametrize_room=True)
-async def quotelist(msg: Message) -> None:
-    room = msg.parametrized_room
-
-    db = Database.open()
-    with db.get_session() as session:
-        quotes_n = session.query(d.Quotes).filter_by(roomid=room.roomid).count()
-
-    if not quotes_n:
-        await msg.reply("Nessuna quote da visualizzare.")
-        return
-
-    try:
-        page = int(msg.arg)
-    except ValueError:
-        page = 1
-
-    await msg.reply_htmlpage("quotelist", room, page)
-
-
-@htmlpage_wrapper("quotelist")
+@htmlpage_wrapper("quotelist", aliases=("quotes", "quoteslist"), allow_pm="regularuser")
 def quotelist_htmlpage(user: User, room: Room) -> Query:  # type: ignore[type-arg]
     return (
         Query(d.Quotes)
