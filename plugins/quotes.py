@@ -139,7 +139,9 @@ async def addquote(msg: Message) -> None:
         await msg.reply("Quote già esistente.")
 
 
-@command_wrapper(aliases=("q", "randomquote"), parametrize_room=True)
+@command_wrapper(
+    aliases=("q", "randomquote"), allow_pm="regularuser", parametrize_room=True
+)
 async def randquote(msg: Message) -> None:
     db = Database.open()
     with db.get_session() as session:
