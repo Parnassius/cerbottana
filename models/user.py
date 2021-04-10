@@ -3,8 +3,9 @@ from __future__ import annotations
 import math
 from typing import TYPE_CHECKING
 
-from sqlalchemy import func
+from sqlalchemy import func, select
 
+import databases.database as d
 import utils
 from database import Database
 from plugins import htmlpages
@@ -166,13 +167,17 @@ class User:
         else:
             await room.send(f"/pminfobox {self.userid}, {message}", False)
 
-    async def send_htmlpage(self, pageid: str, page_room: Room, page: int = 1) -> None:
+    async def send_htmlpage(
+        self, pageid: str, page_room: Room, page: int = 1, *, scroll_to_top: bool = True
+    ) -> None:
         """Sends an HTML page to user.
 
         Args:
             pageid (str): id of the htmlpage.
             page_room (Room): Room to be passed to the function.
             page (int): Page number. Defaults to 1.
+            scroll_to_top (bool): Whether the page should scroll to the top. Defaults to
+                True.
         """
         if pageid not in htmlpages:
             return
@@ -182,31 +187,51 @@ class User:
             simple_message += "solo se sei online in una room dove sono Roombot"
             await self.send(simple_message)
         else:
-            stmt = htmlpages[pageid](self, page_room)
+            stmt_func, delete_command = htmlpages[pageid]
+
+            delete_req_rank: Role = "driver"
+            if delete_command in self.conn.commands:
+                cmd = self.conn.commands[delete_command]
+                delete_req_rank = cmd.required_rank
+
+                if cmd.required_rank_editable is not False:
+                    command = f".{cmd.name}"
+                    if isinstance(cmd.required_rank_editable, str):
+                        command = cmd.required_rank_editable
+
+                    db = Database.open()
+                    with db.get_session() as session:
+                        stmt = select(d.CustomPermissions.required_rank).filter_by(
+                            roomid=page_room.roomid, command=command
+                        )
+                        custom_rank: Role | None = session.scalar(stmt)
+                        if custom_rank:
+                            delete_req_rank = custom_rank
+
+            stmt = stmt_func(self, page_room)
             if stmt is None:
                 return
 
             db = Database.open()
 
             with db.get_session() as session:
-                stmt_last_page = (
-                    stmt.with_only_columns(  # type: ignore[func-returns-value]
-                        func.count()
-                    )
-                )
+                stmt_last_page = stmt.with_only_columns(func.count())
                 last_page = math.ceil(session.scalar(stmt_last_page) / 100)
                 page = min(page, last_page)
-                stmt_rs = stmt.limit(100).offset(  # type: ignore[func-returns-value]
-                    100 * (page - 1)
-                )
-                rs = session.execute(stmt_rs).scalars().all()
+                stmt_rs = stmt.limit(100).offset(100 * (page - 1))
+
+                query = session.execute(stmt_rs)
+                if len(query.keys()) == 1:  # type: ignore[no-untyped-call]
+                    rs = query.scalars().all()
+                else:
+                    rs = query.all()
 
                 message = utils.render_template(
                     f"htmlpages/{pageid}.html",
                     rs=rs,
                     current_page=page,
                     last_page=last_page,
-                    can_delete=self.has_role("driver", page_room),
+                    can_delete=self.has_role(delete_req_rank, page_room),
                     room=page_room,
                     botname=self.conn.username,
                     cmd_char=self.conn.command_character,
@@ -216,9 +241,12 @@ class User:
                 if page_room:
                     pageid += "0" + page_room.roomid
 
-                # Ugly hack to scroll to top when changing page
-                # https://github.com/smogon/pokemon-showdown-client/pull/1645
-                await room.send(f"/sendhtmlpage {self.userid}, {pageid}, <br>", False)
+                if scroll_to_top:
+                    # Ugly hack to scroll to top when changing page
+                    # https://github.com/smogon/pokemon-showdown-client/pull/1645
+                    await room.send(
+                        f"/sendhtmlpage {self.userid}, {pageid}, <br>", False
+                    )
 
                 await room.send(
                     f"/sendhtmlpage {self.userid}, {pageid}, {message}", False

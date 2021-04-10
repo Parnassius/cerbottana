@@ -1,8 +1,12 @@
-{% macro btn_sendpm(cmd) %}
+{% macro btn_sendpm(cmd, disabled=False) %}
   <button
-    class="button"
-    name="send"
-    value="/pm {{ botname }}, {{ cmd_char }}{{ cmd }}"
+    class="button{% if disabled %} disabled{% endif %}"
+    {% if disabled %}
+      style="font-weight: bold ; color: #575757 ; background: #d3d3d3"
+    {% else %}
+      name="send"
+      value="/pm {{ botname }}, {{ cmd_char }}{{ cmd }}"
+    {% endif %}
   >
     {{ caller() }}
   </button>

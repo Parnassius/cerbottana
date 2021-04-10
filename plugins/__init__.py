@@ -5,13 +5,16 @@ import importlib
 from collections.abc import Awaitable, Callable, Iterable
 from functools import wraps
 from os.path import basename, dirname, isfile, join
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Optional
 
 from flask import abort
 from flask import session as web_session
+from sqlalchemy import select
 from sqlalchemy.sql import Select
 
+import databases.database as d
 import utils
+from database import Database
 from models.room import Room
 from typedefs import Role, RoomId
 
@@ -30,12 +33,14 @@ if TYPE_CHECKING:
 class Command:
     _instances: dict[str, Command] = {}
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         func: CommandFunc,
         aliases: tuple[str, ...],
         helpstr: str,
         is_unlisted: bool,
+        required_rank: Role,
+        required_rank_editable: bool | str,
     ) -> None:
         self.name = func.__name__
         self.module = func.__module__
@@ -43,6 +48,8 @@ class Command:
         self.aliases = (self.name,) + aliases
         self.helpstr = helpstr
         self.is_unlisted = is_unlisted
+        self.required_rank = required_rank
+        self.required_rank_editable = required_rank_editable
         self._instances[func.__name__] = self
 
     @property
@@ -51,30 +58,65 @@ class Command:
 
     @classmethod
     def get_all_aliases(cls) -> dict[str, Command]:
-        d: dict[str, Command] = {}
+        aliases: dict[str, Command] = {}
         for command in cls._instances.values():
-            d.update(command.splitted_aliases)
-        return d
+            aliases.update(command.splitted_aliases)
+        return aliases
 
     @classmethod
     def get_all_helpstrings(cls) -> dict[str, str]:
-        d: dict[str, str] = {}
+        helpstrings: dict[str, str] = {}
         for command in cls._instances.values():
             if command.helpstr and not command.is_unlisted:
-                d[command.name] = command.helpstr
-        return {k: d[k] for k in sorted(d)}  # python 3.7+
+                helpstrings[command.name] = command.helpstr
+        return {k: helpstrings[k] for k in sorted(helpstrings)}
+
+    @classmethod
+    def get_rank_editable_commands(cls) -> set[str]:
+        return {
+            (
+                v.required_rank_editable
+                if isinstance(v.required_rank_editable, str)
+                else f".{k}"
+            )
+            for k, v in cls._instances.items()
+            if v.required_rank_editable is not False and k == v.name
+        }
 
 
-def command_check_permission(
+def command_check_permission(  # pylint: disable=too-many-arguments
     func: CommandFunc,
     required_rank: Role,
     allow_pm: bool | Role,
+    required_rank_editable: bool | str,
     main_room_only: bool,
     parametrize_room: bool,
 ) -> CommandFunc:
     @wraps(func)
     async def wrapper(msg: Message) -> None:
         req_rank = required_rank
+
+        if required_rank_editable is not False:
+            roomid = ""
+            if parametrize_room:
+                roomid = msg.parametrized_room.roomid
+            elif msg.room:
+                roomid = msg.room.roomid
+
+            if roomid:
+                command = f".{func.__name__}"
+                if isinstance(required_rank_editable, str):
+                    command = required_rank_editable
+
+                db = Database.open()
+                with db.get_session() as session:
+                    stmt = select(d.CustomPermissions.required_rank).filter_by(
+                        roomid=roomid, command=command
+                    )
+                    custom_rank: Role | None = session.scalar(stmt)
+                    if custom_rank:
+                        req_rank = custom_rank
+
         if msg.room is None and isinstance(allow_pm, str):
             req_rank = allow_pm
 
@@ -104,6 +146,7 @@ def command_wrapper(
     is_unlisted: bool = False,
     required_rank: Role = "voice",
     allow_pm: bool | Role = True,
+    required_rank_editable: bool | str = False,
     main_room_only: bool = False,
     parametrize_room: bool = False,
 ) -> Callable[[CommandFunc], Command]:
@@ -120,6 +163,9 @@ def command_wrapper(
         allow_pm (bool | Role): True if the command can be used in PM (and not only in a
             room). A role can be specified if using this command in PM should have a
             different required rank. Defaults to True.
+        required_rank_editable (bool | str): Whether the default required rank should be
+            editable on a per-room basis. A string can be used to group similar commands
+            together. Defaults to False.
         main_room_only (bool): Whether the main room should be used to check if the user
             has relevant auth. Defaults to False.
         parametrize_room (bool): Allows room-dependent commands to be used in PM. See
@@ -131,11 +177,18 @@ def command_wrapper(
 
     def cls_wrapper(func: CommandFunc) -> Command:
         func = command_check_permission(
-            func, required_rank, allow_pm, main_room_only, parametrize_room
+            func,
+            required_rank,
+            allow_pm,
+            required_rank_editable,
+            main_room_only,
+            parametrize_room,
         )
         if parametrize_room:
             func = parametrize_room_wrapper(func)
-        return Command(func, aliases, helpstr, is_unlisted)
+        return Command(
+            func, aliases, helpstr, is_unlisted, required_rank, required_rank_editable
+        )
 
     return cls_wrapper
 
@@ -186,7 +239,7 @@ def parametrize_room_wrapper(func: CommandFunc) -> CommandFunc:
 # --- HTML pages ---
 
 
-htmlpages: dict[str, HTMLPageFunc] = {}
+htmlpages: dict[str, tuple[HTMLPageFunc, str | None]] = {}
 
 
 def htmlpage_check_permission(
@@ -214,6 +267,7 @@ def htmlpage_wrapper(
     aliases: tuple[str, ...] = (),
     required_rank: Role = "voice",
     allow_pm: bool | Role = True,
+    delete_command: str | None = None,
     main_room_only: bool = False,
 ) -> Callable[[HTMLPageFunc], HTMLPageFunc]:
     # Register a command sending a link to the htmlpage
@@ -242,7 +296,7 @@ def htmlpage_wrapper(
 
     def wrapper(func: HTMLPageFunc) -> HTMLPageFunc:
         func = htmlpage_check_permission(func, req_rank, main_room_only)
-        htmlpages[pageid] = func
+        htmlpages[pageid] = func, delete_command
         return func
 
     return wrapper

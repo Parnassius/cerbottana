@@ -98,6 +98,8 @@ def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
         "prizewinner": "^",
     }
     if user:
+        if role == "disabled":
+            return False
         if role == "regularuser":
             return True
         if user[0] in roles[role]:

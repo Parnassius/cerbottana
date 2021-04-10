@@ -3,6 +3,7 @@ from typing import Any, Dict, Literal, NewType, TypedDict
 RoomId = NewType("RoomId", str)
 UserId = NewType("UserId", str)
 Role = Literal[
+    "disabled",
     "admin",
     "owner",
     "bot",

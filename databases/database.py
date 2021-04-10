@@ -5,6 +5,8 @@ from __future__ import annotations
 from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy.orm import declarative_base
 
+from typedefs import Role
+
 Base = declarative_base()
 
 
@@ -15,6 +17,18 @@ class Badges(Base):
     userid: str | None = Column(String, index=True)
     image: str = Column(String, nullable=False)
     label: str = Column(String, nullable=False)
+
+
+class CustomPermissions(Base):
+    __tablename__ = "custom_permissions"
+    __table_opts__ = (
+        UniqueConstraint("roomid", "command", sqlite_on_conflict="REPLACE"),
+    )
+
+    id: int = Column(Integer, primary_key=True)
+    roomid: str = Column(String, nullable=False)
+    command: str = Column(String, nullable=False)
+    required_rank: Role = Column(String, nullable=False)
 
 
 class EightBall(Base):
