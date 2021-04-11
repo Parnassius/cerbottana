@@ -45,7 +45,7 @@ pylint = "2.7.4"
 pytest = "6.2.3"
 pytest-cov = "2.11.1"
 pytest-mock = "3.5.1"
-sqlalchemy-stubs = "0.4"
+sqlalchemy2-stubs = "0.0.1a4"
 
 
 [tool.pylint.messages_control]
