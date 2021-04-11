@@ -3,6 +3,8 @@ from __future__ import annotations
 import math
 from typing import TYPE_CHECKING
 
+from sqlalchemy import func
+
 import utils
 from database import Database
 from plugins import htmlpages
@@ -180,18 +182,24 @@ class User:
             simple_message += "solo se sei online in una room dove sono Roombot"
             await self.send(simple_message)
         else:
-            query = htmlpages[pageid](self, page_room)
-            if query is None:
+            stmt = htmlpages[pageid](self, page_room)
+            if stmt is None:
                 return
 
             db = Database.open()
 
             with db.get_session() as session:
-                query = query.with_session(session)
-
-                last_page = math.ceil(query.count() / 100)
+                stmt_last_page = (
+                    stmt.with_only_columns(  # type: ignore[func-returns-value]
+                        func.count()
+                    )
+                )
+                last_page = math.ceil(session.scalar(stmt_last_page) / 100)
                 page = min(page, last_page)
-                rs = query.limit(100).offset(100 * (page - 1)).all()
+                stmt_rs = stmt.limit(100).offset(  # type: ignore[func-returns-value]
+                    100 * (page - 1)
+                )
+                rs = session.execute(stmt_rs).scalars().all()
 
                 message = utils.render_template(
                     f"htmlpages/{pageid}.html",

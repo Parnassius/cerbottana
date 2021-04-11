@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from flask import Flask, request
 from flask import session as web_session
-from sqlalchemy import func
+from sqlalchemy import func, select
 from waitress import serve
 
 import databases.database as d
@@ -38,13 +38,14 @@ def initialize_server(secret_key: str) -> Server:
         if token is not None:
             db = Database.open()
             with db.get_session() as session:
-                data = (
-                    session.query(d.Tokens)
+                stmt = (
+                    select(d.Tokens)
                     .filter_by(token=token)
-                    .filter(func.julianday() - func.julianday(d.Tokens.expiry) < 0)
-                    .all()
+                    .where(func.julianday() - func.julianday(d.Tokens.expiry) < 0)
                 )
-                for row in data:
+                # TODO: remove annotation
+                row: d.Tokens
+                for row in session.execute(stmt).scalars():
                     if row.room is None:
                         web_session["_rank"] = row.rank
                     else:

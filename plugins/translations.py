@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from sqlalchemy import select
 from sqlalchemy.orm import Mapped
 from typing_extensions import Protocol
 
@@ -57,17 +58,19 @@ async def translate(msg: Message) -> None:
         }
 
         for category_name, t in tables.items():
-            rs: list[tuple[v.TranslatableMixin, int]] = (
-                session.query(t[0], t[1].local_language_id)
-                .select_from(t[0])  # type: ignore  # sqlalchemy
+            stmt = (
+                select(t[0], t[1].local_language_id)
+                .select_from(t[0])
                 .join(t[1])
-                .filter(
+                .where(
                     t[1].local_language_id.in_(languages),
                     t[1].name_normalized == parola,
                 )
-                .all()
             )
-            for row, language_id in rs:
+            # TODO: remove annotations
+            row: v.TranslatableMixin
+            language_id: int
+            for row, language_id in session.execute(stmt):
                 translation = row.get_translation(
                     f"{category_name}_names",
                     language_id=list(set(languages) - {language_id})[0],

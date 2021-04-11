@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, NamedTuple, TypedDict
 
+from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 import databases.veekun as v
@@ -43,25 +44,31 @@ async def locations(msg: Message) -> None:
         class ResultsDict(TypedDict):
             slots: dict[SlotsKeyTuple, SlotsDict]
 
-        pokemon_species: v.PokemonSpecies | None = (
-            session.query(v.PokemonSpecies)
-            .options(  # type: ignore  # sqlalchemy
-                selectinload(v.PokemonSpecies.pokemon)
+        stmt = (
+            select(v.PokemonSpecies)
+            .options(
+                selectinload(v.PokemonSpecies.pokemon)  # type: ignore[operator]
                 .selectinload(v.Pokemon.encounters)
                 .options(
-                    selectinload(v.Encounters.version).selectinload(
-                        v.Versions.version_names
-                    ),
-                    selectinload(v.Encounters.location_area).options(
-                        selectinload(v.LocationAreas.location_area_prose),
-                        selectinload(v.LocationAreas.location).selectinload(
-                            v.Locations.location_names
+                    selectinload(  # type: ignore[operator]
+                        v.Encounters.version
+                    ).selectinload(v.Versions.version_names),
+                    selectinload(  # type: ignore[operator]
+                        v.Encounters.location_area
+                    ).options(
+                        selectinload(  # type: ignore[operator]
+                            v.LocationAreas.location_area_prose
                         ),
+                        selectinload(  # type: ignore[operator]
+                            v.LocationAreas.location
+                        ).selectinload(v.Locations.location_names),
                     ),
-                    selectinload(v.Encounters.encounter_slot)
+                    selectinload(v.Encounters.encounter_slot)  # type: ignore[operator]
                     .selectinload(v.EncounterSlots.encounter_method)
                     .selectinload(v.EncounterMethods.encounter_method_prose),
-                    selectinload(v.Encounters.encounter_condition_value_map)
+                    selectinload(  # type: ignore[operator]
+                        v.Encounters.encounter_condition_value_map
+                    )
                     .selectinload(
                         v.EncounterConditionValueMap.encounter_condition_value
                     )
@@ -71,13 +78,17 @@ async def locations(msg: Message) -> None:
                 )
             )
             .filter_by(identifier=pokemon_id)
-            .one_or_none()
         )
+        # TODO: remove annotation
+        pokemon_species: v.PokemonSpecies | None = session.scalar(stmt)
         if pokemon_species is None:
             await msg.reply("Pokémon not found.")
             return
 
         results: dict[v.Versions, ResultsDict] = {}
+
+        # TODO: remove annotation
+        area: v.LocationAreas
 
         for pokemon in pokemon_species.pokemon:
             for encounter in pokemon.encounters:
@@ -160,22 +171,32 @@ async def encounters(msg: Message) -> None:
         class ResultsDict(TypedDict):
             areas: dict[v.LocationAreas, AreasDict]
 
-        location: v.Locations | None = (
-            session.query(v.Locations)
-            .options(  # type: ignore  # sqlalchemy
-                selectinload(v.Locations.location_areas).options(
-                    selectinload(v.LocationAreas.location_area_prose),
-                    selectinload(v.LocationAreas.encounters).options(
-                        selectinload(v.Encounters.version).selectinload(
-                            v.Versions.version_names
-                        ),
-                        selectinload(v.Encounters.pokemon)
+        stmt = (
+            select(v.Locations)
+            .options(
+                selectinload(  # type: ignore[operator]
+                    v.Locations.location_areas
+                ).options(
+                    selectinload(  # type: ignore[operator]
+                        v.LocationAreas.location_area_prose
+                    ),
+                    selectinload(  # type: ignore[operator]
+                        v.LocationAreas.encounters
+                    ).options(
+                        selectinload(  # type: ignore[operator]
+                            v.Encounters.version
+                        ).selectinload(v.Versions.version_names),
+                        selectinload(v.Encounters.pokemon)  # type: ignore[operator]
                         .selectinload(v.Pokemon.species)
                         .selectinload(v.PokemonSpecies.pokemon_species_names),
-                        selectinload(v.Encounters.encounter_slot)
+                        selectinload(  # type: ignore[operator]
+                            v.Encounters.encounter_slot
+                        )
                         .selectinload(v.EncounterSlots.encounter_method)
                         .selectinload(v.EncounterMethods.encounter_method_prose),
-                        selectinload(v.Encounters.encounter_condition_value_map)
+                        selectinload(  # type: ignore[operator]
+                            v.Encounters.encounter_condition_value_map
+                        )
                         .selectinload(
                             v.EncounterConditionValueMap.encounter_condition_value
                         )
@@ -186,8 +207,9 @@ async def encounters(msg: Message) -> None:
                 )
             )
             .filter_by(identifier=location_id)
-            .one_or_none()
         )
+        # TODO: remove annotation
+        location: v.Locations | None = session.scalar(stmt)
         if location is None:
             await msg.reply("Location not found.")
             return

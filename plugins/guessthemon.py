@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import random
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List, cast
 
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
 
 import databases.veekun as v
@@ -28,16 +28,22 @@ async def guessthemon(msg: Message) -> None:
         # parsed correctly. Punctuation signs are preserved.
         # Some exceptions pass silently for simplicity, i.e. Nidoran♂ / Nidoran♀.
         invalid_identifiers = ("porygon2",)
-        species = (
-            session.query(v.PokemonSpecies)
-            .filter(v.PokemonSpecies.identifier.notin_(invalid_identifiers))
+        stmt = (
+            select(v.PokemonSpecies)
+            .where(v.PokemonSpecies.identifier.notin_(invalid_identifiers))
             .order_by(func.random())
-            .first()
         )
+        # TODO: remove annotation
+        species: v.PokemonSpecies | None = session.scalar(stmt)
+
         if not species:
             raise SQLAlchemyError("Missing PokemonSpecies data")
 
         # Get localized pokemon name
+        # TODO: remove cast
+        species.pokemon_species_names = cast(  # type: ignore[redundant-cast]
+            List[v.PokemonSpeciesNames], species.pokemon_species_names
+        )
         species_name = next(
             (
                 i.name
@@ -52,6 +58,10 @@ async def guessthemon(msg: Message) -> None:
             )
 
         # Get pokedex flavor text
+        # TODO: remove cast
+        species.pokemon_species_flavor_text = cast(  # type: ignore[redundant-cast]
+            List[v.PokemonSpeciesFlavorText], species.pokemon_species_flavor_text
+        )
         dex_entries = [
             i.flavor_text
             for i in species.pokemon_species_flavor_text

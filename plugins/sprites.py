@@ -4,7 +4,7 @@ import random
 from typing import TYPE_CHECKING
 
 from imageprobe.errors import UnsupportedFormat
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
 
 import databases.veekun as v
@@ -95,7 +95,9 @@ async def randsprite(msg: Message) -> None:
     # Get a random pokemon
     db = Database.open("veekun")
     with db.get_session() as session:
-        species = session.query(v.PokemonSpecies).order_by(func.random()).first()
+        stmt = select(v.PokemonSpecies).order_by(func.random())
+        # TODO: remove annotation
+        species: v.PokemonSpecies | None = session.scalar(stmt)
         if not species:
             raise SQLAlchemyError("Missing PokemonSpecies data")
 

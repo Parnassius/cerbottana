@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 
 import pytest
+from sqlalchemy import select
 
 import databases.database as d
 import utils
@@ -25,7 +26,9 @@ def test_create_token(
     token_id = utils.create_token(rooms, expire_minutes, admin)
     db = Database.open()
     with db.get_session() as session:
-        tokens = session.query(d.Tokens).filter_by(token=token_id).all()
+        stmt = select(d.Tokens).filter_by(token=token_id)
+        # TODO: remove annotation
+        tokens: list[d.Tokens] = session.execute(stmt).scalars().all()
         room_tokens = {i.room: i.rank for i in tokens if i.room is not None}
         global_tokens = [i.rank for i in tokens if i.room is None]
         assert room_tokens == rooms

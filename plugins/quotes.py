@@ -4,9 +4,9 @@ import re
 import string
 from typing import TYPE_CHECKING
 
-from sqlalchemy import func
-from sqlalchemy.orm import Query
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm.exc import ObjectDeletedError
+from sqlalchemy.sql import Select
 
 import databases.database as d
 import utils
@@ -145,17 +145,21 @@ async def addquote(msg: Message) -> None:
 async def randquote(msg: Message) -> None:
     db = Database.open()
     with db.get_session() as session:
-        query_ = session.query(d.Quotes).filter_by(roomid=msg.parametrized_room.roomid)
+        stmt = (
+            select(d.Quotes)
+            .filter_by(roomid=msg.parametrized_room.roomid)
+            .order_by(func.random())
+        )
         if msg.arg:
             # LIKE wildcards are supported and "*" is considered an alias for "%".
             keyword = msg.arg.replace("*", "%")
-            query_ = query_.filter(d.Quotes.message.ilike(f"%{keyword}%"))
+            stmt = stmt.where(d.Quotes.message.ilike(f"%{keyword}%"))
 
-        quote_row = query_.order_by(func.random()).first()
-        if not quote_row:
+        quote: d.Quotes = session.scalar(stmt)  # TODO: remove annotation
+        if not quote:
             await msg.reply("Nessuna quote trovata.")
             return
-        await msg.reply_htmlbox(to_html_quotebox(quote_row.message))
+        await msg.reply_htmlbox(to_html_quotebox(quote.message))
 
 
 @command_wrapper(aliases=("deletequote", "delquote", "rmquote"), parametrize_room=True)
@@ -168,13 +172,10 @@ async def removequote(msg: Message) -> None:
 
     db = Database.open()
     with db.get_session() as session:
-        result = (
-            session.query(d.Quotes)
-            .filter_by(message=msg.arg, roomid=msg.parametrized_room.roomid)
-            .delete()
+        stmt = delete(d.Quotes).filter_by(
+            message=msg.arg, roomid=msg.parametrized_room.roomid
         )
-
-        if result:
+        if session.execute(stmt).rowcount:  # type: ignore[attr-defined]
             await msg.reply("Quote cancellata.")
             if msg.room is None:
                 await msg.parametrized_room.send_modnote(
@@ -193,16 +194,13 @@ async def removequoteid(msg: Message) -> None:
 
     db = Database.open()
     with db.get_session() as session:
-        quote = (
-            session.query(d.Quotes)
-            .filter_by(id=msg.args[0], roomid=room.roomid)
-            .first()
-        )
-        if quote:
+        stmt = select(d.Quotes).filter_by(id=msg.args[0], roomid=room.roomid)
+        quote: d.Quotes  # TODO: remove annotation
+        if quote := session.scalar(stmt):
             await msg.parametrized_room.send_modnote(
                 "QUOTE REMOVED", msg.user, quote.message
             )
-            session.query(d.Quotes).filter_by(id=quote.id).delete()
+            session.delete(quote)
 
     try:
         page = int(msg.args[1])
@@ -213,9 +211,13 @@ async def removequoteid(msg: Message) -> None:
 
 
 @htmlpage_wrapper("quotelist", aliases=("quotes", "quoteslist"), allow_pm="regularuser")
-def quotelist_htmlpage(user: User, room: Room) -> Query:  # type: ignore[type-arg]
-    return (
-        Query(d.Quotes)
+def quotelist_htmlpage(user: User, room: Room) -> Select:
+    # TODO: remove annotation
+    stmt: Select = (
+        select(d.Quotes)
         .filter_by(roomid=room.roomid)
-        .order_by(d.Quotes.date.desc(), d.Quotes.id.desc())
+        .order_by(
+            d.Quotes.date.desc(), d.Quotes.id.desc()  # type: ignore[no-untyped-call]
+        )
     )
+    return stmt

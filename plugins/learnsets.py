@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, TypedDict
 
+from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 import databases.veekun as v
@@ -39,36 +40,32 @@ async def learnset(msg: Message) -> None:
             moves: dict[v.Moves, MovesDict]
             form_column: bool
 
-        version_group = (
-            session.query(v.VersionGroups)
-            .filter_by(identifier=version_id)
-            .one_or_none()
-        )
+        stmt = select(v.VersionGroups).filter_by(identifier=version_id)
+        # TODO: remove annotation
+        version_group: v.VersionGroups | None = session.scalar(stmt)
 
         if version_group is None:
-            version = (
-                session.query(v.Versions)
-                .filter(v.Versions.identifier == version_id)
-                .one_or_none()
-            )
+            stmt = select(v.Versions).filter_by(identifier=version_id)
+            # TODO: remove annotation
+            version: v.Versions | None = session.scalar(stmt)
             if version is None:
                 await msg.reply("Game version not found.")
                 return
             version_group = version.version_group
 
-        pokemon_species: v.PokemonSpecies | None = (
-            session.query(v.PokemonSpecies)
-            .options(  # type: ignore  # sqlalchemy
-                selectinload(v.PokemonSpecies.pokemon)
+        stmt = (
+            select(v.PokemonSpecies)
+            .options(
+                selectinload(v.PokemonSpecies.pokemon)  # type: ignore[operator]
                 .selectinload(
                     v.Pokemon.pokemon_moves.and_(
                         v.PokemonMoves.version_group_id == version_group.id
                     )
                 )
                 .options(
-                    selectinload(v.PokemonMoves.move).options(
-                        selectinload(v.Moves.move_names),
-                        selectinload(
+                    selectinload(v.PokemonMoves.move).options(  # type: ignore[operator]
+                        selectinload(v.Moves.move_names),  # type: ignore[operator]
+                        selectinload(  # type: ignore[operator]
                             v.Moves.machines.and_(
                                 v.Machines.version_group_id == version_group.id
                             )
@@ -76,14 +73,15 @@ async def learnset(msg: Message) -> None:
                         .selectinload(v.Machines.item)
                         .selectinload(v.Items.item_names),
                     ),
-                    selectinload(v.PokemonMoves.pokemon_move_method).selectinload(
-                        v.PokemonMoveMethods.pokemon_move_method_prose
-                    ),
+                    selectinload(  # type: ignore[operator]
+                        v.PokemonMoves.pokemon_move_method
+                    ).selectinload(v.PokemonMoveMethods.pokemon_move_method_prose),
                 )
             )
             .filter_by(identifier=pokemon_id)
-            .one_or_none()
         )
+        # TODO: remove annotation
+        pokemon_species: v.PokemonSpecies | None = session.scalar(stmt)
         if pokemon_species is None:
             await msg.reply("Pokémon not found.")
             return

@@ -3,7 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from flask import render_template, request
-from sqlalchemy.orm import Query
+from sqlalchemy import delete, select, update
+from sqlalchemy.sql import Select
 
 import databases.database as d
 import utils
@@ -24,16 +25,15 @@ async def profile(msg: Message) -> None:
 
     db = Database.open()
     with db.get_session() as session:
-
-        userdata = session.query(d.Users).filter_by(userid=userid).first()
+        stmt = select(d.Users).filter_by(userid=userid)
+        # TODO: remove annotation
+        userdata: d.Users = session.scalar(stmt)
 
         if userdata and userdata.userid and userdata.avatar:
-            badges = (
-                session.query(d.Badges)
-                .filter_by(userid=userdata.userid)
-                .order_by(d.Badges.id)
-                .all()
+            stmt = (
+                select(d.Badges).filter_by(userid=userdata.userid).order_by(d.Badges.id)
             )
+            badges: list[d.Badges] = session.execute(stmt).scalars().all()
 
             if userdata.avatar[0] == "#":
                 avatar_dir = "trainers-custom"
@@ -73,12 +73,13 @@ async def setprofile(msg: Message) -> None:
     with db.get_session() as session:
         userid = msg.user.userid
         session.add(d.Users(userid=userid))
-        query_ = session.query(d.Users).filter_by(userid=userid)
+        stmt = update(d.Users).filter_by(userid=userid)
         if authorized:
             # Authorized users skip the validation process.
-            query_.update({"description": msg.arg, "description_pending": ""})
+            stmt = stmt.values(description=msg.arg, description_pending="")
         else:
-            query_.update({"description_pending": msg.arg})
+            stmt = stmt.values(description_pending=msg.arg)
+        session.execute(stmt)
 
     await msg.reply("Salvato")
 
@@ -103,9 +104,12 @@ async def clearprofile(msg: Message) -> None:
     with db.get_session() as session:
         userid = msg.user.userid
         session.add(d.Users(userid=userid))
-        session.query(d.Users).filter_by(userid=userid).update(
-            {"description": "", "description_pending": ""}
+        stmt = (
+            update(d.Users)
+            .filter_by(userid=userid)
+            .values(description="", description_pending="")
         )
+        session.execute(stmt)
 
     await msg.reply("Frase rimossa")
 
@@ -135,30 +139,38 @@ def badges_route(userid: str) -> str:
         if request.method == "POST":
 
             if "labelnew" in request.form:
-                image = request.form.get("imagenew")
-                label = request.form.get("labelnew", "")
-                if image:
-                    session.add(d.Badges(userid=userid, image=image, label=label))
+                row_image = request.form.get("imagenew")
+                row_label = request.form.get("labelnew", "")
+                if row_image:
+                    session.add(
+                        d.Badges(userid=userid, image=row_image, label=row_label)
+                    )
 
                 for i in request.form:
                     if i[:5] != "label" or i == "labelnew":
                         continue
                     row_id = i[5:]
-                    image = request.form.get(f"image{row_id}")
-                    label = request.form.get(f"label{row_id}", "")
-                    delete = request.form.get(f"delete{row_id}")
-                    if delete:
-                        session.query(d.Badges).filter_by(id=row_id).delete()
-                    elif image:
-                        session.query(d.Badges).filter_by(id=row_id).update(
-                            {"image": image, "label": label}
+                    row_image = request.form.get(f"image{row_id}")
+                    row_label = request.form.get(f"label{row_id}", "")
+                    row_delete = request.form.get(f"delete{row_id}")
+                    if row_delete:
+                        stmt_del = delete(d.Badges).filter_by(id=row_id)
+                        session.execute(stmt_del)
+                    elif row_image:
+                        stmt_img = (
+                            update(d.Badges)
+                            .filter_by(id=row_id)
+                            .values(image=row_image, label=row_label)
                         )
+                        session.execute(stmt_img)
 
-        user = session.query(d.Users).filter_by(userid=userid).first()
+        stmt = select(d.Users).filter_by(userid=userid)
+        # TODO: remove annotation
+        user: d.Users = session.scalar(stmt)
 
-        badges = (
-            session.query(d.Badges).filter_by(userid=userid).order_by(d.Badges.id).all()
-        )
+        stmt = select(d.Badges).filter_by(userid=userid).order_by(d.Badges.id)
+        # TODO: remove annotation
+        badges: list[d.Badges] = session.execute(stmt).scalars().all()
 
         return render_template("badges.html", user=user, badges=badges)
 
@@ -169,14 +181,12 @@ async def approvaprofilo(msg: Message) -> None:
 
     with db.get_session() as session:
         parts = msg.arg.split(",")
-        session.query(d.Users).filter_by(
-            id=parts[0], description_pending=",".join(parts[1:])
-        ).update(
-            {
-                "description": d.Users.description_pending,
-                "description_pending": "",
-            }
+        stmt = (
+            update(d.Users)
+            .filter_by(id=parts[0], description_pending=",".join(parts[1:]))
+            .values(description=d.Users.description_pending, description_pending="")
         )
+        session.execute(stmt)
 
     await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
 
@@ -187,19 +197,22 @@ async def rifiutaprofilo(msg: Message) -> None:
 
     with db.get_session() as session:
         parts = msg.arg.split(",")
-        session.query(d.Users).filter_by(
-            id=parts[0], description_pending=",".join(parts[1:])
-        ).update({"description_pending": ""})
+        stmt = (
+            update(d.Users)
+            .filter_by(id=parts[0], description_pending=",".join(parts[1:]))
+            .values(description_pending="")
+        )
+        session.execute(stmt)
 
     await msg.user.send_htmlpage("pendingdescriptions", msg.conn.main_room)
 
 
 @htmlpage_wrapper("pendingdescriptions", required_rank="driver", main_room_only=True)
-def pendingdescriptions_htmlpage(
-    user: User, room: Room
-) -> Query:  # type: ignore[type-arg]
-    return (
-        Query(d.Users)
-        .filter(d.Users.description_pending != "")
+def pendingdescriptions_htmlpage(user: User, room: Room) -> Select:
+    # TODO: remove annotation
+    stmt: Select = (
+        select(d.Users)
+        .where(d.Users.description_pending != "")
         .order_by(d.Users.userid)
     )
+    return stmt

@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 import pytz
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
 
 import databases.veekun as v
@@ -62,12 +62,13 @@ async def annika(msg: Message) -> None:
 async def antonio200509(msg: Message) -> None:
     db = Database.open("veekun")
     with db.get_session() as session:
-        species = (
-            session.query(v.PokemonSpeciesNames)
+        stmt = (
+            select(v.PokemonSpeciesNames)
             .filter_by(local_language_id=msg.language_id)
             .order_by(func.random())
-            .first()
         )
+        # TODO: remove annotation
+        species: v.PokemonSpeciesNames = session.scalar(stmt)
         if not species:
             raise SQLAlchemyError("Missing PokemonSpeciesNames data")
         species_name = species.name

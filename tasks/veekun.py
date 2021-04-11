@@ -7,7 +7,7 @@ import subprocess
 from os.path import isfile
 from typing import TYPE_CHECKING
 
-from sqlalchemy import func
+from sqlalchemy import func, insert, select, update
 from sqlalchemy.exc import OperationalError
 
 import databases.veekun as v
@@ -43,10 +43,8 @@ async def csv_to_sqlite(conn: Connection) -> None:
         )
         db = Database.open("veekun")
         with db.get_session() as session:
-            db_commit = session.query(  # type: ignore  # sqlalchemy
-                v.LatestCommit.commit_id
-            ).scalar()
-            if db_commit == latest_veekun_commit:
+            stmt = select(v.LatestCommit.commit_id)
+            if session.scalar(stmt) == latest_veekun_commit:
                 return  # database is already up-to-date, skip rebuild
 
     except (
@@ -97,16 +95,19 @@ async def csv_to_sqlite(conn: Connection) -> None:
                                 if num := re.search(r"route-(\d+)", row["identifier"]):
                                     row["route_number"] = num[1]
 
-                        session.bulk_insert_mappings(tables_classes[tname], data)
+                        stmt = insert(tables_classes[tname])
+                        session.execute(stmt, data)
 
                         if "identifier" in csv_keys:
-                            session.query(tables_classes[tname]).update(
-                                {
-                                    tables_classes[tname].identifier: func.replace(
+                            stmt = (
+                                update(tables_classes[tname])
+                                .values(
+                                    identifier=func.replace(
                                         tables_classes[tname].identifier, "-", ""
                                     )
-                                },
-                                synchronize_session=False,
+                                )
+                                .execution_options(synchronize_session=False)
                             )
+                            session.execute(stmt)
 
     print("Done.")

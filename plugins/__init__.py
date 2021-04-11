@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, Optional
 
 from flask import abort
 from flask import session as web_session
-from sqlalchemy.orm import Query
+from sqlalchemy.sql import Select
 
 import utils
 from models.room import Room
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from models.user import User
 
     CommandFunc = Callable[[Message], Awaitable[None]]
-    HTMLPageFunc = Callable[[User, Room], Optional[Query[Any]]]  # type: ignore[misc]
+    HTMLPageFunc = Callable[[User, Room], Optional[Select]]
     RouteFunc = Callable[..., str]  # type: ignore[misc]
 
 
@@ -193,7 +193,7 @@ def htmlpage_check_permission(
     func: HTMLPageFunc, required_rank: Role | None, main_room_only: bool
 ) -> HTMLPageFunc:
     @wraps(func)
-    def wrapper(user: User, room: Room) -> Query[Any] | None:  # type: ignore[misc]
+    def wrapper(user: User, room: Room) -> Select | None:
         if main_room_only and room is not room.conn.main_room:
             return None
 
