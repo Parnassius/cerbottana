@@ -4,6 +4,8 @@ import json
 import string
 from typing import TYPE_CHECKING
 
+from sqlalchemy import update
+
 import databases.database as d
 import utils
 from database import Database
@@ -162,7 +164,8 @@ async def _parse_userdetails(conn: Connection, room: Room, jsondata: JsonDict) -
     db = Database.open()
     with db.get_session() as session:
         session.add(d.Users(userid=user.userid))
-        session.query(d.Users).filter_by(userid=user.userid).update({"avatar": avatar})
+        stmt = update(d.Users).filter_by(userid=user.userid).values(avatar=avatar)
+        session.execute(stmt)
 
     if jsondata["rooms"] is not False:
         user.global_rank = jsondata["group"]

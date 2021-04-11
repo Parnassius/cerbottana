@@ -4,8 +4,9 @@ import json
 import random
 from typing import TYPE_CHECKING
 
-from sqlalchemy.orm import Query
+from sqlalchemy import delete, select
 from sqlalchemy.orm.exc import ObjectDeletedError
+from sqlalchemy.sql import Select
 
 import databases.database as d
 from database import Database
@@ -28,10 +29,8 @@ async def eightball(msg: Message) -> None:
         answers = DEFAULT_ANSWERS[language_name]
 
         if msg.room:
-            custom_answers = (
-                session.query(d.EightBall).filter_by(roomid=msg.room.roomid).all()
-            )
-            answers.extend([i.answer for i in custom_answers])
+            stmt = select(d.EightBall.answer).filter_by(roomid=msg.room.roomid)
+            answers.extend(session.execute(stmt).scalars())
 
         await msg.reply(random.choice(answers))
 
@@ -85,12 +84,10 @@ async def removeeightballanswer(msg: Message) -> None:
 
     db = Database.open()
     with db.get_session() as session:
-        result = (
-            session.query(d.EightBall)
-            .filter_by(answer=msg.arg, roomid=msg.parametrized_room.roomid)
-            .delete()
+        stmt = delete(d.EightBall).filter_by(
+            answer=msg.arg, roomid=msg.parametrized_room.roomid
         )
-        if result:
+        if session.execute(stmt).rowcount:  # type: ignore[attr-defined]
             await msg.reply("Risposta cancellata.")
             if msg.room is None:
                 await msg.parametrized_room.send_modnote(
@@ -107,15 +104,16 @@ async def removeeightballanswerid(msg: Message) -> None:
 
     db = Database.open()
     with db.get_session() as session:
-        query = session.query(d.EightBall).filter_by(
+        stmt = select(d.EightBall).filter_by(
             id=msg.args[0], roomid=msg.parametrized_room.roomid
         )
-        if answer := query.first():
+        answer: d.EightBall  # TODO: remove annotation
+        if answer := session.scalar(stmt):
             if msg.room is None:
                 await msg.parametrized_room.send_modnote(
                     "EIGHTBALL ANSWER REMOVED", msg.user, answer.answer
                 )
-            query.delete()
+            session.delete(answer)
 
     try:
         page = int(msg.args[1])
@@ -126,8 +124,12 @@ async def removeeightballanswerid(msg: Message) -> None:
 
 
 @htmlpage_wrapper("eightballanswers", aliases=("8ballanswers",), required_rank="driver")
-def eightball_htmlpage(user: User, room: Room) -> Query:  # type: ignore[type-arg]
-    return Query(d.EightBall).filter_by(roomid=room.roomid).order_by(d.EightBall.answer)
+def eightball_htmlpage(user: User, room: Room) -> Select:
+    # TODO: remove annotation
+    stmt: Select = (
+        select(d.EightBall).filter_by(roomid=room.roomid).order_by(d.EightBall.answer)
+    )
+    return stmt
 
 
 with open("./data/eightball.json") as f:

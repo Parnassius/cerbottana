@@ -6,7 +6,8 @@ from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 from dateutil.parser import parse
-from sqlalchemy.orm import Query
+from sqlalchemy import delete, select
+from sqlalchemy.sql import Select
 
 import databases.database as d
 from database import Database
@@ -163,9 +164,10 @@ class Repeat:
         # Remove corresponding SQL row
         db = Database.open()
         with db.get_session() as session:
-            session.query(d.Repeats).filter_by(
+            stmt = delete(d.Repeats).filter_by(
                 message=self.message, roomid=self.room.roomid
-            ).delete()
+            )
+            session.execute(stmt)
 
         # Remove from _instances dict
         self._instances.pop(self.key, None)
@@ -188,8 +190,10 @@ class Repeat:
 
         db = Database.open()
         with db.get_session() as session:
-            rows = session.query(d.Repeats).all()
-            for row in rows:
+            stmt = select(d.Repeats)
+            # TODO: remove annotation
+            row: d.Repeats
+            for row in session.execute(stmt):
                 instance = cls(
                     row.message,
                     Room.get(conn, row.roomid),
@@ -286,5 +290,9 @@ async def stoprepeat(msg: Message) -> None:
 
 
 @htmlpage_wrapper("repeats", aliases=("showrepeats",), required_rank="driver")
-def repeats_htmlpage(user: User, room: Room) -> Query:  # type: ignore[type-arg]
-    return Query(d.Repeats).filter_by(roomid=room.roomid).order_by(d.Repeats.message)
+def repeats_htmlpage(user: User, room: Room) -> Select:
+    # TODO: remove annotation
+    stmt: Select = (
+        select(d.Repeats).filter_by(roomid=room.roomid).order_by(d.Repeats.message)
+    )
+    return stmt
