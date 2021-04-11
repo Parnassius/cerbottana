@@ -8,8 +8,17 @@ Create Date: 2020-12-06 17:11:25.270563
 from environs import Env
 
 # pylint: skip-file
-from sqlalchemy import Column, Integer, MetaData, String, Table, UniqueConstraint
-from sqlalchemy.sql import column, select, table
+from sqlalchemy import (
+    Column,
+    Integer,
+    MetaData,
+    String,
+    Table,
+    UniqueConstraint,
+    column,
+    select,
+    table,
+)
 
 from alembic import op
 

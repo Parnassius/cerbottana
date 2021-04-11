@@ -12,7 +12,7 @@ from typing import Any
 import htmlmin  # type: ignore
 from imageprobe import probe
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from sqlalchemy.sql import func
+from sqlalchemy import func
 
 import databases.database as d
 from database import Database

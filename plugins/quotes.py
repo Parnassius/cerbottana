@@ -4,9 +4,9 @@ import re
 import string
 from typing import TYPE_CHECKING
 
+from sqlalchemy import func
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import ObjectDeletedError
-from sqlalchemy.sql import func
 
 import databases.database as d
 import utils

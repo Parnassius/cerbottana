@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sqlalchemy.sql import func
+from sqlalchemy import func
 
 import databases.database as d
 from database import Database

@@ -4,8 +4,8 @@ import random
 from typing import TYPE_CHECKING
 
 from imageprobe.errors import UnsupportedFormat
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.sql.expression import func
 
 import databases.veekun as v
 from database import Database

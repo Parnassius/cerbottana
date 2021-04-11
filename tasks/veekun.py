@@ -7,8 +7,8 @@ import subprocess
 from os.path import isfile
 from typing import TYPE_CHECKING
 
+from sqlalchemy import func
 from sqlalchemy.exc import OperationalError
-from sqlalchemy.sql import func
 
 import databases.veekun as v
 import utils

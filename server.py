@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from flask import Flask, request
 from flask import session as web_session
-from sqlalchemy.sql import func
+from sqlalchemy import func
 from waitress import serve
 
 import databases.database as d
