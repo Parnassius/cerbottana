@@ -93,7 +93,8 @@ async def learnset(msg: Message) -> None:
         all_forms = set(pokemon_species.pokemon)
 
         for pokemon in pokemon_species.pokemon:
-            for pokemon_move in pokemon.pokemon_moves:
+            pokemon_move: v.PokemonMoves  # TODO: remove annotation
+            for pokemon_move in pokemon.pokemon_moves:  # type: ignore[attr-defined]
 
                 method = pokemon_move.pokemon_move_method
                 if method not in results:
