@@ -56,6 +56,6 @@ jobs:
     - name: Test with pytest
       run: make pytest
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@fcebab03f26c7530a22baa63f06b3e0515f0c7cd
+      uses: codecov/codecov-action@9b0b9bbe2c64e9ed41413180dd7398450dfeee14
       with:
         fail_ci_if_error: true
