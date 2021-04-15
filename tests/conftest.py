@@ -10,6 +10,7 @@ from queue import Queue
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, Tuple
 
+import freezegun
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -291,3 +292,8 @@ def veekun_database() -> None:
     # csv_to_sqlite is an init_task, and as such it expects an instance of Connection as
     # its first parameter. However it is never used so we just pass None instead.
     asyncio.run(csv_to_sqlite(None))  # type: ignore[arg-type]
+
+
+# Configure freezegun to ignore the connection module
+# This is needed because the `send` method requires 0.1s between each message
+freezegun.configure(extend_ignore_list=["connection"])  # type: ignore[attr-defined]

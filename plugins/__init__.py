@@ -38,6 +38,7 @@ class Command:
         is_unlisted: bool,
     ) -> None:
         self.name = func.__name__
+        self.module = func.__module__
         self.callback = func
         self.aliases = (self.name,) + aliases
         self.helpstr = helpstr
