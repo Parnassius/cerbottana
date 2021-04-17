@@ -53,7 +53,7 @@ async def uno(msg: Message) -> None:
 
     ps_commands = (
         "/uno create 100",
-        "/uno autostart 90",
+        "/uno autostart 30",
         f"/uno timer {timer}",
     )
 
