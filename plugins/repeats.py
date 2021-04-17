@@ -193,7 +193,7 @@ class Repeat:
             stmt = select(d.Repeats)
             # TODO: remove annotation
             row: d.Repeats
-            for row in session.execute(stmt):
+            for row in session.execute(stmt).scalars():
                 instance = cls(
                     row.message,
                     Room.get(conn, row.roomid),
