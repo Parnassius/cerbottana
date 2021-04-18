@@ -107,10 +107,13 @@ def to_html_quotebox(quote: str) -> str:
     return html
 
 
-@command_wrapper(aliases=("newquote", "quote"), parametrize_room=True)
+@command_wrapper(
+    aliases=("newquote", "quote"),
+    required_rank="driver",
+    required_rank_editable="manage quotes",
+    parametrize_room=True,
+)
 async def addquote(msg: Message) -> None:
-    # Permissions for this command are temporarily lowered to voice level.
-
     if not msg.arg:
         await msg.reply("Cosa devo salvare?")
         return
@@ -140,7 +143,10 @@ async def addquote(msg: Message) -> None:
 
 
 @command_wrapper(
-    aliases=("q", "randomquote"), allow_pm="regularuser", parametrize_room=True
+    aliases=("q", "randomquote"),
+    allow_pm="regularuser",
+    required_rank_editable=True,
+    parametrize_room=True,
 )
 async def randquote(msg: Message) -> None:
     db = Database.open()
@@ -162,10 +168,13 @@ async def randquote(msg: Message) -> None:
         await msg.reply_htmlbox(to_html_quotebox(quote.message))
 
 
-@command_wrapper(aliases=("deletequote", "delquote", "rmquote"), parametrize_room=True)
+@command_wrapper(
+    aliases=("deletequote", "delquote", "rmquote"),
+    required_rank="driver",
+    required_rank_editable="manage quotes",
+    parametrize_room=True,
+)
 async def removequote(msg: Message) -> None:
-    # Permissions for this command are temporarily lowered to voice level.
-
     if not msg.arg:
         await msg.reply("Che quote devo cancellare?")
         return
@@ -185,7 +194,11 @@ async def removequote(msg: Message) -> None:
             await msg.reply("Quote inesistente.")
 
 
-@command_wrapper(required_rank="driver", parametrize_room=True)
+@command_wrapper(
+    required_rank="driver",
+    required_rank_editable="manage quotes",
+    parametrize_room=True,
+)
 async def removequoteid(msg: Message) -> None:
     room = msg.parametrized_room
 
@@ -210,7 +223,12 @@ async def removequoteid(msg: Message) -> None:
     await msg.user.send_htmlpage("quotelist", room, page)
 
 
-@htmlpage_wrapper("quotelist", aliases=("quotes", "quoteslist"), allow_pm="regularuser")
+@htmlpage_wrapper(
+    "quotelist",
+    aliases=("quotes", "quoteslist"),
+    allow_pm="regularuser",
+    delete_command="removequoteid",
+)
 def quotelist_htmlpage(user: User, room: Room) -> Select:
     # TODO: remove annotation
     stmt: Select = (

@@ -11,7 +11,9 @@ if TYPE_CHECKING:
     from models.message import Message
 
 
-@command_wrapper(helpstr="Visualizza/riproduci un file multimediale.")
+@command_wrapper(
+    helpstr="Visualizza/riproduci un file multimediale.", required_rank_editable=True
+)
 async def media(msg: Message) -> None:
     if not msg.arg:
         await msg.reply("Specificare un URL")

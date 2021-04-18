@@ -18,7 +18,9 @@ if TYPE_CHECKING:
     from models.user import User
 
 
-@command_wrapper(aliases=("8ball",), helpstr="Chiedi qualsiasi cosa!")
+@command_wrapper(
+    aliases=("8ball",), helpstr="Chiedi qualsiasi cosa!", required_rank_editable=True
+)
 async def eightball(msg: Message) -> None:
     db = Database.open()
 

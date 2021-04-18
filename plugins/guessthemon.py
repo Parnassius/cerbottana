@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     aliases=("gtm", "hangmanpokemon", "pokemonhangman"),
     helpstr="Indovina un pokemon da una sua entry del pokedex!",
     allow_pm=False,
+    required_rank_editable=True,
 )
 async def guessthemon(msg: Message) -> None:
     db = Database.open("veekun")
