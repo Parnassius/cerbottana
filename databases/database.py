@@ -69,6 +69,18 @@ class Repeats(Base):
     expire_dt: str | None = Column(String)
 
 
+class TemporaryVoices(Base):
+    __tablename__ = "temporary_voices"
+    __table_opts__ = (
+        UniqueConstraint("roomid", "userid", sqlite_on_conflict="IGNORE"),
+    )
+
+    id: int = Column(Integer, primary_key=True)
+    roomid: str = Column(String, nullable=False)
+    userid: str = Column(String, nullable=False)
+    date: str = Column(String, nullable=False)
+
+
 class Tokens(Base):
     __tablename__ = "tokens"
 

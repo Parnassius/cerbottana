@@ -28,7 +28,16 @@ async def setpermission(msg: Message) -> None:
         return
 
     rank = msg.args[2]
-    if rank not in ("default", "voice", "driver", "mod", "owner", "admin", "disabled"):
+    if rank not in (
+        "default",
+        "regularuser",
+        "voice",
+        "driver",
+        "mod",
+        "owner",
+        "admin",
+        "disabled",
+    ):
         return
     rank = cast(Union[Role, Literal["default"]], rank)
 

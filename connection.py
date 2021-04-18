@@ -13,7 +13,7 @@ from handlers import handlers
 from models.room import Room
 from models.user import User
 from plugins import commands
-from tasks import init_tasks
+from tasks import init_tasks, recurring_tasks
 from typedefs import RoomId, UserId
 
 if TYPE_CHECKING:
@@ -53,6 +53,7 @@ class Connection:
         self.public_roomids: set[str] = set()
         self.users: WeakValueDictionary[UserId, User] = WeakValueDictionary()
         self.init_tasks = init_tasks
+        self.recurring_tasks = recurring_tasks
         self.handlers = handlers
         self.commands = commands
         self.timestamp: float = 0
@@ -81,6 +82,10 @@ class Connection:
                 itasks.append(asyncio.create_task(func(self)))
             for itask in itasks:
                 await itask
+
+        if not self.unittesting:
+            for rtask in self.recurring_tasks:
+                asyncio.create_task(rtask(self))
 
         try:
             async with websockets.connect(
