@@ -228,9 +228,10 @@ async def repeat(msg: Message) -> None:
 
     phrase = msg.args[0]
     if (
-        phrase.lower() == "all"  # Reserved keyword for `.stoprepeat` command.
-        or phrase[0] == "/"  # Repeats should always be broadcasted.
-        or (phrase[0] == "!" and phrase.split()[0][1:].lower() not in WHITELISTED_CMD)
+        # Reserved keyword for `.stoprepeat` command.
+        phrase.lower() == "all"
+        # Whitelisted commands
+        or (phrase[0] in "/!" and phrase.split()[0][1:].lower() not in WHITELISTED_CMD)
     ):
         await msg.reply("Testo del repeat non valido.")
         return
