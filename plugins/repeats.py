@@ -24,6 +24,8 @@ if TYPE_CHECKING:
 # WHITELISTED_CMD: List of commands that are broadcastable in a repeat. We don't have a
 # validity check for the command syntax.
 WHITELISTED_CMD = (
+    "announce",
+    "wall",
     "daily",
     "events",
     "roomevent",
