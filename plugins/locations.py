@@ -87,9 +87,6 @@ async def locations(msg: Message) -> None:
 
         results: dict[v.Versions, ResultsDict] = {}
 
-        # TODO: remove annotation
-        area: v.LocationAreas
-
         for pokemon in pokemon_species.pokemon:
             for encounter in pokemon.encounters:
 
