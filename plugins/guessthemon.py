@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import random
 import re
-from typing import TYPE_CHECKING, List, cast
+from typing import TYPE_CHECKING
 
 from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
@@ -41,10 +41,6 @@ async def guessthemon(msg: Message) -> None:
             raise SQLAlchemyError("Missing PokemonSpecies data")
 
         # Get localized pokemon name
-        # TODO: remove cast
-        species.pokemon_species_names = cast(  # type: ignore[redundant-cast]
-            List[v.PokemonSpeciesNames], species.pokemon_species_names
-        )
         species_name = next(
             (
                 i.name
@@ -59,10 +55,6 @@ async def guessthemon(msg: Message) -> None:
             )
 
         # Get pokedex flavor text
-        # TODO: remove cast
-        species.pokemon_species_flavor_text = cast(  # type: ignore[redundant-cast]
-            List[v.PokemonSpeciesFlavorText], species.pokemon_species_flavor_text
-        )
         dex_entries = [
             i.flavor_text
             for i in species.pokemon_species_flavor_text

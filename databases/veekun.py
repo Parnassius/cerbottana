@@ -552,10 +552,8 @@ class Pokemon(HashableMixin, Base):
 
     @property
     def name(self) -> str:
-        # TODO: remove annotation
-        pokemon_name: str = self.species.name  # type: ignore[attr-defined]
-        form: PokemonForms  # TODO: remove annotation
-        for form in self.pokemon_forms:  # type: ignore[attr-defined]
+        pokemon_name = self.species.name
+        for form in self.pokemon_forms:
             if not form.is_default:
                 continue
             pokemon_name = form.get_translation(
