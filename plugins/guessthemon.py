@@ -58,7 +58,9 @@ async def guessthemon(msg: Message) -> None:
         dex_entries = [
             i.flavor_text
             for i in species.pokemon_species_flavor_text
-            if i.language_id == msg.language_id and len(i.flavor_text) <= 150
+            if i.language_id == msg.language_id
+            and i.flavor_text
+            and len(i.flavor_text) <= 150
         ]
         if not dex_entries:  # This might fail but practically it never should
             return
