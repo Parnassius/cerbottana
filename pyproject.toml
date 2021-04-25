@@ -48,6 +48,13 @@ pytest-mock = "3.6.0"
 sqlalchemy2-stubs = "0.0.1a4"
 
 
+[tool.pylint.master]
+load-plugins = [
+    "pylint.extensions.bad_builtin",
+    "pylint.extensions.check_elif",
+    "pylint.extensions.typing",
+]
+
 [tool.pylint.messages_control]
 disable = [
     "invalid-name",
@@ -72,3 +79,7 @@ disable = [
 
 [tool.pylint.format]
 max-line-length = "88"
+
+[tool.pylint.typing]
+py-version = "3.8"
+runtime-typing = "no"
