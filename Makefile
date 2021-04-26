@@ -1,3 +1,6 @@
+export SQLALCHEMY_WARN_20=1
+
+
 .PHONY: all
 all: tests
 
