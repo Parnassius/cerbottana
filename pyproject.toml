@@ -45,7 +45,7 @@ pylint = "2.8.0"
 pytest = "6.2.3"
 pytest-cov = "2.11.1"
 pytest-mock = "3.6.0"
-sqlalchemy2-stubs = "0.0.1a4"
+sqlalchemy2-stubs = "0.0.1a5"
 
 
 [tool.pylint.master]
