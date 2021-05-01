@@ -54,7 +54,7 @@ class Repeat:
         expire_dt: datetime | None = None,
         max_iters: int | None = None,
     ) -> None:
-        now = datetime.now()  # Fixes the time for calculations within this method.
+        now = datetime.utcnow()  # Fixes the time for calculations within this method.
 
         self.message = message
         self.room = room
@@ -86,7 +86,7 @@ class Repeat:
     @property
     def expired(self) -> bool:
         if self.expire_dt:
-            return self.expire_dt + timedelta(seconds=1) < datetime.now()
+            return self.expire_dt + timedelta(seconds=1) < datetime.utcnow()
         return False
 
     @property
@@ -111,7 +111,7 @@ class Repeat:
         await asyncio.sleep(self.offset.total_seconds())
 
         while not self.expired:
-            start = datetime.now()
+            start = datetime.utcnow()
             if (
                 # Conditions that cause a repeat to skip a call but not to stop forever
                 not self.room.modchat  # Don't send if modchat is active
@@ -120,7 +120,7 @@ class Repeat:
                 await self.room.send(self.message, False)
             else:
                 print(f"Not sending {self.message}")
-            sleep_interval = self.delta - (datetime.now() - start)
+            sleep_interval = self.delta - (datetime.utcnow() - start)
             await asyncio.sleep(sleep_interval.total_seconds())
 
         self._unlist()
@@ -249,7 +249,7 @@ async def repeat(msg: Message) -> None:
         )
     else:
         try:  # Is the third param an expire date string?
-            expire_dt = parse(msg.args[2], default=datetime.now(), dayfirst=True)
+            expire_dt = parse(msg.args[2], default=datetime.utcnow(), dayfirst=True)
             instance = Repeat(
                 phrase, msg.parametrized_room, delta_minutes, expire_dt=expire_dt
             )

@@ -31,7 +31,7 @@ async def tempvoice(msg: Message) -> None:
                 d.TemporaryVoices(
                     roomid=msg.parametrized_room.roomid,
                     userid=msg.user.userid,
-                    date=str(datetime.now()),
+                    date=str(datetime.utcnow()),
                 )
             )
 
@@ -45,7 +45,7 @@ async def demote_old_temporary_voices(conn: Connection) -> None:
 
         with db.get_session() as session:
             stmt = select(d.TemporaryVoices).filter(
-                d.TemporaryVoices.date < datetime.now() - timedelta(days=30)
+                d.TemporaryVoices.date < datetime.utcnow() - timedelta(days=30)
             )
             user: d.TemporaryVoices | None = session.scalar(stmt)
 
@@ -71,6 +71,6 @@ async def join_leave_name(conn: Connection, room: Room, *args: str) -> None:
             stmt = (
                 update(d.TemporaryVoices)
                 .filter_by(roomid=room.roomid, userid=utils.to_user_id(user))
-                .values(date=str(datetime.now()))
+                .values(date=str(datetime.utcnow()))
             )
             session.execute(stmt)
