@@ -6,13 +6,13 @@ import random
 import re
 import string
 import unicodedata
+from datetime import datetime, timedelta
 from html import escape
 from typing import Any
 
 import htmlmin  # type: ignore
 from imageprobe import probe
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from sqlalchemy import func
 
 import databases.database as d
 from database import Database
@@ -23,7 +23,7 @@ def create_token(
     rooms: dict[str, str], expire_minutes: int = 30, admin: str | None = None
 ) -> str:
     token_id = os.urandom(16).hex()
-    expiry = f"+{expire_minutes} minute"
+    expiry = str(datetime.utcnow() + timedelta(minutes=expire_minutes))
 
     values = []
     if admin is not None:
@@ -32,7 +32,7 @@ def create_token(
                 token=token_id,
                 room=None,
                 rank=admin,
-                expiry=func.datetime("now", expiry),
+                expiry=expiry,
             )
         )
     for room in rooms:
@@ -41,7 +41,7 @@ def create_token(
                 token=token_id,
                 room=room,
                 rank=rooms[room],
-                expiry=func.datetime("now", expiry),
+                expiry=expiry,
             )
         )
 

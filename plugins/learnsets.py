@@ -56,16 +56,16 @@ async def learnset(msg: Message) -> None:
         stmt = (
             select(v.PokemonSpecies)
             .options(
-                selectinload(v.PokemonSpecies.pokemon)  # type: ignore[operator]
+                selectinload(v.PokemonSpecies.pokemon)
                 .selectinload(
                     v.Pokemon.pokemon_moves.and_(
                         v.PokemonMoves.version_group_id == version_group.id
                     )
                 )
                 .options(
-                    selectinload(v.PokemonMoves.move).options(  # type: ignore[operator]
-                        selectinload(v.Moves.move_names),  # type: ignore[operator]
-                        selectinload(  # type: ignore[operator]
+                    selectinload(v.PokemonMoves.move).options(
+                        selectinload(v.Moves.move_names),
+                        selectinload(
                             v.Moves.machines.and_(
                                 v.Machines.version_group_id == version_group.id
                             )
@@ -73,9 +73,9 @@ async def learnset(msg: Message) -> None:
                         .selectinload(v.Machines.item)
                         .selectinload(v.Items.item_names),
                     ),
-                    selectinload(  # type: ignore[operator]
-                        v.PokemonMoves.pokemon_move_method
-                    ).selectinload(v.PokemonMoveMethods.pokemon_move_method_prose),
+                    selectinload(v.PokemonMoves.pokemon_move_method).selectinload(
+                        v.PokemonMoveMethods.pokemon_move_method_prose
+                    ),
                 )
             )
             .filter_by(identifier=pokemon_id)

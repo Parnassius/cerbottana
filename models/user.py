@@ -201,10 +201,10 @@ class User:
 
                     db = Database.open()
                     with db.get_session() as session:
-                        stmt = select(d.CustomPermissions.required_rank).filter_by(
-                            roomid=page_room.roomid, command=command
-                        )
-                        custom_rank: Role | None = session.scalar(stmt)
+                        stmt_custom_rank = select(
+                            d.CustomPermissions.required_rank
+                        ).filter_by(roomid=page_room.roomid, command=command)
+                        custom_rank: Role | None = session.scalar(stmt_custom_rank)
                         if custom_rank:
                             delete_req_rank = custom_rank
 
@@ -221,7 +221,7 @@ class User:
                 stmt_rs = stmt.limit(100).offset(100 * (page - 1))
 
                 query = session.execute(stmt_rs)
-                if len(query.keys()) == 1:  # type: ignore[no-untyped-call]
+                if len(query.keys()) == 1:
                     rs = query.scalars().all()
                 else:
                     rs = query.all()

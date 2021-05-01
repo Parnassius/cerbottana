@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import string
+from datetime import date
 from typing import TYPE_CHECKING
 
 from sqlalchemy import delete, func, select
@@ -124,7 +125,7 @@ async def addquote(msg: Message) -> None:
             message=msg.arg,
             roomid=msg.parametrized_room.roomid,
             author=msg.user.userid,
-            date=func.date(),
+            date=str(date.today()),
         )
         session.add(result)
         session.commit()
@@ -234,8 +235,6 @@ def quotelist_htmlpage(user: User, room: Room) -> Select:
     stmt: Select = (
         select(d.Quotes)
         .filter_by(roomid=room.roomid)
-        .order_by(
-            d.Quotes.date.desc(), d.Quotes.id.desc()  # type: ignore[no-untyped-call]
-        )
+        .order_by(d.Quotes.date.desc(), d.Quotes.id.desc())
     )
     return stmt
