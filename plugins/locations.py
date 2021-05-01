@@ -47,28 +47,22 @@ async def locations(msg: Message) -> None:
         stmt = (
             select(v.PokemonSpecies)
             .options(
-                selectinload(v.PokemonSpecies.pokemon)  # type: ignore[operator]
+                selectinload(v.PokemonSpecies.pokemon)
                 .selectinload(v.Pokemon.encounters)
                 .options(
-                    selectinload(  # type: ignore[operator]
-                        v.Encounters.version
-                    ).selectinload(v.Versions.version_names),
-                    selectinload(  # type: ignore[operator]
-                        v.Encounters.location_area
-                    ).options(
-                        selectinload(  # type: ignore[operator]
-                            v.LocationAreas.location_area_prose
-                        ),
-                        selectinload(  # type: ignore[operator]
-                            v.LocationAreas.location
-                        ).selectinload(v.Locations.location_names),
+                    selectinload(v.Encounters.version).selectinload(
+                        v.Versions.version_names
                     ),
-                    selectinload(v.Encounters.encounter_slot)  # type: ignore[operator]
+                    selectinload(v.Encounters.location_area).options(
+                        selectinload(v.LocationAreas.location_area_prose),
+                        selectinload(v.LocationAreas.location).selectinload(
+                            v.Locations.location_names
+                        ),
+                    ),
+                    selectinload(v.Encounters.encounter_slot)
                     .selectinload(v.EncounterSlots.encounter_method)
                     .selectinload(v.EncounterMethods.encounter_method_prose),
-                    selectinload(  # type: ignore[operator]
-                        v.Encounters.encounter_condition_value_map
-                    )
+                    selectinload(v.Encounters.encounter_condition_value_map)
                     .selectinload(
                         v.EncounterConditionValueMap.encounter_condition_value
                     )
@@ -171,29 +165,19 @@ async def encounters(msg: Message) -> None:
         stmt = (
             select(v.Locations)
             .options(
-                selectinload(  # type: ignore[operator]
-                    v.Locations.location_areas
-                ).options(
-                    selectinload(  # type: ignore[operator]
-                        v.LocationAreas.location_area_prose
-                    ),
-                    selectinload(  # type: ignore[operator]
-                        v.LocationAreas.encounters
-                    ).options(
-                        selectinload(  # type: ignore[operator]
-                            v.Encounters.version
-                        ).selectinload(v.Versions.version_names),
-                        selectinload(v.Encounters.pokemon)  # type: ignore[operator]
+                selectinload(v.Locations.location_areas).options(
+                    selectinload(v.LocationAreas.location_area_prose),
+                    selectinload(v.LocationAreas.encounters).options(
+                        selectinload(v.Encounters.version).selectinload(
+                            v.Versions.version_names
+                        ),
+                        selectinload(v.Encounters.pokemon)
                         .selectinload(v.Pokemon.species)
                         .selectinload(v.PokemonSpecies.pokemon_species_names),
-                        selectinload(  # type: ignore[operator]
-                            v.Encounters.encounter_slot
-                        )
+                        selectinload(v.Encounters.encounter_slot)
                         .selectinload(v.EncounterSlots.encounter_method)
                         .selectinload(v.EncounterMethods.encounter_method_prose),
-                        selectinload(  # type: ignore[operator]
-                            v.Encounters.encounter_condition_value_map
-                        )
+                        selectinload(v.Encounters.encounter_condition_value_map)
                         .selectinload(
                             v.EncounterConditionValueMap.encounter_condition_value
                         )

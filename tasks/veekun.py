@@ -95,11 +95,11 @@ async def csv_to_sqlite(conn: Connection) -> None:
                                 if num := re.search(r"route-(\d+)", row["identifier"]):
                                     row["route_number"] = num[1]
 
-                        stmt = insert(tables_classes[tname])
-                        session.execute(stmt, data)
+                        bulk_insert_stmt = insert(tables_classes[tname])
+                        session.execute(bulk_insert_stmt, data)
 
                         if "identifier" in csv_keys:
-                            stmt = (
+                            bulk_update_stmt = (
                                 update(tables_classes[tname])
                                 .values(
                                     identifier=func.replace(
@@ -108,6 +108,6 @@ async def csv_to_sqlite(conn: Connection) -> None:
                                 )
                                 .execution_options(synchronize_session=False)
                             )
-                            session.execute(stmt)
+                            session.execute(bulk_update_stmt)
 
     print("Done.")

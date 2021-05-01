@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 from flask import Flask, request
 from flask import session as web_session
-from sqlalchemy import func, select
+from sqlalchemy import select
 from waitress import serve
 
 import databases.database as d
@@ -41,7 +42,7 @@ def initialize_server(secret_key: str) -> Server:
                 stmt = (
                     select(d.Tokens)
                     .filter_by(token=token)
-                    .where(func.julianday() - func.julianday(d.Tokens.expiry) < 0)
+                    .where(d.Tokens.expiry > str(datetime.utcnow()))
                 )
                 # TODO: remove annotation
                 row: d.Tokens
