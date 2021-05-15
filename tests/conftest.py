@@ -14,7 +14,7 @@ import freezegun
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from websockets import ConnectionClosedOK
+from websockets.exceptions import ConnectionClosedOK
 
 import databases.database as d
 import utils
@@ -224,7 +224,7 @@ def mock_connection(
             async def __await_impl__(self) -> MockProtocol:
                 return MockProtocol(recv_queue, send_queue)
 
-        mocker.patch("websockets.connect", MockConnect)
+        mocker.patch("websockets.client.connect", MockConnect)
 
         recv_queue: RecvQueue = RecvQueue()
         send_queue: SendQueue = SendQueue()
