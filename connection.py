@@ -6,7 +6,8 @@ from time import time
 from typing import TYPE_CHECKING
 from weakref import WeakValueDictionary
 
-import websockets
+import websockets.client
+from websockets.exceptions import WebSocketException
 
 import utils
 from handlers import handlers
@@ -88,12 +89,8 @@ class Connection:
                 asyncio.create_task(rtask(self))
 
         try:
-            async with websockets.connect(
-                self.url,
-                # these two should be fixed by the next websockets release
-                # https://github.com/aaugustin/websockets/commit/93ad88a9a8fe2ea8d96fb1d2a0f1625a3c5fee7c
-                ping_interval=None,  # type: ignore
-                max_size=None,  # type: ignore
+            async with websockets.client.connect(
+                self.url, ping_interval=None, max_size=None
             ) as websocket:
                 self.websocket = websocket
                 self.connection_start = time()
@@ -102,7 +99,7 @@ class Connection:
                         print(f"<< {message}")
                         asyncio.create_task(self._parse_message(message))
         except (
-            websockets.exceptions.WebSocketException,
+            WebSocketException,
             OSError,  # https://github.com/aaugustin/websockets/issues/593
         ):
             pass
