@@ -44,28 +44,3 @@ async def foo(msg: Message) -> None:
 `aliases` is the `tuple[str]` parameter that populates the dictionary of commands; the decorated function name is automatically included as an alias.
 
 A `Command` object can also yield useful metadata: `helpstr` is a string that describes the callback function. It is used to generate a help document with data from every instance that doesn't have the boolean parameter `is_unlisted` explicitly set to `True`.
-
-## Generating Flask webpages
-A plugin module might add some routes to the Flask server created in `server.py`. Use the `route_wrapper` decorator with the same syntax of a regular Flask route decorator, and put any needed template files in the `../templates/` folder.
-
-The most common use case is linking a webpage with a command:
-
-```python
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-from plugins import command_wrapper, route_wrapper
-
-if TYPE_CHECKING:
-    from models.message import Message
-
-
-@route_wrapper("/foo")
-def foo(room: str) -> str:
-    return render_template("foo.html")
-
-@command_wrapper()
-async def linkfoo(msg: Message) -> None:
-    await msg.reply(f"{msg.conn.domain}foo")
-```

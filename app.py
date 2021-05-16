@@ -8,7 +8,6 @@ from types import FrameType
 from environs import Env
 
 from connection import Connection
-from server import initialize_server
 
 
 def main() -> None:
@@ -23,8 +22,6 @@ def main() -> None:
 
     env = Env()
     env.read_env()
-
-    server = initialize_server(env("FLASK_SECRET_KEY"))
 
     conn = Connection(
         url=(
@@ -43,19 +40,10 @@ def main() -> None:
         main_room=env("MAIN_ROOM"),
         command_character=env("COMMAND_CHARACTER"),
         administrators=env.list("ADMINISTRATORS", []),
-        domain=env("DOMAIN"),
     )
 
     signal.signal(signal.SIGINT, shutdown)
 
-    threading.Thread(
-        target=server.serve_forever,
-        args=(
-            env.int("PORT"),
-            conn,
-        ),
-        daemon=True,
-    ).start()
     threading.Thread(target=conn.open_connection).start()
 
 

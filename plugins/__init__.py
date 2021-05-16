@@ -7,8 +7,6 @@ from functools import wraps
 from os.path import basename, dirname, isfile, join
 from typing import TYPE_CHECKING, Optional
 
-from flask import abort
-from flask import session as web_session
 from sqlalchemy import select
 from sqlalchemy.sql import Select
 
@@ -297,41 +295,6 @@ def htmlpage_wrapper(
     def wrapper(func: HTMLPageFunc) -> HTMLPageFunc:
         func = htmlpage_check_permission(func, req_rank, main_room_only)
         htmlpages[pageid] = func, delete_command
-        return func
-
-    return wrapper
-
-
-# --- Flask implementation ---
-
-
-routes: list[tuple[RouteFunc, str, Iterable[str] | None]] = []
-
-
-def route_check_permission(func: RouteFunc, required_rank: Role | None) -> RouteFunc:
-    @wraps(func)
-    def wrapper(**kwargs: str) -> str:
-        rank_check = kwargs.get("room", "_rank")
-        if required_rank is None:
-            if rank_check not in web_session:
-                abort(401)
-        elif not utils.has_role(required_rank, web_session.get(rank_check)):
-            abort(401)
-
-        return func(**kwargs)
-
-    return wrapper
-
-
-def route_wrapper(
-    rule: str,
-    *,
-    methods: Iterable[str] | None = None,
-    required_rank: Role | None = None,
-) -> Callable[[RouteFunc], RouteFunc]:
-    def wrapper(func: RouteFunc) -> RouteFunc:
-        func = route_check_permission(func, required_rank)
-        routes.append((func, rule, methods))
         return func
 
     return wrapper

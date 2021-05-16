@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flask import render_template, request
-from sqlalchemy import delete, select, update
+from sqlalchemy import select, update
 from sqlalchemy.sql import Select
 
 import databases.database as d
 import utils
 from database import Database
-from plugins import command_wrapper, htmlpage_wrapper, route_wrapper
+from plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
     from models.message import Message
@@ -112,67 +111,6 @@ async def clearprofile(msg: Message) -> None:
         session.execute(stmt)
 
     await msg.reply("Frase rimossa")
-
-
-@command_wrapper(aliases=("badges",), required_rank="driver", main_room_only=True)
-async def badge(msg: Message) -> None:
-    admin_rank = msg.user.rank(msg.conn.main_room)
-
-    rooms: dict[str, str] = {}
-
-    for room in msg.user.rooms:
-        rooms[room.roomid] = msg.user.rank(room) or " "
-
-    token_id = utils.create_token(rooms, 1, admin_rank)
-    userid = utils.to_user_id(msg.arg or msg.user.userid)
-
-    await msg.user.send(f"{msg.conn.domain}badges/{userid}?token={token_id}")
-
-
-@route_wrapper("/badges/<userid>", methods=("GET", "POST"), required_rank="driver")
-def badges_route(userid: str) -> str:
-    db = Database.open()
-
-    with db.get_session() as session:
-        userid = utils.to_user_id(userid)
-
-        if request.method == "POST":
-
-            if "labelnew" in request.form:
-                row_image = request.form.get("imagenew")
-                row_label = request.form.get("labelnew", "")
-                if row_image:
-                    session.add(
-                        d.Badges(userid=userid, image=row_image, label=row_label)
-                    )
-
-                for i in request.form:
-                    if i[:5] != "label" or i == "labelnew":
-                        continue
-                    row_id = i[5:]
-                    row_image = request.form.get(f"image{row_id}")
-                    row_label = request.form.get(f"label{row_id}", "")
-                    row_delete = request.form.get(f"delete{row_id}")
-                    if row_delete:
-                        stmt_del = delete(d.Badges).filter_by(id=row_id)
-                        session.execute(stmt_del)
-                    elif row_image:
-                        stmt_img = (
-                            update(d.Badges)
-                            .filter_by(id=row_id)
-                            .values(image=row_image, label=row_label)
-                        )
-                        session.execute(stmt_img)
-
-        stmt = select(d.Users).filter_by(userid=userid)
-        # TODO: remove annotation
-        user: d.Users = session.scalar(stmt)
-
-        stmt = select(d.Badges).filter_by(userid=userid).order_by(d.Badges.id)
-        # TODO: remove annotation
-        badges: list[d.Badges] = session.execute(stmt).scalars().all()
-
-        return render_template("badges.html", user=user, badges=badges)
 
 
 @command_wrapper(required_rank="driver", main_room_only=True)

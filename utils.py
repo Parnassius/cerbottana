@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 import json
-import os
 import random
 import re
 import string
 import unicodedata
-from datetime import datetime, timedelta
 from html import escape
 from typing import Any
 
@@ -14,42 +12,7 @@ import htmlmin  # type: ignore
 from imageprobe import probe
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-import databases.database as d
-from database import Database
 from typedefs import JsonDict, Role, RoomId, UserId
-
-
-def create_token(
-    rooms: dict[str, str], expire_minutes: int = 30, admin: str | None = None
-) -> str:
-    token_id = os.urandom(16).hex()
-    expiry = str(datetime.utcnow() + timedelta(minutes=expire_minutes))
-
-    values = []
-    if admin is not None:
-        values.append(
-            d.Tokens(
-                token=token_id,
-                room=None,
-                rank=admin,
-                expiry=expiry,
-            )
-        )
-    for room in rooms:
-        values.append(
-            d.Tokens(
-                token=token_id,
-                room=room,
-                rank=rooms[room],
-                expiry=expiry,
-            )
-        )
-
-    db = Database.open()
-    with db.get_session() as session:
-        session.add_all(values)
-
-    return token_id
 
 
 def to_id(text: str) -> str:

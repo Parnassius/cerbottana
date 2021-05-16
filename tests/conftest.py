@@ -153,7 +153,6 @@ def mock_connection(
         main_room: str = "lobby",
         command_character: str = ".",
         administrators: list[str] | None = None,
-        domain: str = "http://localhost:8080/",
     ) -> tuple[Connection, RecvQueue, SendQueue]:
         class MockProtocol:
             def __init__(self, recv_queue: RecvQueue, send_queue: SendQueue) -> None:
@@ -244,7 +243,6 @@ def mock_connection(
             main_room=main_room,
             command_character=command_character,
             administrators=administrators,
-            domain=domain,
             unittesting=True,
         )
 
