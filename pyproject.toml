@@ -22,7 +22,7 @@ description = ""
 authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "3.8.9"
+python = "3.8.*"
 aiohttp = "3.7.4.post0"
 alembic = "1.6.2"
 environs = "9.3.2"
