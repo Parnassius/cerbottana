@@ -19,7 +19,7 @@ speedups = ["aiodns", "brotlipy", "cchardet"]
 
 [[package]]
 name = "alembic"
-version = "1.6.2"
+version = "1.6.4"
 description = "A database migration tool for SQLAlchemy."
 category = "main"
 optional = false
@@ -649,7 +649,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.*"
-content-hash = "52d50bb16ffd04d77c76d5b13a706a891deae141cb2857288aeac5592ee3e796"
+content-hash = "622adbfe38a5864d288b0d93f5ce75fcb6c61a43f540e8bd230a142959549895"
 
 [metadata.files]
 aiohttp = [
@@ -692,7 +692,8 @@ aiohttp = [
     {file = "aiohttp-3.7.4.post0.tar.gz", hash = "sha256:493d3299ebe5f5a7c66b9819eacdcfbbaaf1a8e84911ddffcdc48888497afecf"},
 ]
 alembic = [
-    {file = "alembic-1.6.2.tar.gz", hash = "sha256:fb9a39a7c68e55490be962fb5f70463d384d340e6563d6e3911447778e3b4576"},
+    {file = "alembic-1.6.4-py2.py3-none-any.whl", hash = "sha256:dd0fd7109f82cd1d7ea64b26f287534a1ad1bc5deab79807926d5f3f5b3b517c"},
+    {file = "alembic-1.6.4.tar.gz", hash = "sha256:becb572c6701c90ca249f97fc1ae231468cc9516df367a350901eeb9310a8d43"},
 ]
 appdirs = [
     {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
