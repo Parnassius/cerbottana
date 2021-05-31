@@ -29,7 +29,7 @@ jobs:
               fs.writeFileSync("cerbottana/data/showdown/pokedex.json", JSON.stringify(Sim.Dex.data.Pokedex, null, 2) + "\n");
         ' | node -
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@01f7dd1d28f5131231ba3ede0f1c8cb413584a1d
+      uses: peter-evans/create-pull-request@9825ae65b1cb54b543b938503728b432a0176d29
       with:
         path: cerbottana
         token: ${{ secrets.MACHINE_USER_PAT }}
