@@ -133,20 +133,15 @@ async def queryresponse(conn: Connection, room: Room, *args: str) -> None:
 async def _parse_rooms(conn: Connection, room: Room, jsondata: JsonDict) -> None:
     """|queryresponse|rooms| sub-handler"""
     public_roomids: set[str] = set()
-    for roomgroup in jsondata.values():
-        # Skip node if it isn't a roomgroup
-        if not isinstance(roomgroup, list):
-            continue
+    # Save roomids for public rooms and subrooms
+    for room_ in jsondata["chat"]:
+        roomid = utils.to_room_id(room_["title"])
+        public_roomids.add(roomid)
 
-        # Save roomids for public rooms and subrooms
-        for room_ in roomgroup:
-            roomid = utils.to_room_id(room_["title"])
-            public_roomids.add(roomid)
-
-            if "subRooms" in room_:
-                for subroom in room_["subRooms"]:
-                    roomid = utils.to_room_id(subroom)
-                    public_roomids.add(roomid)
+        if "subRooms" in room_:
+            for subroom in room_["subRooms"]:
+                roomid = utils.to_room_id(subroom)
+                public_roomids.add(roomid)
 
     # For future reference, reassigning `conn.public_roomids` instead of adding elements
     # directly is better because it removes deleted rooms. As of now the difference is

@@ -20,7 +20,7 @@ def test_usernames(mock_connection):
 
     # Set public rooms, needed for .annika, .averardo, and .francyy
     data = {
-        "official": [{"title": "Public Room", "desc": "", "userCount": 2}],
+        "chat": [{"title": "Public Room", "desc": "", "userCount": 2}],
         "userCount": 2,
         "battleCount": 0,
     }
