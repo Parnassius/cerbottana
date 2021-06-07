@@ -13,7 +13,9 @@ import utils
         ("Nidoran-F", "nidoranf"),
         ("Ninetales-Alola", "ninetales-alola"),
         ("Mewtwo-Mega-Y", "mewtwo-megay"),
-        ("Kommo-O-Totem", "kommoo-totem"),  # Will be the correct syntax in the future.
+        ("Kommo-O-Totem", "kommoo-totem"),
+        ("Unown-B", "unown-b"),
+        ("Alcremie-Lemon-Cream", "alcremie-lemoncream"),
     ),
 )
 def test_generate_sprite_url(pokemon: str, dexname: str) -> None:
@@ -22,4 +24,4 @@ def test_generate_sprite_url(pokemon: str, dexname: str) -> None:
     assert dex_entry is not None
 
     expected_url = f"https://play.pokemonshowdown.com/sprites/ani/{dexname}.gif"
-    assert sprites.generate_sprite_url(dex_entry) == expected_url
+    assert sprites.generate_sprite_url(dex_entry, search_query=pokemon) == expected_url
