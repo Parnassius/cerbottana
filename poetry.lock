@@ -572,7 +572,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-pytz"
-version = "0.1.0"
+version = "0.1.1"
 description = "Typing stubs for pytz"
 category = "dev"
 optional = false
@@ -617,7 +617,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.*"
-content-hash = "596a2ba7df6ab07e22bbb1d756b51acb7efbb625c5447e1cf339ceacfd4ae009"
+content-hash = "94cfc5f152a840ff235c0d3791c438303fc4ede5b2a164f164b26f8ec90b2df2"
 
 [metadata.files]
 aiohttp = [
@@ -1128,7 +1128,7 @@ types-python-dateutil = [
     {file = "types_python_dateutil-0.1.2-py2.py3-none-any.whl", hash = "sha256:498492e71dfb983ecc47924fb4f0987d205901ebd1d59f9a1c6603f3f970a62b"},
 ]
 types-pytz = [
-    {file = "types_pytz-0.1.0-py2.py3-none-any.whl", hash = "sha256:82b3b8cfeb1496cb856cbb7fd514ad21f70e1b2dc765cba42f55bb2927375c8e"},
+    {file = "types_pytz-0.1.1-py2.py3-none-any.whl", hash = "sha256:1f444521f32c02ec18f17b3ae2b0dffcfb10c0e92f9d93ace14daf6b646edac4"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.0-py2-none-any.whl", hash = "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497"},
