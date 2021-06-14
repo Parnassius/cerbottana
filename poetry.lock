@@ -556,7 +556,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "types-freezegun"
-version = "0.1.2"
+version = "0.1.3"
 description = "Typing stubs for freezegun"
 category = "dev"
 optional = false
@@ -617,7 +617,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.*"
-content-hash = "b48d329a6d1063a397235ebe63fe661e0c6f9b40229346381bab8ce5e22c38f3"
+content-hash = "b276a8399434bbabded5cbf25bd26962dd1f0f8538551f4f2bb8467963e050d2"
 
 [metadata.files]
 aiohttp = [
@@ -1122,7 +1122,7 @@ toml = [
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
 ]
 types-freezegun = [
-    {file = "types_freezegun-0.1.2-py2.py3-none-any.whl", hash = "sha256:c551904d329a3c51862d71b969995d97b110d09315810c98728aa896470fbfcf"},
+    {file = "types_freezegun-0.1.3-py2.py3-none-any.whl", hash = "sha256:3269ecb23db1a59964d67db216036465ff8e2227ed48298935c8b375e313fbcb"},
 ]
 types-python-dateutil = [
     {file = "types_python_dateutil-0.1.3-py2.py3-none-any.whl", hash = "sha256:79461202522477cab4a9f4d47462452d14d058f675b51ce0138665aa9b40e554"},
