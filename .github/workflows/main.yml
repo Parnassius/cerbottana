@@ -31,9 +31,9 @@ jobs:
         path: veekun.sqlite
         key: veekun-${{ hashFiles('data/veekun/*.csv', 'databases/veekun.py', 'tasks/veekun.py') }}
     - name: Install Poetry
-      run: |
-        curl -fsS https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - -y
-        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      run: curl -fsS https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - -y
+    - name: Update PATH
+      run: echo "$HOME/.local/bin" >> $GITHUB_PATH
     - name: Install dependencies on a cache miss...
       if: steps.virtualenv-cache.outputs.cache-hit != 'true'
       run: make deps
