@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-import plugins.quotes as quotes
+from plugins import quotes
 
 
 @pytest.mark.parametrize(

@@ -110,12 +110,12 @@ async def learnset(msg: Message) -> None:
                     }
                 results[method]["moves"][move]["forms"].add(pokemon)
 
-        for method in results:
-            for move in results[method]["moves"]:
-                if results[method]["moves"][move]["forms"] == all_forms:
-                    results[method]["moves"][move]["forms"] = set()
+        for method_data in results.values():
+            for move_data in method_data["moves"].values():
+                if move_data["forms"] == all_forms:
+                    move_data["forms"] = set()
                 else:
-                    results[method]["form_column"] = True
+                    method_data["form_column"] = True
 
         html = utils.render_template("commands/learnsets.html", results=results)
 

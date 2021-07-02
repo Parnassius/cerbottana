@@ -6,8 +6,8 @@ from plugins import commands
 
 def test_parametrize_room() -> None:
     """Checks if msg.parametrized_room is only used in properly decorated commands."""
-    for command in commands:
-        func_source = inspect.getsource(commands[command].callback).lstrip()
+    for command in commands.values():
+        func_source = inspect.getsource(command.callback).lstrip()
         func_ast = ast.parse(func_source)
 
         decorator = next(
@@ -43,4 +43,4 @@ def test_parametrize_room() -> None:
             )
             assert (
                 not uses_parametrized_room
-            ), f"{command} shouldn't use msg.parametrized_room"
+            ), f"{command.name} shouldn't use msg.parametrized_room"

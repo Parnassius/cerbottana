@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-import plugins.tcg as tcg
+from plugins import tcg
 
 
 def is_errmsg(html: str) -> bool:
