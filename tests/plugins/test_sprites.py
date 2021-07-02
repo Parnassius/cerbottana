@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-import plugins.sprites as sprites
 import utils
+from plugins import sprites
 
 
 @pytest.mark.parametrize(

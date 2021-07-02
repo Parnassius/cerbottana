@@ -56,7 +56,8 @@ async def csv_to_sqlite(conn: Connection) -> None:
 
     print("Rebuilding veekun database...")
 
-    open("./veekun.sqlite", "w").close()  # truncate database
+    with open("./veekun.sqlite", "w"):  # truncate database
+        pass
 
     db = Database.open("veekun")
 
