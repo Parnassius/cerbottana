@@ -19,7 +19,7 @@ def test_parametrize_room() -> None:
             None,
         )
         if not decorator:
-            return
+            continue
 
         has_parametrize_room = next(
             (
