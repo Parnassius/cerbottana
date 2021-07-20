@@ -37,6 +37,14 @@ async def challstr(conn: Connection, room: Room, *args: str) -> None:
     # Startup commands
     await conn.send("|/cmd rooms")
 
+    if conn.statustext:
+        await conn.send(f"|/status {conn.statustext}")
+
+    for roomid in list(conn.rooms.keys()):
+        if Room.get(conn, roomid).autojoin:
+            await asyncio.sleep(0.15)
+            await conn.send(f"|/join {roomid}")
+
 
 @handler_wrapper(["updateuser"])
 async def updateuser(conn: Connection, room: Room, *args: str) -> None:
@@ -46,7 +54,7 @@ async def updateuser(conn: Connection, room: Room, *args: str) -> None:
     user = args[0]
     # named = args[1]
     avatar = args[2]
-    # settings = args[3]
+    settings: dict[str, bool | None] = json.loads(args[3])
 
     username = user.split("@")[0]
     if utils.to_user_id(username) != utils.to_user_id(conn.username):
@@ -55,10 +63,5 @@ async def updateuser(conn: Connection, room: Room, *args: str) -> None:
     if conn.avatar and avatar != conn.avatar:
         await conn.send(f"|/avatar {conn.avatar}")
 
-    if conn.statustext:
-        await conn.send(f"|/status {conn.statustext}")
-
-    for roomid in list(conn.rooms.keys()):
-        if Room.get(conn, roomid).autojoin:
-            await asyncio.sleep(0.15)
-            await conn.send(f"|/join {roomid}")
+    if not settings.get("blockChallenges"):
+        await conn.send("|/blockchallenges")
