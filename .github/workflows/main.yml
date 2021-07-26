@@ -56,4 +56,4 @@ jobs:
     - name: Test with pytest
       run: make pytest
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@29386c70ef20e286228c72b668a06fd0e8399192
+      uses: codecov/codecov-action@51d810878be5422784e86451c0e7c14e5860ec47
