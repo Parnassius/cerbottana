@@ -207,11 +207,11 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "imageprobe"
-version = "0.1.2"
+version = "0.2.0"
 description = "Asynchronous image probing library. Fetch only as much as you need!"
 category = "main"
 optional = false
-python-versions = ">=3.6.2,<3.9"
+python-versions = ">=3.6.2,<3.10"
 
 [package.dependencies]
 aiohttp = ">=3.7.3,<4.0.0"
@@ -626,7 +626,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.*"
-content-hash = "ad3976d5abc7482747baf91ff618ce34e77e13d1e9f6068173b36e2b617fa80c"
+content-hash = "13cbec368d589e06854616764126c86ff375adb8b0fcb50dd5c4a0e8f772c7d5"
 
 [metadata.files]
 aiohttp = [
@@ -833,8 +833,8 @@ idna = [
     {file = "idna-3.2.tar.gz", hash = "sha256:467fbad99067910785144ce333826c71fb0e63a425657295239737f7ecd125f3"},
 ]
 imageprobe = [
-    {file = "imageprobe-0.1.2-py3-none-any.whl", hash = "sha256:e81605e08d14a502b483111808ce1b3eae8b00726f45d2a478d5867193642dab"},
-    {file = "imageprobe-0.1.2.tar.gz", hash = "sha256:b9bb35fb15f49256c962e5cdba440112b79fe5487c9f0bc5e04580cc8ae6a5c2"},
+    {file = "imageprobe-0.2.0-py3-none-any.whl", hash = "sha256:b773e1b0f5c4aef8292865ac31777fc736f9619d0c47bfe961d19f00b1ff3161"},
+    {file = "imageprobe-0.2.0.tar.gz", hash = "sha256:10cce7dd32eb0debc0a93df172ca2e578e098c3f6bab8ddf4c1ba3afff577d7c"},
 ]
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
