@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import signal
-import threading
 from types import FrameType
 
 from environs import Env
@@ -44,7 +43,7 @@ def main() -> None:
 
     signal.signal(signal.SIGINT, shutdown)
 
-    threading.Thread(target=conn.open_connection).start()
+    conn.open_connection()
 
 
 if __name__ == "__main__":

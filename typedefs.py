@@ -1,4 +1,4 @@
-from typing import Any, Dict, Literal, NewType, TypedDict
+from typing import Any, Literal, NewType, TypedDict
 
 RoomId = NewType("RoomId", str)
 UserId = NewType("UserId", str)
@@ -16,7 +16,7 @@ Role = Literal[
     "regularuser",
 ]
 
-JsonDict = Dict[str, Any]  # type: ignore[misc]
+JsonDict = dict[str, Any]  # type: ignore[misc]
 
 
 class TiersDict(TypedDict):
