@@ -8,7 +8,7 @@ from collections.abc import AsyncIterator, Callable, Generator
 from queue import Empty as EmptyQueue
 from queue import Queue
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Tuple
+from typing import Any
 
 import freezegun
 import pytest
@@ -22,19 +22,12 @@ from connection import Connection
 from database import Database
 from tasks.veekun import csv_to_sqlite
 
-if TYPE_CHECKING:
-    BaseRecvQueue = Queue[Tuple[int, str]]
-    BaseSendQueue = Queue[str]
-else:
-    BaseRecvQueue = Queue
-    BaseSendQueue = Queue
-
 database_metadata: dict[str, Any] = {
     "database": d.Base.metadata,
 }
 
 
-class RecvQueue(BaseRecvQueue):
+class RecvQueue(Queue[tuple[int, str]]):
     def add_user_join(
         self,
         room: str,
@@ -126,7 +119,7 @@ class RecvQueue(BaseRecvQueue):
         self.put((2, ""))  # close fake websocket connection
 
 
-class SendQueue(BaseSendQueue):
+class SendQueue(Queue[str]):
     # pylint: disable=too-few-public-methods
     def get_all(self) -> Counter[str]:
         messages: Counter[str] = Counter()
