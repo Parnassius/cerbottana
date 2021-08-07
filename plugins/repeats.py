@@ -112,11 +112,7 @@ class Repeat:
 
         while not self.expired:
             start = datetime.utcnow()
-            if (
-                # Conditions that cause a repeat to skip a call but not to stop forever
-                not self.room.modchat  # Don't send if modchat is active
-                and self.message not in self.room.buffer  # Throttling
-            ):
+            if self.message not in self.room.buffer:  # Throttling
                 await self.room.send(self.message, False)
             else:
                 print(f"Not sending {self.message}")

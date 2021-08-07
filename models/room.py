@@ -27,7 +27,6 @@ class Room:
         buffer (deque[str]): Fixed list of the last room messages.
         language (str): Room language.
         language_id (int): Veekun id for language.
-        modchat (bool): True if modchat level is at least "+".
         roombot (bool): True if cerbottana is roombot in this room.
         title (str): Formatted variant of roomid.
         users (dict[User, str]): User instance, rank string.
@@ -50,7 +49,6 @@ class Room:
         # Attributes initialized through handlers
         self.dynamic_buffer: deque[str] = deque(maxlen=20)
         self.language = "English"
-        self.modchat = False
         self.roombot = False
         self.title = ""
 
