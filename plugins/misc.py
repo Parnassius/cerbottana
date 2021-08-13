@@ -49,11 +49,11 @@ async def tell(msg: Message) -> None:
 @command_wrapper(helpstr="<i>[blitz]</i> Avvia una partita di UNO.", allow_pm=False)
 async def uno(msg: Message) -> None:
     blitz_keywords = ("blitz", "fast", "veloce")
-    timer = 5 if msg.arg.lower() in blitz_keywords else 30
+    timer = 5 if msg.arg.lower() in blitz_keywords else 45
 
     ps_commands = (
         "/uno create 100",
-        "/uno autostart 45",
+        "/uno autostart 30",
         f"/uno timer {timer}",
     )
 
