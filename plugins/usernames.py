@@ -162,6 +162,11 @@ async def francyy(msg: Message) -> None:
     await msg.reply(f"Ho rotto {random.choice(things)}")
 
 
+@command_wrapper(aliases=("gioco", "gioko"))
+async def giokio(msg: Message) -> None:
+    await msg.reply("!tier VGC 2021 Series 10", escape=False)
+
+
 @command_wrapper()
 async def haund(msg: Message) -> None:
     await msg.reply("( ͡° ͜ʖ ͡°)")
