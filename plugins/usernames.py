@@ -233,6 +233,14 @@ async def melodyl(msg: Message) -> None:
 
 
 @command_wrapper()
+async def mihowk(msg: Message) -> None:
+    if random.randint(1, 100) <= 5:
+        await msg.reply(":happy:")
+    else:
+        await msg.reply("l2p mammalu")
+
+
+@command_wrapper()
 async def milak(msg: Message) -> None:
     await msg.reply("I just salmonella gurl")
 
