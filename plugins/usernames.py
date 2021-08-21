@@ -104,6 +104,12 @@ async def bizzo(msg: Message) -> None:
     await msg.reply(text)
 
 
+@command_wrapper(aliases=("caio",))
+async def caionamax(msg: Message) -> None:
+    text = random.choice(["cringe", "re della comicità"])
+    await msg.reply(text)
+
+
 @command_wrapper()
 async def ciarizardmille(msg: Message) -> None:
     user = random.choice(
