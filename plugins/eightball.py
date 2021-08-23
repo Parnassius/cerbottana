@@ -134,5 +134,5 @@ def eightball_htmlpage(user: User, room: Room) -> Select:
     return stmt
 
 
-with open("./data/eightball.json") as f:
+with open("./data/eightball.json", encoding="utf-8") as f:
     DEFAULT_ANSWERS: dict[str, list[str]] = json.load(f)

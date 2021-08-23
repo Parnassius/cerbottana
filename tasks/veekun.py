@@ -56,7 +56,7 @@ async def csv_to_sqlite(conn: Connection) -> None:
 
     print("Rebuilding veekun database...")
 
-    with open("./veekun.sqlite", "w"):  # truncate database
+    with open("./veekun.sqlite", "wb"):  # truncate database
         pass
 
     db = Database.open("veekun")
@@ -78,7 +78,7 @@ async def csv_to_sqlite(conn: Connection) -> None:
         for table in v.Base.metadata.sorted_tables:
             tname = table.key
             if isfile("./data/veekun/" + tname + ".csv"):
-                with open("./data/veekun/" + tname + ".csv") as f:
+                with open("./data/veekun/" + tname + ".csv", encoding="utf-8") as f:
                     csv_data = csv.DictReader(f)
                     csv_keys = csv_data.fieldnames
 

@@ -225,9 +225,9 @@ def _escape(text: str) -> str:
     return text
 
 
-with open("./data/avatars.json") as f:
+with open("./data/avatars.json", encoding="utf-8") as f:
     AVATAR_IDS: dict[str, str] = json.load(f)
-with open("./data/showdown/aliases.json") as f:
+with open("./data/showdown/aliases.json", encoding="utf-8") as f:
     ALIASES: dict[str, str] = json.load(f)
-with open("./data/showdown/pokedex.json") as f:
+with open("./data/showdown/pokedex.json", encoding="utf-8") as f:
     POKEDEX: dict[str, JsonDict] = json.load(f)

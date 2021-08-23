@@ -24,7 +24,7 @@ def is_errmsg(html: str) -> bool:
 def test_thumbnail_layout(layout: str) -> None:
     """Tests whether a card layout is rendered correctly."""
     print(f"Testing against: {layout}")
-    with open(layout) as testdata:
+    with open(layout, encoding="utf-8") as testdata:
         card_json = json.load(testdata)
     assert not is_errmsg(tcg.to_card_thumbnail(card_json))
 
