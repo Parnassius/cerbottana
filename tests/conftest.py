@@ -265,7 +265,7 @@ def mock_database(mocker) -> None:
         self.Session = scoped_session(self.session_factory)
         database_instances[dbname] = self
 
-    @classmethod  # type: ignore
+    @classmethod  # type: ignore[misc]
     def mock_database_open(cls, dbname: str = "database") -> Database:
         if dbname not in database_instances:
             cls(dbname)  # pylint: disable=too-many-function-args

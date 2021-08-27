@@ -22,7 +22,6 @@ if TYPE_CHECKING:
 
     CommandFunc = Callable[[Message], Awaitable[None]]
     HTMLPageFunc = Callable[[User, Room], Optional[Select]]
-    RouteFunc = Callable[..., str]  # type: ignore[misc]
 
 
 # --- Command logic and complementary decorators ---

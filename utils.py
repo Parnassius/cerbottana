@@ -8,7 +8,7 @@ import unicodedata
 from html import escape
 from typing import Any
 
-import htmlmin  # type: ignore
+import htmlmin  # type: ignore[import]
 from imageprobe import probe
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
