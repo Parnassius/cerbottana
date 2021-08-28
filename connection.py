@@ -60,7 +60,7 @@ class Connection:
         self.loop: asyncio.AbstractEventLoop | None = None
         self.websocket: websockets.client.WebSocketClientProtocol | None = None
         self.connection_start: float | None = None
-        self.tiers: list[TiersDict] = []
+        self.tiers: dict[str, TiersDict] = {}
 
     def open_connection(self) -> None:
         try:

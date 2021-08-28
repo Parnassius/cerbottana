@@ -18,7 +18,7 @@ async def formats(conn: Connection, room: Room, *args: str) -> None:
 
     formatslist = args
 
-    tiers: list[TiersDict] = []
+    tiers: dict[str, TiersDict] = {}
     section: str | None = None
     section_next = False
     for tier in formatslist:
@@ -31,12 +31,11 @@ async def formats(conn: Connection, room: Room, *args: str) -> None:
             continue
         parts = tier.split(",")
         if section is not None:
-            tiers.append(
-                {
-                    "id": utils.to_id(parts[0]),
-                    "name": parts[0],
-                    "section": section,
-                    "random": bool(int(parts[1], 16) & 1),
-                }
-            )
+            tier_id = utils.to_id(parts[0])
+            tiers[tier_id] = {
+                "id": tier_id,
+                "name": parts[0],
+                "section": section,
+                "random": bool(int(parts[1], 16) & 1),
+            }
     conn.tiers = tiers
