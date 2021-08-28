@@ -35,7 +35,7 @@ async def parse_chat_message(
         elif room is None:
             await user.send("Invalid command")
 
-    elif room is None and message.split(" ")[0] not in ("/raw", "/text"):
+    elif room is None and (not message.startswith("/") or message.startswith("//")):
         c = f"``{conn.command_character}help``"
         message = f"I'm a bot: type {c} to get a list of available commands. "
         message += (
