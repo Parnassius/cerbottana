@@ -11,6 +11,7 @@ from websockets.exceptions import WebSocketException
 
 import utils
 from handlers import handlers
+from models.protocol_message import ProtocolMessage
 from models.room import Room
 from models.user import User
 from plugins import commands
@@ -119,29 +120,27 @@ class Connection:
         roomid = utils.to_room_id(roomname)
         room = Room.get(self, roomid)
 
-        for msg in message.split("\n"):
+        for raw_msg in message.split("\n"):
 
-            if language := re.match(r"This room's primary language is (.*)", msg):
+            if language := re.match(r"This room's primary language is (.*)", raw_msg):
                 room.language = language.group(1)
                 continue
 
-            if not msg or msg[0] != "|":
+            if not raw_msg or raw_msg[0] != "|":
                 continue
 
-            parts = msg.split("|")
+            msg = ProtocolMessage(room, raw_msg[1:])
 
-            command = parts[1]
-
-            if command == "init":
+            if msg.type == "init":
                 init = True
 
-            if init and command in ["tournament"]:
+            if init and msg.type in ["tournament"]:
                 return
 
-            if command in self.handlers:
+            if msg.type in self.handlers:
                 tasks: list[asyncio.Task[None]] = []
-                for func in self.handlers[command]:
-                    tasks.append(asyncio.create_task(func(self, room, *parts[2:])))
+                for handler in self.handlers[msg.type]:
+                    tasks.append(asyncio.create_task(handler.callback(msg)))
                 for task in tasks:
                     await task
 

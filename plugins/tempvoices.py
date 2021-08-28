@@ -17,6 +17,7 @@ from tasks import recurring_task_wrapper
 if TYPE_CHECKING:
     from connection import Connection
     from models.message import Message
+    from models.protocol_message import ProtocolMessage
 
 
 @command_wrapper(
@@ -64,13 +65,13 @@ async def demote_old_temporary_voices(conn: Connection) -> None:
 
 
 @handler_wrapper(["join", "j", "J", "leave", "l", "L", "name", "n", "N"])
-async def join_leave_name(conn: Connection, room: Room, *args: str) -> None:
+async def join_leave_name(msg: ProtocolMessage) -> None:
     db = Database.open()
     with db.get_session() as session:
-        for user in args:
+        for user in msg.params:
             stmt = (
                 update(d.TemporaryVoices)
-                .filter_by(roomid=room.roomid, userid=utils.to_user_id(user))
+                .filter_by(roomid=msg.room.roomid, userid=utils.to_user_id(user))
                 .values(date=str(datetime.utcnow()))
             )
             session.execute(stmt)

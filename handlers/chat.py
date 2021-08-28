@@ -10,6 +10,7 @@ from models.user import User
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.protocol_message import ProtocolMessage
 
 
 async def parse_chat_message(
@@ -44,66 +45,54 @@ async def parse_chat_message(
         await user.send(message)
 
 
-@handler_wrapper(["chat", "c"])
-async def chat(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 2:
+@handler_wrapper(["chat", "c"], required_parameters=2)
+async def chat(msg: ProtocolMessage) -> None:
+    user = User.get(msg.conn, msg.params[0])
+    message = "|".join(msg.params[1:]).strip()
+
+    msg.room.dynamic_buffer.append(message)
+
+    if user.userid == utils.to_user_id(msg.conn.username):
         return
 
-    user = User.get(conn, args[0])
-    message = "|".join(args[1:]).strip()
+    await parse_chat_message(msg.conn, msg.room, user, message)
 
-    room.dynamic_buffer.append(message)
 
-    if user.userid == utils.to_user_id(conn.username):
+@handler_wrapper(["c:"], required_parameters=3)
+async def timestampchat(msg: ProtocolMessage) -> None:
+    timestamp = msg.params[0]
+    user = User.get(msg.conn, msg.params[1])
+    message = "|".join(msg.params[2:]).strip()
+
+    msg.room.dynamic_buffer.append(message)
+
+    if user.userid == utils.to_user_id(msg.conn.username):
+        return
+    if int(timestamp) <= msg.conn.timestamp:
         return
 
-    await parse_chat_message(conn, room, user, message)
+    await parse_chat_message(msg.conn, msg.room, user, message)
 
 
-@handler_wrapper(["c:"])
-async def timestampchat(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 3:
+@handler_wrapper(["pm"], required_parameters=3)
+async def pm(msg: ProtocolMessage) -> None:
+    if len(msg.params) >= 4 and msg.params[3] == "requestpage":
         return
 
-    timestamp = args[0]
-    user = User.get(conn, args[1])
-    message = "|".join(args[2:]).strip()
+    sender = User.get(msg.conn, msg.params[0])
+    receiver = User.get(msg.conn, msg.params[1])
+    message = "|".join(msg.params[2:]).strip()
 
-    room.dynamic_buffer.append(message)
-
-    if user.userid == utils.to_user_id(conn.username):
+    if sender.userid == utils.to_user_id(msg.conn.username):
         return
-    if int(timestamp) <= conn.timestamp:
+    if receiver.userid != utils.to_user_id(msg.conn.username):
         return
 
-    await parse_chat_message(conn, room, user, message)
+    await parse_chat_message(msg.conn, None, sender, message)
 
 
-@handler_wrapper(["pm"])
-async def pm(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 3:
-        return
+@handler_wrapper([":"], required_parameters=1)
+async def server_timestamp(msg: ProtocolMessage) -> None:
+    timestamp = int(msg.params[0])
 
-    if len(args) >= 4 and args[3] == "requestpage":
-        return
-
-    sender = User.get(conn, args[0])
-    receiver = User.get(conn, args[1])
-    message = "|".join(args[2:]).strip()
-
-    if sender.userid == utils.to_user_id(conn.username):
-        return
-    if receiver.userid != utils.to_user_id(conn.username):
-        return
-
-    await parse_chat_message(conn, None, sender, message)
-
-
-@handler_wrapper([":"])
-async def server_timestamp(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 1:
-        return
-
-    timestamp = int(args[0])
-
-    conn.timestamp = timestamp
+    msg.conn.timestamp = timestamp

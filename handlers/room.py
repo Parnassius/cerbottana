@@ -16,6 +16,7 @@ from typedefs import JsonDict
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.protocol_message import ProtocolMessage
 
 
 async def add_user(
@@ -48,77 +49,56 @@ async def remove_user(conn: Connection, room: Room, userstring: str) -> None:
     room.remove_user(user)
 
 
-@handler_wrapper(["init"])
-async def init(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 1:
-        return
-
-    if args[0] == "chat":
-        await conn.send(f"|/cmd roominfo {room.roomid}")
-        await room.send("/roomlanguage", False)
+@handler_wrapper(["init"], required_parameters=1)
+async def init(msg: ProtocolMessage) -> None:
+    if msg.params[0] == "chat":
+        await msg.conn.send(f"|/cmd roominfo {msg.room.roomid}")
+        await msg.room.send("/roomlanguage", False)
 
 
-@handler_wrapper(["title"])
-async def title(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 1:
-        return
-
-    room.title = args[0]
+@handler_wrapper(["title"], required_parameters=1)
+async def title(msg: ProtocolMessage) -> None:
+    msg.room.title = msg.params[0]
 
 
-@handler_wrapper(["users"])
-async def users(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 1:
-        return
-
-    userlist = args[0]
+@handler_wrapper(["users"], required_parameters=1)
+async def users(msg: ProtocolMessage) -> None:
+    userlist = msg.params[0]
 
     for user in userlist.split(",")[1:]:
-        await add_user(conn, room, user, True)
+        await add_user(msg.conn, msg.room, user, True)
 
 
-@handler_wrapper(["join", "j", "J"])
-async def join(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 1:
-        return
+@handler_wrapper(["join", "j", "J"], required_parameters=1)
+async def join(msg: ProtocolMessage) -> None:
+    user = msg.params[0]
 
-    user = args[0]
-
-    await add_user(conn, room, user)
+    await add_user(msg.conn, msg.room, user)
 
 
-@handler_wrapper(["leave", "l", "L"])
-async def leave(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 1:
-        return
+@handler_wrapper(["leave", "l", "L"], required_parameters=1)
+async def leave(msg: ProtocolMessage) -> None:
+    user = msg.params[0]
 
-    user = args[0]
-
-    await remove_user(conn, room, user)
+    await remove_user(msg.conn, msg.room, user)
 
 
-@handler_wrapper(["name", "n", "N"])
-async def name(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 2:
-        return
-
-    userstring = args[0]
-    oldid = args[1]
+@handler_wrapper(["name", "n", "N"], required_parameters=2)
+async def name(msg: ProtocolMessage) -> None:
+    userstring = msg.params[0]
+    oldid = msg.params[1]
 
     # If the nick change changes userid, treat the new user as unrelated
     if utils.to_user_id(userstring) != utils.to_user_id(oldid):
-        await remove_user(conn, room, oldid)
+        await remove_user(msg.conn, msg.room, oldid)
 
-    await add_user(conn, room, userstring)
+    await add_user(msg.conn, msg.room, userstring)
 
 
-@handler_wrapper(["queryresponse"])
-async def queryresponse(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 2:
-        return
-
-    querytype = args[0]
-    querydata = args[1]
+@handler_wrapper(["queryresponse"], required_parameters=2)
+async def queryresponse(msg: ProtocolMessage) -> None:
+    querytype = msg.params[0]
+    querydata = msg.params[1]
 
     parsers = {
         "rooms": _parse_rooms,
@@ -127,31 +107,31 @@ async def queryresponse(conn: Connection, room: Room, *args: str) -> None:
 
     if querytype in parsers:
         jsondata = json.loads(querydata)
-        await parsers[querytype](conn, room, jsondata)
+        await parsers[querytype](msg, jsondata)
 
 
-async def _parse_rooms(conn: Connection, room: Room, jsondata: JsonDict) -> None:
+async def _parse_rooms(msg: ProtocolMessage, jsondata: JsonDict) -> None:
     """|queryresponse|rooms| sub-handler"""
     public_roomids: set[str] = set()
     # Save roomids for public rooms and subrooms
-    for room_ in jsondata["chat"]:
-        roomid = utils.to_room_id(room_["title"])
+    for room in jsondata["chat"]:
+        roomid = utils.to_room_id(room["title"])
         public_roomids.add(roomid)
 
-        if "subRooms" in room_:
-            for subroom in room_["subRooms"]:
+        if "subRooms" in room:
+            for subroom in room["subRooms"]:
                 roomid = utils.to_room_id(subroom)
                 public_roomids.add(roomid)
 
     # For future reference, reassigning `conn.public_roomids` instead of adding elements
     # directly is better because it removes deleted rooms. As of now the difference is
     # irrelevant because `|/rooms` is called only once.
-    conn.public_roomids = public_roomids
+    msg.conn.public_roomids = public_roomids
 
 
-async def _parse_userdetails(conn: Connection, room: Room, jsondata: JsonDict) -> None:
+async def _parse_userdetails(msg: ProtocolMessage, jsondata: JsonDict) -> None:
     """|queryresponse|userdetails| sub-handler"""
-    user = User.get(conn, jsondata["name"])
+    user = User.get(msg.conn, jsondata["name"])
     avatar = str(jsondata["avatar"])
     if avatar in utils.AVATAR_IDS:
         avatar = utils.AVATAR_IDS[avatar]
@@ -165,7 +145,7 @@ async def _parse_userdetails(conn: Connection, room: Room, jsondata: JsonDict) -
     if jsondata["rooms"] is not False:
         user.global_rank = jsondata["group"]
         for r in jsondata["rooms"]:
-            room = Room.get(conn, utils.to_room_id(r))
+            room = Room.get(msg.conn, utils.to_room_id(r))
             room_rank = (
                 r[0] if r[0] not in string.ascii_letters + string.digits else " "
             )

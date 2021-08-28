@@ -7,16 +7,14 @@ from handlers import handler_wrapper
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.protocol_message import ProtocolMessage
     from models.room import Room
     from typedefs import TiersDict
 
 
-@handler_wrapper(["formats"])
-async def formats(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 1:
-        return
-
-    formatslist = args
+@handler_wrapper(["formats"], required_parameters=1)
+async def formats(msg: ProtocolMessage) -> None:
+    formatslist = msg.params
 
     tiers: dict[str, TiersDict] = {}
     section: str | None = None
@@ -38,4 +36,4 @@ async def formats(conn: Connection, room: Room, *args: str) -> None:
                 "section": section,
                 "random": bool(int(parts[1], 16) & 1),
             }
-    conn.tiers = tiers
+    msg.conn.tiers = tiers

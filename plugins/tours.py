@@ -9,6 +9,7 @@ from plugins import command_wrapper
 if TYPE_CHECKING:
     from connection import Connection
     from models.message import Message
+    from models.protocol_message import ProtocolMessage
     from models.room import Room
 
 
@@ -176,16 +177,16 @@ async def waffletour(msg: Message) -> None:
 # --- Tour generation enhancements ---
 
 
-@handler_wrapper(["tournament"])  # hooked on |tournament|create|
-async def tournament_create(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 2 or args[0] != "create":
+@handler_wrapper(["tournament"], required_parameters=2)  # hooked on |tournament|create|
+async def tournament_create(msg: ProtocolMessage) -> None:
+    if msg.params[0] != "create":
         return
 
-    tierid = args[1]
+    tierid = msg.params[1]
     if tierid.endswith("blitz"):
         tierid = tierid[:-5]
 
-    tiersdict = conn.tiers.get(tierid)
+    tiersdict = msg.conn.tiers.get(tierid)
     if tiersdict is None:
         print(f"Unrecognized tier: '{tierid}'")
         return
@@ -194,4 +195,4 @@ async def tournament_create(conn: Connection, room: Room, *args: str) -> None:
     if tiersdict["random"] or tierid.endswith("customgame"):
         return
 
-    await room.send(f'!tier {tiersdict["name"]}', False)
+    await msg.room.send(f'!tier {tiersdict["name"]}', False)

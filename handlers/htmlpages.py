@@ -8,21 +8,19 @@ from models.user import User
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.protocol_message import ProtocolMessage
 
 
-@handler_wrapper(["pm"])
-async def requestpage(conn: Connection, room: Room, *args: str) -> None:
-    if len(args) < 6:
+@handler_wrapper(["pm"], required_parameters=6)
+async def requestpage(msg: ProtocolMessage) -> None:
+    if msg.params[2] != "" or msg.params[3] != "requestpage":
         return
 
-    if args[2] != "" or args[3] != "requestpage":
-        return
-
-    user = User.get(conn, args[4])
-    pageid = args[5].split("0")  # pageids can only contain letters and numbers
+    user = User.get(msg.conn, msg.params[4])
+    pageid = msg.params[5].split("0")  # pageids can only contain letters and numbers
 
     if len(pageid) != 2:
         return
 
-    page_room = Room.get(conn, pageid[1])
+    page_room = Room.get(msg.conn, pageid[1])
     await user.send_htmlpage(pageid[0], page_room)
