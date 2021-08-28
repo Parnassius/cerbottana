@@ -126,12 +126,10 @@ def _linkify_uri(uri: str) -> str:
         fulluri = f"mailto:{uri}"
     else:
         fulluri = re.sub(r"^([a-z]*[^a-z:])", r"http://\1", uri)
-        if uri.startswith("https://docs.google.com/") or uri.startswith(
-            "docs.google.com/"
-        ):
+        if uri.startswith(("https://docs.google.com/", "docs.google.com/")):
             if uri.startswith("https"):
                 uri = uri[8:]
-            if uri.endswith("?usp=sharing") or uri.endswith("&usp=sharing"):
+            if uri.endswith(("?usp=sharing", "&usp=sharing")):
                 uri = uri[:-12]
             if uri.endswith("#gid=0"):
                 uri = uri[:-6]
