@@ -115,7 +115,7 @@ disable = [
     "missing-function-docstring",
     "missing-module-docstring",
     "unused-argument",
-    
+
     "unsubscriptable-object",  # too many false positives in type annotations
 
     # temporarily disabled, should be re-enabled sooner or later
