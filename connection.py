@@ -80,8 +80,7 @@ class Connection:
                 if self.unittesting and skip_unittesting:
                     continue
                 itasks.append(asyncio.create_task(func(self)))
-            for itask in itasks:
-                await itask
+            await asyncio.gather(*itasks)
 
         if not self.unittesting:
             for rtask in self.recurring_tasks:
@@ -96,7 +95,7 @@ class Connection:
                 async for message in websocket:
                     if isinstance(message, str):
                         print(f"<< {message}")
-                        asyncio.create_task(self._parse_message(message))
+                        await self._parse_message(message)
         except (
             WebSocketException,
             OSError,  # https://github.com/aaugustin/websockets/issues/593
@@ -137,12 +136,7 @@ class Connection:
             if init and msg.type in ["tournament"]:
                 return
 
-            if msg.type in self.handlers:
-                tasks: list[asyncio.Task[None]] = []
-                for handler in self.handlers[msg.type]:
-                    tasks.append(asyncio.create_task(handler.callback(msg)))
-                for task in tasks:
-                    await task
+            room.add_message_to_queue(msg)
 
     async def send(self, message: str) -> None:
         """Sends a raw unescaped message to the websocket.

@@ -170,14 +170,8 @@ def mock_connection(
                 if msg_type == 0:
                     pass
                 elif msg_type == 1:
-                    # await conn._parse_message() tasks
-                    await asyncio.gather(
-                        *(
-                            task
-                            for task in asyncio.all_tasks()
-                            if task.get_coro().__name__ == "_parse_message"
-                        )
-                    )
+                    for room in conn.rooms.values():
+                        await room.process_all_messages()
                 elif msg_type == 2:
                     # cancel all running tasks
                     for task in asyncio.all_tasks():

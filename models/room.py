@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from collections import deque
 from textwrap import shorten
 from typing import TYPE_CHECKING
@@ -9,6 +10,7 @@ from typedefs import RoomId
 
 if TYPE_CHECKING:
     from connection import Connection
+    from models.protocol_message import ProtocolMessage
 
     from .user import User
 
@@ -54,6 +56,7 @@ class Room:
 
         # Attributes updated within this instance
         self._users: dict[User, str] = {}  # user, rank
+        self._message_queue: asyncio.Queue[ProtocolMessage]
 
         # Register new initialized room
         if self.roomid in self.conn.rooms:
@@ -111,6 +114,29 @@ class Room:
 
     def __contains__(self, user: User) -> bool:
         return user in self.users
+
+    def add_message_to_queue(self, msg: ProtocolMessage) -> None:
+        if not hasattr(self, "_message_queue"):
+            self._message_queue = asyncio.Queue()
+            asyncio.create_task(self._process_message_queue())
+        self._message_queue.put_nowait(msg)
+
+    async def process_all_messages(self) -> None:
+        if hasattr(self, "_message_queue"):
+            await self._message_queue.join()
+
+    async def _process_message_queue(self) -> None:
+        tasks: list[asyncio.Task[None]]
+        try:
+            while msg := self._message_queue.get_nowait():
+                if msg.type in self.conn.handlers:
+                    tasks = []
+                    for handler in self.conn.handlers[msg.type]:
+                        tasks.append(asyncio.create_task(handler.callback(msg)))
+                    await asyncio.gather(*tasks)
+                self._message_queue.task_done()
+        except asyncio.QueueEmpty:
+            del self._message_queue
 
     async def send(self, message: str, escape: bool = True) -> None:
         """Sends a message to the room.
