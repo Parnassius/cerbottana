@@ -1,6 +1,7 @@
 from collections import Counter
 
 import pytest
+from freezegun import freeze_time
 
 from models.room import Room
 from models.user import User
@@ -60,9 +61,9 @@ async def test_room(mock_connection) -> None:
 
     assert send_queue.get_all() == Counter(
         [
-            "|/cmd userdetails User 1",
-            "|/cmd userdetails User 2",
-            "|/cmd userdetails User 3",
+            "|/cmd userdetails user1",
+            "|/cmd userdetails user2",
+            "|/cmd userdetails user3",
         ]
     )
 
@@ -90,11 +91,14 @@ async def test_room(mock_connection) -> None:
 
     assert send_queue.get_all() == Counter(
         [
-            "|/cmd userdetails User 4",
-            "|/cmd userdetails User 5",
-            "|/cmd userdetails User 6",
+            "|/cmd userdetails user4",
+            "|/cmd userdetails user5",
+            "|/cmd userdetails user6",
         ]
     )
+
+    # Advance time to avoid throttling `/cmd userdetails`
+    freeze_time().start().tick(15)
 
     # Users change names without changing userid
     await recv_queue.add_messages(
@@ -117,9 +121,9 @@ async def test_room(mock_connection) -> None:
 
     assert send_queue.get_all() == Counter(
         [
-            "|/cmd userdetails USER 4",
-            "|/cmd userdetails USER 5",
-            "|/cmd userdetails USER 6",
+            "|/cmd userdetails user4",
+            "|/cmd userdetails user5",
+            "|/cmd userdetails user6",
         ]
     )
 

@@ -41,7 +41,7 @@ async def add_user(
         session.add(d.Users(userid=user.userid, username=user.username))
 
     if not from_userlist or rank != " ":
-        await conn.send(f"|/cmd userdetails {user.username}")
+        await user.load_details()
 
 
 async def remove_user(conn: Connection, room: Room, userstring: str) -> None:
