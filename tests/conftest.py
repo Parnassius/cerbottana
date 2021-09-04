@@ -2,11 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import json
-import threading
 from collections import Counter
-from collections.abc import AsyncIterator, Callable, Generator
-from queue import Empty as EmptyQueue
-from queue import Queue
+from collections.abc import AsyncIterator, Awaitable, Callable, Generator
 from types import TracebackType
 from typing import Any
 
@@ -30,8 +27,8 @@ database_metadata: dict[str, Any] = {
 }
 
 
-class RecvQueue(Queue[tuple[int, str]]):
-    def add_user_join(
+class RecvQueue(asyncio.Queue[tuple[int, str]]):  # pylint: disable=inherit-non-class
+    async def add_user_join(
         self,
         room: str,
         user: str,
@@ -42,15 +39,17 @@ class RecvQueue(Queue[tuple[int, str]]):
         roomid = utils.to_room_id(room)
         userid = utils.to_user_id(user)
 
-        self.add_messages(
+        await self.add_messages(
             [
                 f">{roomid}",
                 f"|j|{rank}{userid}",
             ]
         )
-        self.add_queryresponse_userdetails(user, group=group, rooms={roomid: rank})
+        await self.add_queryresponse_userdetails(
+            user, group=group, rooms={roomid: rank}
+        )
 
-    def add_user_namechange(
+    async def add_user_namechange(
         self,
         room: str,
         user: str,
@@ -63,26 +62,28 @@ class RecvQueue(Queue[tuple[int, str]]):
         userid = utils.to_user_id(user)
         olduserid = utils.to_user_id(olduser)
 
-        self.add_messages(
+        await self.add_messages(
             [
                 f">{roomid}",
                 f"|n|{rank}{userid}|{olduserid}",
             ]
         )
-        self.add_queryresponse_userdetails(user, group=group, rooms={roomid: rank})
+        await self.add_queryresponse_userdetails(
+            user, group=group, rooms={roomid: rank}
+        )
 
-    def add_user_leave(self, room: str, user: str) -> None:
+    async def add_user_leave(self, room: str, user: str) -> None:
         roomid = utils.to_room_id(room)
         userid = utils.to_user_id(user)
 
-        self.add_messages(
+        await self.add_messages(
             [
                 f">{roomid}",
                 f"|l|{userid}",
             ]
         )
 
-    def add_queryresponse_userdetails(
+    async def add_queryresponse_userdetails(
         self,
         user: str,
         *,
@@ -105,31 +106,32 @@ class RecvQueue(Queue[tuple[int, str]]):
             "rooms": {rooms[room].strip() + room: {} for room in rooms},
         }
 
-        self.add_messages(
+        await self.add_messages(
             [
                 f"|queryresponse|userdetails|{json.dumps(data)}",
             ]
         )
 
-    def add_messages(self, *items: list[str]) -> None:
+    async def add_messages(self, *items: list[str]) -> None:
         for item in items:
-            self.put((0, "\n".join(item)))
+            await self.put((0, "\n".join(item)))
 
-        self.put((1, ""))  # await conn._parse_message() tasks
-        self.join()
+        await self.put((1, ""))  # process message queues
+        await self.join()
 
-    def close(self) -> None:
-        self.put((2, ""))  # close fake websocket connection
+    async def close(self) -> None:
+        await self.put((2, ""))  # close fake websocket connection
+        await self.join()
 
 
-class SendQueue(Queue[str]):
+class SendQueue(asyncio.Queue[str]):  # pylint: disable=inherit-non-class
     # pylint: disable=too-few-public-methods
     def get_all(self) -> Counter[str]:
         messages: Counter[str] = Counter()
         try:
             while True:
                 messages.update([self.get_nowait()])
-        except EmptyQueue:
+        except asyncio.queues.QueueEmpty:
             pass
         return messages
 
@@ -137,8 +139,8 @@ class SendQueue(Queue[str]):
 @pytest.fixture()
 def mock_connection(
     mocker,
-) -> Callable[[], tuple[Connection, RecvQueue, SendQueue]]:
-    def make_mock_connection(
+) -> Callable[[], Awaitable[tuple[Connection, RecvQueue, SendQueue]]]:
+    async def make_mock_connection(
         *,
         url: str = "ws://localhost:80/showdown/websocket",
         username: str = "cerbottana",
@@ -164,11 +166,13 @@ def mock_connection(
                         msg = await self.recv()
                         if msg:
                             yield msg
+                        self.recv_queue.task_done()
                 except ConnectionClosedOK:
+                    self.recv_queue.task_done()
                     return
 
             async def recv(self) -> str:
-                msg_type, msg = self.recv_queue.get()
+                msg_type, msg = await self.recv_queue.get()
 
                 if msg_type == 0:
                     pass
@@ -178,14 +182,14 @@ def mock_connection(
                 elif msg_type == 2:
                     # cancel all running tasks
                     for task in asyncio.all_tasks():
-                        task.cancel()
+                        if not task.get_coro().__name__.startswith("test_"):
+                            task.cancel()
                     raise ConnectionClosedOK(1000, "Connection closed")
 
-                self.recv_queue.task_done()
                 return msg
 
             async def send(self, message: str) -> None:
-                self.send_queue.put(message)
+                await self.send_queue.put(message)
 
         class MockConnect:
             def __init__(self, url: str, **kwargs: Any) -> None:
@@ -236,9 +240,9 @@ def mock_connection(
             unittesting=True,
         )
 
-        threading.Thread(target=conn.open_connection).start()
+        asyncio.create_task(conn._start_websocket())
 
-        recv_queue.add_messages(["|updateuser|*cerbottana|1|0|{}"])
+        await recv_queue.add_messages(["|updateuser|*cerbottana|1|0|{}"])
 
         # Clear send queue
         send_queue.get_all()

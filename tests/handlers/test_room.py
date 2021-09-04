@@ -1,14 +1,18 @@
 from collections import Counter
 
+import pytest
+
 from models.room import Room
 from models.user import User
 
+pytestmark = pytest.mark.asyncio
 
-def test_room(mock_connection) -> None:
-    conn, recv_queue, send_queue = mock_connection()
+
+async def test_room(mock_connection) -> None:
+    conn, recv_queue, send_queue = await mock_connection()
 
     # Join a room with only an user in it
-    recv_queue.add_messages(
+    await recv_queue.add_messages(
         [
             ">room1",
             "|init|chat",
@@ -36,7 +40,7 @@ def test_room(mock_connection) -> None:
     )
 
     # Users enter the room
-    recv_queue.add_messages(
+    await recv_queue.add_messages(
         [
             ">room1",
             "|j| User 1",
@@ -63,7 +67,7 @@ def test_room(mock_connection) -> None:
     )
 
     # Users change names
-    recv_queue.add_messages(
+    await recv_queue.add_messages(
         [
             ">room1",
             "|n| User 4|user1",
@@ -93,7 +97,7 @@ def test_room(mock_connection) -> None:
     )
 
     # Users change names without changing userid
-    recv_queue.add_messages(
+    await recv_queue.add_messages(
         [
             ">room1",
             "|n| USER 4|user4",
@@ -120,7 +124,7 @@ def test_room(mock_connection) -> None:
     )
 
     # Users leave the room
-    recv_queue.add_messages(
+    await recv_queue.add_messages(
         [
             ">room1",
             "|l| User 4",
@@ -141,7 +145,7 @@ def test_room(mock_connection) -> None:
     assert send_queue.get_all() == Counter()
 
     # Global and room rank
-    recv_queue.add_queryresponse_userdetails(
+    await recv_queue.add_queryresponse_userdetails(
         "cerbottana", group="+", rooms={"room1": "*"}
     )
     assert User.get(conn, "cerbottana").global_rank == "+"
@@ -149,4 +153,4 @@ def test_room(mock_connection) -> None:
 
     assert send_queue.get_all() == Counter()
 
-    recv_queue.close()
+    await recv_queue.close()

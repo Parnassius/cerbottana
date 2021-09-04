@@ -1,14 +1,17 @@
 import json
 from datetime import datetime
 
+import pytest
 import pytz
 from freezegun import freeze_time
 
+pytestmark = pytest.mark.asyncio
 
-def test_usernames(mock_connection):
-    conn, recv_queue, send_queue = mock_connection()
 
-    recv_queue.add_messages(
+async def test_usernames(mock_connection):
+    conn, recv_queue, send_queue = await mock_connection()
+
+    await recv_queue.add_messages(
         [
             ">publicroom",
             "|init|chat",
@@ -19,13 +22,13 @@ def test_usernames(mock_connection):
         ],
     )
 
-    recv_queue.add_user_join("publicroom", "user1", "+")
-    recv_queue.add_user_join("publicroom", "cerbottana", "*")
-    recv_queue.add_user_join("privateroom", "user1", "+")
-    recv_queue.add_user_join("privateroom", "cerbottana", "*")
+    await recv_queue.add_user_join("publicroom", "user1", "+")
+    await recv_queue.add_user_join("publicroom", "cerbottana", "*")
+    await recv_queue.add_user_join("privateroom", "user1", "+")
+    await recv_queue.add_user_join("privateroom", "cerbottana", "*")
 
     # Add a couple of formats, needed for .silver97
-    recv_queue.add_messages(
+    await recv_queue.add_messages(
         ["|formats|,LL|,1|Sw/Sh Singles|Random Battle,f|OU,e|Custom Game,c"]
     )
 
@@ -35,7 +38,7 @@ def test_usernames(mock_connection):
         "userCount": 2,
         "battleCount": 0,
     }
-    recv_queue.add_messages([f"|queryresponse|rooms|{json.dumps(data)}"])
+    await recv_queue.add_messages([f"|queryresponse|rooms|{json.dumps(data)}"])
 
     send_queue.get_all()
 
@@ -44,21 +47,21 @@ def test_usernames(mock_connection):
     ]
 
     for cmd in username_commands:
-        recv_queue.add_messages(
+        await recv_queue.add_messages(
             [
                 ">publicroom",
                 f"|c|+user1|.{cmd.name}",
             ]
         )
         reply_public = send_queue.get_all()
-        recv_queue.add_messages(
+        await recv_queue.add_messages(
             [
                 ">privateroom",
                 f"|c|+user1|.{cmd.name}",
             ]
         )
         reply_private = send_queue.get_all()
-        recv_queue.add_messages(
+        await recv_queue.add_messages(
             [
                 f"|pm|+user1|*cerbottana|.{cmd.name}",
             ]
@@ -81,7 +84,7 @@ def test_usernames(mock_connection):
     # I hate you plato
     tz = pytz.timezone("Europe/Rome")
     with freeze_time(datetime(2020, 1, 1, hour=10, tzinfo=tz)):
-        recv_queue.add_messages(
+        await recv_queue.add_messages(
             [
                 ">publicroom",
                 "|c|+user1|.plat0",
@@ -89,7 +92,7 @@ def test_usernames(mock_connection):
         )
         reply_plat0_daytime = send_queue.get_all()
     with freeze_time(datetime(2020, 1, 1, hour=4, tzinfo=tz)):
-        recv_queue.add_messages(
+        await recv_queue.add_messages(
             [
                 ">publicroom",
                 "|c|+user1|.plat0",
@@ -99,4 +102,4 @@ def test_usernames(mock_connection):
     assert not next(iter(reply_plat0_daytime)).endswith("appena svegliato")
     assert next(iter(reply_plat0_nighttime)).endswith("appena svegliato")
 
-    recv_queue.close()
+    await recv_queue.close()

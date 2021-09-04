@@ -5,6 +5,8 @@ import pytest
 from models.room import Room
 from models.user import User
 
+pytestmark = pytest.mark.asyncio
+
 
 @pytest.mark.parametrize(
     "room, roomid",
@@ -16,12 +18,12 @@ from models.user import User
         ("Français", "franais"),
     ),
 )
-def test_roomid(mock_connection, room: str, roomid: str) -> None:
-    conn, recv_queue, _ = mock_connection()
+async def test_roomid(mock_connection, room: str, roomid: str) -> None:
+    conn, recv_queue, _ = await mock_connection()
 
     assert Room.get(conn, room).roomid == roomid
 
-    recv_queue.close()
+    await recv_queue.close()
 
 
 @pytest.mark.parametrize(
@@ -85,15 +87,17 @@ def test_roomid(mock_connection, room: str, roomid: str) -> None:
         ),
     ),
 )
-def test_buffer(mock_connection, messages: list[list[str]], buffer: list[str]) -> None:
-    conn, recv_queue, _ = mock_connection()
+async def test_buffer(
+    mock_connection, messages: list[list[str]], buffer: list[str]
+) -> None:
+    conn, recv_queue, _ = await mock_connection()
 
     room = Room.get(conn, "room1")
     for message in messages:
-        recv_queue.add_messages(message)
+        await recv_queue.add_messages(message)
     assert list(room.buffer) == buffer
 
-    recv_queue.close()
+    await recv_queue.close()
 
 
 @pytest.mark.parametrize(
@@ -105,15 +109,15 @@ def test_buffer(mock_connection, messages: list[list[str]], buffer: list[str]) -
         ({"room1"}, "room12", True),
     ),
 )
-def test_is_private(
+async def test_is_private(
     mock_connection, public_roomids: set[str], room: str, is_private: bool
 ) -> None:
-    conn, recv_queue, _ = mock_connection()
+    conn, recv_queue, _ = await mock_connection()
 
     conn.public_roomids = public_roomids
     assert Room.get(conn, room).is_private == is_private
 
-    recv_queue.close()
+    await recv_queue.close()
 
 
 @pytest.mark.parametrize(
@@ -129,15 +133,17 @@ def test_is_private(
         ("Dummy", 9),  # English
     ),
 )
-def test_language_id(mock_connection, language: str | None, language_id: int) -> None:
-    conn, recv_queue, _ = mock_connection()
+async def test_language_id(
+    mock_connection, language: str | None, language_id: int
+) -> None:
+    conn, recv_queue, _ = await mock_connection()
 
     room = Room.get(conn, "room1")
     if language is not None:
         room.language = language
     assert room.language_id == language_id
 
-    recv_queue.close()
+    await recv_queue.close()
 
 
 @pytest.mark.parametrize(
@@ -149,10 +155,10 @@ def test_language_id(mock_connection, language: str | None, language_id: int) ->
         ({"user1": None, "user2": None}, {"user2", "user3"}),
     ),
 )
-def test_users(
+async def test_users(
     mock_connection, usernames_add: dict[str, str], usernames_remove: set[str]
 ) -> None:
-    conn, recv_queue, _ = mock_connection()
+    conn, recv_queue, _ = await mock_connection()
 
     room = Room.get(conn, "room1")
     users = {}
@@ -171,4 +177,4 @@ def test_users(
 
     assert room.users == users
 
-    recv_queue.close()
+    await recv_queue.close()
