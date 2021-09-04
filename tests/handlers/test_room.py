@@ -20,8 +20,8 @@ def test_room(mock_connection) -> None:
 
     room1 = Room.get(conn, "room1")
 
-    # Check if the room has been added to the list of the rooms (lobby is special here)
-    assert set(conn.rooms.keys()) == {"lobby", "room1"}
+    # Check if the room has been added to the list of the rooms
+    assert set(conn.rooms.keys()) == {"room1"}
     # Check the room title
     assert room1.title == "Room 1"
     # Check if the only user in the room has been added to the room

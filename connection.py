@@ -4,7 +4,6 @@ import asyncio
 import re
 from time import time
 from typing import TYPE_CHECKING
-from weakref import WeakValueDictionary
 
 import websockets.client
 from websockets.exceptions import WebSocketException
@@ -13,10 +12,9 @@ import utils
 from handlers import handlers
 from models.protocol_message import ProtocolMessage
 from models.room import Room
-from models.user import User
 from plugins import commands
 from tasks import init_tasks, recurring_tasks
-from typedefs import RoomId, UserId
+from typedefs import RoomId
 
 if TYPE_CHECKING:
     from typedefs import TiersDict
@@ -42,16 +40,13 @@ class Connection:
         self.password = password
         self.avatar = avatar
         self.statustext = statustext
-        self.rooms: dict[RoomId, Room] = {}  # roomid, Room
-        for roomname in rooms:
-            roomid = utils.to_room_id(roomname)
-            self.rooms[roomid] = Room(self, roomid, autojoin=True)
+        self.autojoin_rooms = {utils.to_room_id(x) for x in rooms}
+        self.rooms: dict[RoomId, Room] = {}
         self.main_room = Room.get(self, main_room)
         self.command_character = command_character
-        self.administrators = [utils.to_user_id(user) for user in administrators]
+        self.administrators = {utils.to_user_id(user) for user in administrators}
         self.unittesting = unittesting
         self.public_roomids: set[str] = set()
-        self.users: WeakValueDictionary[UserId, User] = WeakValueDictionary()
         self.init_tasks = init_tasks
         self.recurring_tasks = recurring_tasks
         self.handlers = handlers

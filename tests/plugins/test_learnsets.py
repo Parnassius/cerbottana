@@ -1,6 +1,13 @@
 def test_learnsets(mock_connection, veekun_database):
     conn, recv_queue, send_queue = mock_connection()
 
+    recv_queue.add_messages(
+        [
+            ">room1",
+            "|init|chat",
+        ]
+    )
+
     recv_queue.add_user_join("room1", "user1")
     recv_queue.add_user_join("room1", "cerbottana", "*")
     send_queue.get_all()

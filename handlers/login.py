@@ -8,7 +8,6 @@ import aiohttp
 
 import utils
 from handlers import handler_wrapper
-from models.room import Room
 
 if TYPE_CHECKING:
     from connection import Connection
@@ -38,10 +37,9 @@ async def challstr(msg: ProtocolMessage) -> None:
     if msg.conn.statustext:
         await msg.conn.send(f"|/status {msg.conn.statustext}")
 
-    for roomid in list(msg.conn.rooms.keys()):
-        if Room.get(msg.conn, roomid).autojoin:
-            await asyncio.sleep(0.15)
-            await msg.conn.send(f"|/join {roomid}")
+    for roomid in msg.conn.autojoin_rooms:
+        await asyncio.sleep(0.15)
+        await msg.conn.send(f"|/join {roomid}")
 
 
 @handler_wrapper(["updateuser"], required_parameters=4)

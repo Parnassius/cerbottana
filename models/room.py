@@ -4,6 +4,7 @@ import asyncio
 from collections import deque
 from textwrap import shorten
 from typing import TYPE_CHECKING
+from weakref import WeakKeyDictionary, WeakValueDictionary
 
 import utils
 from typedefs import RoomId
@@ -24,29 +25,26 @@ class Room:
         conn (Connection): Used to access the websocket.
         roomid (RoomId): Uniquely identifies a room, see utils.to_room_id.
         is_private (bool): True if room is unlisted/private.
-        autojoin (bool): Whether the bot should join the room on startup. Defaults to
-            False.
         buffer (deque[str]): Fixed list of the last room messages.
         language (str): Room language.
         language_id (int): Veekun id for language.
         roombot (bool): True if cerbottana is roombot in this room.
         title (str): Formatted variant of roomid.
         users (dict[User, str]): User instance, rank string.
-
-    Todo:
-        Rooms should be removed from conn.rooms if they |deinit|.
     """
+
+    _instances: WeakKeyDictionary[
+        Connection, WeakValueDictionary[RoomId, Room]
+    ] = WeakKeyDictionary()
 
     def __init__(
         self,
         conn: Connection,
         roomid: RoomId,
-        autojoin: bool = False,
     ) -> None:
         # Attributes initialized directly
         self.conn = conn
         self.roomid = roomid
-        self.autojoin = autojoin
 
         # Attributes initialized through handlers
         self.dynamic_buffer: deque[str] = deque(maxlen=20)
@@ -57,13 +55,6 @@ class Room:
         # Attributes updated within this instance
         self._users: dict[User, str] = {}  # user, rank
         self._message_queue: asyncio.Queue[ProtocolMessage]
-
-        # Register new initialized room
-        if self.roomid in self.conn.rooms:
-            warn = f"Warning: overriding previous data for {self.roomid}! "
-            warn += "You should avoid direct initialization and use Room.get instead."
-            print(warn)
-        self.conn.rooms[self.roomid] = self
 
     @property
     def buffer(self) -> deque[str]:
@@ -84,8 +75,6 @@ class Room:
     def add_user(self, user: User, rank: str | None = None) -> None:
         """Adds a user to the room or updates it if it's already stored.
 
-        If it's the first room joined by the user, it saves its instance in conn.users.
-
         Args:
             user (User): User to add.
             rank (str | None): Room rank of user. Defaults to None if rank is unchanged.
@@ -93,10 +82,6 @@ class Room:
         if not rank:
             rank = self._users[user] if user in self._users else " "
         self._users[user] = rank
-
-        # User persistance
-        if user.userid not in self.conn.users:
-            self.conn.users[user.userid] = user
 
     def remove_user(self, user: User) -> None:
         """Removes a user from a room.
@@ -207,7 +192,13 @@ class Room:
         Returns:
             Room: Existing instance associated with roomid or newly created one.
         """
+
+        if conn not in cls._instances:
+            cls._instances[conn] = WeakValueDictionary()
+
         roomid = utils.to_room_id(room)
-        if roomid not in conn.rooms:
-            conn.rooms[roomid] = cls(conn, roomid)
-        return conn.rooms[roomid]
+        try:
+            instance = cls._instances[conn][roomid]
+        except KeyError:
+            instance = cls._instances[conn][roomid] = cls(conn, roomid)
+        return instance

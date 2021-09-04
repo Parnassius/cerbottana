@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 from typing import TYPE_CHECKING
+from weakref import WeakKeyDictionary, WeakValueDictionary
 
 from sqlalchemy import func, select
 
@@ -20,7 +21,7 @@ if TYPE_CHECKING:
 class User:
     """Represents a PS User.
 
-    User instances are saved in conn.users if they they're contained in at least one
+    User instances are saved in _instances if they they're contained in at least one
     room; changing `userid` removes its associated instance.
 
     Attributes:
@@ -33,6 +34,10 @@ class User:
         is_administrator (bool): True if user is a bot administrator.
         rooms (set[Room]): List of rooms the user is in.
     """
+
+    _instances: WeakKeyDictionary[
+        Connection, WeakValueDictionary[UserId, User]
+    ] = WeakKeyDictionary()
 
     def __init__(
         self,
@@ -263,7 +268,13 @@ class User:
         Returns:
             User: Existing instance associated with userstring or newly created one.
         """
+
+        if conn not in cls._instances:
+            cls._instances[conn] = WeakValueDictionary()
+
         userid = utils.to_user_id(userstring)
-        if userid in conn.users:
-            return conn.users[userid]
-        return cls(conn, userstring)
+        try:
+            instance = cls._instances[conn][userid]
+        except KeyError:
+            instance = cls._instances[conn][userid] = cls(conn, userstring)
+        return instance

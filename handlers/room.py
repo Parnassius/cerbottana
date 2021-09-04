@@ -51,9 +51,16 @@ async def remove_user(conn: Connection, room: Room, userstring: str) -> None:
 
 @handler_wrapper(["init"], required_parameters=1)
 async def init(msg: ProtocolMessage) -> None:
+    msg.conn.rooms[msg.room.roomid] = msg.room
+
     if msg.params[0] == "chat":
         await msg.conn.send(f"|/cmd roominfo {msg.room.roomid}")
         await msg.room.send("/roomlanguage", False)
+
+
+@handler_wrapper(["deinit"])
+async def deinit(msg: ProtocolMessage) -> None:
+    del msg.conn.rooms[msg.room.roomid]
 
 
 @handler_wrapper(["title"], required_parameters=1)

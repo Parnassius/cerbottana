@@ -8,6 +8,17 @@ from freezegun import freeze_time
 def test_usernames(mock_connection):
     conn, recv_queue, send_queue = mock_connection()
 
+    recv_queue.add_messages(
+        [
+            ">publicroom",
+            "|init|chat",
+        ],
+        [
+            ">privateroom",
+            "|init|chat",
+        ],
+    )
+
     recv_queue.add_user_join("publicroom", "user1", "+")
     recv_queue.add_user_join("publicroom", "cerbottana", "*")
     recv_queue.add_user_join("privateroom", "user1", "+")

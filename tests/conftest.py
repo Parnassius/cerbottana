@@ -20,7 +20,10 @@ import databases.database as d
 import utils
 from connection import Connection
 from database import Database
+from models.room import Room
 from tasks.veekun import csv_to_sqlite
+
+# pylint: disable=protected-access
 
 database_metadata: dict[str, Any] = {
     "database": d.Base.metadata,
@@ -170,7 +173,7 @@ def mock_connection(
                 if msg_type == 0:
                     pass
                 elif msg_type == 1:
-                    for room in conn.rooms.values():
+                    for room in list(Room._instances.get(conn, {}).values()):
                         await room.process_all_messages()
                 elif msg_type == 2:
                     # cancel all running tasks
