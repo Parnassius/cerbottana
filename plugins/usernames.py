@@ -232,18 +232,14 @@ async def megagr(msg: Message) -> None:
 
 @command_wrapper(aliases=("melody",))
 async def melodyl(msg: Message) -> None:
-    if random.randint(1, 100) <= 5:
-        await msg.reply("Emh")
-    else:
-        await msg.reply("Beh che dire")
+    text = "Ehm" if random.randrange(20) == 0 else "Beh che dire"
+    await msg.reply(text)
 
 
 @command_wrapper()
 async def mihowk(msg: Message) -> None:
-    if random.randint(1, 100) <= 5:
-        await msg.reply(":happy:")
-    else:
-        await msg.reply("l2p mammalu")
+    text = ":happy:" if random.randrange(20) == 0 else "l2p mammalu"
+    await msg.reply(text)
 
 
 @command_wrapper()
