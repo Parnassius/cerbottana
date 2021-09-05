@@ -28,7 +28,7 @@ class Room:
         buffer (deque[str]): Fixed list of the last room messages.
         language (str): Room language.
         language_id (int): Veekun id for language.
-        roombot (bool): True if cerbottana is roombot in this room.
+        roombot (bool): True if the bot is roombot in this room.
         title (str): Formatted variant of roomid.
         users (dict[User, str]): User instance, rank string.
     """
