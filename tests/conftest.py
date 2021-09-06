@@ -3,7 +3,8 @@ from __future__ import annotations
 import asyncio
 import json
 from collections import Counter
-from collections.abc import AsyncIterator, Awaitable, Callable, Generator
+from collections.abc import AsyncIterator, Callable, Generator
+from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from types import TracebackType
 from typing import Any
 
@@ -25,6 +26,14 @@ from tasks.veekun import csv_to_sqlite
 database_metadata: dict[str, Any] = {
     "database": d.Base.metadata,
 }
+
+
+class TestConnection(Connection):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+
+        self.recv_queue: RecvQueue
+        self.send_queue: SendQueue
 
 
 class RecvQueue(asyncio.Queue[tuple[int, str]]):  # pylint: disable=inherit-non-class
@@ -139,7 +148,8 @@ class SendQueue(asyncio.Queue[str]):  # pylint: disable=inherit-non-class
 @pytest.fixture()
 def mock_connection(
     mocker,
-) -> Callable[[], Awaitable[tuple[Connection, RecvQueue, SendQueue]]]:
+) -> Callable[[], AbstractAsyncContextManager[TestConnection]]:
+    @asynccontextmanager
     async def make_mock_connection(
         *,
         url: str = "ws://localhost:80/showdown/websocket",
@@ -151,7 +161,7 @@ def mock_connection(
         main_room: str = "lobby",
         command_character: str = ".",
         administrators: list[str] | None = None,
-    ) -> tuple[Connection, RecvQueue, SendQueue]:
+    ) -> AsyncIterator[TestConnection]:
         class MockProtocol:
             def __init__(self, recv_queue: RecvQueue, send_queue: SendQueue) -> None:
                 self.recv_queue = recv_queue
@@ -227,7 +237,7 @@ def mock_connection(
         if administrators is None:
             administrators = ["parnassius"]
 
-        conn = Connection(
+        conn = TestConnection(
             url=url,
             username=username,
             password=password,
@@ -247,7 +257,13 @@ def mock_connection(
         # Clear send queue
         send_queue.get_all()
 
-        return (conn, recv_queue, send_queue)
+        conn.recv_queue = recv_queue
+        conn.send_queue = send_queue
+
+        try:
+            yield conn
+        finally:
+            await recv_queue.close()
 
     return make_mock_connection
 
