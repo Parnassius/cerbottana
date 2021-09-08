@@ -1,7 +1,7 @@
 __pycache__/
 /.coverage
 /.env
-/.mypy_cache
+/.python-version
 /.venv
 /database.sqlite
 /poetry.toml
