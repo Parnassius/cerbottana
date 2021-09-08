@@ -99,6 +99,9 @@ def get_sprite_parameters(args: list[str]) -> tuple[bool, bool, str]:
 
 @command_wrapper(helpstr="Mostra lo sprite di un pokemon")
 async def sprite(msg: Message) -> None:
+    if len(msg.args) < 1:
+        return
+
     search_query = to_id(msg.args[0])
     dex_entry = get_ps_dex_entry(search_query)
     female = False
