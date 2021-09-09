@@ -12,8 +12,6 @@ import freezegun
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from websockets.exceptions import ConnectionClosedOK
-from websockets.frames import Close
 
 import databases.database as d
 import utils
@@ -172,15 +170,11 @@ def mock_connection(
                 return self
 
             async def __aiter__(self) -> AsyncIterator[str]:
-                try:
-                    while True:
-                        msg = await self.recv()
-                        if msg:
-                            yield msg
-                        self.recv_queue.task_done()
-                except ConnectionClosedOK:
+                while True:
+                    msg = await self.recv()
+                    if msg:
+                        yield msg
                     self.recv_queue.task_done()
-                    return
 
             async def recv(self) -> str:
                 msg_type, msg = await self.recv_queue.get()
@@ -195,18 +189,25 @@ def mock_connection(
                     for task in asyncio.all_tasks():
                         if not task.get_coro().__name__.startswith("test_"):
                             task.cancel()
-                    raise ConnectionClosedOK(Close(1000, "Connection closed"), None)
+                    if conn.websocket is not None:
+                        await conn.websocket.close()
 
                 return msg
 
             async def send(self, message: str) -> None:
                 await self.send_queue.put(message)
 
+            async def close(self) -> None:
+                pass
+
         class MockConnect:
             def __init__(self, url: str, **kwargs: Any) -> None:
                 pass
 
-            # async with connect(...)
+            async def __aiter__(self) -> AsyncIterator[MockProtocol]:
+                while True:
+                    async with self as protocol:
+                        yield protocol
 
             async def __aenter__(self) -> MockProtocol:
                 return await self
@@ -218,8 +219,6 @@ def mock_connection(
                 traceback: TracebackType | None,
             ) -> None:
                 pass
-
-            # await connect(...)
 
             def __await__(self) -> Generator[Any, None, MockProtocol]:
                 # Create a suitable iterator by calling __await__ on a coroutine.

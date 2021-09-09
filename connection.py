@@ -81,21 +81,21 @@ class Connection:
             for rtask in self.recurring_tasks:
                 asyncio.create_task(rtask(self))
 
-        try:
-            async with websockets.client.connect(
-                self.url, ping_interval=None, max_size=None
-            ) as websocket:
+        async for websocket in websockets.client.connect(
+            self.url, ping_interval=None, max_size=None
+        ):
+            try:
                 self.websocket = websocket
                 self.connection_start = time()
                 async for message in websocket:
                     if isinstance(message, str):
                         print(f"<< {message}")
                         await self._parse_message(message)
-        except (
-            WebSocketException,
-            OSError,  # https://github.com/aaugustin/websockets/issues/593
-        ):
-            pass
+            except (
+                WebSocketException,
+                OSError,  # https://github.com/aaugustin/websockets/issues/593
+            ):
+                pass
 
     async def _parse_message(self, message: str) -> None:
         """Extracts a Room object from a raw message.
