@@ -13,6 +13,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from websockets.exceptions import ConnectionClosedOK
+from websockets.frames import Close
 
 import databases.database as d
 import utils
@@ -194,7 +195,7 @@ def mock_connection(
                     for task in asyncio.all_tasks():
                         if not task.get_coro().__name__.startswith("test_"):
                             task.cancel()
-                    raise ConnectionClosedOK(1000, "Connection closed")
+                    raise ConnectionClosedOK(Close(1000, "Connection closed"), None)
 
                 return msg
 
