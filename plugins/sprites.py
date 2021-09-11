@@ -20,8 +20,6 @@ if TYPE_CHECKING:
 def generate_sprite_url(
     dex_entry: JsonDict,
     *,
-    search_query: str | None = None,
-    female: bool = False,
     back: bool = False,
     shiny: bool = False,
     category: str = "ani",
@@ -30,10 +28,6 @@ def generate_sprite_url(
 
     Args:
         dex_entry (JsonDict): Pokedex entry from the PS database.
-        search_query (str | None): The original search query, needed for cosmetic
-            formes. Defaults to None.
-        female (bool): Whether the required sprite should be the female one. Defaults to
-            False.
         back (bool): Whether the required sprite should be the back sprite. Defaults to
             False.
         shiny (bool): Whether the required sprite should be shiny. Defaults to False.
@@ -42,40 +36,14 @@ def generate_sprite_url(
     Returns:
         str: URL.
     """
-    if search_query:
-        search_query = to_id(search_query)
-
-    base_id: str
-    forme_id: str | None = None
-
-    if "baseSpecies" in dex_entry:  # Alternate form, e.g. mega, gmax
-        base_id = to_id(dex_entry["baseSpecies"])
-        forme_id = to_id(dex_entry["forme"])
-    else:  # Base form
-        base_id = to_id(dex_entry["name"])
-
-    if "cosmeticFormes" in dex_entry:  # Cosmetic form, e.g. unown, alcremie
-        forme_id = next(
-            (
-                to_id(i[len(base_id) + 1 :])
-                for i in dex_entry["cosmeticFormes"]
-                if to_id(i) == search_query
-            ),
-            None,
-        )
-
-    dex_name = base_id
-    if forme_id:
-        dex_name += f"-{forme_id}"
-    if female:
-        dex_name += "-f"
-
-    ext = "gif" if category.endswith("ani") else "png"
-
     if back:
         category += "-back"
     if shiny:
         category += "-shiny"
+
+    dex_name = dex_entry["dex_name"]
+
+    ext = "gif" if category.endswith("ani") else "png"
 
     return f"https://play.pokemonshowdown.com/sprites/{category}/{dex_name}.{ext}"
 
@@ -104,24 +72,13 @@ async def sprite(msg: Message) -> None:
 
     search_query = to_id(msg.args[0])
     dex_entry = get_ps_dex_entry(search_query)
-    female = False
-    if dex_entry is None and to_id(search_query[-1]) == "f":
-        dex_entry = get_ps_dex_entry(search_query[:-1])
-        female = True
     if dex_entry is None:
         await msg.reply("Nome pokemon non valido")
         return
 
     back, shiny, category = get_sprite_parameters(msg.args[1:])
 
-    url = generate_sprite_url(
-        dex_entry,
-        search_query=search_query,
-        female=female,
-        back=back,
-        shiny=shiny,
-        category=category,
-    )
+    url = generate_sprite_url(dex_entry, back=back, shiny=shiny, category=category)
 
     try:
         html = await image_url_to_html(url)

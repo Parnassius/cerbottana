@@ -4,5 +4,6 @@ __pycache__/
 /.python-version
 /.venv
 /database.sqlite
+/icons.json
 /poetry.toml
 /veekun.sqlite

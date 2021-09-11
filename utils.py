@@ -199,7 +199,7 @@ def get_language_id(language_name: str, *, fallback: int = 9) -> int:
     return fallback
 
 
-def get_ps_dex_entry(query: str) -> JsonDict | None:
+def get_ps_dex_entry(query: str, *, _female: bool = False) -> JsonDict | None:
     """Retrieves a pokemon entry from the PS pokedex.
 
     Args:
@@ -209,11 +209,44 @@ def get_ps_dex_entry(query: str) -> JsonDict | None:
         JsonDict | None: Dict with pokemon information or None if no pokemon was
             recognized.
     """
-    query = _escape(query)
-    if query in ALIASES:
-        query = _escape(ALIASES[query])
-    if query in POKEDEX:
-        return POKEDEX[query]
+    species = query = _escape(query)
+    if species in ALIASES:
+        species = _escape(ALIASES[species])
+
+    if species in POKEDEX:
+        entry = POKEDEX[species]
+
+        base_id: str
+        forme_id: str | None = None
+
+        if "baseSpecies" in entry:  # Alternate form, e.g. mega, gmax
+            base_id = to_id(entry["baseSpecies"])
+            forme_id = to_id(entry["forme"])
+        else:  # Base form
+            base_id = to_id(entry["name"])
+
+        if "cosmeticFormes" in entry:  # Cosmetic form, e.g. unown, alcremie
+            forme_id = next(
+                (
+                    to_id(i[len(base_id) + 1 :])
+                    for i in entry["cosmeticFormes"]
+                    if to_id(i) == query
+                ),
+                None,
+            )
+
+        dex_name = base_id
+        if forme_id:
+            dex_name += f"-{forme_id}"
+        if _female:
+            dex_name += "-f"
+        entry["dex_name"] = dex_name
+
+        return entry
+
+    if not _female and query[-1] == "f":
+        return get_ps_dex_entry(query[:-1], _female=True)
+
     return None
 
 
