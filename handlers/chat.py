@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from typing import TYPE_CHECKING
 
 import utils
@@ -32,7 +33,7 @@ async def parse_chat_message(
                 (len(conn.command_character) + len(command) + 1) :
             ].strip()
             msg = Message(room, user, message)
-            await conn.commands[command].callback(msg)
+            asyncio.create_task(conn.commands[command].callback(msg))
         elif room is None:
             await user.send("Invalid command")
 
