@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
 
+from sqlalchemy import select, update
+
+import databases.database as d
+from database import Database
 from plugins import command_wrapper
-from typedefs import JsonDict
 from utils import get_ps_dex_entry, to_id
 
 if TYPE_CHECKING:
@@ -28,14 +30,28 @@ async def icon(msg: Message) -> None:
         await msg.reply("Pokémon not found.")
         return
 
-    icons: JsonDict
-    try:
-        with open("./icons.json", encoding="utf-8") as f:
-            icons = json.load(f)
-    except FileNotFoundError:
-        icons = {}
-    icons[msg.user.userid] = to_id(dex_entry["dex_name"])
-    with open("./icons.json", "w", encoding="utf-8") as f:
-        json.dump(icons, f)
+    db = Database.open()
+    with db.get_session() as session:
+        userid = msg.user.userid
+        session.add(d.Users(userid=userid))
+        stmt = (
+            update(d.Users)
+            .filter_by(userid=userid)
+            .values(icon=to_id(dex_entry["dex_name"]))
+        )
+        session.execute(stmt)
 
-    await msg.reply("Done. Your Pokémon might take up to 24 hours to be updated.")
+        # Update the CSV file
+        stmt_csv = (
+            select(d.Users.userid, d.Users.icon)
+            .where(d.Users.icon.is_not(None))
+            .order_by(d.Users.userid)
+        )
+        with open("./userlist_icons.csv", "w", encoding="utf-8") as f:
+            f.writelines(
+                [f"{userid},{icon}\n" for userid, icon in session.execute(stmt_csv)]
+            )
+
+    await msg.reply(
+        "Done. Your Pokémon might take up to 24 hours to appear on the userstyle."
+    )

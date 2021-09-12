@@ -12,4 +12,9 @@
       <div style="text-align: justify">{{ description }}</div>
     {% endif %}
   </div>
+  {% if pokemon_icon %}
+    <div style="display: table-cell; width: 40px; vertical-align: top">
+      <psicon pokemon="{{ pokemon_icon }}"></psicon>
+    </div>
+  {% endif %}
 </div>

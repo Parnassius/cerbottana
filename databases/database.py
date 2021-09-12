@@ -101,3 +101,4 @@ class Users(Base):
     avatar: str | None = Column(String)
     description: str | None = Column(String)
     description_pending: str | None = Column(String, index=True)
+    icon: str | None = Column(String)

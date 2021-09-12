@@ -48,6 +48,7 @@ async def profile(msg: Message) -> None:
                 username=userdata.username,
                 badges=badges,
                 description=userdata.description,
+                pokemon_icon=userdata.icon,
             )
 
             await msg.reply_htmlbox(html)
