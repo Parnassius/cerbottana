@@ -43,7 +43,7 @@ def generate_sprite_url(
 
     dex_name = dex_entry["dex_name"]
 
-    ext = "gif" if category.endswith("ani") else "png"
+    ext = "gif" if category.startswith(("gen5ani", "ani")) else "png"
 
     return f"https://play.pokemonshowdown.com/sprites/{category}/{dex_name}.{ext}"
 
