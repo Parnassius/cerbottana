@@ -51,13 +51,14 @@ def has_role(role: Role, user: str, strict_voice_check: bool = False) -> bool:
     """
     roles: dict[Role, str] = {
         "admin": "~&",
+        "sectionleader": "~&§",
         "owner": "~&#",
         "bot": "*",
         "host": "★",
-        "mod": "~&#@",
-        "driver": "~&#@%",
+        "mod": "~&§#@",
+        "driver": "~&§#@%",
         "player": "☆",
-        "voice": "~&#@%+",
+        "voice": "~&§#@%+",
         "prizewinner": "^",
     }
     if user:

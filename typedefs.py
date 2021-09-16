@@ -5,6 +5,7 @@ UserId = NewType("UserId", str)
 Role = Literal[
     "disabled",
     "admin",
+    "sectionleader",
     "owner",
     "bot",
     "host",
