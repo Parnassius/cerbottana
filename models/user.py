@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import math
-from time import time
 from typing import TYPE_CHECKING
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
@@ -52,8 +51,6 @@ class User:
         self.userstring = userstring
         self.global_rank: str = " "
 
-        self._last_userdetails: float = 0
-
     @property
     def username(self) -> str:
         return self.userstring.split("@")[0]
@@ -86,10 +83,6 @@ class User:
         return self.username
 
     async def load_details(self) -> None:
-        if time() - self._last_userdetails < 10:
-            return
-
-        self._last_userdetails = time()
         await self.conn.send(f"|/cmd userdetails {self.userid}")
 
     def rank(self, room: Room, consider_global: bool = False) -> str | None:
