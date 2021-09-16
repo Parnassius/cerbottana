@@ -92,16 +92,45 @@ class User:
         self._last_userdetails = time()
         await self.conn.send(f"|/cmd userdetails {self.userid}")
 
-    def rank(self, room: Room) -> str | None:
+    def rank(self, room: Room, consider_global: bool = False) -> str | None:
         """Retrieves user's rank.
 
         Args:
             room (Room): Room to check.
+            consider_global (bool): Whether the global rank should be returned if it is
+                higher than the room rank.
 
         Returns:
-            str | None: Returns rank string, None if user is not in room.
+            str | None: Returns rank string, None if consider_global is False and user
+                is not in room.
         """
-        return room.users[self] if self in room else None
+        rank_orders = {
+            "~": 101,
+            "#": 102,
+            "&": 103,
+            "★": 104,
+            "@": 105,
+            "%": 106,
+            "§": 107,
+            # unrecognized symbols
+            "*": 109,
+            "☆": 110,
+            "+": 200,
+            " ": 201,
+            "!": 301,
+            "✖": 302,
+            "‽": 303,
+            None: 401,
+        }
+        default_rank = 108
+
+        rank_: str | None = self.global_rank if consider_global else None
+        if self in room:
+            rank_ = min(
+                rank_, room.users[self], key=lambda x: rank_orders.get(x, default_rank)
+            )
+
+        return rank_
 
     def has_role(self, role: Role, room: Room, ignore_grole: bool = False) -> bool:
         """Check if user has a PS room role or higher.
@@ -117,14 +146,7 @@ class User:
         Returns:
             bool: True if user meets the required criteria.
         """
-        if (
-            not ignore_grole
-            and self.global_rank
-            and utils.has_role(role, self.global_rank)
-        ):
-            return True
-
-        if room_rank := self.rank(room):
+        if room_rank := self.rank(room, not ignore_grole):
             return utils.has_role(role, room_rank)
 
         return False
@@ -138,8 +160,7 @@ class User:
         Returns:
             str | None: User string, None if user is not in room.
         """
-        # TODO: Cover local / global rank interaction
-        rank_ = self.rank(room)
+        rank_ = self.rank(room, True)
         if rank_ is None:
             return None
         if rank_ == " ":
