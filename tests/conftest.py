@@ -225,6 +225,7 @@ def mock_connection(
                 return self.__await_impl__().__await__()
 
             async def __await_impl__(self) -> MockProtocol:
+                # pylint: disable=no-self-use
                 return MockProtocol(recv_queue, send_queue)
 
         mocker.patch("websockets.client.connect", MockConnect)

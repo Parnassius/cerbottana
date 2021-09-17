@@ -120,7 +120,7 @@ async def randsprite(msg: Message) -> None:
         await msg.reply_htmlbox(html)
     except UnsupportedFormat:
         # Missing sprite. We received a generic Apache error webpage.
-        await msg.reply("Sprite di {} non trovato".format(dex_entry["name"]))
+        await msg.reply(f"Sprite di {dex_entry['name']} non trovato")
 
 
 SPRITE_CATEGORIES = {
