@@ -90,9 +90,7 @@ async def translate(msg: Message) -> None:
         for key, val in results.items():
             if resultstext != "":
                 resultstext += ", "
-            resultstext += "{trad} ({cat})".format(
-                trad=" / ".join(sorted(val)), cat=key[0]
-            )
+            resultstext += f"{' / '.join(sorted(val))} ({key[0]})"
         await msg.reply(resultstext)
         return
 

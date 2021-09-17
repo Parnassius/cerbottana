@@ -19,9 +19,17 @@ async def uptime(msg: Message) -> None:
     h, m = divmod(m, 60)
     d, h = divmod(h, 24)
 
-    days = "{} day{}, ".format(d, "" if d == 1 else "s") if d > 0 else ""
-    hours = "{} hour{}, ".format(h, "" if h == 1 else "s") if h > 0 else ""
-    minutes = "{} minute{}, ".format(m, "" if m == 1 else "s") if m > 0 else ""
-    seconds = "{} second{}".format(s, "" if s == 1 else "s")
+    uptime_ = ""
+    if d > 0:
+        plural = "" if d == 1 else "s"
+        uptime_ += f"{d} day{plural}, "
+    if h > 0:
+        plural = "" if h == 1 else "s"
+        uptime_ += f"{h} hour{plural}, "
+    if m > 0:
+        plural = "" if m == 1 else "s"
+        uptime_ += f"{m} minute{plural}, "
+    plural = "" if s == 1 else "s"
+    uptime_ += f"{s} second{plural}"
 
-    await msg.reply(days + hours + minutes + seconds)
+    await msg.reply(uptime_)

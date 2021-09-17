@@ -70,10 +70,9 @@ def to_card_thumbnail(card_json: JsonDict) -> str:
     else:
         # Fallback: image_uris isn't guaranteed to exist or be non-null but the previous
         # conditional cases should cover most cards.
-        return 'Immagine per <a href="{}">{}</a> non disponibile.'.format(
-            card_json["scryfall_uri"],
-            card_json["name"],
-        )
+        uri = card_json["scryfall_uri"]
+        name = card_json["name"]
+        return f'Immagine per <a href="{uri}">{name}</a> non disponibile.'
 
     return utils.render_template(
         "commands/mtg_card.html",

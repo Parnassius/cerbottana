@@ -100,7 +100,8 @@ async def azyzyz(msg: Message) -> None:
 
 @command_wrapper(aliases=("bizzozero",))
 async def bizzo(msg: Message) -> None:
-    text = "gr{}ve".format("e" * random.randint(1, 4))
+    letters = "e" * random.randint(1, 4)
+    text = f"gr{letters}ve"
     await msg.reply(text)
 
 
@@ -133,9 +134,8 @@ async def ciarizardmille(msg: Message) -> None:
 
 @command_wrapper(aliases=("cinse", "cobse", "conse"))
 async def consecutio(msg: Message) -> None:
-    text = "opss{} ho lasciato il pc acceso tutta notte".format(
-        "s" * random.randint(0, 3)
-    )
+    letters = "s" * random.randint(2, 5)
+    text = f"op{letters} ho lasciato il pc acceso tutta notte"
     await msg.reply(text)
 
 
@@ -275,9 +275,8 @@ async def pissog(msg: Message) -> None:
 
 @command_wrapper(aliases=("palt0", "palto", "plato"))
 async def plat0(msg: Message) -> None:
-    text = "oh {} non mi spoilerare".format(
-        random.choice(["basta", "senti", "smettila"])
-    )
+    word = random.choice(["basta", "senti", "smettila"])
+    text = f"oh {word} non mi spoilerare"
     tz = pytz.timezone("Europe/Rome")
     timestamp = datetime.now(tz)
     if 3 <= timestamp.hour <= 5:
