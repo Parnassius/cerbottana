@@ -25,3 +25,4 @@ class TiersDict(TypedDict):
     name: str
     section: str
     random: bool
+    tournament: bool

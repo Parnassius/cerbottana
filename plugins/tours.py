@@ -62,7 +62,9 @@ async def create_tour(
     allow_pm=False,
 )
 async def randtour(msg: Message) -> None:
-    tiers = [x["name"] for x in msg.conn.tiers.values() if x["random"]]
+    tiers = [
+        x["name"] for x in msg.conn.tiers.values() if x["random"] and x["tournament"]
+    ]
 
     formatid = random.choice(tiers)
 

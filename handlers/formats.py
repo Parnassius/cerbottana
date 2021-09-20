@@ -30,10 +30,15 @@ async def formats(msg: ProtocolMessage) -> None:
         parts = tier.split(",")
         if section is not None:
             tier_id = utils.to_id(parts[0])
+            code = int(parts[1], 16)
             tiers[tier_id] = {
                 "id": tier_id,
                 "name": parts[0],
                 "section": section,
-                "random": bool(int(parts[1], 16) & 1),
+                "random": bool(code & 1),
+                # "ladder": bool(code & 2),
+                # "challenge": bool(code & 4),
+                "tournament": bool(code & 8),
+                # "teambuilder_level": bool(code & 16),
             }
     msg.conn.tiers = tiers
