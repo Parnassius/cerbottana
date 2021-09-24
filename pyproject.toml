@@ -110,6 +110,7 @@ disable = [
     "missing-function-docstring",
     "missing-module-docstring",
     "unused-argument",
+    "too-few-public-methods",
 
     "unsubscriptable-object",  # too many false positives in type annotations
 

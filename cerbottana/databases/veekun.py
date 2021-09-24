@@ -1,5 +1,3 @@
-# pylint: disable=too-few-public-methods
-
 from __future__ import annotations
 
 from functools import total_ordering

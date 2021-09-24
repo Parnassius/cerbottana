@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 
 
 class TranslatableTableNames(Protocol):
-    # pylint: disable=too-few-public-methods
     local_language_id: Mapped[int]
     name_normalized: Mapped[str | None]
 
