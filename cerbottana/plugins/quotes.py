@@ -8,10 +8,12 @@ from typing import TYPE_CHECKING
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.sql import Select
+from yattag import Doc
 
 import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
+from cerbottana.html_utils import HTMLPageCommand, get_doc, linkify
 
 from . import command_wrapper, htmlpage_wrapper
 
@@ -46,7 +48,7 @@ def to_html_quotebox(quote: str) -> str:
     # (1) Quote doesn't start with a timestamp.
     # (2) Quote only has timestamps.
     if splitted[0] or not any(part.lstrip() for part in splitted[::2]):
-        return utils.linkify(quote)
+        return linkify(quote)
 
     lines: list[str] = []
     for timestamp, phrase in zip(splitted[1::2], splitted[2::2]):
@@ -82,7 +84,7 @@ def to_html_quotebox(quote: str) -> str:
             # Timestamp doesn't need to be escaped.
             rank = utils.html_escape(rank)
             username = utils.html_escape(username)
-            body = utils.linkify(body)
+            body = linkify(body)
 
             lines.append(
                 f"<small>{timestamp} {rank}</small>"
@@ -96,7 +98,7 @@ def to_html_quotebox(quote: str) -> str:
             # Text contained within round parentheses is considered a separated line.
             # This is true for most use-cases but it's still euristic.
             sublines = re.split(r"(\(.*\))", phrase)
-            sublines = [utils.linkify(s) for s in sublines if s.strip()]
+            sublines = [linkify(s) for s in sublines if s.strip()]
 
             # The timestamp is written only on the first subline.
             sublines[0] = f"<small>{timestamp}</small> <em>{sublines[0]}</em>"
@@ -167,7 +169,10 @@ async def randquote(msg: Message) -> None:
         if not quote:
             await msg.reply("Nessuna quote trovata.")
             return
-        await msg.reply_htmlbox(to_html_quotebox(quote.message))
+
+        doc = get_doc()
+        doc.asis(to_html_quotebox(quote.message))
+        await msg.reply_htmlbox(doc)
 
 
 @command_wrapper(
@@ -229,13 +234,33 @@ async def removequoteid(msg: Message) -> None:
     "quotelist",
     aliases=("quotes", "quoteslist"),
     allow_pm="regularuser",
-    delete_command="removequoteid",
 )
-def quotelist_htmlpage(user: User, room: Room) -> Select:
+def quotelist_htmlpage(user: User, room: Room, page: int) -> Doc:
     # TODO: remove annotation
     stmt: Select = (
         select(d.Quotes)
         .filter_by(roomid=room.roomid)
         .order_by(d.Quotes.date.desc(), d.Quotes.id.desc())
     )
-    return stmt
+
+    html = HTMLPageCommand(
+        user,
+        room,
+        "quotelist",
+        stmt,
+        title=f"Quotes for {room.title}",
+        fields=[("Quote", "message"), ("Date", "date")],
+        actions=[
+            (
+                "removequoteid",
+                ["_roomid", "id", "_page"],
+                False,
+                "trash",
+                "Delete",
+            )
+        ],
+    )
+
+    html.load_page(page)
+
+    return html.doc

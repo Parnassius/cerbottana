@@ -6,6 +6,8 @@ from textwrap import shorten
 from typing import TYPE_CHECKING
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
+from yattag import Doc
+
 from cerbottana import utils
 from cerbottana.typedefs import RoomId
 
@@ -137,22 +139,22 @@ class Room:
                 message = " " + message
         await self.conn.send(f"{self.roomid}|{message}")
 
-    async def send_rankhtmlbox(self, rank: str, message: str) -> None:
+    async def send_rankhtmlbox(self, rank: str, message: Doc) -> None:
         """Sends an HTML box visible only to people with a specific rank.
 
         Args:
             rank (str): Minimum rank required to see the HTML box.
-            message (str): HTML to be sent.
+            message (Doc): HTML to be sent.
         """
-        await self.send(f"/addrankhtmlbox {rank}, {message}", False)
+        await self.send(f"/addrankhtmlbox {rank}, {message.getvalue()}", False)
 
-    async def send_htmlbox(self, message: str) -> None:
+    async def send_htmlbox(self, message: Doc) -> None:
         """Sends an HTML box visible to every user in the room.
 
         Args:
-            message (str): HTML to be sent.
+            message (Doc): HTML to be sent.
         """
-        await self.send(f"/addhtmlbox {message}", False)
+        await self.send(f"/addhtmlbox {message.getvalue()}", False)
 
     async def send_htmlpage(self, pageid: str, page_room: Room) -> None:
         """Sends link to an HTML page in a room.

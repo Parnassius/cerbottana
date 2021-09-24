@@ -9,6 +9,7 @@ from sqlalchemy.orm import selectinload
 import cerbottana.databases.veekun as v
 from cerbottana import utils
 from cerbottana.database import Database
+from cerbottana.html_utils import BaseHTMLCommand
 
 from . import command_wrapper
 
@@ -67,7 +68,7 @@ class LocationsVersion:
 class Locations:
     versions: dict[int, LocationsVersion] = field(default_factory=dict)
 
-    def add_encounter_slot(self, pokemon: v.Pokemon, encounter: v.Encounters) -> None:
+    def add_encounter_slot(self, encounter: v.Encounters) -> None:
         version = encounter.version
         if version.id not in self.versions:
             self.versions[version.id] = LocationsVersion(version)
@@ -107,6 +108,56 @@ class Locations:
         self.versions[version.id].slots[slot_key].rarity += (
             encounter.encounter_slot.rarity or 0
         )
+
+
+class LocationsHTML(BaseHTMLCommand):
+    _STYLES = {
+        "table": {
+            "margin": "5px 0",
+        },
+    }
+
+    def __init__(self, *, locations_data: Locations) -> None:
+        super().__init__()
+
+        tag = self.doc.tag
+        text = self.doc.text
+
+        if not locations_data.versions:
+            return
+
+        with tag("div", klass="ladder"):
+
+            for version in sorted(locations_data.versions.values()):
+                with tag("details"):
+                    with tag("summary"), tag("b"), tag("big"):
+                        text(version.version.name)
+
+                    self._add_table(version)
+
+    def _add_table(self, version: LocationsVersion) -> None:
+        tag = self.doc.tag
+        line = self.doc.line
+        text = self.doc.text
+
+        with tag("table", style=self._get_css("table")):
+            with tag("tr"):
+                line("th", "Location")
+                line("th", "Method")
+                line("th", "Level")
+                line("th", "Rarity", colspan=2)
+
+            for slot in sorted(version.slots.values()):
+                with tag("tr"):
+                    line("td", slot.location)
+                    line("td", slot.method.prose)
+                    with tag("td"):
+                        text(f"L{slot.min_level}")
+                        if slot.min_level < slot.max_level:
+                            text(f"-{slot.max_level}")
+                    line("td", f"{slot.rarity}%", colspan=1 if slot.conditions else 2)
+                    if slot.conditions:
+                        line("td", ", ".join([x.prose for x in slot.conditions]))
 
 
 @command_wrapper(aliases=("location",))
@@ -163,15 +214,15 @@ async def locations(msg: Message) -> None:
 
         for pokemon in pokemon_species.pokemon:
             for encounter in pokemon.encounters:
-                results.add_encounter_slot(pokemon, encounter)
+                results.add_encounter_slot(encounter)
 
-        html = utils.render_template("commands/locations.html", results=results)
+        html = LocationsHTML(locations_data=results)
 
         if not html:
             await msg.reply("No data available.")
             return
 
-        await msg.reply_htmlbox('<div class="ladder">' + html + "</div>")
+        await msg.reply_htmlbox(html.doc)
 
 
 EncountersSlotKey = tuple[
@@ -271,6 +322,59 @@ class Encounters:
         )
 
 
+class EncountersHTML(BaseHTMLCommand):
+    _STYLES = {
+        "table": {
+            "margin": "5px 0",
+        },
+    }
+
+    def __init__(self, *, encounters_data: Encounters) -> None:
+        super().__init__()
+
+        tag = self.doc.tag
+        text = self.doc.text
+
+        if not encounters_data.versions:
+            return
+
+        with tag("div", klass="ladder"):
+
+            for version in sorted(encounters_data.versions.values()):
+                with tag("details"):
+                    with tag("summary"), tag("b"), tag("big"):
+                        text(version.version.name)
+
+                    self._add_table(version)
+
+    def _add_table(self, version: EncountersVersion) -> None:
+        tag = self.doc.tag
+        line = self.doc.line
+        text = self.doc.text
+
+        with tag("table", style=self._get_css("table")):
+            for area in sorted(version.areas.values()):
+                with tag("tr"):
+                    line("th", area.area.name)
+                    line("th", "Method")
+                    line("th", "Level")
+                    line("th", "Rarity", colspan=2)
+
+                for slot in sorted(area.slots.values()):
+                    with tag("tr"):
+                        line("td", slot.pokemon.name)
+                        line("td", slot.method.prose)
+                        with tag("td"):
+                            text(f"L{slot.min_level}")
+                            if slot.min_level < slot.max_level:
+                                text(f"-{slot.max_level}")
+                        line(
+                            "td", f"{slot.rarity}%", colspan=1 if slot.conditions else 2
+                        )
+                        if slot.conditions:
+                            line("td", ", ".join([x.prose for x in slot.conditions]))
+
+
 @command_wrapper(aliases=("encounter",))
 async def encounters(msg: Message) -> None:
     if len(msg.args) < 1:
@@ -325,10 +429,10 @@ async def encounters(msg: Message) -> None:
             for encounter in area.encounters:
                 results.add_encounter_slot(area, encounter)
 
-        html = utils.render_template("commands/encounters.html", results=results)
+        html = EncountersHTML(encounters_data=results)
 
         if not html:
             await msg.reply("No data available.")
             return
 
-        await msg.reply_htmlbox('<div class="ladder">' + html + "</div>")
+        await msg.reply_htmlbox(html.doc)

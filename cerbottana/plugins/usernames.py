@@ -10,6 +10,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 import cerbottana.databases.veekun as v
 from cerbottana.database import Database
+from cerbottana.html_utils import get_doc
 
 from . import command_wrapper
 
@@ -90,7 +91,9 @@ async def averardo(msg: Message) -> None:
     if msg.room is None:
         await msg.reply(yt_url)
     elif msg.room.is_private:
-        await msg.reply_htmlbox(f'<youtube src="{yt_url}"></youtube>', yt_url)
+        doc = get_doc()
+        doc.line("youtube", "", src=yt_url)
+        await msg.reply_htmlbox(doc, yt_url)
 
 
 @command_wrapper()
@@ -364,7 +367,9 @@ async def ultrasuca(msg: Message) -> None:
     if msg.room is None:
         await msg.reply(yt_url)
     else:
-        await msg.reply_htmlbox(f'<youtube src="{yt_url}"></youtube>', yt_url)
+        doc = get_doc()
+        doc.line("youtube", "", src=yt_url)
+        await msg.reply_htmlbox(doc, yt_url)
 
 
 @command_wrapper(aliases=("useless", "usy"))

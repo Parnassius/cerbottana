@@ -7,10 +7,12 @@ from typing import TYPE_CHECKING
 from sqlalchemy import delete, select
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.sql import Select
+from yattag import Doc
 
 import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
+from cerbottana.html_utils import HTMLPageCommand
 
 from . import command_wrapper, htmlpage_wrapper
 
@@ -124,16 +126,37 @@ async def removeeightballanswerid(msg: Message) -> None:
     except ValueError:
         page = 1
 
-    await msg.user.send_htmlpage("eightball", msg.parametrized_room, page)
+    await msg.user.send_htmlpage("eightballanswers", msg.parametrized_room, page)
 
 
 @htmlpage_wrapper("eightballanswers", aliases=("8ballanswers",), required_rank="driver")
-def eightball_htmlpage(user: User, room: Room) -> Select:
+def eightball_htmlpage(user: User, room: Room, page: int) -> Doc:
     # TODO: remove annotation
     stmt: Select = (
         select(d.EightBall).filter_by(roomid=room.roomid).order_by(d.EightBall.answer)
     )
-    return stmt
+
+    html = HTMLPageCommand(
+        user,
+        room,
+        "eightballanswers",
+        stmt,
+        title="8ball answers",
+        fields=[("Answer", "answer")],
+        actions=[
+            (
+                "removeeightballanswerid",
+                ["_roomid", "id", "_page"],
+                False,
+                "trash",
+                "Delete",
+            )
+        ],
+    )
+
+    html.load_page(page)
+
+    return html.doc
 
 
 with open(utils.get_data_file("eightball.json"), encoding="utf-8") as f:

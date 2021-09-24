@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from yattag import Doc
+
 from cerbottana import utils
 
 from .room import Room
@@ -85,11 +87,11 @@ class Message:
         else:
             await self.room.send(message, escape)
 
-    async def reply_htmlbox(self, message: str, simple_message: str = "") -> None:
+    async def reply_htmlbox(self, message: Doc, simple_message: str = "") -> None:
         """Sends an HTML box to a room or in PM to a user, depending on the context.
 
         Args:
-            message (str): HTML to be sent.
+            message (Doc): HTML to be sent.
             simple_message (str): Alt text, not needed if the HTML box is sent to a
                 room. Defaults to a generic message.
         """

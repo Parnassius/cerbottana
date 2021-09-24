@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 import aiohttp
 
 from cerbottana import utils
+from cerbottana.html_utils import get_doc
 
 from . import command_wrapper
 
@@ -26,12 +27,19 @@ async def media(msg: Message) -> None:
             async with session.get(msg.arg) as response:
                 macrotype = response.content_type.split("/")[0]
                 if macrotype == "audio":
-                    await msg.reply_htmlbox(f'<audio controls src="{msg.arg}"></audio>')
+                    doc = get_doc()
+                    doc.line("audio", "", controls="", src=msg.arg)
+                    await msg.reply_htmlbox(doc)
                 elif macrotype == "video":
-                    # pylint: disable=line-too-long
-                    await msg.reply_htmlbox(
-                        f'<video style="max-width: 100%; max-height: 300px;" controls src="{msg.arg}"></video>'
+                    doc = get_doc()
+                    doc.line(
+                        "video",
+                        "",
+                        style="max-width: 100%; max-height: 300px",
+                        controls="",
+                        src=msg.arg,
                     )
+                    await msg.reply_htmlbox(doc)
                 elif macrotype == "image" or utils.is_youtube_link(msg.arg):
                     # This command isn't needed for images and youtube links, force to
                     # use `!show` if possible.

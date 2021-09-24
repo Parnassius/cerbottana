@@ -4,10 +4,12 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import select, update
 from sqlalchemy.sql import Select
+from yattag import Doc
 
 import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
+from cerbottana.html_utils import BaseHTMLCommand, HTMLPageCommand, get_doc
 
 from . import command_wrapper, htmlpage_wrapper
 
@@ -15,6 +17,86 @@ if TYPE_CHECKING:
     from cerbottana.models.message import Message
     from cerbottana.models.room import Room
     from cerbottana.models.user import User
+
+
+class ProfileHTML(BaseHTMLCommand):
+    _STYLES = {
+        "avatar": {
+            "display": "table-cell",
+            "vertical-align": "top",
+            "width": "80px",
+        },
+        "main": {
+            "display": "table-cell",
+            "vertical-align": "top",
+            "width": "100%",
+        },
+        "badge": {
+            "border": "1px solid",
+            "border-radius": "2px",
+            "margin": "2px 1px 0 0",
+        },
+        "hr": {
+            "margin": "4px 0",
+        },
+        "description": {
+            "text-align": "justify",
+        },
+        "pokemon_icon": {
+            "display": "table-cell",
+            "vertical-align": "top",
+            "width": "40px",
+        },
+    }
+
+    def __init__(
+        self,
+        *,
+        avatar_dir: str,
+        avatar_name: str,
+        username: str,
+        badges: list[d.Badges],
+        description: str | None,
+        pokemon_icon: str | None,
+    ) -> None:
+        super().__init__()
+
+        tag = self.doc.tag
+        stag = self.doc.stag
+        line = self.doc.line
+
+        with tag("div"):
+
+            with tag("div", style=self._get_css("avatar")):
+                stag(
+                    "img",
+                    src=(
+                        "https://play.pokemonshowdown.com/sprites/"
+                        f"{avatar_dir}/{avatar_name}.png"
+                    ),
+                    width=80,
+                    height=80,
+                )
+
+            with tag("div", style=self._get_css("main")):
+                line("username", username)
+                stag("br")
+                for badge in badges:
+                    stag(
+                        "img",
+                        src=badge.image,
+                        width=13,
+                        height=13,
+                        title=badge.label,
+                        style=self._get_css("badge"),
+                    )
+                if description:
+                    stag("hr", style=self._get_css("hr"))
+                    line("div", description, style=self._get_css("description"))
+
+            if pokemon_icon:
+                with tag("div", style=self._get_css("pokemon_icon")):
+                    line("psicon", "", pokemon=pokemon_icon)
 
 
 @command_wrapper(aliases=("profilo",), helpstr="Visualizza il tuo profilo.")
@@ -42,17 +124,16 @@ async def profile(msg: Message) -> None:
                 avatar_dir = "trainers"
                 avatar_name = userdata.avatar
 
-            html = utils.render_template(
-                "commands/profile.html",
+            html = ProfileHTML(
                 avatar_dir=avatar_dir,
                 avatar_name=avatar_name,
-                username=userdata.username,
+                username=userdata.username or userdata.userid,
                 badges=badges,
                 description=userdata.description,
                 pokemon_icon=userdata.icon,
             )
 
-            await msg.reply_htmlbox(html)
+            await msg.reply_htmlbox(html.doc)
 
 
 @command_wrapper(
@@ -85,15 +166,17 @@ async def setprofile(msg: Message) -> None:
     await msg.reply("Salvato")
 
     if not authorized:
-        username = utils.html_escape(msg.user.username)
+        username = msg.user.username
         botname = msg.conn.username
         cmd = f"{msg.conn.command_character}pendingdescriptions"
-        message = (
-            f"{username} ha aggiornato la sua frase del profilo.<br>"
-            f'Usa <button name="send" value="/pm {botname}, {cmd}">{cmd}</button> '
-            "per approvarla o rifiutarla"
-        )
-        await msg.conn.main_room.send_rankhtmlbox("%", message)
+
+        doc = get_doc()
+        doc.text(f"{username} ha aggiornato la sua frase del profilo.")
+        doc.stag("br")
+        doc.text("Usa ")
+        doc.line("button", cmd, name="send", value=f"/pm {botname}, {cmd}")
+        doc.text(" per approvarla o rifiutarla")
+        await msg.conn.main_room.send_rankhtmlbox("%", doc)
 
 
 @command_wrapper(
@@ -148,11 +231,43 @@ async def rifiutaprofilo(msg: Message) -> None:
 
 
 @htmlpage_wrapper("pendingdescriptions", required_rank="driver", main_room_only=True)
-def pendingdescriptions_htmlpage(user: User, room: Room) -> Select:
+def pendingdescriptions_htmlpage(user: User, room: Room, page: int) -> Doc:
     # TODO: remove annotation
     stmt: Select = (
         select(d.Users)
         .where(d.Users.description_pending != "")
         .order_by(d.Users.userid)
     )
-    return stmt
+
+    html = HTMLPageCommand(
+        user,
+        room,
+        "pendingdescriptions",
+        stmt,
+        title="Pending profile descriptions",
+        fields=[
+            ("User", "username"),
+            ("Current description", "description"),
+            ("New description", "description_pending"),
+        ],
+        actions=[
+            (
+                "approvaprofilo",
+                ["id", "description_pending"],
+                False,
+                "check",
+                "Approve",
+            ),
+            (
+                "rifiutaprofilo",
+                ["id", "description_pending"],
+                False,
+                "times",
+                "Reject",
+            ),
+        ],
+    )
+
+    html.load_page(page)
+
+    return html.doc

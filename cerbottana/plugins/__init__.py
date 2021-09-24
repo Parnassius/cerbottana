@@ -9,10 +9,12 @@ from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import select
 from sqlalchemy.sql import Select
+from yattag import Doc
 
 import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
+from cerbottana.html_utils import HTMLPageCommand
 from cerbottana.models.room import Room
 from cerbottana.typedefs import Role, RoomId
 
@@ -21,7 +23,7 @@ if TYPE_CHECKING:
     from cerbottana.models.user import User
 
     CommandFunc = Callable[[Message], Awaitable[None]]
-    HTMLPageFunc = Callable[[User, Room], Optional[Select]]
+    HTMLPageFunc = Callable[[User, Room, int], Optional[Doc]]
 
 
 # --- Command logic and complementary decorators ---
@@ -38,6 +40,7 @@ class Command:
         is_unlisted: bool,
         required_rank: Role,
         required_rank_editable: bool | str,
+        allow_pm: bool | Role,
     ) -> None:
         self.name = func.__name__
         self.module = func.__module__
@@ -47,11 +50,34 @@ class Command:
         self.is_unlisted = is_unlisted
         self.required_rank = required_rank
         self.required_rank_editable = required_rank_editable
+        self.allow_pm = allow_pm
         self._instances[func.__name__] = self
 
     @property
     def splitted_aliases(self) -> dict[str, Command]:
         return {alias: self for alias in self.aliases}
+
+    def get_required_rank(self, roomid: RoomId | None, is_pm: bool) -> Role:
+        req_rank = self.required_rank
+
+        if self.required_rank_editable is not False and roomid:
+            command = f".{self.name}"
+            if isinstance(self.required_rank_editable, str):
+                command = self.required_rank_editable
+
+            db = Database.open()
+            with db.get_session() as session:
+                stmt = select(d.CustomPermissions.required_rank).filter_by(
+                    roomid=roomid, command=command
+                )
+                custom_rank: Role | None = session.scalar(stmt)
+                if custom_rank:
+                    req_rank = custom_rank
+
+        if is_pm and isinstance(self.allow_pm, str):
+            req_rank = self.allow_pm
+
+        return req_rank
 
     @classmethod
     def get_all_aliases(cls) -> dict[str, Command]:
@@ -81,46 +107,26 @@ class Command:
         }
 
 
-def command_check_permission(  # pylint: disable=too-many-arguments
+def command_check_permission(
     func: CommandFunc,
-    required_rank: Role,
     allow_pm: bool | Role,
-    required_rank_editable: bool | str,
     main_room_only: bool,
     parametrize_room: bool,
 ) -> CommandFunc:
     @wraps(func)
     async def wrapper(msg: Message) -> None:
-        req_rank = required_rank
-
-        if required_rank_editable is not False:
-            roomid = ""
-            if parametrize_room:
-                roomid = msg.parametrized_room.roomid
-            elif msg.room:
-                roomid = msg.room.roomid
-
-            if roomid:
-                command = f".{func.__name__}"
-                if isinstance(required_rank_editable, str):
-                    command = required_rank_editable
-
-                db = Database.open()
-                with db.get_session() as session:
-                    stmt = select(d.CustomPermissions.required_rank).filter_by(
-                        roomid=roomid, command=command
-                    )
-                    custom_rank: Role | None = session.scalar(stmt)
-                    if custom_rank:
-                        req_rank = custom_rank
-
-        if msg.room is None and isinstance(allow_pm, str):
-            req_rank = allow_pm
+        roomid: RoomId | None = None
+        if parametrize_room:
+            roomid = msg.parametrized_room.roomid
+        elif msg.room:
+            roomid = msg.room.roomid
+        is_pm = msg.room is None
+        req_rank = msg.conn.commands[func.__name__].get_required_rank(roomid, is_pm)
 
         if main_room_only and not msg.user.has_role(req_rank, msg.conn.main_room):
             return
 
-        if not allow_pm and msg.room is None:
+        if not allow_pm and is_pm:
             return
 
         if parametrize_room:
@@ -175,16 +181,20 @@ def command_wrapper(
     def cls_wrapper(func: CommandFunc) -> Command:
         func = command_check_permission(
             func,
-            required_rank,
             allow_pm,
-            required_rank_editable,
             main_room_only,
             parametrize_room,
         )
         if parametrize_room:
             func = parametrize_room_wrapper(func)
         return Command(
-            func, aliases, helpstr, is_unlisted, required_rank, required_rank_editable
+            func,
+            aliases,
+            helpstr,
+            is_unlisted,
+            required_rank,
+            required_rank_editable,
+            allow_pm,
         )
 
     return cls_wrapper
@@ -236,14 +246,14 @@ def parametrize_room_wrapper(func: CommandFunc) -> CommandFunc:
 # --- HTML pages ---
 
 
-htmlpages: dict[str, tuple[HTMLPageFunc, str | None]] = {}
+htmlpages: dict[str, HTMLPageFunc] = {}
 
 
 def htmlpage_check_permission(
     func: HTMLPageFunc, required_rank: Role | None, main_room_only: bool
 ) -> HTMLPageFunc:
     @wraps(func)
-    def wrapper(user: User, room: Room) -> Select | None:
+    def wrapper(user: User, room: Room, page: int) -> Doc | None:
         if main_room_only and room is not room.conn.main_room:
             return None
 
@@ -253,7 +263,7 @@ def htmlpage_check_permission(
         elif not user.has_role(required_rank, room):
             return None
 
-        return func(user, room)
+        return func(user, room, page)
 
     return wrapper
 
@@ -264,7 +274,6 @@ def htmlpage_wrapper(
     aliases: tuple[str, ...] = (),
     required_rank: Role = "voice",
     allow_pm: bool | Role = True,
-    delete_command: str | None = None,
     main_room_only: bool = False,
 ) -> Callable[[HTMLPageFunc], HTMLPageFunc]:
     # Register a command sending a link to the htmlpage
@@ -293,7 +302,7 @@ def htmlpage_wrapper(
 
     def wrapper(func: HTMLPageFunc) -> HTMLPageFunc:
         func = htmlpage_check_permission(func, req_rank, main_room_only)
-        htmlpages[pageid] = func, delete_command
+        htmlpages[pageid] = func
         return func
 
     return wrapper

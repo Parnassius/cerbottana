@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING
 
-from cerbottana import utils
+from cerbottana.html_utils import get_doc, to_obfuscated_html
 
 from . import command_wrapper
 
@@ -38,13 +38,13 @@ async def tell(msg: Message) -> None:
         return
 
     author = msg.user.roomname(msg.parametrized_room)
-    html = (
-        f"<b>{utils.to_obfuscated_html(msg.arg)}</b><br>"
-        + '<div style="display: inline-block; color: #888; font-size: 8pt">'
-        + f"[inviato da {author}]"
-        + "</div>"
-    )
-    await msg.parametrized_room.send_htmlbox(html)
+    doc = get_doc()
+    with doc.tag("b"):
+        doc.asis(to_obfuscated_html(msg.arg).getvalue())
+    doc.stag("br")
+    with doc.tag("div", style="display: inline-block; color: #888; font-size: 8pt"):
+        doc.text(f"[inviato da {author}]")
+    await msg.parametrized_room.send_htmlbox(doc)
 
 
 @command_wrapper(helpstr="<i>[blitz]</i> Avvia una partita di UNO.", allow_pm=False)

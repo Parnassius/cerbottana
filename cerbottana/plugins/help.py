@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cerbottana.html_utils import get_doc
+
 from . import Command, command_wrapper
 
 if TYPE_CHECKING:
@@ -13,17 +15,21 @@ async def commands(msg: Message) -> None:
     cmd = msg.arg.lower()
     if cmd in msg.conn.commands and msg.conn.commands[cmd].helpstr:
         # asking for a specific command
-        message = f"<b>{cmd}</b> {msg.conn.commands[cmd].helpstr}"
-        await msg.reply_htmlbox(message)
+        doc = get_doc()
+        doc.line("b", cmd)
+        doc.asis(f" {msg.conn.commands[cmd].helpstr}")
+        await msg.reply_htmlbox(doc)
     elif cmd == "":
         # asking for a list of every command
         helpstrings = Command.get_all_helpstrings()
         if not helpstrings:
             return
 
-        html = ""
-        for key in helpstrings:
-            html += f"<b>{key}</b> {helpstrings[key]}<br>"
-        await msg.reply_htmlbox(html[:-4])
+        doc = get_doc()
+        for key, helpstring in helpstrings.items():
+            doc.line("b", key)
+            doc.asis(f" {helpstring}")
+            doc.stag("br")
+        await msg.reply_htmlbox(doc)
     else:
         await msg.reply("Comando non trovato")

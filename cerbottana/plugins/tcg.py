@@ -5,8 +5,9 @@ import urllib
 from typing import TYPE_CHECKING
 
 import aiohttp
+from yattag import Doc
 
-from cerbottana import utils
+from cerbottana.html_utils import get_doc
 from cerbottana.typedefs import JsonDict
 
 from . import command_wrapper
@@ -52,15 +53,18 @@ def to_card_id(card_name: str) -> str:
     return "".join(ch.lower() for ch in card_name if ch.isalpha())
 
 
-def to_card_thumbnail(card_json: JsonDict) -> str:
+def to_card_thumbnail(card_json: JsonDict) -> Doc:
     """Generates HTML that shows card thumbnail(s).
 
     Args:
         card_json (JsonDict): JSON of a Scryfall Card object.
 
     Returns:
-        str: htmlbox code.
+        Doc: htmlbox code.
     """
+
+    doc = get_doc()
+
     # img_uris ~ URI for card thumbnail(s)
     if "card_faces" in card_json and "image_uris" in card_json["card_faces"][0]:
         # Double-faced cards have 2 thumbnails, i.e. transform cards.
@@ -71,15 +75,22 @@ def to_card_thumbnail(card_json: JsonDict) -> str:
     else:
         # Fallback: image_uris isn't guaranteed to exist or be non-null but the previous
         # conditional cases should cover most cards.
-        uri = card_json["scryfall_uri"]
-        name = card_json["name"]
-        return f'Immagine per <a href="{uri}">{name}</a> non disponibile.'
+        doc.text("Immagine per ")
+        doc.line("a", card_json["name"], href=card_json["scryfall_uri"])
+        doc.text(" non disponibile.")
+        return doc
 
-    return utils.render_template(
-        "commands/mtg_card.html",
-        img_uris=img_uris,
-        scryfall_uri=card_json["scryfall_uri"],
-    )
+    with doc.tag("a", href=card_json["scryfall_uri"]):
+        for img_uri in img_uris:
+            doc.stag(
+                "img",
+                src=img_uri,
+                width=251,
+                height=350,
+                style="border-radius: 4.75% / 3.5%; margin-right: 5px",
+            )
+
+    return doc
 
 
 @command_wrapper(
@@ -120,9 +131,11 @@ async def card(msg: Message) -> None:
         await msg.reply_htmlbox(to_card_thumbnail(card_))
     elif len(cards) <= 40:
         # Show a list of all query results.
-        link = '<a href="{}">{}</a>'
-        links = [link.format(c["scryfall_uri"], c["name"]) for c in cards]
-        await msg.reply_htmlbox("<br>".join(links))
+        doc = get_doc()
+        for c in cards:
+            doc.line("a", c["name"], href=c["scryfall_uri"])
+            doc.stag("br")
+        await msg.reply_htmlbox(doc)
     else:
         await msg.reply(f"**{len(cards)}** risultati! Usa un nome più specifico...")
 

@@ -2,12 +2,52 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from cerbottana import utils
+from cerbottana.html_utils import BaseHTMLCommand
 
 from . import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message
+
+
+class ColorCompareHTML(BaseHTMLCommand):
+    _STYLES = {
+        "table": {
+            "table-layout": "fixed",
+            "width": "100%",
+        },
+        "background1": {
+            "box-shadow": "inset 0 0 0 100vh, 0 30px",
+            "height": "30px",
+        },
+        "username": {
+            "font-weight": "bold",
+            "text-align": "center",
+        },
+        "background2": {
+            "box-shadow": "inset 0 0 0 100vh, 0 -30px",
+            "height": "30px",
+        },
+    }
+
+    def __init__(self, *, usernames: list[str]) -> None:
+        super().__init__()
+
+        tag = self.doc.tag
+        line = self.doc.line
+
+        with tag("table", style=self._get_css("table")), tag("tr"):
+
+            for username in usernames:
+                with tag("td"):
+
+                    with tag("username", name=username):
+                        line("div", "", style=self._get_css("background1"))
+
+                    line("div", username, style=self._get_css("username"))
+
+                    with tag("username", name=username):
+                        line("div", "", style=self._get_css("background2"))
 
 
 @command_wrapper(
@@ -21,5 +61,5 @@ async def colorcompare(msg: Message) -> None:
     if not args:
         return
 
-    html = utils.render_template("commands/colorcompare.html", usernames=args)
-    await msg.reply_htmlbox(html)
+    html = ColorCompareHTML(usernames=args)
+    await msg.reply_htmlbox(html.doc)

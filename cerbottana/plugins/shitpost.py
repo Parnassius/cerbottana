@@ -5,6 +5,7 @@ import random
 from typing import TYPE_CHECKING
 
 from cerbottana import utils
+from cerbottana.html_utils import get_doc
 
 from . import command_wrapper
 
@@ -44,9 +45,14 @@ async def shitpost(msg: Message) -> None:
             text1 += LETTERS[i][1]
             text2 += LETTERS[i][2]
 
-    html = '<pre style="margin: 0; overflow-x: auto">{}<br>{}<br>{}</pre>'
-
-    await msg.reply_htmlbox(html.format(text0, text1, text2))
+    doc = get_doc()
+    with doc.tag("pre", style="margin: 0; overflow-x: auto"):
+        doc.text(text0)
+        doc.stag("br")
+        doc.text(text1)
+        doc.stag("br")
+        doc.text(text2)
+    await msg.reply_htmlbox(doc)
 
 
 @command_wrapper(aliases=("meme", "memes", "mims"), is_unlisted=True, allow_pm=False)
