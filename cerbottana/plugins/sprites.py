@@ -7,13 +7,13 @@ from typing import TYPE_CHECKING
 
 from imageprobe.errors import UnsupportedFormat
 
+from cerbottana.html_utils import image_url_to_html
 from cerbottana.typedefs import JsonDict
 from cerbottana.utils import (
     POKEDEX,
     POKEDEX_MINI,
     POKEDEX_MINI_BW,
     get_ps_dex_entry,
-    image_url_to_html,
     to_id,
 )
 

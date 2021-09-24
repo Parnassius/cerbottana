@@ -3,12 +3,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from domify import html_elements as e
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 import cerbottana.databases.veekun as v
 from cerbottana import utils
 from cerbottana.database import Database
+from cerbottana.html_utils import BaseHTMLCommand
 
 from . import command_wrapper
 
@@ -64,6 +66,50 @@ class Learnset:
                 move.machines[0] if move.machines else None,
             )
         self.methods[method.id].moves[move.id].forms.add(pokemon)
+
+
+class LearnsetHTML(BaseHTMLCommand):
+    _STYLES = {
+        "table": {
+            "margin": "5px 0",
+        },
+        "align_right": {
+            "text-align": "right",
+        },
+    }
+
+    def __init__(self, *, learnset_data: Learnset) -> None:
+        super().__init__()
+
+        if not learnset_data.methods:
+            return
+
+        with self.doc, e.Div(class_="ladder"):
+            for method in sorted(learnset_data.methods.values()):
+                with e.Details():
+                    e.Summary(e.B(method.method.prose))
+                    self._add_table(method)
+
+    def _add_table(self, method: LearnsetMethod) -> None:
+        with e.Table(style=self._get_css("table")):
+            with e.Tr():
+                e.Th("Move")
+                if method.method.id == 1:
+                    e.Th("Level")
+                elif method.method.id == 4:
+                    e.Th("Machine")
+                if method.form_column:
+                    e.Th("Form")
+
+            for move in sorted(method.moves.values()):
+                with e.Tr():
+                    e.Td(move.move.name)
+                    if method.method.id == 1:
+                        e.Td(move.level, style=self._get_css("align_right"))
+                    elif method.method.id == 4:
+                        e.Td(getattr(getattr(move.machine, "item", None), "name", ""))
+                    if method.form_column:
+                        e.Td(", ".join([x.name for x in sorted(move.forms)]))
 
 
 @command_wrapper()
@@ -143,10 +189,10 @@ async def learnset(msg: Message) -> None:
                 else:
                     method_data.form_column = True
 
-        html = utils.render_template("commands/learnsets.html", results=results)
+        html = LearnsetHTML(learnset_data=results)
 
         if not html:
             await msg.reply("No data available.")
             return
 
-        await msg.reply_htmlbox('<div class="ladder">' + html + "</div>")
+        await msg.reply_htmlbox(html.doc)

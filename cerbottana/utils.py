@@ -1,17 +1,11 @@
 from __future__ import annotations
 
 import json
-import random
 import re
 import string
 import unicodedata
 from html import escape
 from os.path import dirname, join
-from typing import Any
-
-import htmlmin  # type: ignore[import]
-from imageprobe import probe
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from .typedefs import JsonDict, Role, RoomId, UserId
 
@@ -85,98 +79,11 @@ def html_escape(text: str | None) -> str:
     return escape(text).replace("\n", "<br>")
 
 
-async def image_url_to_html(url: str) -> str:
-    """Generates an <img> tag from an image url."""
-    image = await probe(url)
-    return f'<img src="{url}" width="{image.width}" height="{image.height}">'
-
-
 def is_youtube_link(url: str) -> bool:
     """Returns True if url is a youtube link, based on PS' regex."""
     # Note: You should let PS display youtube links natively with "!show {url}".
     youtube_regex = r"^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)(\/|$)"
     return re.match(youtube_regex, url, re.IGNORECASE) is not None
-
-
-def linkify(text: str) -> str:
-    """Transforms a text containing URLs into HTML code.
-
-    Args:
-        text (str): Raw text.
-
-    Returns:
-        str: Escaped HTML, possibly containing <a> tags.
-    """
-    # Partially translated from https://github.com/smogon/pokemon-showdown, chat parser.
-    # The original code is released under the MIT License.
-
-    # linkify requires a custom translation table because "/" is left unescaped.
-    table = {ord(char): escape(char) for char in "&<>\"'"}
-    table[ord("\n")] = "<br>"
-    text = text.translate(table)
-
-    # pylint: disable=line-too-long
-    url_regex = r'(?i)(?:(?:https?:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)*|www\.[a-z0-9-]+(?:\.[a-z0-9-]+)+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com?|org|net|edu|info|us|jp|[a-z]{2,3}(?=[:/])))(?::[0-9]+)?(?:\/(?:(?:[^\s()&<>]|&amp;|&quot;|\((?:[^\\s()<>&]|&amp;)*\))*(?:[^\s()[\]{}".,!?;:&<>*`^~\\]|\((?:[^\s()<>&]|&amp;)*\)))?)?|[a-z0-9.]+@[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,})(?![^ ]*&gt;)'
-    return re.sub(url_regex, lambda m: _linkify_uri(m.group()), text)
-
-
-def _linkify_uri(uri: str) -> str:
-    # Partially translated from https://github.com/smogon/pokemon-showdown, chat parser.
-    # The original code is released under the MIT License.
-
-    if re.match(r"^[a-z0-9.]+@", uri, re.IGNORECASE):
-        fulluri = f"mailto:{uri}"
-    else:
-        fulluri = re.sub(r"^([a-z]*[^a-z:])", r"http://\1", uri)
-        if uri.startswith(("https://docs.google.com/", "docs.google.com/")):
-            if uri.startswith("https"):
-                uri = uri[8:]
-            if uri.endswith(("?usp=sharing", "&usp=sharing")):
-                uri = uri[:-12]
-            if uri.endswith("#gid=0"):
-                uri = uri[:-6]
-
-            slash_index = uri.rindex("/")
-            if len(uri) - slash_index > 18:
-                slash_index = len(uri)
-            if slash_index - 4 > 22:
-                uri = (
-                    uri[:19]
-                    + '<small class="message-overflow">'
-                    + uri[19 : slash_index - 4]
-                    + "</small>"
-                    + uri[slash_index - 4 :]
-                )
-    return f'<a href="{fulluri}">{uri}</a>'
-
-
-def render_template(  # type: ignore[misc]  # allow any
-    template_name: str, **template_vars: Any
-) -> str:
-    env = Environment(
-        loader=FileSystemLoader(join(dirname(__file__), "templates")),
-        autoescape=select_autoescape(["html", "xml"]),
-        trim_blocks=True,
-        lstrip_blocks=True,
-    )
-    template = env.get_template(template_name)
-    html = template.render(**template_vars)
-    return htmlmin.minify(html, convert_charrefs=False)  # type: ignore[no-any-return]
-
-
-def to_obfuscated_html(text: str | None) -> str:
-    """Converts a string to HTML code and adds invisible obfuscation text."""
-    if text is None:
-        return ""
-
-    obfuscated = ""
-    for ch in text:
-        obfuscated += html_escape(ch)
-        randstr = ""
-        for _ in range(random.randrange(3, 10)):
-            randstr += random.choice(string.ascii_letters + string.digits)
-        obfuscated += f'<span style="position: absolute; top: -999vh">{randstr}</span>'
-    return obfuscated
 
 
 def get_language_id(language_name: str, *, fallback: int = 9) -> int:

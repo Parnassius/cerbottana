@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from domify import html_elements as e
+from domify.base_element import BaseElement
+
 from . import Command, command_wrapper
 
 if TYPE_CHECKING:
@@ -13,17 +16,17 @@ async def commands(msg: Message) -> None:
     cmd = msg.arg.lower()
     if cmd in msg.conn.commands and msg.conn.commands[cmd].helpstr:
         # asking for a specific command
-        message = f"<b>{cmd}</b> {msg.conn.commands[cmd].helpstr}"
-        await msg.reply_htmlbox(message)
+        html = e.B(cmd) + e.RawTextNode(f" {msg.conn.commands[cmd].helpstr}")
+        await msg.reply_htmlbox(html)
     elif cmd == "":
         # asking for a list of every command
         helpstrings = Command.get_all_helpstrings()
         if not helpstrings:
             return
 
-        html = ""
-        for key in helpstrings:
-            html += f"<b>{key}</b> {helpstrings[key]}<br>"
-        await msg.reply_htmlbox(html[:-4])
+        html = BaseElement()
+        for key, helpstring in helpstrings.items():
+            html.add(e.B(key) + e.RawTextNode(f" {helpstring}") + e.Br())
+        await msg.reply_htmlbox(html)
     else:
         await msg.reply("Comando non trovato")
