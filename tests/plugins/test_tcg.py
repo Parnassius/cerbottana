@@ -26,7 +26,7 @@ def test_thumbnail_layout(layout: str) -> None:
     print(f"Testing against: {layout}")
     with open(layout, encoding="utf-8") as testdata:
         card_json = json.load(testdata)
-    assert not is_errmsg(to_card_thumbnail(card_json))
+    assert not is_errmsg(str(to_card_thumbnail(card_json)))
 
 
 def test_thumbnail_missing_image_uris() -> None:
@@ -35,4 +35,4 @@ def test_thumbnail_missing_image_uris() -> None:
         "name": "Dummy Card Name",
         "scryfall_uri": "https://dummy.url/",
     }
-    assert is_errmsg(to_card_thumbnail(card_json))
+    assert is_errmsg(str(to_card_thumbnail(card_json)))

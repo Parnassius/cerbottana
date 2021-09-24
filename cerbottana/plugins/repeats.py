@@ -8,11 +8,14 @@ from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 from dateutil.parser import parse
+from domify import html_elements as e
+from domify.base_element import BaseElement
 from sqlalchemy import delete, select
 from sqlalchemy.sql import Select
 
 import cerbottana.databases.database as d
 from cerbottana.database import Database
+from cerbottana.html_utils import HTMLPageCommand
 from cerbottana.models.room import Room
 from cerbottana.tasks import init_task_wrapper
 
@@ -292,9 +295,25 @@ async def stoprepeat(msg: Message) -> None:
 
 
 @htmlpage_wrapper("repeats", aliases=("showrepeats",), required_rank="driver")
-def repeats_htmlpage(user: User, room: Room) -> Select:
+def repeats_htmlpage(user: User, room: Room, page: int) -> BaseElement:
     # TODO: remove annotation
     stmt: Select = (
         select(d.Repeats).filter_by(roomid=room.roomid).order_by(d.Repeats.message)
     )
-    return stmt
+
+    html = HTMLPageCommand(
+        user,
+        room,
+        "repeats",
+        stmt,
+        title=f"Repeats for {room.title}",
+        fields=[
+            ("Phrase", lambda row: e.Div(row.Repeats.message)),
+            ("Interval (minutes)", "delta_minutes"),
+            ("Expiry", lambda row: str(row.Repeats.expire_dt or "Nope")),
+        ],
+    )
+
+    html.load_page(page)
+
+    return html.doc

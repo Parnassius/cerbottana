@@ -3,7 +3,9 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING
 
-from cerbottana import utils
+from domify import html_elements as e
+
+from cerbottana.html_utils import to_obfuscated_html
 
 from . import command_wrapper
 
@@ -38,11 +40,10 @@ async def tell(msg: Message) -> None:
         return
 
     author = msg.user.roomname(msg.parametrized_room)
-    html = (
-        f"<b>{utils.to_obfuscated_html(msg.arg)}</b><br>"
-        + '<div style="display: inline-block; color: #888; font-size: 8pt">'
-        + f"[inviato da {author}]"
-        + "</div>"
+    html = e.B(to_obfuscated_html(msg.arg)) + e.Br()
+    html += e.Div(
+        f"[inviato da {author}]",
+        style="display: inline-block; color: #888; font-size: 8pt",
     )
     await msg.parametrized_room.send_htmlbox(html)
 

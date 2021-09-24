@@ -4,6 +4,8 @@ import json
 import random
 from typing import TYPE_CHECKING
 
+from domify import html_elements as e
+
 from cerbottana import utils
 
 from . import command_wrapper
@@ -44,9 +46,9 @@ async def shitpost(msg: Message) -> None:
             text1 += LETTERS[i][1]
             text2 += LETTERS[i][2]
 
-    html = '<pre style="margin: 0; overflow-x: auto">{}<br>{}<br>{}</pre>'
-
-    await msg.reply_htmlbox(html.format(text0, text1, text2))
+    html = e.Pre(style="margin: 0; overflow-x: auto")
+    html.add(text0 + e.Br() + text1 + e.Br() + text2)
+    await msg.reply_htmlbox(html)
 
 
 @command_wrapper(aliases=("meme", "memes", "mims"), is_unlisted=True, allow_pm=False)

@@ -8,6 +8,8 @@ from textwrap import shorten
 from typing import TYPE_CHECKING
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
+from domify.base_element import BaseElement
+
 from cerbottana import utils
 from cerbottana.typedefs import RoomId
 
@@ -139,20 +141,20 @@ class Room:
                 message = " " + message
         await self.conn.send(f"{self.roomid}|{message}")
 
-    async def send_rankhtmlbox(self, rank: str, message: str) -> None:
+    async def send_rankhtmlbox(self, rank: str, message: BaseElement) -> None:
         """Sends an HTML box visible only to people with a specific rank.
 
         Args:
             rank (str): Minimum rank required to see the HTML box.
-            message (str): HTML to be sent.
+            message (BaseElement): HTML to be sent.
         """
         await self.send(f"/addrankhtmlbox {rank}, {message}", False)
 
-    async def send_htmlbox(self, message: str) -> None:
+    async def send_htmlbox(self, message: BaseElement) -> None:
         """Sends an HTML box visible to every user in the room.
 
         Args:
-            message (str): HTML to be sent.
+            message (BaseElement): HTML to be sent.
         """
         await self.send(f"/addhtmlbox {message}", False)
 

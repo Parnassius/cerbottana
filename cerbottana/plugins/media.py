@@ -5,6 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import aiohttp
+from domify import html_elements as e
+from domify.base_element import BaseElement
 
 from cerbottana import utils
 
@@ -27,13 +29,17 @@ async def media(msg: Message) -> None:
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(msg.arg) as response:
                 macrotype = response.content_type.split("/")[0]
+                html: BaseElement
                 if macrotype == "audio":
-                    await msg.reply_htmlbox(f'<audio controls src="{msg.arg}"></audio>')
+                    html = e.Audio(controls=True, src=msg.arg)
+                    await msg.reply_htmlbox(html)
                 elif macrotype == "video":
-                    # pylint: disable=line-too-long
-                    await msg.reply_htmlbox(
-                        f'<video style="max-width: 100%; max-height: 300px;" controls src="{msg.arg}"></video>'
+                    html = e.Video(
+                        controls=True,
+                        src=msg.arg,
+                        style="max-width: 100%; max-height: 300px",
                     )
+                    await msg.reply_htmlbox(html)
                 elif macrotype == "image" or utils.is_youtube_link(msg.arg):
                     # This command isn't needed for images and youtube links, force to
                     # use `!show` if possible.
