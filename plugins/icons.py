@@ -26,7 +26,7 @@ async def icon(msg: Message) -> None:
 
     search_query = to_id(msg.args[0])
     dex_entry = get_ps_dex_entry(search_query)
-    if dex_entry is None or dex_entry["num"] < 0:
+    if dex_entry is None or dex_entry["num"] <= 0:
         await msg.reply("Pokémon not found.")
         return
 
