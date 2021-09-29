@@ -555,7 +555,7 @@ sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
 name = "sqlalchemy2-stubs"
-version = "0.0.2a15"
+version = "0.0.2a16"
 description = "Typing Stubs for SQLAlchemy 1.4"
 category = "dev"
 optional = false
@@ -643,7 +643,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.9.*"
-content-hash = "e82aefb27f215e5e539ae3376a94cde49b30a0c9680dca6e57b7bd858354b0c0"
+content-hash = "1b597f49e5c48ec069d1ce6d53f8680d9d44d16335efc7725fc061deb77e28a4"
 
 [metadata.files]
 aiohttp = [
@@ -1157,8 +1157,8 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.25.tar.gz", hash = "sha256:1adf3d25e2e33afbcd48cfad8076f9378793be43e7fec3e4334306cac6bec138"},
 ]
 sqlalchemy2-stubs = [
-    {file = "sqlalchemy2-stubs-0.0.2a15.tar.gz", hash = "sha256:9336e0724c985623e055e2db28e8d78a62b40a2628b862c6cd50d7942fd5a238"},
-    {file = "sqlalchemy2_stubs-0.0.2a15-py3-none-any.whl", hash = "sha256:3da19252c87c1ae6bf0e49c2873e72a6e5684a1ede2490c8b75b78834239258b"},
+    {file = "sqlalchemy2-stubs-0.0.2a16.tar.gz", hash = "sha256:a52356e393ab369a15786de0a65e4b8068f8d49d5d728b2a5f643075425f12c5"},
+    {file = "sqlalchemy2_stubs-0.0.2a16-py3-none-any.whl", hash = "sha256:20a580f866cb1a777821283ef1087662732e9d8e559cb0acead460b404cf7d3c"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
