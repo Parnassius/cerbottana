@@ -46,6 +46,11 @@ pytestmark = pytest.mark.asyncio
             (5, 9),
             {("move", "chargeur"): {"Chargeur"}, ("move", "tackle"): {"Tackle"}},
         ),
+        (
+            "hdb",
+            (8, 9),
+            {("item", "scarponirobusti"): {"Scarponi robusti"}},
+        ),
     ),
 )
 async def test_translations(

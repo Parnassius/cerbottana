@@ -23,6 +23,8 @@ class TranslatableTableNames(Protocol):
 def _get_translations(
     word: str, languages: tuple[int, int]
 ) -> dict[tuple[str, str], set[str]]:
+    word = utils.to_user_id(utils.remove_diacritics(utils.get_alias(word)))
+
     results: dict[tuple[str, str], set[str]] = {}
 
     db = Database.open("veekun")

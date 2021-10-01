@@ -200,6 +200,10 @@ def get_language_id(language_name: str, *, fallback: int = 9) -> int:
     return fallback
 
 
+def get_alias(text: str) -> str:
+    return ALIASES.get(_escape(text), text)
+
+
 def get_ps_dex_entry(query: str, *, _female: bool = False) -> JsonDict | None:
     """Retrieves a pokemon entry from the PS pokedex.
 
@@ -210,9 +214,8 @@ def get_ps_dex_entry(query: str, *, _female: bool = False) -> JsonDict | None:
         JsonDict | None: Dict with pokemon information or None if no pokemon was
             recognized.
     """
-    species = query = _escape(query)
-    if species in ALIASES:
-        species = _escape(ALIASES[species])
+    query = _escape(query)
+    species = _escape(get_alias(query))
 
     if species in POKEDEX:
         entry = POKEDEX[species]
