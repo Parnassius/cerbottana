@@ -1,9 +1,60 @@
 import pytest
 
+from plugins.translations import _get_translations
+
 pytestmark = pytest.mark.asyncio
 
 
-async def test_translations(mock_connection):
+@pytest.mark.parametrize(
+    "word, languages, results",
+    (
+        (
+            "azione",
+            (8, 9),
+            {("move", "tackle"): {"Tackle"}},
+        ),
+        (
+            "tackle",
+            (8, 9),
+            {("move", "azione"): {"Azione"}},
+        ),
+        (
+            "metronome",
+            (8, 9),
+            {
+                ("item", "plessimetro"): {"Plessimetro"},
+                ("move", "metronomo"): {"Metronomo"},
+            },
+        ),
+        (
+            "pound",
+            (6, 9),
+            {("move", "klaps"): {"Klaps"}},
+        ),
+        (
+            "klaps",
+            (6, 9),
+            {("move", "pound"): {"Pound"}},
+        ),
+        (
+            "klaps",
+            (6, 5),
+            {("move", "ecrasface"): {"Écras’Face"}},
+        ),
+        (
+            "charge",
+            (5, 9),
+            {("move", "chargeur"): {"Chargeur"}, ("move", "tackle"): {"Tackle"}},
+        ),
+    ),
+)
+async def test_translations(
+    word: str, languages: tuple[int, int], results: dict[tuple[str, str], set[str]]
+) -> None:
+    assert _get_translations(word, languages) == results
+
+
+async def test_translations_conn(mock_connection):
     async with mock_connection() as conn:
 
         await conn.recv_queue.add_messages(
@@ -25,15 +76,6 @@ async def test_translations(mock_connection):
         reply = conn.send_queue.get_all()
         assert len(reply) == 1
         assert next(iter(reply)).replace("|/w user1, ", "") == "Tackle"
-
-        await conn.recv_queue.add_messages(
-            [
-                f"|pm| user1| {conn.username}|.translate Tackle",
-            ]
-        )
-        reply = conn.send_queue.get_all()
-        assert len(reply) == 1
-        assert next(iter(reply)).replace("|/w user1, ", "") == "Azione"
 
         await conn.recv_queue.add_messages(
             [
@@ -63,16 +105,6 @@ async def test_translations(mock_connection):
         reply = conn.send_queue.get_all()
         assert len(reply) == 1
         assert next(iter(reply)).replace("room1|", "") == "Klaps"
-
-        await conn.recv_queue.add_messages(
-            [
-                ">room1",
-                "|c|+user1|.translate Klaps",
-            ]
-        )
-        reply = conn.send_queue.get_all()
-        assert len(reply) == 1
-        assert next(iter(reply)).replace("room1|", "") == "Pound"
 
         await conn.recv_queue.add_messages(
             [

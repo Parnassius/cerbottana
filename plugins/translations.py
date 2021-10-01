@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Protocol, cast
 
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped
@@ -20,27 +20,9 @@ class TranslatableTableNames(Protocol):
     name_normalized: Mapped[str | None]
 
 
-@command_wrapper(
-    aliases=("translation", "trad"), helpstr="Traduce abilità, mosse e strumenti."
-)
-async def translate(msg: Message) -> None:
-    if len(msg.args) > 3:
-        return
-
-    parola = utils.to_user_id(utils.remove_diacritics(msg.args[0]))
-    if parola == "":
-        await msg.reply("Cosa devo tradurre?")
-        return
-
-    languages_list: list[int] = []
-    for lang in msg.args[1:]:  # Get language ids from the command parameters
-        languages_list.append(utils.get_language_id(lang))
-    languages_list.append(msg.language_id)  # Add the room language
-    languages_list.extend([9, 8])  # Hardcode english and italian as fallbacks
-
-    # Get the first two unique languages
-    languages = tuple(dict.fromkeys(languages_list))[:2]
-
+def _get_translations(
+    word: str, languages: tuple[int, int]
+) -> dict[tuple[str, str], set[str]]:
     results: dict[tuple[str, str], set[str]] = {}
 
     db = Database.open("veekun")
@@ -63,7 +45,7 @@ async def translate(msg: Message) -> None:
                 .join(t[1])
                 .where(
                     t[1].local_language_id.in_(languages),
-                    t[1].name_normalized == parola,
+                    t[1].name_normalized == word,
                 )
             )
             # TODO: remove annotations
@@ -77,10 +59,40 @@ async def translate(msg: Message) -> None:
                 )
 
                 if translation is not None:
-                    res = (category_name, utils.to_id(translation))
+                    res = (
+                        category_name,
+                        utils.to_id(utils.remove_diacritics(translation)),
+                    )
                     if res not in results:
                         results[res] = set()
                     results[res].add(translation)
+
+    return results
+
+
+@command_wrapper(
+    aliases=("translation", "trad"), helpstr="Traduce abilità, mosse e strumenti."
+)
+async def translate(msg: Message) -> None:
+    if len(msg.args) > 3:
+        return
+
+    word = utils.to_user_id(utils.remove_diacritics(msg.args[0]))
+    if word == "":
+        await msg.reply("Cosa devo tradurre?")
+        return
+
+    languages_list: list[int] = []
+    for lang in msg.args[1:]:  # Get language ids from the command parameters
+        languages_list.append(utils.get_language_id(lang))
+    languages_list.append(msg.language_id)  # Add the room language
+    languages_list.extend([9, 8])  # Hardcode english and italian as fallbacks
+
+    # Get the first two unique languages
+    languages = tuple(dict.fromkeys(languages_list))[:2]
+    languages = cast(tuple[int, int], languages)
+
+    results = _get_translations(word, languages)
 
     if results:
         if len(results) == 1:
