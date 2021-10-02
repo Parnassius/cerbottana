@@ -1,7 +1,7 @@
 import ast
 import inspect
 
-from plugins import commands
+from cerbottana.plugins import commands
 
 
 def test_parametrize_room() -> None:

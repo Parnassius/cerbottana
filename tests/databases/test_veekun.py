@@ -1,11 +1,11 @@
 import ast
 import inspect
 
-import databases.veekun
+from cerbottana.databases import veekun
 
 
 def test_table_order() -> None:
-    module_source = inspect.getsource(databases.veekun)
+    module_source = inspect.getsource(veekun)
     module_ast = ast.parse(module_source)
 
     classes = []

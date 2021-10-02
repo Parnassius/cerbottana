@@ -1,6 +1,6 @@
 import pytest
 
-import plugins.eightball
+from cerbottana.plugins import eightball
 
 pytestmark = pytest.mark.asyncio
 
@@ -29,10 +29,10 @@ async def test_eightball(mock_connection):
         assert len(reply) == 1
         assert (
             next(iter(reply)).replace("|/w user1, ", "")
-            in plugins.eightball.DEFAULT_ANSWERS["English"]
+            in eightball.DEFAULT_ANSWERS["English"]
         )
 
-        for lang in plugins.eightball.DEFAULT_ANSWERS:
+        for lang in eightball.DEFAULT_ANSWERS:
             await conn.recv_queue.add_messages(
                 [
                     ">room1",
@@ -49,7 +49,7 @@ async def test_eightball(mock_connection):
             assert len(reply) == 1
             assert (
                 next(iter(reply)).replace("room1|", "")
-                in plugins.eightball.DEFAULT_ANSWERS[lang]
+                in eightball.DEFAULT_ANSWERS[lang]
             )
 
         await conn.recv_queue.add_messages(
@@ -68,10 +68,10 @@ async def test_eightball(mock_connection):
         assert len(reply) == 1
         assert (
             next(iter(reply)).replace("room1|", "")
-            in plugins.eightball.DEFAULT_ANSWERS["English"]
+            in eightball.DEFAULT_ANSWERS["English"]
         )
 
-        plugins.eightball.DEFAULT_ANSWERS = {"English": []}
+        eightball.DEFAULT_ANSWERS = {"English": []}
 
         await conn.recv_queue.add_messages(
             [

@@ -1,6 +1,6 @@
 import pytest
 
-from plugins.translations import _get_translations
+from cerbottana.plugins.translations import _get_translations
 
 pytestmark = pytest.mark.asyncio
 
