@@ -13,12 +13,12 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-import databases.database as d
-import utils
-from connection import Connection
-from database import Database
-from models.room import Room
-from tasks.veekun import csv_to_sqlite
+import cerbottana.databases.database as d
+from cerbottana import utils
+from cerbottana.connection import Connection
+from cerbottana.database import Database
+from cerbottana.models.room import Room
+from cerbottana.tasks.veekun import csv_to_sqlite
 
 # pylint: disable=protected-access
 
@@ -275,7 +275,8 @@ def mock_database(mocker) -> None:
 
     def mock_database_init(self, dbname: str) -> None:
         if dbname == "veekun":
-            engine = f"sqlite:///{dbname}.sqlite"
+            dbpath = utils.get_config_file(f"{dbname}.sqlite")
+            engine = f"sqlite:///{dbpath}"
         else:
             engine = "sqlite://"  # :memory: database
         self.engine = create_engine(engine, future=True)
@@ -305,4 +306,6 @@ def veekun_database() -> None:
 
 # Configure freezegun to ignore the connection module
 # This is needed because the `send` method requires 0.1s between each message
-freezegun.configure(extend_ignore_list=["connection"])  # type: ignore[attr-defined]
+freezegun.configure(  # type: ignore[attr-defined]
+    extend_ignore_list=["cerbottana.connection"]
+)

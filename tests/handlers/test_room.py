@@ -3,8 +3,8 @@ from collections import Counter
 import pytest
 from freezegun import freeze_time
 
-from models.room import Room
-from models.user import User
+from cerbottana.models.room import Room
+from cerbottana.models.user import User
 
 pytestmark = pytest.mark.asyncio
 

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from models.room import Room
-from models.user import User
+from cerbottana.models.room import Room
+from cerbottana.models.user import User
 
 pytestmark = pytest.mark.asyncio
 

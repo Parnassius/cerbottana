@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from plugins import quotes
+from cerbottana.plugins.quotes import to_html_quotebox
 
 
 @pytest.mark.parametrize(
@@ -34,7 +34,7 @@ from plugins import quotes
 )
 def test_to_html_quotebox_chat(testquote: str, n_parsed_lines: int) -> None:
     """Tests that chatlines are splitted correctly (or left unparsed)."""
-    quotebox = quotes.to_html_quotebox(testquote)
+    quotebox = to_html_quotebox(testquote)
     assert quotebox.count('<div class="chat">') == n_parsed_lines
 
 
@@ -51,7 +51,7 @@ def test_to_html_quotebox_chat(testquote: str, n_parsed_lines: int) -> None:
 )
 def test_to_html_quotebox_colorize(chatline: str, is_colorized: bool) -> None:
     """Tests that usernames are colorized only once per line and if necessary."""
-    quotebox = quotes.to_html_quotebox(chatline)
+    quotebox = to_html_quotebox(chatline)
     tag_count = int(is_colorized)  # Occurrences of <username>, at most 1.
     assert quotebox.count("<username>") == tag_count
 
@@ -59,5 +59,5 @@ def test_to_html_quotebox_colorize(chatline: str, is_colorized: bool) -> None:
 def test_to_html_quotebox_empty() -> None:
     """Tests that empty quotes raise an exception."""
     with pytest.raises(BaseException) as excinfo:
-        quotes.to_html_quotebox("")
+        to_html_quotebox("")
     assert str(excinfo.value) == "Trying to create quotebox for empty quote."

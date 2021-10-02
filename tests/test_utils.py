@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-import utils
-from typedefs import Role
+from cerbottana import utils
+from cerbottana.typedefs import Role
 
 
 @pytest.mark.parametrize(

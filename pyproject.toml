@@ -7,8 +7,7 @@ build-backend = "poetry.core.masonry.api"
 exclude_lines = ["if TYPE_CHECKING:"]
 
 [tool.coverage.run]
-source = ["."]
-omit = [".venv/*", "tests/*"]
+source = ["cerbottana"]
 
 
 [tool.isort]

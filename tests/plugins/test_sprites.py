@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-import utils
-from plugins import sprites
+from cerbottana import utils
+from cerbottana.plugins.sprites import generate_sprite_url
 
 
 @pytest.mark.parametrize(
@@ -24,4 +24,4 @@ def test_generate_sprite_url(pokemon: str, dexname: str) -> None:
     assert dex_entry is not None
 
     expected_url = f"https://play.pokemonshowdown.com/sprites/ani/{dexname}.gif"
-    assert sprites.generate_sprite_url(dex_entry) == expected_url
+    assert generate_sprite_url(dex_entry) == expected_url

@@ -43,7 +43,9 @@ async def test_usernames(mock_connection):
         conn.send_queue.get_all()
 
         username_commands = [
-            i for i in conn.commands.values() if i.module == "plugins.usernames"
+            i
+            for i in conn.commands.values()
+            if i.module == "cerbottana.plugins.usernames"
         ]
 
         for cmd in username_commands:
