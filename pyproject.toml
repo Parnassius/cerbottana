@@ -65,6 +65,24 @@ disallow_untyped_defs = false
 disallow_incomplete_defs = false
 
 
+[tool.poe.env]
+SQLALCHEMY_WARN_20 = "1"
+
+[tool.poe.tasks]
+format = ["isort", "black"]
+isort = "isort ."
+black = "black ."
+
+tests = ["test"]
+test = ["isort_check", "black_check", "darglint", "mypy", "pylint", "pytest"]
+isort_check = "isort . --check"
+black_check = "black . --check"
+darglint = "darglint cerbottana -v 2"
+mypy = "mypy . --namespace-packages --explicit-package-bases"
+pylint = "pylint cerbottana --disable=fixme"
+pytest = "pytest"
+
+
 [tool.poetry]
 name = "cerbottana"
 version = "0.1.0"
@@ -72,7 +90,7 @@ description = ""
 authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "3.9.*"
+python = "^3.9"
 aiohttp = "3.7.4.post0"
 alembic = "1.7.3"
 environs = "9.3.3"
@@ -90,6 +108,7 @@ darglint = "1.8.0"
 freezegun = "1.1.0"
 isort = "5.9.3"
 mypy = "0.910"
+poethepoet = "0.10.0"
 pylint = "2.11.1"
 pytest = "6.2.5"
 pytest-asyncio = "0.15.1"
