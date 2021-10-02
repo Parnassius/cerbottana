@@ -30,33 +30,30 @@ jobs:
       uses: actions/cache@v2
       with:
         path: veekun.sqlite
-        key: veekun-${{ hashFiles('data/veekun/*.csv', 'databases/veekun.py', 'tasks/veekun.py') }}
+        key: veekun-${{ hashFiles('cerbottana/data/veekun/*.csv', 'cerbottana/databases/veekun.py', 'cerbottana/tasks/veekun.py') }}
     - name: Install Poetry
       run: pipx install poetry
     - name: Setup the virtual environment
       run: |
         poetry config --local virtualenvs.in-project true
-        poetry env use $(which python)
-    - name: Install dependencies on a cache miss...
+        poetry env use "$(which python)"
+    - name: Install dependencies on a cache miss
       if: steps.virtualenv-cache.outputs.cache-hit != 'true'
-      run: make deps
-    - name: ...or mark them as up-to-date on a cache hit
-      if: steps.virtualenv-cache.outputs.cache-hit == 'true'
-      run: make deps --touch
+      run: poetry install --remove-untracked
     - name: Mark the veekun database as up-to-date on a cache hit
       if: steps.veekun-cache.outputs.cache-hit == 'true'
       run: sqlite3 veekun.sqlite "UPDATE latest_commit SET commit_id = '$GITHUB_SHA';"
     - name: Check import order
-      run: make isort_check
+      run: poetry run poe isort_check
     - name: Check formatting using black
-      run: make black_check
+      run: poetry run poe black_check
     - name: Check docstrings with darglint
-      run: make darglint
+      run: poetry run poe darglint
     - name: Test with mypy
-      run: make mypy
+      run: poetry run poe mypy
     - name: Test with pylint
-      run: make pylint
+      run: poetry run poe pylint
     - name: Test with pytest
-      run: make pytest
+      run: poetry run poe pytest --cov --cov-report=xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
