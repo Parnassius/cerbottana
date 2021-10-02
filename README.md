@@ -21,16 +21,18 @@ Copy `.env-example` into `.env` and edit the file accordingly. Optional environm
 
 ### Running a bot instance
 
-If you are running a local Pokémon Showdown instance, make sure it is active. To start cerbottana, run:
+First of all, you need to install the dependencies (drop `--no-dev` if you wish to contribute):
 
-    make run
+    poetry install --no-dev
 
-This will also create a virtual environment and install the necessary dependencies.
+If you are running a local Pokémon Showdown instance, make sure it is active. Then, to start cerbottana, run:
+
+    poetry run bot
 
 To stop the execution, use the command `.kill` on PS (the first character might differ, depending on the configured `COMMAND_CHARACTER`) or just raise a `SIGINT` (`Ctrl + C`) in the console.
 
 ## Contributing
 
-Before submitting a pull request, please make sure your code is formatted with `black` and `isort` (`make format` will run those two commands automatically) and that `make test` passes without errors.
+Before submitting a pull request, please make sure your code is formatted with `black` and `isort` (`poetry run poe format` will run those two commands automatically) and that `poetry run poe test` passes without errors.
 
-The bulk of cerbottana code is plugins (see [plugins reference](plugins/README.md)). Working on a simple plugin is a good first contribution.
+The bulk of cerbottana code is plugins (see [plugins reference](cerbottana/plugins/README.md)). Working on a simple plugin is a good first contribution.
