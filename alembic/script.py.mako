@@ -5,7 +5,6 @@ Revises: ${down_revision | comma,n}
 Create Date: ${create_date}
 
 """
-# pylint: skip-file
 from sqlalchemy import Column
 
 from alembic import op

@@ -6,8 +6,6 @@ Create Date: 2020-12-06 17:11:25.270563
 
 """
 from environs import Env
-
-# pylint: skip-file
 from sqlalchemy import (
     Column,
     Integer,

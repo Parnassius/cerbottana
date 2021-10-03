@@ -5,7 +5,6 @@ Revises: 7e97091b66b0
 Create Date: 2020-10-17 21:10:58.091866
 
 """
-# pylint: skip-file
 from sqlalchemy import Column, Integer, MetaData, String, Table, UniqueConstraint
 
 from alembic import op
