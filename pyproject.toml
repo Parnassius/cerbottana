@@ -152,5 +152,4 @@ disable = [
 max-line-length = "88"
 
 [tool.pylint.typing]
-py-version = "3.9"
 runtime-typing = "no"
