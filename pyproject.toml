@@ -147,6 +147,7 @@ disable = [
     "too-many-locals",
     "too-many-statements",
 ]
+enable = ["useless-suppression"]
 
 [tool.pylint.format]
 max-line-length = "88"

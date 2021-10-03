@@ -133,7 +133,6 @@ class RecvQueue(asyncio.Queue[tuple[int, str]]):  # pylint: disable=inherit-non-
 
 
 class SendQueue(asyncio.Queue[str]):  # pylint: disable=inherit-non-class
-    # pylint: disable=too-few-public-methods
     def get_all(self) -> Counter[str]:
         messages: Counter[str] = Counter()
         try:
@@ -287,7 +286,7 @@ def mock_database(mocker) -> None:
     @classmethod  # type: ignore[misc]
     def mock_database_open(cls, dbname: str = "database") -> Database:
         if dbname not in database_instances:
-            cls(dbname)  # pylint: disable=too-many-function-args
+            cls(dbname)
             if dbname in database_metadata:
                 # Create schemas
                 database_metadata[dbname].create_all(database_instances[dbname].engine)
