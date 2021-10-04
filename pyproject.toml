@@ -78,7 +78,7 @@ test = ["isort_check", "black_check", "darglint", "mypy", "pylint", "pytest"]
 isort_check = "isort . --check"
 black_check = "black . --check"
 darglint = "darglint cerbottana tests -v 2"
-mypy = "mypy . --namespace-packages --explicit-package-bases"
+mypy = "mypy cerbottana tests"
 pylint = "pylint cerbottana tests --disable=fixme"
 pytest = "pytest"
 
