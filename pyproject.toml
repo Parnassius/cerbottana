@@ -53,10 +53,6 @@ allow_redefinition = false
 strict_equality = true
 
 [[tool.mypy.overrides]]
-module = "alembic.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
 module = "tests.*"
 # pytest decorators leave functions untyped after transformation
 disallow_any_decorated = false
