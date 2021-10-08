@@ -121,6 +121,7 @@ disable = [
     "too-many-statements",
 ]
 enable = ["useless-suppression"]
+fail-on = ["useless-suppression"]
 
 [tool.pylint.format]
 expected-line-ending-format = "LF"
