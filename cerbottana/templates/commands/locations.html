@@ -1,7 +1,7 @@
-{% for version, version_data in results.items()|sort %}
+{% for version in results.versions.values()|sort %}
   <details>
     <summary>
-      <b><big>{{ version.name }}</big></b>
+      <b><big>{{ version.version.name }}</big></b>
     </summary>
     <table>
       <tbody>
@@ -11,9 +11,9 @@
           <th>Level</th>
           <th colspan="2">Rarity</th>
         </tr>
-        {% for slot, slot_data in version_data["slots"].items()|sort(reverse=True, attribute="rarity")|sort(attribute="1.route_number,1.location,0.method,0.min_level,0.max_level") %}
+        {% for slot in version.slots.values()|sort %}
           <tr>
-            <td>{{ slot_data["location"] }}</td>
+            <td>{{ slot.location }}</td>
             <td>{{ slot.method.prose }}</td>
             <td>
               L{{ slot.min_level }}
@@ -22,7 +22,7 @@
               {% endif %}
             </td>
             <td{% if not slot.conditions %} colspan="2"{% endif %}>
-              {{ slot_data["rarity"] }}%
+              {{ slot.rarity }}%
             </td>
             {% if slot.conditions %}
               <td>

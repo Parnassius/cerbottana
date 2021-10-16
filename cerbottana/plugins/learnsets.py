@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypedDict
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
@@ -13,6 +14,56 @@ from . import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message
+
+
+@dataclass
+class LearnsetMove:
+    move: v.Moves
+    level: int
+    order: int
+    machine: v.Machines | None
+    forms: set[v.Pokemon] = field(default_factory=set)
+
+    @property
+    def _order_tuple(self) -> tuple[int, int, v.Machines | None, int]:
+        return self.level, self.order, self.machine, self.move.id
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, LearnsetMove):
+            raise NotImplementedError
+        return self._order_tuple < other._order_tuple
+
+
+@dataclass
+class LearnsetMethod:
+    method: v.PokemonMoveMethods
+    moves: dict[int, LearnsetMove] = field(default_factory=dict)
+    form_column: bool = False
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, LearnsetMethod):
+            raise NotImplementedError
+        return self.method.id < other.method.id
+
+
+@dataclass
+class Learnset:
+    methods: dict[int, LearnsetMethod] = field(default_factory=dict)
+
+    def add_move(self, pokemon: v.Pokemon, pokemon_move: v.PokemonMoves) -> None:
+        method = pokemon_move.pokemon_move_method
+        if method.id not in self.methods:
+            self.methods[method.id] = LearnsetMethod(method)
+
+        move = pokemon_move.move
+        if move.id not in self.methods[method.id].moves:
+            self.methods[method.id].moves[move.id] = LearnsetMove(
+                move,
+                int(pokemon_move.level or 0),
+                int(pokemon_move.order or 0),
+                move.machines[0] if move.machines else None,
+            )
+        self.methods[method.id].moves[move.id].forms.add(pokemon)
 
 
 @command_wrapper()
@@ -30,16 +81,6 @@ async def learnset(msg: Message) -> None:
     db = Database.open("veekun")
 
     with db.get_session(language_id) as session:
-
-        class MovesDict(TypedDict):
-            level: int
-            order: int
-            machine: v.Machines | None
-            forms: set[v.Pokemon]
-
-        class ResultsDict(TypedDict):
-            moves: dict[v.Moves, MovesDict]
-            form_column: bool
 
         stmt = select(v.VersionGroups).filter_by(identifier=version_id)
         # TODO: remove annotation
@@ -87,36 +128,20 @@ async def learnset(msg: Message) -> None:
             await msg.reply("Pokémon not found.")
             return
 
-        results: dict[v.PokemonMoveMethods, ResultsDict] = {}
+        results = Learnset()
 
         all_forms = set(pokemon_species.pokemon)
 
         for pokemon in pokemon_species.pokemon:
             for pokemon_move in pokemon.pokemon_moves:
+                results.add_move(pokemon, pokemon_move)
 
-                method = pokemon_move.pokemon_move_method
-                if method not in results:
-                    results[method] = {
-                        "moves": {},
-                        "form_column": False,
-                    }
-
-                move = pokemon_move.move
-                if move not in results[method]["moves"]:
-                    results[method]["moves"][move] = {
-                        "level": int(pokemon_move.level or 0),
-                        "order": int(pokemon_move.order or 0),
-                        "machine": move.machines[0] if move.machines else None,
-                        "forms": set(),
-                    }
-                results[method]["moves"][move]["forms"].add(pokemon)
-
-        for method_data in results.values():
-            for move_data in method_data["moves"].values():
-                if move_data["forms"] == all_forms:
-                    move_data["forms"] = set()
+        for method_data in results.methods.values():
+            for move_data in method_data.moves.values():
+                if move_data.forms == all_forms:
+                    move_data.forms = set()
                 else:
-                    method_data["form_column"] = True
+                    method_data.form_column = True
 
         html = utils.render_template("commands/learnsets.html", results=results)
 

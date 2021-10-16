@@ -3,9 +3,10 @@ from __future__ import annotations
 import glob
 import importlib
 from collections.abc import Awaitable, Callable
+from dataclasses import dataclass
 from functools import wraps
 from os.path import basename, dirname, isfile, join
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from cerbottana.models.protocol_message import ProtocolMessage
@@ -13,12 +14,13 @@ if TYPE_CHECKING:
     HandlerFunc = Callable[[ProtocolMessage], Awaitable[None]]
 
 
-class HandlerTuple(NamedTuple):
+@dataclass
+class Handler:
     callback: HandlerFunc
     required_parameters: int | None
 
 
-handlers: dict[str, list[HandlerTuple]] = {}
+handlers: dict[str, list[Handler]] = {}
 
 
 def handler_wrapper(
@@ -30,7 +32,7 @@ def handler_wrapper(
         for message_type in message_types:
             if message_type not in handlers:
                 handlers[message_type] = []
-            handlers[message_type].append(HandlerTuple(func, required_parameters))
+            handlers[message_type].append(Handler(func, required_parameters))
         return func
 
     return cls_wrapper

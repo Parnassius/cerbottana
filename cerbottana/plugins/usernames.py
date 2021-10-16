@@ -314,7 +314,7 @@ async def roiler(msg: Message) -> None:
 
 @command_wrapper(aliases=("silver",))
 async def silver97(msg: Message) -> None:
-    tier = random.choice(list(msg.conn.tiers.values()))["name"]
+    tier = random.choice(list(msg.conn.tiers.values())).name
     await msg.reply(f"qualcuno mi passa un team {tier}")
 
 

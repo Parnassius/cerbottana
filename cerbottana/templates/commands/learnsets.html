@@ -1,36 +1,36 @@
-{% for method, method_data in results.items()|sort %}
+{% for method in results.methods.values()|sort %}
   <details>
     <summary>
-      <b><big>{{ method.prose }}</big></b>
+      <b><big>{{ method.method.prose }}</big></b>
     </summary>
     <table style="margin: 5px 0">
       <tbody>
         <tr>
           <th>Move</th>
-          {% if method.id == 1 %}
+          {% if method.method.id == 1 %}
             <th>Level</th>
-          {% elif method.id == 4 %}
+          {% elif method.method.id == 4 %}
             <th>Machine</th>
           {% endif %}
-          {% if method_data["form_column"] %}
+          {% if method.form_column %}
             <th>Form</th>
           {% endif %}
         </tr>
-        {% for move, move_data in method_data["moves"].items()|sort(attribute="1.level,1.order,1.machine,0") %}
+        {% for move in method.moves.values()|sort %}
           <tr>
-            <td>{{ move.name }}</td>
-            {% if method.id == 1 %}
-              <td style="text-align: right">{{ move_data["level"] }}</td>
-            {% elif method.id == 4 %}
+            <td>{{ move.move.name }}</td>
+            {% if method.method.id == 1 %}
+              <td style="text-align: right">{{ move.level }}</td>
+            {% elif method.method.id == 4 %}
               <td>
-                {% if move_data["machine"] %}
-                  {{ move_data["machine"].item.name }}
+                {% if move.machine %}
+                  {{ move.machine.item.name }}
                 {% endif %}
               </td>
             {% endif %}
-            {% if method_data["form_column"] %}
+            {% if method.form_column %}
               <td>
-                {% for form in move_data["forms"]|sort %}
+                {% for form in move.forms|sort %}
                   {{ form.name }}
                   {%- if not loop.last %}, {% endif %}
                 {% endfor %}

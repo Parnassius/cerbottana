@@ -1,18 +1,18 @@
-{% for version, version_data in results.items()|sort %}
+{% for version in results.versions.values()|sort %}
   <details>
     <summary>
-      <b><big>{{ version.name }}</big></b>
+      <b><big>{{ version.version.name }}</big></b>
     </summary>
     <table>
       <tbody>
-        {% for area, area_data in version_data["areas"].items()|sort(attribute="0.name") %}
+        {% for area in version.areas.values()|sort %}
           <tr>
-            <th>{{ area.name }}</th>
+            <th>{{ area.area.name }}</th>
             <th>Method</th>
             <th>Level</th>
             <th colspan="2">Rarity</th>
           </tr>
-          {% for slot, slot_data in area_data["slots"].items()|sort(reverse=True, attribute="rarity")|sort(attribute="0.pokemon.species.order,0.pokemon.order,0.method,0.min_level,0.max_level") %}
+          {% for slot in area.slots.values()|sort %}
             <tr>
               <td>{{ slot.pokemon.name }}</td>
               <td>{{ slot.method.prose }}</td>
@@ -23,7 +23,7 @@
                 {% endif %}
               </td>
               <td{% if not slot.conditions %} colspan="2"{% endif %}>
-                {{ slot_data["rarity"] }}%
+                {{ slot.rarity }}%
               </td>
               {% if slot.conditions %}
                 <td>

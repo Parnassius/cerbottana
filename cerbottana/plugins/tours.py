@@ -63,9 +63,7 @@ async def create_tour(
     allow_pm=False,
 )
 async def randtour(msg: Message) -> None:
-    tiers = [
-        x["name"] for x in msg.conn.tiers.values() if x["random"] and x["tournament"]
-    ]
+    tiers = [x.name for x in msg.conn.tiers.values() if x.random and x.tournament]
 
     formatid = random.choice(tiers)
 
@@ -192,13 +190,13 @@ async def tournament_create(msg: ProtocolMessage) -> None:
     if tierid.endswith("blitz"):
         tierid = tierid[:-5]
 
-    tiersdict = msg.conn.tiers.get(tierid)
-    if tiersdict is None:
+    tier = msg.conn.tiers.get(tierid)
+    if tier is None:
         print(f"Unrecognized tier: '{tierid}'")
         return
 
     # Ignore random formats and custom games
-    if tiersdict["random"] or tierid.endswith("customgame"):
+    if tier.random or tierid.endswith("customgame"):
         return
 
-    await msg.room.send(f'!tier {tiersdict["name"]}', False)
+    await msg.room.send(f"!tier {tier.name}", False)

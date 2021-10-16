@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, NamedTuple, TypedDict
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
@@ -13,6 +14,99 @@ from . import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message
+
+
+LocationsSlotKey = tuple[
+    int,  # location_area
+    int,  # encounter_method
+    int,  # min_level
+    int,  # max_level
+    frozenset[int],  # conditions
+]
+
+
+@dataclass
+class LocationsSlot:
+    route_number: int
+    location: str
+    method: v.EncounterMethods
+    min_level: int
+    max_level: int
+    conditions: frozenset[v.EncounterConditionValues]
+    rarity: int = 0
+
+    @property
+    def _order_tuple(self) -> tuple[int, str, int, int, int, int]:
+        return (
+            self.route_number,
+            self.location,
+            self.method.id,
+            self.min_level,
+            self.max_level,
+            -self.rarity,
+        )
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, LocationsSlot):
+            raise NotImplementedError
+        return self._order_tuple < other._order_tuple
+
+
+@dataclass
+class LocationsVersion:
+    version: v.Versions
+    slots: dict[LocationsSlotKey, LocationsSlot] = field(default_factory=dict)
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, LocationsVersion):
+            raise NotImplementedError
+        return self.version.id < other.version.id
+
+
+@dataclass
+class Locations:
+    versions: dict[int, LocationsVersion] = field(default_factory=dict)
+
+    def add_encounter_slot(self, pokemon: v.Pokemon, encounter: v.Encounters) -> None:
+        version = encounter.version
+        if version.id not in self.versions:
+            self.versions[version.id] = LocationsVersion(version)
+
+        area = encounter.location_area
+        location = area.location
+        full_location_name = ""
+        if location.name:
+            full_location_name += location.name
+        if location.subtitle:
+            full_location_name += " - " + location.subtitle
+        if area.name:
+            full_location_name += " (" + area.name + ")"
+
+        conditions = frozenset(
+            i.encounter_condition_value for i in encounter.encounter_condition_value_map
+        )
+
+        slot_key = (
+            area.id,
+            encounter.encounter_slot.encounter_method.id,
+            encounter.min_level,
+            encounter.max_level,
+            frozenset(i.id for i in conditions),
+        )
+
+        if slot_key not in self.versions[version.id].slots:
+            self.versions[version.id].slots[slot_key] = LocationsSlot(
+                location.route_number or 0,
+                full_location_name,
+                encounter.encounter_slot.encounter_method,
+                encounter.min_level,
+                encounter.max_level,
+                conditions,
+            )
+
+        self.versions[version.id].slots[slot_key].rarity += (
+            encounter.encounter_slot.rarity or 0
+        )
 
 
 @command_wrapper(aliases=("location",))
@@ -29,21 +123,6 @@ async def locations(msg: Message) -> None:
     db = Database.open("veekun")
 
     with db.get_session(language_id) as session:
-
-        class SlotsKeyTuple(NamedTuple):
-            area: v.LocationAreas
-            method: v.EncounterMethods
-            min_level: int
-            max_level: int
-            conditions: frozenset[v.EncounterConditionValues]
-
-        class SlotsDict(TypedDict):
-            route_number: int
-            location: str
-            rarity: int
-
-        class ResultsDict(TypedDict):
-            slots: dict[SlotsKeyTuple, SlotsDict]
 
         stmt = (
             select(v.PokemonSpecies)
@@ -80,48 +159,11 @@ async def locations(msg: Message) -> None:
             await msg.reply("Pokémon not found.")
             return
 
-        results: dict[v.Versions, ResultsDict] = {}
+        results = Locations()
 
         for pokemon in pokemon_species.pokemon:
             for encounter in pokemon.encounters:
-
-                version = encounter.version
-                if version not in results:
-                    results[version] = {"slots": {}}
-
-                area = encounter.location_area
-                location = area.location
-                full_location_name = ""
-                if location.name:
-                    full_location_name += location.name
-                if location.subtitle:
-                    full_location_name += " - " + location.subtitle
-                if area.name:
-                    full_location_name += " (" + area.name + ")"
-
-                conditions = frozenset(
-                    i.encounter_condition_value
-                    for i in encounter.encounter_condition_value_map
-                )
-
-                slots_key = SlotsKeyTuple(
-                    area,
-                    encounter.encounter_slot.encounter_method,
-                    encounter.min_level,
-                    encounter.max_level,
-                    conditions,
-                )
-
-                if slots_key not in results[version]["slots"]:
-                    results[version]["slots"][slots_key] = {
-                        "route_number": location.route_number or 0,
-                        "location": full_location_name,
-                        "rarity": 0,
-                    }
-
-                results[version]["slots"][slots_key]["rarity"] += (
-                    encounter.encounter_slot.rarity or 0
-                )
+                results.add_encounter_slot(pokemon, encounter)
 
         html = utils.render_template("commands/locations.html", results=results)
 
@@ -130,6 +172,103 @@ async def locations(msg: Message) -> None:
             return
 
         await msg.reply_htmlbox('<div class="ladder">' + html + "</div>")
+
+
+EncountersSlotKey = tuple[
+    int,  # pokemon
+    int,  # encounter_method
+    int,  # min_level
+    int,  # max_level
+    frozenset[int],  # conditions
+]
+
+
+@dataclass
+class EncountersSlot:
+    pokemon: v.Pokemon
+    method: v.EncounterMethods
+    min_level: int
+    max_level: int
+    conditions: frozenset[v.EncounterConditionValues]
+    rarity: int = 0
+
+    @property
+    def _order_tuple(self) -> tuple[int, int, int, int, int, int]:
+        return (
+            self.pokemon.species.order,
+            self.pokemon.order,
+            self.method.id,
+            self.min_level,
+            self.max_level,
+            -self.rarity,
+        )
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, EncountersSlot):
+            raise NotImplementedError
+        return self._order_tuple < other._order_tuple
+
+
+@dataclass
+class EncountersArea:
+    area: v.LocationAreas
+    slots: dict[EncountersSlotKey, EncountersSlot] = field(default_factory=dict)
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, EncountersArea):
+            raise NotImplementedError
+        return self.area.name < other.area.name
+
+
+@dataclass
+class EncountersVersion:
+    version: v.Versions
+    areas: dict[int, EncountersArea] = field(default_factory=dict)
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, EncountersVersion):
+            raise NotImplementedError
+        return self.version.id < other.version.id
+
+
+@dataclass
+class Encounters:
+    versions: dict[int, EncountersVersion] = field(default_factory=dict)
+
+    def add_encounter_slot(
+        self, area: v.LocationAreas, encounter: v.Encounters
+    ) -> None:
+        version = encounter.version
+        if version.id not in self.versions:
+            self.versions[version.id] = EncountersVersion(version)
+
+        if area.id not in self.versions[version.id].areas:
+            self.versions[version.id].areas[area.id] = EncountersArea(area)
+
+        conditions = frozenset(
+            i.encounter_condition_value for i in encounter.encounter_condition_value_map
+        )
+
+        slot_key = (
+            encounter.pokemon.id,
+            encounter.encounter_slot.encounter_method.id,
+            encounter.min_level,
+            encounter.max_level,
+            frozenset(i.id for i in conditions),
+        )
+
+        if slot_key not in self.versions[version.id].areas[area.id].slots:
+            self.versions[version.id].areas[area.id].slots[slot_key] = EncountersSlot(
+                encounter.pokemon,
+                encounter.encounter_slot.encounter_method,
+                encounter.min_level,
+                encounter.max_level,
+                conditions,
+            )
+
+        self.versions[version.id].areas[area.id].slots[slot_key].rarity += (
+            encounter.encounter_slot.rarity or 0
+        )
 
 
 @command_wrapper(aliases=("encounter",))
@@ -146,22 +285,6 @@ async def encounters(msg: Message) -> None:
     db = Database.open("veekun")
 
     with db.get_session(language_id) as session:
-
-        class SlotsKeyTuple(NamedTuple):
-            pokemon: v.Pokemon
-            method: v.EncounterMethods
-            min_level: int
-            max_level: int
-            conditions: frozenset[v.EncounterConditionValues]
-
-        class SlotsDict(TypedDict):
-            rarity: int
-
-        class AreasDict(TypedDict):
-            slots: dict[SlotsKeyTuple, SlotsDict]
-
-        class ResultsDict(TypedDict):
-            areas: dict[v.LocationAreas, AreasDict]
 
         stmt = (
             select(v.Locations)
@@ -196,37 +319,11 @@ async def encounters(msg: Message) -> None:
             await msg.reply("Location not found.")
             return
 
-        results: dict[v.Versions, ResultsDict] = {}
+        results = Encounters()
 
         for area in location.location_areas:
             for encounter in area.encounters:
-
-                version = encounter.version
-                if version not in results:
-                    results[version] = {"areas": {}}
-
-                if area not in results[version]["areas"]:
-                    results[version]["areas"][area] = {"slots": {}}
-
-                conditions = frozenset(
-                    i.encounter_condition_value
-                    for i in encounter.encounter_condition_value_map
-                )
-
-                slots_key = SlotsKeyTuple(
-                    encounter.pokemon,
-                    encounter.encounter_slot.encounter_method,
-                    encounter.min_level,
-                    encounter.max_level,
-                    conditions,
-                )
-
-                if slots_key not in results[version]["areas"][area]["slots"]:
-                    results[version]["areas"][area]["slots"][slots_key] = {"rarity": 0}
-
-                results[version]["areas"][area]["slots"][slots_key]["rarity"] += (
-                    encounter.encounter_slot.rarity or 0
-                )
+                results.add_encounter_slot(area, encounter)
 
         html = utils.render_template("commands/encounters.html", results=results)
 
