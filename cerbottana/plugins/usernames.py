@@ -215,6 +215,18 @@ async def lillo2000(msg: Message) -> None:
     await msg.reply(phrase)
 
 
+@command_wrapper(aliases=("magmar",))
+async def magmar54(msg: Message) -> None:
+    things = [
+        "la musica con le voci",
+        "la lasagna",
+        "la piadina",
+        "la nutella",
+        "niente",
+    ]
+    await msg.reply(f"Non mi piace {random.choice(things)}")
+
+
 @command_wrapper()
 async def mammalu(msg: Message) -> None:
     await msg.reply("clicca la stab")
