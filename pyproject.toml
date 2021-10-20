@@ -112,8 +112,6 @@ disable = [
     "unused-argument",
     "too-few-public-methods",
 
-    "unsubscriptable-object",  # too many false positives in type annotations
-
     # temporarily disabled, should be re-enabled sooner or later
     "duplicate-code",  # encounters / locations plugins
     "too-many-branches",
