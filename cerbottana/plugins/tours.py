@@ -85,6 +85,9 @@ async def randtour(msg: Message) -> None:
     if random.randint(1, 100) <= 10:
         rules.append("Gen 8 Camomons")
 
+    if random.randint(1, 100) <= 10:
+        rules.append("Gen 8 Shared Power")
+
     if "1v1" in formatid or "2v2" in formatid:
         generator = "roundrobin"
     else:
