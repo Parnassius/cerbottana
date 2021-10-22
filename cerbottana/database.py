@@ -4,7 +4,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, scoped_session, sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
 from . import utils
 
@@ -16,8 +16,7 @@ class Database:
         dbpath = utils.get_config_file(f"{dbname}.sqlite")
         engine = f"sqlite:///{dbpath}"
         self.engine = create_engine(engine, future=True)
-        self.session_factory = sessionmaker(self.engine, future=True)
-        self.Session = scoped_session(self.session_factory)
+        self.Session = sessionmaker(self.engine, future=True)
         self._instances[dbname] = self
 
     @classmethod
