@@ -21,12 +21,18 @@ jobs:
         uses: actions/setup-node@v2
       - name: Build pokemon showdown
         run: pokemon-showdown/build
+      - name: Download minidex files
+        run: |
+          wget -O pokedex-mini.js https://play.pokemonshowdown.com/data/pokedex-mini.js
+          wget -O pokedex-mini-bw.js https://play.pokemonshowdown.com/data/pokedex-mini-bw.js
       - name: Update showdown data
         run: |
           echo 'const fs = require("fs");
                 const Sim = require("./pokemon-showdown");
                 fs.writeFileSync("cerbottana/cerbottana/data/showdown/aliases.json", JSON.stringify(Sim.Dex.data.Aliases, null, 2) + "\n");
                 fs.writeFileSync("cerbottana/cerbottana/data/showdown/pokedex.json", JSON.stringify(Sim.Dex.data.Pokedex, null, 2) + "\n");
+                fs.writeFileSync("cerbottana/cerbottana/data/showdown/pokedex-mini.json", JSON.stringify(require("./pokedex-mini.js").BattlePokemonSprites, null, 2) + "\n");
+                fs.writeFileSync("cerbottana/cerbottana/data/showdown/pokedex-mini-bw.json", JSON.stringify(require("./pokedex-mini-bw.js").BattlePokemonSpritesBW, null, 2) + "\n");
           ' | node -
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
