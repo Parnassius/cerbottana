@@ -4,13 +4,10 @@ import random
 from typing import TYPE_CHECKING
 
 from imageprobe.errors import UnsupportedFormat
-from sqlalchemy import func, select
-from sqlalchemy.exc import SQLAlchemyError
 
-import cerbottana.databases.veekun as v
-from cerbottana.database import Database
 from cerbottana.typedefs import JsonDict
 from cerbottana.utils import (
+    POKEDEX,
     POKEDEX_MINI,
     POKEDEX_MINI_BW,
     get_ps_dex_entry,
@@ -114,18 +111,10 @@ async def sprite(msg: Message) -> None:
 )
 async def randsprite(msg: Message) -> None:
     # Get a random pokemon
-    db = Database.open("veekun")
-    with db.get_session() as session:
-        stmt = select(v.PokemonSpecies).order_by(func.random())
-        # TODO: remove annotation
-        species: v.PokemonSpecies | None = session.scalar(stmt)
-        if not species:
-            raise SQLAlchemyError("Missing PokemonSpecies data")
-
-        dex_entry = get_ps_dex_entry(species.identifier)
-        if dex_entry is None:
-            print(f"Missing PS data for {species.identifier}")
-            return
+    dex_entry = get_ps_dex_entry(random.choice(list(POKEDEX.keys())))
+    if dex_entry is None:
+        # Should never happen
+        return
 
     back, shiny, _ = get_sprite_parameters(msg.args)
 
