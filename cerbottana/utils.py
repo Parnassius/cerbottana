@@ -221,6 +221,8 @@ def get_ps_dex_entry(query: str, *, _female: bool = False) -> JsonDict | None:
     if species in POKEDEX:
         entry = POKEDEX[species]
 
+        entry["id"] = species
+
         base_id: str
         forme_id: str | None = None
 
@@ -246,6 +248,7 @@ def get_ps_dex_entry(query: str, *, _female: bool = False) -> JsonDict | None:
         if _female:
             dex_name += "-f"
         entry["dex_name"] = dex_name
+        entry["female"] = _female
 
         return entry
 
@@ -275,3 +278,7 @@ with open(get_data_file("showdown", "aliases.json"), encoding="utf-8") as f:
     ALIASES: dict[str, str] = json.load(f)
 with open(get_data_file("showdown", "pokedex.json"), encoding="utf-8") as f:
     POKEDEX: dict[str, JsonDict] = json.load(f)
+with open(get_data_file("showdown", "pokedex-mini-bw.json"), encoding="utf-8") as f:
+    POKEDEX_MINI_BW: JsonDict = json.load(f)
+with open(get_data_file("showdown", "pokedex-mini.json"), encoding="utf-8") as f:
+    POKEDEX_MINI: JsonDict = json.load(f)

@@ -10,7 +10,13 @@ from sqlalchemy.exc import SQLAlchemyError
 import cerbottana.databases.veekun as v
 from cerbottana.database import Database
 from cerbottana.typedefs import JsonDict
-from cerbottana.utils import get_ps_dex_entry, image_url_to_html, to_id
+from cerbottana.utils import (
+    POKEDEX_MINI,
+    POKEDEX_MINI_BW,
+    get_ps_dex_entry,
+    image_url_to_html,
+    to_id,
+)
 
 from . import command_wrapper
 
@@ -37,16 +43,29 @@ def generate_sprite_url(
     Returns:
         str: URL.
     """
+    dir_name = category
     if back:
-        category += "-back"
+        dir_name += "-back"
     if shiny:
-        category += "-shiny"
+        dir_name += "-shiny"
 
     dex_name = dex_entry["dex_name"]
 
-    ext = "gif" if category.startswith(("gen5ani", "ani")) else "png"
+    ext = "png"
+    if category in ("gen5ani", "ani"):
+        pokedex_mini = POKEDEX_MINI_BW if category == "gen5ani" else POKEDEX_MINI
+        sprite_data = pokedex_mini.get(dex_entry["id"])
+        if sprite_data is not None:
+            facing = "back" if back else "front"
+            if dex_entry["female"] and f"{facing}f" in sprite_data:
+                facing += "f"
+            if facing in sprite_data:
+                ext = "gif"
 
-    return f"https://play.pokemonshowdown.com/sprites/{category}/{dex_name}.{ext}"
+        if ext == "png":
+            dir_name = "gen5" + dir_name[len(category) :]
+
+    return f"https://play.pokemonshowdown.com/sprites/{dir_name}/{dex_name}.{ext}"
 
 
 def get_sprite_parameters(args: list[str]) -> tuple[bool, bool, str]:
