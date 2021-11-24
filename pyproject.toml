@@ -65,7 +65,7 @@ authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 aiohttp = "3.8.1"
-alembic = "1.7.4"
+alembic = "1.7.5"
 domify = "0.1.1"
 environs = "9.3.4"
 imageprobe = "0.3.0"
