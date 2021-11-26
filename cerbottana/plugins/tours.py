@@ -3,6 +3,8 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING
 
+import aiohttp
+
 from cerbottana.handlers import handler_wrapper
 
 from . import command_wrapper
@@ -195,8 +197,13 @@ async def tournament_create(msg: ProtocolMessage) -> None:
         print(f"Unrecognized tier: '{tierid}'")
         return
 
-    # Ignore random formats and custom games
-    if tier.random or tierid.endswith("customgame"):
-        return
+    # Show !tier info for non-random non-custom formats
+    if not tier.random and not tierid.endswith("customgame"):
+        await msg.room.send(f"!tier {tier.name}", False)
 
-    await msg.room.send(f"!tier {tier.name}", False)
+    # Push a notification to discord webhook
+    if msg.room.webhook is not None:
+        name = tier.name.replace("[", r"\[").replace("]", r"\]")
+        alert = f"[**{name}** tour in {msg.room.title}](https://psim.us/{msg.room})"
+        async with aiohttp.ClientSession() as session:
+            await session.post(msg.room.webhook, data={"content": alert})
