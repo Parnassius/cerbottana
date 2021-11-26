@@ -35,7 +35,7 @@ class TestConnection(Connection):
         self.send_queue: SendQueue
 
 
-class RecvQueue(asyncio.Queue[tuple[int, str]]):  # pylint: disable=inherit-non-class
+class RecvQueue(asyncio.Queue[tuple[int, str]]):
     async def add_user_join(
         self,
         room: str,
@@ -132,7 +132,7 @@ class RecvQueue(asyncio.Queue[tuple[int, str]]):  # pylint: disable=inherit-non-
         await self.join()
 
 
-class SendQueue(asyncio.Queue[str]):  # pylint: disable=inherit-non-class
+class SendQueue(asyncio.Queue[str]):
     def get_all(self) -> Counter[str]:
         messages: Counter[str] = Counter()
         try:
