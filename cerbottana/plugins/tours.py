@@ -206,4 +206,8 @@ async def tournament_create(msg: ProtocolMessage) -> None:
         name = tier.name.replace("[", r"\[").replace("]", r"\]")
         alert = f"[**{name}** tour in {msg.room.title}](https://psim.us/{msg.room})"
         async with aiohttp.ClientSession() as session:
-            await session.post(msg.room.webhook, data={"content": alert})
+            async with session.post(msg.room.webhook, data={"content": alert}) as resp:
+                if err := await resp.text("utf-8"):
+                    print(f"Error with webhook of {msg.room}:\n{err}")
+                else:
+                    print(f"Sent tour alert to webhook of {msg.room}")
