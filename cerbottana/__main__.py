@@ -37,6 +37,7 @@ def main() -> None:
         main_room=env("MAIN_ROOM"),
         command_character=env("COMMAND_CHARACTER"),
         administrators=env.list("ADMINISTRATORS", []),
+        webhooks=env.dict("WEBHOOKS", {}),
     )
 
     signal.signal(signal.SIGINT, shutdown)
