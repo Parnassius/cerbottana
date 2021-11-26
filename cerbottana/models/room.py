@@ -35,6 +35,7 @@ class Room:
         roombot (bool): True if the bot is roombot in this room.
         title (str): Formatted variant of roomid.
         users (dict[User, str]): User instance, rank string.
+        webhook (str | None): Discord webhook URL. None if missing.
     """
 
     _instances: WeakKeyDictionary[
@@ -75,6 +76,10 @@ class Room:
     @property
     def users(self) -> dict[User, str]:
         return self._users
+
+    @property
+    def webhook(self) -> str | None:
+        return self.conn.webhooks.get(self.roomid)
 
     def add_user(self, user: User, rank: str | None = None) -> None:
         """Adds a user to the room or updates it if it's already stored.

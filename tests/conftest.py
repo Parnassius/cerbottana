@@ -159,6 +159,7 @@ def mock_connection(
         main_room: str = "lobby",
         command_character: str = ".",
         administrators: list[str] | None = None,
+        webhooks: dict[str, str] | None = None,
     ) -> AsyncIterator[TestConnection]:
         class MockProtocol:
             def __init__(self, recv_queue: RecvQueue, send_queue: SendQueue) -> None:
@@ -236,6 +237,8 @@ def mock_connection(
             rooms = ["room1"]
         if administrators is None:
             administrators = ["parnassius"]
+        if webhooks is None:
+            webhooks = {"room1": "https://discord.com/api/webhooks/00000/aaaaa"}
 
         conn = TestConnection(
             url=url,
@@ -247,6 +250,7 @@ def mock_connection(
             main_room=main_room,
             command_character=command_character,
             administrators=administrators,
+            webhooks=webhooks,
             unittesting=True,
         )
 
