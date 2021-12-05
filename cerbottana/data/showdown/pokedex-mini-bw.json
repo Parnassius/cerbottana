@@ -11436,6 +11436,12 @@
   "protowatt": {
     "num": -65
   },
+  "venomicon": {
+    "num": -67
+  },
+  "venomiconepilogue": {
+    "num": -67
+  },
   "pokestarsmeargle": {
     "num": -5000,
     "front": {
