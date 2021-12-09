@@ -170,7 +170,7 @@ python-versions = ">=3.6,<4.0"
 
 [[package]]
 name = "domify"
-version = "0.1.1"
+version = "0.2.0"
 description = "HTML generator using pure Python"
 category = "main"
 optional = false
@@ -674,7 +674,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "f7d34cc13340bfd221867e88abaaf499bda99ce9605e93e982cd9a26d5db9271"
+content-hash = "bb5713fbdcb30344078650533d3e33bf775f786ef21bd512765638f05eef81a5"
 
 [metadata.files]
 aiohttp = [
@@ -845,8 +845,8 @@ darglint = [
     {file = "darglint-1.8.0.tar.gz", hash = "sha256:aa605ef47817a6d14797d32b390466edab621768ea4ca5cc0f3c54f6d8dcaec8"},
 ]
 domify = [
-    {file = "domify-0.1.1-py3-none-any.whl", hash = "sha256:5695756dccb3b73c1b87ed1323bbed8407cbf37af4dc7e9a72682b77da96174d"},
-    {file = "domify-0.1.1.tar.gz", hash = "sha256:81cc28360fcf5b5e599f5636918ecdf35bde53f68b1c32abefc9982c582dfa7c"},
+    {file = "domify-0.2.0-py3-none-any.whl", hash = "sha256:c40c8305d5ab274ac0a4eca230e542f72fad96f4b35e524ea6002fd17a966157"},
+    {file = "domify-0.2.0.tar.gz", hash = "sha256:f4227d5698403b7d44acb5c8f0fd50bbd178091ae787ae2eff22cb2f4077f679"},
 ]
 environs = [
     {file = "environs-9.3.5-py2.py3-none-any.whl", hash = "sha256:f5a3ca00afd32a82e098597c7dc8899bea5ed451d31055e518e8c7681cdf1c2b"},
