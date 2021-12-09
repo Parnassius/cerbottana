@@ -45,7 +45,7 @@ async def setpermission(msg: Message) -> None:
         return
 
     rank = msg.args[2]
-    if rank not in PERMISSION_ROLES.keys():
+    if rank not in PERMISSION_ROLES:
         return
     rank = cast(Union[Role, Literal["default"]], rank)
 
