@@ -71,7 +71,7 @@ environs = "9.3.5"
 imageprobe = "0.3.0"
 python-dateutil = "2.8.2"
 pytz = "2021.3"
-SQLAlchemy = "1.4.27"
+SQLAlchemy = "1.4.28"
 websockets = "10.1"
 
 [tool.poetry.dev-dependencies]
