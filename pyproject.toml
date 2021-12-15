@@ -89,7 +89,7 @@ pytest-mock = "3.6.1"
 sqlalchemy2-stubs = "0.0.2a19"
 types-freezegun = "1.1.3"
 types-python-dateutil = "2.8.2"
-types-pytz = "2021.3.2"
+types-pytz = "2021.3.3"
 
 [tool.poetry.scripts]
 bot = "cerbottana.__main__:main"
