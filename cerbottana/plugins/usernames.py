@@ -135,6 +135,15 @@ async def ciarizardmille(msg: Message) -> None:
     await msg.reply(text)
 
 
+@command_wrapper(aliases=("ciro",))
+async def cironapoli(msg: Message) -> None:
+    phrases = [
+        "https://calc.pokemonshowdown.com/randoms.html?mode=randoms",
+        "kebab mlmlml ti dono la benedizione di San Gennaro",
+    ]
+    await msg.reply(random.choice(phrases))
+
+
 @command_wrapper(aliases=("cinse", "cobse", "conse"))
 async def consecutio(msg: Message) -> None:
     letters = "s" * random.randint(2, 5)
@@ -173,7 +182,7 @@ async def francyy(msg: Message) -> None:
 
 @command_wrapper(aliases=("gioco", "gioko"))
 async def giokio(msg: Message) -> None:
-    await msg.reply("!tier VGC 2021 Series 10", escape=False)
+    await msg.reply("!tier VGC 2021 Series 11", escape=False)
 
 
 @command_wrapper()
