@@ -1,17 +1,20 @@
+from __future__ import annotations
+
 import json
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-import pytest
 import pytz
 from freezegun import freeze_time
 
-pytestmark = pytest.mark.asyncio
+if TYPE_CHECKING:
+    from tests.conftest import ServerWs, TestConnection
 
 
 async def test_usernames(mock_connection):
-    async with mock_connection() as conn:
+    async def handler(ws: ServerWs, conn: TestConnection) -> None:
 
-        await conn.recv_queue.add_messages(
+        await ws.add_messages(
             [
                 ">publicroom",
                 "|init|chat",
@@ -22,13 +25,13 @@ async def test_usernames(mock_connection):
             ],
         )
 
-        await conn.recv_queue.add_user_join("publicroom", "user1", "+")
-        await conn.recv_queue.add_user_join("publicroom", "cerbottana", "*")
-        await conn.recv_queue.add_user_join("privateroom", "user1", "+")
-        await conn.recv_queue.add_user_join("privateroom", "cerbottana", "*")
+        await ws.add_user_join("publicroom", "user1", "+")
+        await ws.add_user_join("publicroom", "cerbottana", "*")
+        await ws.add_user_join("privateroom", "user1", "+")
+        await ws.add_user_join("privateroom", "cerbottana", "*")
 
         # Add a couple of formats, needed for .silver97
-        await conn.recv_queue.add_messages(
+        await ws.add_messages(
             ["|formats|,LL|,1|Sw/Sh Singles|Random Battle,f|OU,e|Custom Game,c"]
         )
 
@@ -38,9 +41,9 @@ async def test_usernames(mock_connection):
             "userCount": 2,
             "battleCount": 0,
         }
-        await conn.recv_queue.add_messages([f"|queryresponse|rooms|{json.dumps(data)}"])
+        await ws.add_messages([f"|queryresponse|rooms|{json.dumps(data)}"])
 
-        conn.send_queue.get_all()
+        await ws.get_messages()
 
         username_commands = [
             i
@@ -49,26 +52,26 @@ async def test_usernames(mock_connection):
         ]
 
         for cmd in username_commands:
-            await conn.recv_queue.add_messages(
+            await ws.add_messages(
                 [
                     ">publicroom",
                     f"|c|+user1|.{cmd.name}",
                 ]
             )
-            reply_public = conn.send_queue.get_all()
-            await conn.recv_queue.add_messages(
+            reply_public = await ws.get_messages()
+            await ws.add_messages(
                 [
                     ">privateroom",
                     f"|c|+user1|.{cmd.name}",
                 ]
             )
-            reply_private = conn.send_queue.get_all()
-            await conn.recv_queue.add_messages(
+            reply_private = await ws.get_messages()
+            await ws.add_messages(
                 [
                     f"|pm|+user1|*cerbottana|.{cmd.name}",
                 ]
             )
-            reply_pm = conn.send_queue.get_all()
+            reply_pm = await ws.get_messages()
 
             if cmd.name == "annika":
                 assert len(reply_public) == len(reply_pm) == 0
@@ -86,20 +89,22 @@ async def test_usernames(mock_connection):
         # I hate you plato
         tz = pytz.timezone("Europe/Rome")
         with freeze_time(datetime(2020, 1, 1, hour=10, tzinfo=tz)):
-            await conn.recv_queue.add_messages(
+            await ws.add_messages(
                 [
                     ">publicroom",
                     "|c|+user1|.plat0",
                 ]
             )
-            reply_plat0_daytime = conn.send_queue.get_all()
+            reply_plat0_daytime = await ws.get_messages()
         with freeze_time(datetime(2020, 1, 1, hour=4, tzinfo=tz)):
-            await conn.recv_queue.add_messages(
+            await ws.add_messages(
                 [
                     ">publicroom",
                     "|c|+user1|.plat0",
                 ]
             )
-            reply_plat0_nighttime = conn.send_queue.get_all()
+            reply_plat0_nighttime = await ws.get_messages()
         assert not next(iter(reply_plat0_daytime)).endswith("appena svegliato")
         assert next(iter(reply_plat0_nighttime)).endswith("appena svegliato")
+
+    await mock_connection(handler)

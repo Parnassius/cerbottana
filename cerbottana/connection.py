@@ -5,8 +5,7 @@ import re
 from time import time
 from typing import TYPE_CHECKING
 
-import websockets.client
-from websockets.exceptions import WebSocketException
+import aiohttp
 
 from . import utils
 from .handlers import handlers
@@ -56,7 +55,7 @@ class Connection:
         self.timestamp: float = 0
         self.lastmessage: float = 0
         self.loop: asyncio.AbstractEventLoop | None = None
-        self.websocket: websockets.client.WebSocketClientProtocol | None = None
+        self.websocket: aiohttp.ClientWebSocketResponse | None = None
         self.connection_start: float | None = None
         self.tiers: dict[str, Tier] = {}
 
@@ -83,23 +82,26 @@ class Connection:
             for rtask in self.recurring_tasks:
                 asyncio.create_task(rtask(self))
 
-        async for websocket in websockets.client.connect(
-            self.url, ping_interval=None, max_size=None
-        ):
+        async with aiohttp.ClientSession() as session:
             try:
-                self.websocket = websocket
-                self.connection_start = time()
-                async for message in websocket:
-                    if isinstance(message, str):
-                        print(f"<< {message}")
-                        await self._parse_message(message)
-            except (
-                WebSocketException,
-                OSError,  # https://github.com/aaugustin/websockets/issues/593
-            ):
+                async with session.ws_connect(
+                    self.url, max_msg_size=0, heartbeat=60
+                ) as websocket:
+                    self.websocket = websocket
+                    self.connection_start = time()
+                    async for message in websocket:
+                        if message.type == aiohttp.WSMsgType.TEXT:
+                            print(f"<< {message.data}")
+                            await self._parse_text_message(message.data)
+                        elif message.type == aiohttp.WSMsgType.BINARY:
+                            print(f"<b {message.data.decode()}")
+                            await self._parse_binary_message(message.data)
+                        elif message.type == aiohttp.WSMsgType.ERROR:
+                            break
+            except aiohttp.ClientConnectionError:
                 pass
 
-    async def _parse_message(self, message: str) -> None:
+    async def _parse_text_message(self, message: str) -> None:
         """Extracts a Room object from a raw message.
 
         Args:
@@ -135,16 +137,24 @@ class Connection:
 
             room.add_message_to_queue(msg)
 
+    async def _parse_binary_message(  # pylint: disable=no-self-use
+        self, message: bytes
+    ) -> None:
+        raise Exception("Received unexpected binary message")
+
+    async def _send_message_delay(self) -> None:
+        now = time()
+        if now - self.lastmessage < 0.1:
+            await asyncio.sleep(0.1)
+        self.lastmessage = now
+
     async def send(self, message: str) -> None:
         """Sends a raw unescaped message to the websocket.
 
         Args:
             message (str): String to send.
         """
-        print(f">> {message}")
-        now = time()
-        if now - self.lastmessage < 0.1:
-            await asyncio.sleep(0.1)
-        self.lastmessage = now
         if self.websocket is not None:
-            await self.websocket.send(message)
+            await self._send_message_delay()
+            print(f">> {message}")
+            await self.websocket.send_str(message)

@@ -3,12 +3,12 @@ from __future__ import annotations
 import asyncio
 import json
 from collections import Counter
-from collections.abc import AsyncIterator, Callable, Generator
-from contextlib import AbstractAsyncContextManager, asynccontextmanager
-from types import TracebackType
+from collections.abc import Awaitable, Callable
+from enum import Enum
+from time import time
 from typing import Any
 
-import freezegun
+import aiohttp
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -27,15 +27,38 @@ database_metadata: dict[str, Any] = {
 }
 
 
+class ControlMessage(bytes, Enum):
+    # server to client
+    PROCESS_MESSAGES = b"process_messages"
+    PROCESS_AND_REPLY = b"process_and_reply"
+
+    # client to server
+    PROCESSING_DONE = b"processing_done"
+
+
 class TestConnection(Connection):
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
+    async def _parse_binary_message(self, message: bytes) -> None:
+        if message in (
+            ControlMessage.PROCESS_MESSAGES,
+            ControlMessage.PROCESS_AND_REPLY,
+        ):
+            for room in list(Room._instances.get(self, {}).values()):
+                await room.process_all_messages()
+            if message == ControlMessage.PROCESS_AND_REPLY:
+                await self.send_bytes(ControlMessage.PROCESSING_DONE)
 
-        self.recv_queue: RecvQueue
-        self.send_queue: SendQueue
+    async def _send_message_delay(self) -> None:
+        # No need to throttle messages
+        self.lastmessage = time()
+
+    async def send_bytes(self, message: bytes) -> None:
+        if self.websocket is not None:
+            await self._send_message_delay()
+            print(f">b {message.decode()}")
+            await self.websocket.send_bytes(message)
 
 
-class RecvQueue(asyncio.Queue[tuple[int, str]]):
+class ServerWs(aiohttp.web.WebSocketResponse):
     async def add_user_join(
         self,
         room: str,
@@ -122,35 +145,32 @@ class RecvQueue(asyncio.Queue[tuple[int, str]]):
 
     async def add_messages(self, *items: list[str]) -> None:
         for item in items:
-            await self.put((0, "\n".join(item)))
+            await self.send_str("\n".join(item))
 
-        await self.put((1, ""))  # process message queues
-        await self.join()
+        await self.send_bytes(ControlMessage.PROCESS_MESSAGES)
 
-    async def close(self) -> None:
-        await self.put((2, ""))  # close fake websocket connection
-        await self.join()
+    async def get_messages(self) -> Counter[str]:
+        await self.send_bytes(ControlMessage.PROCESS_AND_REPLY)
 
-
-class SendQueue(asyncio.Queue[str]):
-    def get_all(self) -> Counter[str]:
         messages: Counter[str] = Counter()
-        try:
-            while True:
-                messages.update([self.get_nowait()])
-        except asyncio.queues.QueueEmpty:
-            pass
+        async for message in self:
+            if message.type == aiohttp.WSMsgType.TEXT:
+                messages.update([message.data])
+            elif (
+                message.type == aiohttp.WSMsgType.BINARY
+                and message.data == ControlMessage.PROCESSING_DONE
+            ):
+                break
         return messages
 
 
 @pytest.fixture()
 def mock_connection(
-    mocker,
-) -> Callable[[], AbstractAsyncContextManager[TestConnection]]:
-    @asynccontextmanager
+    aiohttp_raw_server,
+) -> Callable[[Callable[[ServerWs, TestConnection], Awaitable[None]]], Awaitable[None]]:
     async def make_mock_connection(
+        server_handler: Callable[[ServerWs, TestConnection], Awaitable[None]],
         *,
-        url: str = "ws://localhost:80/showdown/websocket",
         username: str = "cerbottana",
         password: str = "",
         avatar: str = "",
@@ -160,78 +180,21 @@ def mock_connection(
         command_character: str = ".",
         administrators: list[str] | None = None,
         webhooks: dict[str, str] | None = None,
-    ) -> AsyncIterator[TestConnection]:
-        class MockProtocol:
-            def __init__(self, recv_queue: RecvQueue, send_queue: SendQueue) -> None:
-                self.recv_queue = recv_queue
-                self.send_queue = send_queue
+    ) -> None:
+        async def handler(request: aiohttp.web_request.BaseRequest) -> ServerWs:
+            ws = ServerWs(max_msg_size=0)
+            await ws.prepare(request)
 
-            def __await__(self) -> "MockProtocol":
-                return self
+            await ws.add_messages(["|updateuser|*cerbottana|1|0|{}"])
+            await ws.get_messages()
 
-            async def __aiter__(self) -> AsyncIterator[str]:
-                while True:
-                    msg = await self.recv()
-                    if msg:
-                        yield msg
-                    self.recv_queue.task_done()
+            await server_handler(ws, conn)
 
-            async def recv(self) -> str:
-                msg_type, msg = await self.recv_queue.get()
+            await ws.close()
+            return ws
 
-                if msg_type == 0:
-                    pass
-                elif msg_type == 1:
-                    for room in list(Room._instances.get(conn, {}).values()):
-                        await room.process_all_messages()
-                elif msg_type == 2:
-                    # cancel all running tasks
-                    for task in asyncio.all_tasks():
-                        if not task.get_coro().__name__.startswith("test_"):
-                            task.cancel()
-                    if conn.websocket is not None:
-                        await conn.websocket.close()
-
-                return msg
-
-            async def send(self, message: str) -> None:
-                await self.send_queue.put(message)
-
-            async def close(self) -> None:
-                pass
-
-        class MockConnect:
-            def __init__(self, url: str, **kwargs: Any) -> None:
-                pass
-
-            async def __aiter__(self) -> AsyncIterator[MockProtocol]:
-                while True:
-                    async with self as protocol:
-                        yield protocol
-
-            async def __aenter__(self) -> MockProtocol:
-                return await self
-
-            async def __aexit__(
-                self,
-                exc_type: type[BaseException] | None,
-                exc_value: BaseException | None,
-                traceback: TracebackType | None,
-            ) -> None:
-                pass
-
-            def __await__(self) -> Generator[Any, None, MockProtocol]:
-                # Create a suitable iterator by calling __await__ on a coroutine.
-                return self.__await_impl__().__await__()
-
-            async def __await_impl__(self) -> MockProtocol:
-                # pylint: disable=no-self-use
-                return MockProtocol(recv_queue, send_queue)
-
-        mocker.patch("websockets.client.connect", MockConnect)
-
-        recv_queue: RecvQueue = RecvQueue()
-        send_queue: SendQueue = SendQueue()
+        raw_server = await aiohttp_raw_server(handler)
+        url = raw_server.make_url("/")
 
         if rooms is None:
             rooms = ["room1"]
@@ -254,20 +217,12 @@ def mock_connection(
             unittesting=True,
         )
 
-        asyncio.create_task(conn._start_websocket())
+        await conn._start_websocket()
 
-        await recv_queue.add_messages(["|updateuser|*cerbottana|1|0|{}"])
-
-        # Clear send queue
-        send_queue.get_all()
-
-        conn.recv_queue = recv_queue
-        conn.send_queue = send_queue
-
-        try:
-            yield conn
-        finally:
-            await recv_queue.close()
+        if conn.websocket is not None:
+            exc = conn.websocket.exception()
+            if exc:
+                raise exc
 
     return make_mock_connection
 
@@ -305,10 +260,3 @@ def veekun_database() -> None:
     # csv_to_sqlite is an init_task, and as such it expects an instance of Connection as
     # its first parameter. However it is never used so we just pass None instead.
     asyncio.run(csv_to_sqlite(None))  # type: ignore[arg-type]
-
-
-# Configure freezegun to ignore the connection module
-# This is needed because the `send` method requires 0.1s between each message
-freezegun.configure(  # type: ignore[attr-defined]
-    extend_ignore_list=["cerbottana.connection"]
-)

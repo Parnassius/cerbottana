@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
 
-pytestmark = pytest.mark.asyncio
+if TYPE_CHECKING:
+    from tests.conftest import ServerWs, TestConnection
 
 
 @pytest.mark.parametrize(
@@ -19,9 +22,11 @@ pytestmark = pytest.mark.asyncio
     ),
 )
 async def test_roomid(mock_connection, room: str, roomid: str) -> None:
-    async with mock_connection() as conn:
+    async def handler(ws: ServerWs, conn: TestConnection) -> None:
 
         assert Room.get(conn, room).roomid == roomid
+
+    await mock_connection(handler)
 
 
 @pytest.mark.parametrize(
@@ -88,12 +93,15 @@ async def test_roomid(mock_connection, room: str, roomid: str) -> None:
 async def test_buffer(
     mock_connection, messages: list[list[str]], buffer: list[str]
 ) -> None:
-    async with mock_connection() as conn:
+    async def handler(ws: ServerWs, conn: TestConnection) -> None:
 
         room = Room.get(conn, "room1")
         for message in messages:
-            await conn.recv_queue.add_messages(message)
+            await ws.add_messages(message)
+        await ws.get_messages()
         assert list(room.buffer) == buffer
+
+    await mock_connection(handler)
 
 
 @pytest.mark.parametrize(
@@ -108,10 +116,12 @@ async def test_buffer(
 async def test_is_private(
     mock_connection, public_roomids: set[str], room: str, is_private: bool
 ) -> None:
-    async with mock_connection() as conn:
+    async def handler(ws: ServerWs, conn: TestConnection) -> None:
 
         conn.public_roomids = public_roomids
         assert Room.get(conn, room).is_private == is_private
+
+    await mock_connection(handler)
 
 
 @pytest.mark.parametrize(
@@ -130,12 +140,14 @@ async def test_is_private(
 async def test_language_id(
     mock_connection, language: str | None, language_id: int
 ) -> None:
-    async with mock_connection() as conn:
+    async def handler(ws: ServerWs, conn: TestConnection) -> None:
 
         room = Room.get(conn, "room1")
         if language is not None:
             room.language = language
         assert room.language_id == language_id
+
+    await mock_connection(handler)
 
 
 @pytest.mark.parametrize(
@@ -150,7 +162,7 @@ async def test_language_id(
 async def test_users(
     mock_connection, usernames_add: dict[str, str], usernames_remove: set[str]
 ) -> None:
-    async with mock_connection() as conn:
+    async def handler(ws: ServerWs, conn: TestConnection) -> None:
 
         room = Room.get(conn, "room1")
         users = {}
@@ -168,3 +180,5 @@ async def test_users(
                 users.pop(user)
 
         assert room.users == users
+
+    await mock_connection(handler)

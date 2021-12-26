@@ -1,19 +1,22 @@
-from collections import Counter
+from __future__ import annotations
 
-import pytest
+from collections import Counter
+from typing import TYPE_CHECKING
+
 from freezegun import freeze_time
 
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
 
-pytestmark = pytest.mark.asyncio
+if TYPE_CHECKING:
+    from tests.conftest import ServerWs, TestConnection
 
 
 async def test_room(mock_connection) -> None:
-    async with mock_connection() as conn:
+    async def handler(ws: ServerWs, conn: TestConnection) -> None:
 
         # Join a room with only an user in it
-        await conn.recv_queue.add_messages(
+        await ws.add_messages(
             [
                 ">room1",
                 "|init|chat",
@@ -23,16 +26,7 @@ async def test_room(mock_connection) -> None:
             ]
         )
 
-        room1 = Room.get(conn, "room1")
-
-        # Check if the room has been added to the list of the rooms
-        assert set(conn.rooms.keys()) == {"room1"}
-        # Check the room title
-        assert room1.title == "Room 1"
-        # Check if the only user in the room has been added to the room
-        assert User.get(conn, "cerbottana") in room1
-
-        assert conn.send_queue.get_all() == Counter(
+        assert await ws.get_messages() == Counter(
             [
                 "|/cmd roominfo room1",
                 "room1|/roomlanguage",
@@ -40,8 +34,16 @@ async def test_room(mock_connection) -> None:
             ]
         )
 
+        room1 = Room.get(conn, "room1")
+        # Check if the room has been added to the list of the rooms
+        assert set(conn.rooms.keys()) == {"room1"}
+        # Check the room title
+        assert room1.title == "Room 1"
+        # Check if the only user in the room has been added to the room
+        assert User.get(conn, "cerbottana") in room1
+
         # Users enter the room
-        await conn.recv_queue.add_messages(
+        await ws.add_messages(
             [
                 ">room1",
                 "|j| User 1",
@@ -55,20 +57,19 @@ async def test_room(mock_connection) -> None:
                 "|join| User 3",
             ],
         )
-        assert User.get(conn, "user1") in room1
-        assert User.get(conn, "user2") in room1
-        assert User.get(conn, "user3") in room1
-
-        assert conn.send_queue.get_all() == Counter(
+        assert await ws.get_messages() == Counter(
             [
                 "|/cmd userdetails user1",
                 "|/cmd userdetails user2",
                 "|/cmd userdetails user3",
             ]
         )
+        assert User.get(conn, "user1") in room1
+        assert User.get(conn, "user2") in room1
+        assert User.get(conn, "user3") in room1
 
         # Users change names
-        await conn.recv_queue.add_messages(
+        await ws.add_messages(
             [
                 ">room1",
                 "|n| User 4|user1",
@@ -82,6 +83,13 @@ async def test_room(mock_connection) -> None:
                 "|name| User 6|user3",
             ],
         )
+        assert await ws.get_messages() == Counter(
+            [
+                "|/cmd userdetails user4",
+                "|/cmd userdetails user5",
+                "|/cmd userdetails user6",
+            ]
+        )
         assert User.get(conn, "user1") not in room1
         assert User.get(conn, "user2") not in room1
         assert User.get(conn, "user3") not in room1
@@ -89,19 +97,11 @@ async def test_room(mock_connection) -> None:
         assert User.get(conn, "user5") in room1
         assert User.get(conn, "user6") in room1
 
-        assert conn.send_queue.get_all() == Counter(
-            [
-                "|/cmd userdetails user4",
-                "|/cmd userdetails user5",
-                "|/cmd userdetails user6",
-            ]
-        )
-
         # Advance time to avoid throttling `/cmd userdetails`
         freeze_time().start().tick(15)
 
         # Users change names without changing userid
-        await conn.recv_queue.add_messages(
+        await ws.add_messages(
             [
                 ">room1",
                 "|n| USER 4|user4",
@@ -115,20 +115,19 @@ async def test_room(mock_connection) -> None:
                 "|name| USER 6|user6",
             ],
         )
-        assert User.get(conn, "user4") in room1
-        assert User.get(conn, "user5") in room1
-        assert User.get(conn, "user6") in room1
-
-        assert conn.send_queue.get_all() == Counter(
+        assert await ws.get_messages() == Counter(
             [
                 "|/cmd userdetails user4",
                 "|/cmd userdetails user5",
                 "|/cmd userdetails user6",
             ]
         )
+        assert User.get(conn, "user4") in room1
+        assert User.get(conn, "user5") in room1
+        assert User.get(conn, "user6") in room1
 
         # Users leave the room
-        await conn.recv_queue.add_messages(
+        await ws.add_messages(
             [
                 ">room1",
                 "|l| User 4",
@@ -142,17 +141,17 @@ async def test_room(mock_connection) -> None:
                 "|leave| User 6",
             ],
         )
+        assert await ws.get_messages() == Counter()
         assert User.get(conn, "user4") not in room1
         assert User.get(conn, "user5") not in room1
         assert User.get(conn, "user6") not in room1
 
-        assert conn.send_queue.get_all() == Counter()
-
         # Global and room rank
-        await conn.recv_queue.add_queryresponse_userdetails(
+        await ws.add_queryresponse_userdetails(
             "cerbottana", group="+", rooms={"room1": "*"}
         )
+        assert await ws.get_messages() == Counter()
         assert User.get(conn, "cerbottana").global_rank == "+"
         assert User.get(conn, "cerbottana").rank(room1) == "*"
 
-        assert conn.send_queue.get_all() == Counter()
+    await mock_connection(handler)
