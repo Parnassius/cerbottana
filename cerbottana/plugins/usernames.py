@@ -3,8 +3,8 @@ from __future__ import annotations
 import random
 from datetime import datetime
 from typing import TYPE_CHECKING
+from zoneinfo import ZoneInfo
 
-import pytz
 from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -301,8 +301,7 @@ async def pissog(msg: Message) -> None:
 async def plat0(msg: Message) -> None:
     word = random.choice(["basta", "senti", "smettila"])
     text = f"oh {word} non mi spoilerare"
-    tz = pytz.timezone("Europe/Rome")
-    timestamp = datetime.now(tz)
+    timestamp = datetime.now(ZoneInfo("Europe/Rome"))
     if 3 <= timestamp.hour <= 5:
         text += ", che mi sono appena svegliato"
     await msg.reply(text)

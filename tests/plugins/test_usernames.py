@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from typing import TYPE_CHECKING
+from zoneinfo import ZoneInfo
 
-import pytz
 from freezegun import freeze_time
 
 if TYPE_CHECKING:
@@ -87,7 +87,7 @@ async def test_usernames(mock_connection):
                     assert reply_public != reply_pm
 
         # I hate you plato
-        tz = pytz.timezone("Europe/Rome")
+        tz = ZoneInfo("Europe/Rome")
         with freeze_time(datetime(2020, 1, 1, hour=10, tzinfo=tz)):
             await ws.add_messages(
                 [
