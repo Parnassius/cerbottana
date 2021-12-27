@@ -10,7 +10,7 @@ from .connection import Connection
 
 
 def main() -> None:
-    def shutdown(sig: signal.Signals, frame_type: FrameType) -> None:
+    def shutdown(sig: int, frame_type: FrameType | None) -> None:
         if conn.websocket is not None and conn.loop is not None:
             for task in asyncio.all_tasks(conn.loop):
                 task.cancel()
