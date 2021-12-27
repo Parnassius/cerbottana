@@ -70,7 +70,7 @@ domify = "0.2.0"
 environs = "9.3.5"
 imageprobe = "0.3.0"
 python-dateutil = "2.8.2"
-SQLAlchemy = "1.4.27"
+SQLAlchemy = "1.4.29"
 
 [tool.poetry.dev-dependencies]
 black = "21.12b0"
