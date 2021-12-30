@@ -137,11 +137,7 @@ async def ciarizardmille(msg: Message) -> None:
 
 @command_wrapper(aliases=("ciro",))
 async def cironapoli(msg: Message) -> None:
-    phrases = [
-        "https://calc.pokemonshowdown.com/randoms.html?mode=randoms",
-        "kebab mlmlml ti dono la benedizione di San Gennaro",
-    ]
-    await msg.reply(random.choice(phrases))
+    await msg.reply("kebab mlmlml ti dono la benedizione di San Gennaro")
 
 
 @command_wrapper(aliases=("cinse", "cobse", "conse"))
