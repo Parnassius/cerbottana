@@ -3,8 +3,6 @@ from __future__ import annotations
 from collections import Counter
 from typing import TYPE_CHECKING
 
-from freezegun import freeze_time
-
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
 
@@ -96,9 +94,6 @@ async def test_room(mock_connection) -> None:
         assert User.get(conn, "user4") in room1
         assert User.get(conn, "user5") in room1
         assert User.get(conn, "user6") in room1
-
-        # Advance time to avoid throttling `/cmd userdetails`
-        freeze_time().start().tick(15)
 
         # Users change names without changing userid
         await ws.add_messages(
