@@ -117,7 +117,7 @@ async def monopoketour(msg: Message) -> None:
 
     await create_tour(
         msg,
-        formatid="nationaldex",
+        formatid="ou",
         name="MONOPOKE TOUR",
         autostart=6.5,
         rules=["-All Pokemon", f"+{msg.arg}-base", "-Focus Sash", "Z-Move Clause"],
@@ -135,7 +135,7 @@ async def randpoketour(msg: Message) -> None:
         await msg.reply("Inserisci almeno un Pokémon")
         return
 
-    formatid = "nationaldex"
+    formatid = "ou"
     name = "!RANDPOKE TOUR"
     rules = ["Z-Move Clause", "Dynamax Clause"]
     bans = ["All Pokemon"]
