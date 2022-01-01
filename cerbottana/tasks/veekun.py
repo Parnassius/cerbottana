@@ -4,7 +4,7 @@ import csv
 import inspect
 import re
 import subprocess
-from os.path import dirname, isfile, join
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from sqlalchemy import func, insert, select, update
@@ -36,7 +36,7 @@ async def csv_to_sqlite(conn: Connection) -> None:
                     "databases/veekun.py",
                     "tasks/veekun.py",
                 ],
-                cwd=join(dirname(__file__), ".."),
+                cwd=Path(__file__).parent.parent,
                 capture_output=True,
                 check=True,
             )
@@ -58,7 +58,7 @@ async def csv_to_sqlite(conn: Connection) -> None:
 
     print("Rebuilding veekun database...")
 
-    with open(utils.get_config_file("veekun.sqlite"), "wb"):  # truncate database
+    with utils.get_config_file("veekun.sqlite").open("wb"):  # truncate database
         pass
 
     db = Database.open("veekun")
@@ -79,9 +79,9 @@ async def csv_to_sqlite(conn: Connection) -> None:
 
         for table in v.Base.metadata.sorted_tables:
             tname = table.key
-            file_name = utils.get_data_file("veekun", f"{tname}.csv")
-            if isfile(file_name):
-                with open(file_name, encoding="utf-8") as f:
+            csv_file = utils.get_data_file(f"veekun/{tname}.csv")
+            if csv_file.is_file():
+                with csv_file.open(encoding="utf-8") as f:
                     csv_data = csv.DictReader(f)
                     csv_keys = csv_data.fieldnames
 

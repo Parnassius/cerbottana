@@ -159,5 +159,5 @@ def eightball_htmlpage(user: User, room: Room, page: int) -> BaseElement:
     return html.doc
 
 
-with open(utils.get_data_file("eightball.json"), encoding="utf-8") as f:
+with utils.get_data_file("eightball.json").open(encoding="utf-8") as f:
     DEFAULT_ANSWERS: dict[str, list[str]] = json.load(f)

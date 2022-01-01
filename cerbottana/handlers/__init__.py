@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import glob
 import importlib
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from functools import wraps
-from os.path import basename, dirname, isfile, join
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -50,9 +49,9 @@ def check_required_parameters(
     return wrapper
 
 
-modules = glob.glob(join(dirname(__file__), "*.py"))
+modules = Path(__file__).parent.glob("*.py")
 
 for f in modules:
-    if isfile(f) and not f.endswith("__init__.py"):
-        name = basename(f)[:-3]
+    if f.is_file() and f.name != "__init__.py":
+        name = f.stem
         importlib.import_module(f".{name}", __name__)

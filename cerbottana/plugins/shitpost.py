@@ -59,7 +59,7 @@ async def memes(msg: Message) -> None:
     await msg.reply(random.choice(MEMES))
 
 
-with open(utils.get_data_file("letters.json"), encoding="utf-8") as f:
+with utils.get_data_file("letters.json").open(encoding="utf-8") as f:
     LETTERS: dict[str, list[str]] = json.load(f)
-with open(utils.get_data_file("memes.json"), encoding="utf-8") as f:
+with utils.get_data_file("memes.json").open(encoding="utf-8") as f:
     MEMES: list[str] = json.load(f)

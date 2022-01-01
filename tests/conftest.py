@@ -233,7 +233,7 @@ def mock_database(mocker) -> None:
 
     def mock_database_init(self, dbname: str) -> None:
         if dbname == "veekun":
-            dbpath = utils.get_config_file(f"{dbname}.sqlite")
+            dbpath = str(utils.get_config_file(f"{dbname}.sqlite"))
             engine = f"sqlite:///{dbpath}"
         else:
             engine = "sqlite://"  # :memory: database

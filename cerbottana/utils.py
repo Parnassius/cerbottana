@@ -5,7 +5,7 @@ import re
 import string
 import unicodedata
 from html import escape
-from os.path import dirname, join
+from pathlib import Path
 
 from .typedefs import JsonDict, Role, RoomId, UserId
 
@@ -171,21 +171,21 @@ def _escape(text: str) -> str:
     return text
 
 
-def get_config_file(*path: str) -> str:
-    return join(dirname(__file__), "..", *path)
+def get_config_file(path: str) -> Path:
+    return Path(__file__).parent.parent / path
 
 
-def get_data_file(*path: str) -> str:
-    return join(dirname(__file__), "data", *path)
+def get_data_file(path: str) -> Path:
+    return Path(__file__).parent / "data" / path
 
 
-with open(get_data_file("avatars.json"), encoding="utf-8") as f:
+with get_data_file("avatars.json").open(encoding="utf-8") as f:
     AVATAR_IDS: dict[str, str] = json.load(f)
-with open(get_data_file("showdown", "aliases.json"), encoding="utf-8") as f:
+with get_data_file("showdown/aliases.json").open(encoding="utf-8") as f:
     ALIASES: dict[str, str] = json.load(f)
-with open(get_data_file("showdown", "pokedex.json"), encoding="utf-8") as f:
+with get_data_file("showdown/pokedex.json").open(encoding="utf-8") as f:
     POKEDEX: dict[str, JsonDict] = json.load(f)
-with open(get_data_file("showdown", "pokedex-mini-bw.json"), encoding="utf-8") as f:
+with get_data_file("showdown/pokedex-mini-bw.json").open(encoding="utf-8") as f:
     POKEDEX_MINI_BW: JsonDict = json.load(f)
-with open(get_data_file("showdown", "pokedex-mini.json"), encoding="utf-8") as f:
+with get_data_file("showdown/pokedex-mini.json").open(encoding="utf-8") as f:
     POKEDEX_MINI: JsonDict = json.load(f)

@@ -48,8 +48,8 @@ async def icon(msg: Message) -> None:
             .where(d.Users.icon.is_not(None))
             .order_by(d.Users.userid)
         )
-        with open(
-            utils.get_config_file("userlist_icons.csv"), "w", encoding="utf-8"
+        with utils.get_config_file("userlist_icons.csv").open(
+            "w", encoding="utf-8"
         ) as f:
             f.writelines(
                 [f"{userid},{icon}\n" for userid, icon in session.execute(stmt_csv)]

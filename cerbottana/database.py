@@ -13,7 +13,7 @@ class Database:
     _instances: dict[str, Database] = {}
 
     def __init__(self, dbname: str) -> None:
-        dbpath = utils.get_config_file(f"{dbname}.sqlite")
+        dbpath = str(utils.get_config_file(f"{dbname}.sqlite"))
         engine = f"sqlite:///{dbpath}"
         self.engine = create_engine(engine, future=True)
         self.Session = sessionmaker(self.engine, future=True)
