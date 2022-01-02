@@ -12,6 +12,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.9"
+      - name: Set up node
+        uses: actions/setup-node@v2
       - name: Cache Poetry virtualenv
         id: virtualenv-cache
         uses: actions/cache@v2
@@ -25,6 +27,11 @@ jobs:
         with:
           path: veekun.sqlite
           key: veekun-${{ hashFiles('cerbottana/data/veekun/*.csv', 'cerbottana/databases/veekun.py', 'cerbottana/tasks/veekun.py') }}
+      - name: Cache pokemon-showdown instance
+        uses: actions/cache@v2
+        with:
+          path: pokemon-showdown
+          key: pokemon-showdown
       - name: Install Poetry
         run: pipx install poetry
       - name: Setup the virtual environment
@@ -38,9 +45,9 @@ jobs:
         if: steps.veekun-cache.outputs.cache-hit == 'true'
         run: sqlite3 veekun.sqlite "UPDATE latest_commit SET commit_id = '$GITHUB_SHA';"
       - name: Check import order
-        run: poetry run poe isort_check
+        run: poetry run poe isort-check
       - name: Check formatting using black
-        run: poetry run poe black_check
+        run: poetry run poe black-check
       - name: Check docstrings with darglint
         run: poetry run poe darglint
       - name: Test with mypy
@@ -48,6 +55,13 @@ jobs:
       - name: Test with pylint
         run: poetry run poe pylint
       - name: Test with pytest
-        run: poetry run poe pytest --cov --cov-report=xml
+        env:
+          USERNAME: ${{ secrets.TESTS_BOT_USERNAME }}
+          PASSWORD: ${{ secrets.TESTS_BOT_PASSWORD }}
+          TESTS_MOD_USERNAME: ${{ secrets.TESTS_MOD_USERNAME }}
+          TESTS_MOD_PASSWORD: ${{ secrets.TESTS_MOD_PASSWORD }}
+        run: |
+          poetry run poe pytest --cov --cov-report=xml
+          poetry run poe pytest-real-ps-instance --cov --cov-append --cov-report=xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2

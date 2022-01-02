@@ -47,13 +47,26 @@ isort = "isort ."
 black = "black ."
 
 tests = ["test"]
-test = ["isort_check", "black_check", "darglint", "mypy", "pylint", "pytest"]
-isort_check = "isort . --check"
-black_check = "black . --check"
+test = ["isort-check", "black-check", "darglint", "mypy", "pylint", "pytest-full"]
+isort-check = "isort . --check"
+black-check = "black . --check"
 darglint = "darglint cerbottana tests -v 2"
 mypy = "mypy cerbottana tests"
 pylint = "pylint cerbottana tests --disable=fixme"
-pytest = "pytest"
+pytest-full = [
+    {ref="pytest"},
+    {shell="""
+        dotenv get TESTS_MOD_USERNAME > /dev/null
+        if [ $? -ne 0 ]
+        then
+            echo 'Skipping tests using a real Showdown instance'
+        else
+            poe pytest-real-ps-instance
+        fi
+    """},
+]
+pytest = "pytest -m 'not real_ps_instance'"
+pytest-real-ps-instance = "pytest -m 'real_ps_instance'"
 
 
 [tool.poetry]
@@ -125,3 +138,9 @@ max-line-length = "88"
 
 [tool.pylint.typing]
 runtime-typing = "no"
+
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers"
+markers = ["real_ps_instance"]
+xfail_strict = true
