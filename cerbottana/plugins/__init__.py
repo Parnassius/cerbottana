@@ -6,7 +6,7 @@ import importlib
 from collections.abc import Awaitable, Callable, Iterable
 from functools import wraps
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from domify.base_element import BaseElement
 from sqlalchemy import select
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from cerbottana.models.user import User
 
     CommandFunc = Callable[[Message], Awaitable[None]]
-    HTMLPageFunc = Callable[[User, Room, int], Optional[BaseElement]]
+    HTMLPageFunc = Callable[[User, Room, int], BaseElement | None]
 
 
 # --- Command logic and complementary decorators ---

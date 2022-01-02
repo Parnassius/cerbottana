@@ -9,11 +9,11 @@ jobs:
       HAS_SECRETS: ${{ secrets.TESTS_BOT_USERNAME != '' }}
     steps:
       - uses: actions/checkout@v2
-      - name: Set up python 3.9
+      - name: Set up python 3.10
         id: setup-python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.9"
+          python-version: "3.10"
       - name: Set up node
         uses: actions/setup-node@v2
       - name: Cache Poetry virtualenv

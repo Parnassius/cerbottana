@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Literal, Union, cast
+from typing import TYPE_CHECKING, Literal, cast
 
 from domify.base_element import BaseElement
 from sqlalchemy import and_, delete, literal, select, union
@@ -47,7 +47,7 @@ async def setpermission(msg: Message) -> None:
     rank = msg.args[2]
     if rank not in PERMISSION_ROLES:
         return
-    rank = cast(Union[Role, Literal["default"]], rank)
+    rank = cast(Role | Literal["default"], rank)
 
     db = Database.open()
     with db.get_session() as session:
