@@ -4,54 +4,101 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    "pokemon1, pokemon2",
+    "monopoke, species, item, ability, moves, valid",
     (
+        (
+            # Pokemon with `Past` moves should be accepted
+            "venonat",
+            "venonat",
+            "",
+            "compoundeyes",
+            "flash",
+            True,
+        ),
+        (
+            # Pokemon with `Past` items should be accepted
+            "venonat",
+            "venonat",
+            "beedrillite",
+            "compoundeyes",
+            "agility",
+            True,
+        ),
         pytest.param(
-            ("venonat", "compoundeyes", "rest"),
             # `Past` pokemon should be rejected
-            ("unown", "levitate", "hiddenpower"),
+            "venonat",
+            "unown",
+            "",
+            "levitate",
+            "hiddenpower",
+            False,
             marks=pytest.mark.xfail,
         ),
         (
-            ("vulpix", "drought", "sunnyday"),
-            # Non-default forms should be rejected
-            ("vulpix-alola", "snowwarning", "hail"),
+            "vulpix",
+            "vulpix",
+            "",
+            "drought",
+            "sunnyday",
+            True,
         ),
         (
-            ("vulpix-alola", "snowwarning", "hail"),
+            # Non-default forms should be rejected
+            "vulpix",
+            "vulpix-alola",
+            "",
+            "snowwarning",
+            "hail",
+            False,
+        ),
+        (
+            "vulpix-alola",
+            "vulpix-alola",
+            "",
+            "snowwarning",
+            "hail",
+            True,
+        ),
+        (
             # Default forms should be rejected
-            ("vulpix", "drought", "sunnyday"),
+            "vulpix-alola",
+            "vulpix",
+            "",
+            "drought",
+            "sunnyday",
+            False,
         ),
     ),
 )
 async def test_monopoke(
-    showdown_connection, pokemon1: tuple[str, str, str], pokemon2: tuple[str, str, str]
+    showdown_connection,
+    *,
+    monopoke: str,
+    species: str,
+    item: str,
+    ability: str,
+    moves: str,
+    valid: bool,
 ) -> None:
     async with showdown_connection() as (bot, mod):
         # Create the tournament
-        await mod.send(f"lobby|.monopoke {pokemon1[0]}")
+        await mod.send(f"lobby|.monopoke {monopoke}")
         await mod.await_message(
-            "|tournament|create|gen8nationaldex|Single Elimination|0|MONOPOKE TOUR"
+            '|raw|<div class="infobox infobox-limited">This tournament includes:',
+            startswith=True,
         )
 
-        # The first pokemon should be accepted
-        await mod.send(
-            f"|/utm {pokemon1[0]}|||{pokemon1[1]}|{pokemon1[2]}||4,,,,,|||||"
-        )
+        # Validate the pokemon
+        await mod.send(f"|/utm {species}||{item}|{ability}|{moves}||4,,,,,|||||")
         await mod.send("lobby|/tournament vtm")
-        msg_accept = await mod.await_message("|popup|", startswith=True)
-
-        # The second pokemon should be rejected
-        await mod.send(
-            f"|/utm {pokemon2[0]}|||{pokemon2[1]}|{pokemon2[2]}||4,,,,,|||||"
-        )
-        await mod.send("lobby|/tournament vtm")
-        msg_reject = await mod.await_message("|popup|", startswith=True)
+        msg = await mod.await_message("|popup|", startswith=True)
 
         # Close the tournament
         await bot.send("lobby|/tournament end")
         await bot.await_message("|tournament|forceend")
 
         # Assertions
-        assert msg_accept.startswith("|popup|Your team is valid")
-        assert msg_reject.startswith("|popup|Your team was rejected")
+        if valid:
+            assert msg.startswith("|popup|Your team is valid")
+        else:
+            assert msg.startswith("|popup|Your team was rejected")
