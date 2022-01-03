@@ -391,6 +391,8 @@ def showdown_connection(
             bot_password = env("PASSWORD")
             mod_username = env("TESTS_MOD_USERNAME")
             mod_password = env("TESTS_MOD_PASSWORD")
+
+            bot_userid = utils.to_user_id(bot_username)
             mod_userid = utils.to_user_id(mod_username)
 
             async with make_connection(
@@ -400,6 +402,9 @@ def showdown_connection(
             ) as mod:
                 await bot.await_message(
                     f'|queryresponse|userdetails|{{"id":"{mod_userid}"', startswith=True
+                )
+                await mod.await_message(
+                    f'|queryresponse|userdetails|{{"id":"{bot_userid}"', startswith=True
                 )
                 yield bot, mod
                 return
