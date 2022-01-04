@@ -285,7 +285,9 @@ class TestConnection(Connection):
 
     async def await_message(self, *messages: str, startswith: bool = False) -> str:
         while True:
-            msg = await self.recv_queue.get()
+            # Wait at most 5 seconds. It should be more than enough for normal cases,
+            # and allows to easily identify eventual problems.
+            msg = await asyncio.wait_for(self.recv_queue.get(), 5)
             if startswith:
                 cond = msg.startswith(messages)
             else:
@@ -328,6 +330,7 @@ def showdown_server() -> Generator[int, None, None]:
     copy(cwd / "config/config-example.js", config)
     with config.open("a", encoding="utf-8") as f:
         f.write("exports.bindaddress = '127.0.0.1';\n")
+        f.write("exports.reportjoins = false;\n")
         f.write("exports.nothrottle = true;\n")
         f.write("exports.noipchecks = true;\n")
         f.write("exports.backdoor = false;\n")
