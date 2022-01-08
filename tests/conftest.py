@@ -18,6 +18,7 @@ from aiohttp.test_utils import unused_port
 from environs import Env
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from xprocess import ProcessStarter  # type: ignore[import]
 
 import cerbottana.databases.database as d
 from cerbottana import utils
@@ -297,10 +298,22 @@ class TestConnection(Connection):
 
 
 @pytest.fixture(scope="session")
-def showdown_server() -> Generator[int, None, None]:
-    def pull_pokemon_showdown(cwd) -> None:
+def showdown_server(xprocess) -> Generator[int, None, None]:
+    env = Env()
+    env.read_env()
+
+    external_ps_port = env("PS_PORT", None)
+    if external_ps_port:
+        yield int(external_ps_port)
+        return
+
+    cwd = Path(__file__).parent.parent / "pokemon-showdown"
+    port = unused_port()
+
+    # Clone pokemon showdown
+    def pull_pokemon_showdown() -> None:
         cwd.mkdir(exist_ok=True)
-        subprocess.run(["git", "init", "--quiet"], cwd=cwd, check=True)
+        subprocess.run(["git", "init", "--quiet"], cwd=cwd, timeout=5, check=True)
         subprocess.run(
             [
                 "git",
@@ -310,20 +323,16 @@ def showdown_server() -> Generator[int, None, None]:
                 "https://github.com/smogon/pokemon-showdown.git",
             ],
             cwd=cwd,
+            timeout=300,
             check=True,
         )
 
-    env = Env()
-    env.read_env()
-
-    # Clone pokemon showdown
-    cwd = Path(__file__).parent.parent / "pokemon-showdown"
     try:
-        pull_pokemon_showdown(cwd)
+        pull_pokemon_showdown()
     except subprocess.CalledProcessError:
         # Delete the directory and retry
         rmtree(cwd)
-        pull_pokemon_showdown(cwd)
+        pull_pokemon_showdown()
 
     # Create the configuration file and tweak some options
     config = cwd / "config/config.js"
@@ -343,28 +352,18 @@ def showdown_server() -> Generator[int, None, None]:
         f.write(f"{env('USERNAME')},&\n")
         f.write(f"{env('TESTS_MOD_USERNAME')},@\n")
 
-    external_ps_port = env("PS_PORT", None)
-    if external_ps_port:
-        yield int(external_ps_port)
-        return
-
     # Start the server
-    port = unused_port()
-    with subprocess.Popen(
-        ["./pokemon-showdown", str(port)], cwd=cwd, stdout=subprocess.PIPE, text=True
-    ) as ps:
-        # Wait until the server is ready
-        while True:
-            line = ps.stdout.readline()  # type: ignore[union-attr]
-            if not line:
-                raise Exception("Pokemon Showdown stopped unexpectedly")
-            if line.rstrip().endswith(f" listening on 127.0.0.1:{port}"):
-                # Pokemon Showdown has started
-                break
+    class PokemonShowdownStarter(ProcessStarter):  # type: ignore
+        pattern = rf" listening on 127\.0\.0\.1:{port}$"
+        timeout = 600
+        args = ["./pokemon-showdown", str(port)]
+        popen_kwargs = {"cwd": cwd}
+        terminate_on_interrupt = True
+        max_read_lines = None
 
-        yield port
-
-        ps.terminate()
+    xprocess.ensure("showdown", PokemonShowdownStarter)
+    yield port
+    xprocess.getinfo("showdown").terminate()
 
 
 @pytest.fixture()
