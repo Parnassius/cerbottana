@@ -279,9 +279,9 @@ class TestConnection(Connection):
         )
 
     async def _parse_text_message(self, message: str) -> None:
-        await self.recv_queue.put(message)
-
         await super()._parse_text_message(message)
+
+        await self.recv_queue.put(message)
 
     async def await_message(self, *messages: str, startswith: bool = False) -> str:
         while True:

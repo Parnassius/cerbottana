@@ -70,7 +70,7 @@ async def timestampchat(msg: ProtocolMessage) -> None:
 
     if user.userid == utils.to_user_id(msg.conn.username):
         return
-    if int(timestamp) <= msg.conn.timestamp:
+    if int(timestamp) < msg.conn.timestamp:
         return
 
     await parse_chat_message(msg.conn, msg.room, user, message)
