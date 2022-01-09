@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import subprocess
-from pathlib import Path
 from typing import TYPE_CHECKING
+
+import cerbottana.databases.database as d
+from cerbottana.database import Database
 
 from . import init_task_wrapper
 
@@ -12,8 +13,5 @@ if TYPE_CHECKING:
 
 @init_task_wrapper(skip_unittesting=True)
 async def create_or_upgrade_database(conn: Connection) -> None:
-    subprocess.run(
-        ["poetry", "run", "alembic", "upgrade", "head"],
-        cwd=Path(__file__).parent.parent.parent,
-        check=True,
-    )
+    db = Database.open()
+    d.Base.metadata.create_all(db.engine)
