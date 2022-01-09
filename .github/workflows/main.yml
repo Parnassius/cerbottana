@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      HAS_SECRETS: ${{ secrets.TESTS_BOT_USERNAME != '' }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up python 3.9
@@ -55,13 +57,14 @@ jobs:
       - name: Test with pylint
         run: poetry run poe pylint
       - name: Test with pytest
+        run: poetry run poe pytest --cov --cov-report=xml
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+      - name: Test with pytest (integration)
+        if: env.HAS_SECRETS == 'true'
         env:
           USERNAME: ${{ secrets.TESTS_BOT_USERNAME }}
           PASSWORD: ${{ secrets.TESTS_BOT_PASSWORD }}
           TESTS_MOD_USERNAME: ${{ secrets.TESTS_MOD_USERNAME }}
           TESTS_MOD_PASSWORD: ${{ secrets.TESTS_MOD_PASSWORD }}
-        run: |
-          poetry run poe pytest --cov --cov-report=xml
-          poetry run poe pytest-real-ps-instance --cov --cov-append --cov-report=xml
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        run: poetry run poe pytest-real-ps-instance
