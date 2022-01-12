@@ -168,7 +168,6 @@ async def waffletour(msg: Message) -> None:
         "Endless Battle Clause",
         "Evasion Moves Clause",
         "HP Percentage Mod",
-        "Obtainable Formes",  # to avoid multiple Mega-Evolutions
         "Sleep Clause Mod",
         "Species Clause",
     ]
