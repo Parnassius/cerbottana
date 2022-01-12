@@ -15,9 +15,9 @@ from typing import Any
 import aiohttp
 import pytest
 from aiohttp.test_utils import unused_port
-from environs import Env
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from typenv import Env
 from xprocess import ProcessStarter  # type: ignore[import]
 
 import cerbottana.databases.database as d
@@ -35,6 +35,10 @@ def pytest_collection_modifyitems(items):
         # Mark tests using a real showdown instance with `pytest.mark.real_ps_instance`
         if "showdown_connection" in item.fixturenames:
             item.add_marker(pytest.mark.real_ps_instance)
+
+
+env = Env()
+env.read_env()
 
 
 database_metadata: dict[str, Any] = {
@@ -299,12 +303,9 @@ class TestConnection(Connection):
 
 @pytest.fixture(scope="session")
 def showdown_server(xprocess) -> Generator[int, None, None]:
-    env = Env()
-    env.read_env()
-
-    external_ps_port = env("PS_PORT", None)
+    external_ps_port = env.int("PS_PORT", default=None)
     if external_ps_port:
-        yield int(external_ps_port)
+        yield external_ps_port
         return
 
     cwd = Path(__file__).parent.parent / "pokemon-showdown"
@@ -349,8 +350,8 @@ def showdown_server(xprocess) -> Generator[int, None, None]:
     # Create the usergroups file
     usergroups = cwd / "config/usergroups.csv"
     with usergroups.open("w", encoding="utf-8") as f:
-        f.write(f"{env('USERNAME')},&\n")
-        f.write(f"{env('TESTS_MOD_USERNAME')},@\n")
+        f.write(f"{env.str('USERNAME')},&\n")
+        f.write(f"{env.str('TESTS_MOD_USERNAME')},@\n")
 
     # Start the server
     class PokemonShowdownStarter(ProcessStarter):  # type: ignore
@@ -386,13 +387,10 @@ def showdown_connection(
     ) -> AsyncGenerator[Any, None]:
         if username is None:
             # Create and yield two default connections if no username is passed
-            env = Env()
-            env.read_env()
-
-            bot_username = env("USERNAME")
-            bot_password = env("PASSWORD")
-            mod_username = env("TESTS_MOD_USERNAME")
-            mod_password = env("TESTS_MOD_PASSWORD")
+            bot_username = env.str("USERNAME")
+            bot_password = env.str("PASSWORD")
+            mod_username = env.str("TESTS_MOD_USERNAME")
+            mod_password = env.str("TESTS_MOD_PASSWORD")
 
             bot_userid = utils.to_user_id(bot_username)
             mod_userid = utils.to_user_id(mod_username)

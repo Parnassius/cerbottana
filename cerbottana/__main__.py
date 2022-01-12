@@ -4,7 +4,7 @@ import asyncio
 import signal
 from types import FrameType
 
-from environs import Env
+from typenv import Env
 
 from .connection import Connection
 
@@ -20,24 +20,22 @@ def main() -> None:
     env = Env()
     env.read_env()
 
+    host = env.str("SHOWDOWN_HOST")
+    port = env.int("SHOWDOWN_PORT")
+    protocol = "wss" if port == 443 else "ws"
+    url = f"{protocol}://{host}:{port}/showdown/websocket"
+
     conn = Connection(
-        url=(
-            ("wss" if env("SHOWDOWN_PORT") == "443" else "ws")
-            + "://"
-            + env("SHOWDOWN_HOST")
-            + ":"
-            + env("SHOWDOWN_PORT")
-            + "/showdown/websocket"
-        ),
-        username=env("USERNAME"),
-        password=env("PASSWORD"),
-        avatar=env("AVATAR", ""),
-        statustext=env("STATUSTEXT", ""),
-        rooms=env.list("ROOMS", []),
-        main_room=env("MAIN_ROOM"),
-        command_character=env("COMMAND_CHARACTER"),
-        administrators=env.list("ADMINISTRATORS", []),
-        webhooks=env.dict("WEBHOOKS", {}),
+        url=url,
+        username=env.str("USERNAME"),
+        password=env.str("PASSWORD"),
+        avatar=env.str("AVATAR", default=""),
+        statustext=env.str("STATUSTEXT", default=""),
+        rooms=env.list("ROOMS", default=[]),
+        main_room=env.str("MAIN_ROOM"),
+        command_character=env.str("COMMAND_CHARACTER"),
+        administrators=env.list("ADMINISTRATORS", default=[]),
+        webhooks=env.json("WEBHOOKS", default={}),
     )
 
     signal.signal(signal.SIGINT, shutdown)
