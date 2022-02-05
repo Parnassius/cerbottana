@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
+from domify import html_elements as e
 from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -76,6 +77,12 @@ async def antonio200509(msg: Message) -> None:
         species_name = species.name
     numbers = str(random.randint(0, 999999)).zfill(6)
     await msg.reply(f'Antonio{numbers} guessed "{species_name}"!')
+
+
+@command_wrapper(aliases=("atrax", "madara"))
+async def atraxmadara(msg: Message) -> None:
+    image = e.Img(src="https://i.imgur.com/QQzsrBH.gif", width=400, height=225)
+    await msg.reply_htmlbox(image)
 
 
 @command_wrapper(aliases=("auraluna", "luna"))
