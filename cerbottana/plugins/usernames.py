@@ -81,8 +81,12 @@ async def antonio200509(msg: Message) -> None:
 
 @command_wrapper(aliases=("atrax", "madara"))
 async def atraxmadara(msg: Message) -> None:
-    image = e.Img(src="https://i.imgur.com/QQzsrBH.gif", width=400, height=225)
-    await msg.reply_htmlbox(image)
+    img_url = "https://i.imgur.com/QQzsrBH.gif"
+    if msg.room is None:
+        await msg.reply(img_url)
+    else:
+        html = e.Img(src=img_url, width=400, height=225)
+        await msg.reply_htmlbox(html, img_url)
 
 
 @command_wrapper(aliases=("auraluna", "luna"))
