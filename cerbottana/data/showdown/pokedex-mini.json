@@ -1108,6 +1108,9 @@
       "h": 57
     }
   },
+  "growlithehisui": {
+    "num": 58
+  },
   "arcanine": {
     "num": 59,
     "front": {
@@ -1118,6 +1121,9 @@
       "w": 118,
       "h": 82
     }
+  },
+  "arcaninehisui": {
+    "num": 59
   },
   "poliwag": {
     "num": 60,
@@ -1766,6 +1772,9 @@
       "h": 43
     }
   },
+  "voltorbhisui": {
+    "num": 100
+  },
   "electrode": {
     "num": 101,
     "front": {
@@ -1776,6 +1785,9 @@
       "w": 73,
       "h": 59
     }
+  },
+  "electrodehisui": {
+    "num": 101
   },
   "exeggcute": {
     "num": 102,
@@ -2618,6 +2630,9 @@
       "w": 71,
       "h": 116
     }
+  },
+  "typhlosionhisui": {
+    "num": 157
   },
   "totodile": {
     "num": 158,
@@ -3638,6 +3653,9 @@
       "h": 53
     }
   },
+  "qwilfishhisui": {
+    "num": 211
+  },
   "scizor": {
     "num": 212,
     "front": {
@@ -3723,6 +3741,9 @@
       "w": 48,
       "h": 71
     }
+  },
+  "sneaselhisui": {
+    "num": 215
   },
   "teddiursa": {
     "num": 216,
@@ -7610,6 +7631,9 @@
       "h": 118
     }
   },
+  "dialgaorigin": {
+    "num": 483
+  },
   "palkia": {
     "num": 484,
     "front": {
@@ -7620,6 +7644,9 @@
       "w": 132,
       "h": 113
     }
+  },
+  "palkiaorigin": {
+    "num": 484
   },
   "heatran": {
     "num": 485,
@@ -8038,6 +8065,9 @@
       "w": 94,
       "h": 93
     }
+  },
+  "samurotthisui": {
+    "num": 503
   },
   "patrat": {
     "num": 504,
@@ -8564,6 +8594,9 @@
       "h": 89
     }
   },
+  "lilliganthisui": {
+    "num": 549
+  },
   "basculin": {
     "num": 550,
     "front": {
@@ -8585,6 +8618,9 @@
       "w": 69,
       "h": 65
     }
+  },
+  "basculinwhitestriped": {
+    "num": 550
   },
   "sandile": {
     "num": 551,
@@ -8872,6 +8908,9 @@
       "h": 62
     }
   },
+  "zoruahisui": {
+    "num": 570
+  },
   "zoroark": {
     "num": 571,
     "front": {
@@ -8882,6 +8921,9 @@
       "w": 141,
       "h": 97
     }
+  },
+  "zoroarkhisui": {
+    "num": 571
   },
   "minccino": {
     "num": 572,
@@ -9602,6 +9644,9 @@
       "w": 192,
       "h": 180
     }
+  },
+  "braviaryhisui": {
+    "num": 628
   },
   "vullaby": {
     "num": 629,
@@ -11071,6 +11116,9 @@
       "h": 81
     }
   },
+  "sliggoohisui": {
+    "num": 705
+  },
   "goodra": {
     "num": 706,
     "front": {
@@ -11081,6 +11129,9 @@
       "w": 71,
       "h": 101
     }
+  },
+  "goodrahisui": {
+    "num": 706
   },
   "klefki": {
     "num": 707,
@@ -11224,6 +11275,9 @@
       "w": 120,
       "h": 58
     }
+  },
+  "avalugghisui": {
+    "num": 713
   },
   "noibat": {
     "num": 714,
@@ -11400,6 +11454,9 @@
       "w": 59,
       "h": 101
     }
+  },
+  "decidueyehisui": {
+    "num": 724
   },
   "litten": {
     "num": 725,
@@ -14241,6 +14298,33 @@
       "w": 107,
       "h": 113
     }
+  },
+  "wyrdeer": {
+    "num": 899
+  },
+  "kleavor": {
+    "num": 900
+  },
+  "ursaluna": {
+    "num": 901
+  },
+  "basculegion": {
+    "num": 902
+  },
+  "basculegionf": {
+    "num": 902
+  },
+  "sneasler": {
+    "num": 903
+  },
+  "overqwil": {
+    "num": 904
+  },
+  "enamorus": {
+    "num": 905
+  },
+  "enamorustherian": {
+    "num": 905
   },
   "missingno": {
     "num": 0
