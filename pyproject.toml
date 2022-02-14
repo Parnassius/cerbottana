@@ -85,7 +85,7 @@ SQLAlchemy = "1.4.31"
 typenv = "0.2.0"
 
 [tool.poetry.dev-dependencies]
-black = "21.12b0"
+black = "22.1.0"
 darglint = "1.8.0"
 freezegun = "1.1.0"
 isort = "5.10.0"
