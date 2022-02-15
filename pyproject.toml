@@ -143,4 +143,5 @@ runtime-typing = "no"
 [tool.pytest.ini_options]
 addopts = "--strict-config --strict-markers"
 markers = ["real_ps_instance"]
+asyncio_mode = "auto"
 xfail_strict = true
