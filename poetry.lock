@@ -157,11 +157,11 @@ python-versions = ">=3.7,<4.0"
 
 [[package]]
 name = "freezegun"
-version = "1.1.0"
+version = "1.2.1"
 description = "Let your Python tests travel through time"
 category = "dev"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 
 [package.dependencies]
 python-dateutil = ">=2.7"
@@ -626,7 +626,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "96bc5604a2fee0ec24fb41a5a8dc19dea0de0f972b5a23c18ce0595f9838bc4e"
+content-hash = "b5cefce3456d44bedc19762da64d123bac8a1db5628f1ce3ce9691f3314f42b1"
 
 [metadata.files]
 aiohttp = [
@@ -812,8 +812,8 @@ domify = [
     {file = "domify-0.2.0.tar.gz", hash = "sha256:f4227d5698403b7d44acb5c8f0fd50bbd178091ae787ae2eff22cb2f4077f679"},
 ]
 freezegun = [
-    {file = "freezegun-1.1.0-py2.py3-none-any.whl", hash = "sha256:2ae695f7eb96c62529f03a038461afe3c692db3465e215355e1bb4b0ab408712"},
-    {file = "freezegun-1.1.0.tar.gz", hash = "sha256:177f9dd59861d871e27a484c3332f35a6e3f5d14626f2bf91be37891f18927f3"},
+    {file = "freezegun-1.2.1-py3-none-any.whl", hash = "sha256:15103a67dfa868ad809a8f508146e396be2995172d25f927e48ce51c0bf5cb09"},
+    {file = "freezegun-1.2.1.tar.gz", hash = "sha256:b4c64efb275e6bc68dc6e771b17ffe0ff0f90b81a2a5189043550b6519926ba4"},
 ]
 frozenlist = [
     {file = "frozenlist-1.3.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:d2257aaba9660f78c7b1d8fea963b68f3feffb1a9d5d05a18401ca9eb3e8d0a3"},
