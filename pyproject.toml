@@ -43,13 +43,13 @@ SQLALCHEMY_WARN_20 = "1"
 
 [tool.poe.tasks]
 format = ["isort", "black"]
-isort = "isort ."
-black = "black ."
+isort = "isort cerbottana tests"
+black = "black cerbottana tests"
 
 tests = ["test"]
 test = ["isort-check", "black-check", "darglint", "mypy", "pylint", "pytest-full"]
-isort-check = "isort . --check"
-black-check = "black . --check"
+isort-check = "isort cerbottana tests --check"
+black-check = "black cerbottana tests --check"
 darglint = "darglint cerbottana tests -v 2"
 mypy = "mypy cerbottana tests"
 pylint = "pylint cerbottana tests --disable=fixme"
