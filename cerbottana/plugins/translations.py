@@ -23,8 +23,6 @@ class TranslatableTableNames(Protocol):
 def _get_translations(
     word: str, languages: tuple[int, int]
 ) -> dict[tuple[str, str], set[str]]:
-    word = utils.to_user_id(utils.remove_diacritics(utils.get_alias(word)))
-
     results: dict[tuple[str, str], set[str]] = {}
 
     db = Database.open("veekun")
@@ -69,6 +67,11 @@ def _get_translations(
                         results[res] = set()
                     results[res].add(translation)
 
+    if not results and 9 in languages:
+        # Use aliases if english is one of the languages
+        word = utils.to_id(utils.remove_diacritics(utils.get_alias(word)))
+        return _get_translations(word, languages)
+
     return results
 
 
@@ -79,7 +82,7 @@ async def translate(msg: Message) -> None:
     if len(msg.args) > 3:
         return
 
-    word = utils.to_user_id(utils.remove_diacritics(msg.args[0]))
+    word = utils.to_id(utils.remove_diacritics(msg.args[0]))
     if word == "":
         await msg.reply("Cosa devo tradurre?")
         return

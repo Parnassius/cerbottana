@@ -56,6 +56,16 @@ if TYPE_CHECKING:
             (8, 9),
             {("item", "scarponirobusti"): {"Scarponi robusti"}},
         ),
+        (
+            "sub",
+            (8, 9),
+            {("move", "dive"): {"Dive"}},
+        ),
+        (
+            "sub",
+            (9, 5),
+            {("move", "clonage"): {"Clonage"}},
+        ),
     ),
 )
 async def test_translations(
