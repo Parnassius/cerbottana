@@ -36925,7 +36925,7 @@
     "color": "Green",
     "prevo": "Basculin-White-Striped",
     "evoType": "other",
-    "evoCondition": "Receive 294+ recoil from one move without fainting",
+    "evoCondition": "Receive 294+ recoil without fainting",
     "eggGroups": [
       "Water 2"
     ],
@@ -36965,7 +36965,7 @@
     "color": "Green",
     "prevo": "Basculin-White-Striped",
     "evoType": "other",
-    "evoCondition": "Receive 294+ recoil from one move without fainting",
+    "evoCondition": "Receive 294+ recoil without fainting",
     "eggGroups": [
       "Water 2"
     ]
