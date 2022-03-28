@@ -22,19 +22,19 @@ jobs:
         uses: actions/setup-node@v3
       - name: Cache Poetry virtualenv
         id: virtualenv-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .venv
           key: poetry-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
           restore-keys: poetry-${{ steps.setup-python.outputs.python-version }}-
       - name: Cache veekun database
         id: veekun-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: veekun.sqlite
           key: veekun-${{ hashFiles('cerbottana/data/veekun/*.csv', 'cerbottana/databases/veekun.py', 'cerbottana/tasks/veekun.py') }}
       - name: Cache pokemon-showdown instance
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: pokemon-showdown
           key: pokemon-showdown
