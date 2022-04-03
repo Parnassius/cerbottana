@@ -81,7 +81,7 @@ aiohttp = "3.8.1"
 domify = "0.2.0"
 imageprobe = "0.3.0"
 python-dateutil = "2.8.2"
-SQLAlchemy = "1.4.32"
+SQLAlchemy = "1.4.34"
 typenv = "0.2.0"
 
 [tool.poetry.dev-dependencies]
