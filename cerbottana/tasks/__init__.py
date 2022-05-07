@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 import importlib
-from collections.abc import Awaitable, Callable
+from collections.abc import Callable, Coroutine
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
 
-    InitTaskFunc = Callable[[Connection], Awaitable[None]]
-    RecurringTaskFunc = Callable[[Connection], Awaitable[None]]
+    InitTaskFunc = Callable[[Connection], Coroutine[None, None, None]]
+    RecurringTaskFunc = Callable[[Connection], Coroutine[None, None, None]]
 
 
 init_tasks: list[tuple[int, InitTaskFunc, bool]] = []
