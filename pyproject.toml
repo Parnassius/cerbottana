@@ -78,10 +78,10 @@ authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 aiohttp = "3.8.1"
-domify = "0.2.0"
+domify = "0.3.0"
 imageprobe = "0.3.0"
 python-dateutil = "2.8.2"
-SQLAlchemy = "1.4.34"
+SQLAlchemy = "1.4.36"
 typenv = "0.2.0"
 
 [tool.poetry.dev-dependencies]
