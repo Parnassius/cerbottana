@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import importlib
-from collections.abc import Awaitable, Callable, Iterable
+from collections.abc import Callable, Coroutine, Iterable
 from functools import wraps
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from cerbottana.models.message import Message
     from cerbottana.models.user import User
 
-    CommandFunc = Callable[[Message], Awaitable[None]]
+    CommandFunc = Callable[[Message], Coroutine[None, None, None]]
     HTMLPageFunc = Callable[[User, Room, int], BaseElement | None]
 
 
