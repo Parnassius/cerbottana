@@ -98,7 +98,7 @@ pytest-cov = "3.0.0"
 pytest-mock = "3.7.0"
 pytest-xprocess = "0.18.1"
 sqlalchemy2-stubs = "0.0.2a22"
-types-python-dateutil = "2.8.15"
+types-python-dateutil = "2.8.18"
 
 [tool.poetry.scripts]
 bot = "cerbottana.__main__:main"
