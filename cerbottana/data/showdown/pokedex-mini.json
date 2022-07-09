@@ -7526,10 +7526,6 @@
     "back": {
       "w": 58,
       "h": 73
-    },
-    "backf": {
-      "w": 105,
-      "h": 65
     }
   },
   "rotomheat": {
@@ -14647,7 +14643,15 @@
     }
   },
   "mumbao": {
-    "num": -43
+    "num": -43,
+    "front": {
+      "w": 78,
+      "h": 69
+    },
+    "back": {
+      "w": 81,
+      "h": 67
+    }
   },
   "jumbao": {
     "num": -44,
@@ -14825,6 +14829,9 @@
   "venomiconepilogue": {
     "num": -66
   },
+  "saharaja": {
+    "num": -68
+  },
   "pokestarsmeargle": {
     "num": -5000,
     "front": {
@@ -14853,10 +14860,6 @@
   "pokestarufo2": {
     "num": -5001,
     "front": {
-      "w": 179,
-      "h": 119
-    },
-    "back": {
       "w": 179,
       "h": 119
     }
