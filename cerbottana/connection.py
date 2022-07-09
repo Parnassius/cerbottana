@@ -137,9 +137,7 @@ class Connection:
 
             room.add_message_to_queue(msg)
 
-    async def _parse_binary_message(  # pylint: disable=no-self-use
-        self, message: bytes
-    ) -> None:
+    async def _parse_binary_message(self, message: bytes) -> None:
         raise Exception("Received unexpected binary message")
 
     async def _send_message_delay(self) -> None:
