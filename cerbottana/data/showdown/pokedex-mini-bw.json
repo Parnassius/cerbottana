@@ -2315,7 +2315,7 @@
     "num": 166,
     "front": {
       "w": 55,
-      "h": 65
+      "h": 64
     },
     "frontf": {
       "w": 55,
@@ -11525,6 +11525,9 @@
   },
   "venomiconepilogue": {
     "num": -66
+  },
+  "saharaja": {
+    "num": -68
   },
   "pokestarsmeargle": {
     "num": -5000,

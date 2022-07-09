@@ -1056,6 +1056,7 @@
     "color": "Black",
     "prevo": "Rattata-Alola",
     "evoLevel": 20,
+    "evoCondition": "at night",
     "eggGroups": [
       "Field"
     ]
@@ -5393,6 +5394,7 @@
     "color": "Purple",
     "prevo": "Cubone",
     "evoLevel": 28,
+    "evoCondition": "at night",
     "eggGroups": [
       "Monster"
     ]
@@ -18485,6 +18487,7 @@
     "prevo": "Sneasel",
     "evoType": "levelHold",
     "evoItem": "Razor Claw",
+    "evoCondition": "at night",
     "eggGroups": [
       "Field"
     ]
@@ -27735,6 +27738,7 @@
     "color": "Red",
     "prevo": "Tyrunt",
     "evoLevel": 39,
+    "evoCondition": "during the day",
     "eggGroups": [
       "Monster",
       "Dragon"
@@ -27801,6 +27805,7 @@
     "color": "Blue",
     "prevo": "Amaura",
     "evoLevel": 39,
+    "evoCondition": "at night",
     "eggGroups": [
       "Monster"
     ]
@@ -29452,6 +29457,7 @@
     "color": "Brown",
     "prevo": "Yungoos",
     "evoLevel": 20,
+    "evoCondition": "during the day",
     "eggGroups": [
       "Field"
     ],
@@ -30002,7 +30008,7 @@
     "color": "Red",
     "prevo": "Rockruff",
     "evoLevel": 25,
-    "evoCondition": "during the night",
+    "evoCondition": "at night",
     "eggGroups": [
       "Field"
     ]
@@ -36220,7 +36226,7 @@
       "Undiscovered"
     ],
     "requiredItem": "Rusted Sword",
-    "changesFrom": "Zacian",
+    "battleOnly": "Zacian",
     "cannotDynamax": true
   },
   "zamazenta": {
@@ -36288,7 +36294,7 @@
       "Undiscovered"
     ],
     "requiredItem": "Rusted Shield",
-    "changesFrom": "Zamazenta",
+    "battleOnly": "Zamazenta",
     "cannotDynamax": true
   },
   "eternatus": {
@@ -36995,6 +37001,7 @@
     "prevo": "Sneasel-Hisui",
     "evoType": "useItem",
     "evoItem": "Razor Claw",
+    "evoCondition": "during the day",
     "eggGroups": [
       "Field"
     ]
@@ -39282,6 +39289,32 @@
     ],
     "requiredItem": "Vile Vial",
     "changesFrom": "Venomicon",
+    "gen": 8
+  },
+  "saharaja": {
+    "num": -68,
+    "name": "Saharaja",
+    "types": [
+      "Ground"
+    ],
+    "baseStats": {
+      "hp": 70,
+      "atk": 120,
+      "def": 105,
+      "spa": 65,
+      "spd": 130,
+      "spe": 90
+    },
+    "abilities": {
+      "0": "Water Absorb",
+      "1": "Serene Grace"
+    },
+    "heightm": 2.3,
+    "weightkg": 303.9,
+    "color": "White",
+    "eggGroups": [
+      "Undiscovered"
+    ],
     "gen": 8
   },
   "pokestarsmeargle": {
