@@ -13,20 +13,16 @@ jobs:
       HAS_SECRETS: ${{ secrets.TESTS_BOT_USERNAME != '' }}
     steps:
       - uses: actions/checkout@v3
+      - name: Install Poetry
+        run: pipx install poetry
       - name: Set up python 3.10
         id: setup-python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
+          cache: "poetry"
       - name: Set up node
         uses: actions/setup-node@v3
-      - name: Cache Poetry virtualenv
-        id: virtualenv-cache
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: poetry-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
-          restore-keys: poetry-${{ steps.setup-python.outputs.python-version }}-
       - name: Cache veekun database
         id: veekun-cache
         uses: actions/cache@v3
@@ -38,14 +34,8 @@ jobs:
         with:
           path: pokemon-showdown
           key: pokemon-showdown
-      - name: Install Poetry
-        run: pipx install poetry
-      - name: Setup the virtual environment
-        run: |
-          poetry config --local virtualenvs.in-project true
-          poetry env use "$(which python)"
       - name: Install dependencies on a cache miss
-        if: steps.virtualenv-cache.outputs.cache-hit != 'true'
+        if: steps.setup-python.outputs.cache-hit != 'true'
         run: poetry install --remove-untracked
       - name: Mark the veekun database as up-to-date on a cache hit
         if: steps.veekun-cache.outputs.cache-hit == 'true'
