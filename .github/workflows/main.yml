@@ -36,7 +36,7 @@ jobs:
           key: pokemon-showdown
       - name: Install dependencies on a cache miss
         if: steps.setup-python.outputs.cache-hit != 'true'
-        run: poetry install --remove-untracked
+        run: poetry install --sync
       - name: Mark the veekun database as up-to-date on a cache hit
         if: steps.veekun-cache.outputs.cache-hit == 'true'
         run: sqlite3 veekun.sqlite "UPDATE latest_commit SET commit_id = '$GITHUB_SHA';"
