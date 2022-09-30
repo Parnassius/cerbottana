@@ -4,9 +4,8 @@ import asyncio
 import signal
 from types import FrameType
 
-from typenv import Env
-
 from .connection import Connection
+from .utils import env
 
 
 def main() -> None:
@@ -16,9 +15,6 @@ def main() -> None:
                 task.cancel()
             coro = conn.websocket.close()
             asyncio.run_coroutine_threadsafe(coro, conn.loop)
-
-    env = Env()
-    env.read_env()
 
     host = env.str("SHOWDOWN_HOST")
     port = env.int("SHOWDOWN_PORT")

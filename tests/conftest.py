@@ -17,7 +17,6 @@ import pytest
 from aiohttp.test_utils import unused_port
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from typenv import Env
 from xprocess import ProcessStarter  # type: ignore[import]
 
 import cerbottana.databases.database as d
@@ -26,6 +25,7 @@ from cerbottana.connection import Connection
 from cerbottana.database import Database
 from cerbottana.models.room import Room
 from cerbottana.tasks.veekun import csv_to_sqlite
+from cerbottana.utils import env
 
 # pylint: disable=protected-access, redefined-outer-name
 
@@ -35,10 +35,6 @@ def pytest_collection_modifyitems(items):
         # Mark tests using a real showdown instance with `pytest.mark.real_ps_instance`
         if "showdown_connection" in item.fixturenames:
             item.add_marker(pytest.mark.real_ps_instance)
-
-
-env = Env()
-env.read_env()
 
 
 database_metadata: dict[str, Any] = {
