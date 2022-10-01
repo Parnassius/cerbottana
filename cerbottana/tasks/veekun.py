@@ -3,9 +3,10 @@ from __future__ import annotations
 import csv
 import inspect
 import re
-import subprocess
+from itertools import chain
 from pathlib import Path
 from typing import TYPE_CHECKING
+from zlib import crc32
 
 from sqlalchemy import func, insert, select, update
 from sqlalchemy.exc import OperationalError
@@ -22,38 +23,26 @@ if TYPE_CHECKING:
 
 @init_task_wrapper(skip_unittesting=True)
 async def csv_to_sqlite(conn: Connection) -> None:
-    latest_veekun_commit = ""
+    csv_dir = Path(__file__).parent.parent / "data/veekun"
+    files = chain(
+        csv_dir.iterdir(),
+        (
+            Path(__file__).parent.parent / x
+            for x in ["databases/veekun.py", "tasks/veekun.py"]
+        ),
+    )
+    new_crc = crc32(b"")
+    for file in sorted(files):
+        new_crc = crc32(file.read_bytes(), new_crc)
+
     try:
-        latest_veekun_commit = (
-            subprocess.run(
-                [
-                    "git",
-                    "rev-list",
-                    "-1",
-                    "HEAD",
-                    "--",
-                    "data/veekun",
-                    "databases/veekun.py",
-                    "tasks/veekun.py",
-                ],
-                cwd=Path(__file__).parent.parent,
-                capture_output=True,
-                check=True,
-            )
-            .stdout.decode()
-            .strip()
-        )
         db = Database.open("veekun")
         with db.get_session() as session:
-            stmt = select(v.LatestCommit.commit_id)
-            if session.scalar(stmt) == latest_veekun_commit:
+            stmt = select(v.LatestVersion.crc)
+            if session.scalar(stmt) == new_crc:
                 return  # database is already up-to-date, skip rebuild
 
-    except (
-        subprocess.SubprocessError,  # generic subprocess error
-        FileNotFoundError,  # git is not available
-        OperationalError,  # table does not exist
-    ):
+    except OperationalError:  # table does not exist
         pass  # always rebuild on error
 
     print("Rebuilding veekun database...")
@@ -74,8 +63,7 @@ async def csv_to_sqlite(conn: Connection) -> None:
     }
 
     with db.get_session() as session:
-        if latest_veekun_commit:
-            session.add(v.LatestCommit(commit_id=latest_veekun_commit))
+        session.add(v.LatestVersion(crc=new_crc))
 
         for table in v.Base.metadata.sorted_tables:
             tname = table.key

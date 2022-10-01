@@ -7,6 +7,8 @@ import unicodedata
 from html import escape
 from pathlib import Path
 
+from typenv import Env
+
 from .typedefs import JsonDict, Role, RoomId, UserId
 
 
@@ -172,11 +174,18 @@ def _escape(text: str) -> str:
 
 
 def get_config_file(path: str) -> Path:
-    return Path(__file__).parent.parent / path
+    config_path = Path(__file__).parent.parent
+    if config_path_ := env.str("CERBOTTANA_CONFIG_PATH", default=""):
+        config_path = Path(config_path_)
+    return config_path / path
 
 
 def get_data_file(path: str) -> Path:
     return Path(__file__).parent / "data" / path
+
+
+env = Env()
+env.read_env()
 
 
 with get_data_file("avatars.json").open(encoding="utf-8") as f:

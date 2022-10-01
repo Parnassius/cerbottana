@@ -4,6 +4,7 @@ __pycache__/
 /.python-version
 /.venv
 /database.sqlite
+/dist
 /poetry.toml
 /pokemon-showdown
 /userlist_icons.csv

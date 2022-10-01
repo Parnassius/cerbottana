@@ -115,10 +115,10 @@ class TranslatableMixin:
         return str(getattr(self, fallback_column))
 
 
-class LatestCommit(Base):
-    __tablename__ = "latest_commit"
+class LatestVersion(Base):
+    __tablename__ = "latest_version"
 
-    commit_id: str = Column(String, primary_key=True)
+    crc: int = Column(Integer, primary_key=True)
 
 
 class Abilities(HashableMixin, TranslatableMixin, Base):

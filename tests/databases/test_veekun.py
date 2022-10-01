@@ -21,7 +21,7 @@ def test_table_order() -> None:
             ),
             None,
         ):
-            if tblname == "latest_commit":
+            if tblname == "latest_version":
                 continue
             classes.append(tblname)
 
