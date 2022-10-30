@@ -27,7 +27,7 @@ async def icon(msg: Message) -> None:
 
     search_query = utils.to_id(msg.args[0])
     dex_entry = utils.get_ps_dex_entry(search_query)
-    if dex_entry is None or dex_entry["num"] <= 0:
+    if dex_entry is None or dex_entry["num"] <= -5000:  # Exclude Pokestar props
         await msg.reply("Pokémon not found.")
         return
 
