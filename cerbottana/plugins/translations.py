@@ -69,8 +69,9 @@ def _get_translations(
 
     if not results and 9 in languages:
         # Use aliases if english is one of the languages
-        word = utils.to_id(utils.remove_diacritics(utils.get_alias(word)))
-        return _get_translations(word, languages)
+        new_word = utils.to_id(utils.remove_diacritics(utils.get_alias(word)))
+        if new_word != word:
+            return _get_translations(new_word, languages)
 
     return results
 

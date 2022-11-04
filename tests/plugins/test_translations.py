@@ -66,6 +66,16 @@ if TYPE_CHECKING:
             (9, 5),
             {("move", "clonage"): {"Clonage"}},
         ),
+        (
+            "aaaa",
+            (8, 5),
+            {},
+        ),
+        (
+            "aaaa",
+            (9, 5),
+            {},
+        ),
     ),
 )
 async def test_translations(
