@@ -1832,6 +1832,15 @@
       "h": 56
     }
   },
+  "taurospaldea": {
+    "num": 128
+  },
+  "taurospaldeafire": {
+    "num": 128
+  },
+  "taurospaldeawater": {
+    "num": 128
+  },
   "magikarp": {
     "num": 129,
     "front": {
@@ -2691,6 +2700,9 @@
       "w": 40,
       "h": 33
     }
+  },
+  "wooperpaldea": {
+    "num": 194
   },
   "quagsire": {
     "num": 195,
@@ -11234,6 +11246,345 @@
   },
   "enamorustherian": {
     "num": 905
+  },
+  "sprigatito": {
+    "num": 906
+  },
+  "floragato": {
+    "num": 907
+  },
+  "meowscarada": {
+    "num": 908
+  },
+  "fuecoco": {
+    "num": 909
+  },
+  "crocalor": {
+    "num": 910
+  },
+  "skeledirge": {
+    "num": 911
+  },
+  "quaxly": {
+    "num": 912
+  },
+  "quaxwell": {
+    "num": 913
+  },
+  "quaquaval": {
+    "num": 914
+  },
+  "lechonk": {
+    "num": 915
+  },
+  "oinkologne": {
+    "num": 916
+  },
+  "oinkolognef": {
+    "num": 916
+  },
+  "dudunsparce": {
+    "num": 917
+  },
+  "dudunsparcethreesegment": {
+    "num": 917
+  },
+  "tarountula": {
+    "num": 918
+  },
+  "spidops": {
+    "num": 919
+  },
+  "nymble": {
+    "num": 920
+  },
+  "lokix": {
+    "num": 921
+  },
+  "rellor": {
+    "num": 922
+  },
+  "rabsca": {
+    "num": 923
+  },
+  "greavard": {
+    "num": 924
+  },
+  "houndstone": {
+    "num": 925
+  },
+  "flittle": {
+    "num": 926
+  },
+  "espathra": {
+    "num": 927
+  },
+  "farigiraf": {
+    "num": 928
+  },
+  "wiglett": {
+    "num": 929
+  },
+  "wugtrio": {
+    "num": 930
+  },
+  "dondozo": {
+    "num": 931
+  },
+  "veluza": {
+    "num": 932
+  },
+  "finizen": {
+    "num": 933
+  },
+  "palafin": {
+    "num": 934
+  },
+  "palafinhero": {
+    "num": 934
+  },
+  "smoliv": {
+    "num": 935
+  },
+  "dolliv": {
+    "num": 936
+  },
+  "arboliva": {
+    "num": 937
+  },
+  "capsakid": {
+    "num": 938
+  },
+  "scovillain": {
+    "num": 939
+  },
+  "tadbulb": {
+    "num": 940
+  },
+  "bellibolt": {
+    "num": 941
+  },
+  "varoom": {
+    "num": 942
+  },
+  "revavroom": {
+    "num": 943
+  },
+  "orthworm": {
+    "num": 944
+  },
+  "tandemaus": {
+    "num": 945
+  },
+  "maushold": {
+    "num": 946
+  },
+  "mausholdfour": {
+    "num": 946
+  },
+  "cetoddle": {
+    "num": 947
+  },
+  "cetitan": {
+    "num": 948
+  },
+  "frigibax": {
+    "num": 949
+  },
+  "arctibax": {
+    "num": 950
+  },
+  "baxcalibur": {
+    "num": 951
+  },
+  "tatsugiri": {
+    "num": 952
+  },
+  "tatsugiridroopy": {
+    "num": 952
+  },
+  "tatsugiristretchy": {
+    "num": 952
+  },
+  "cyclizar": {
+    "num": 953
+  },
+  "pawmi": {
+    "num": 954
+  },
+  "pawmo": {
+    "num": 955
+  },
+  "pawmot": {
+    "num": 956
+  },
+  "wattrel": {
+    "num": 957
+  },
+  "kilowattrel": {
+    "num": 958
+  },
+  "bombirdier": {
+    "num": 959
+  },
+  "squawkabilly": {
+    "num": 960
+  },
+  "squawkabillyblue": {
+    "num": 960
+  },
+  "squawkabillyyellow": {
+    "num": 960
+  },
+  "squawkabillywhite": {
+    "num": 960
+  },
+  "flamigo": {
+    "num": 961
+  },
+  "klawf": {
+    "num": 962
+  },
+  "nacli": {
+    "num": 963
+  },
+  "naclstack": {
+    "num": 964
+  },
+  "garganacl": {
+    "num": 965
+  },
+  "glimmet": {
+    "num": 966
+  },
+  "glimmora": {
+    "num": 967
+  },
+  "shroodle": {
+    "num": 968
+  },
+  "grafaiai": {
+    "num": 969
+  },
+  "fidough": {
+    "num": 970
+  },
+  "dachsbun": {
+    "num": 971
+  },
+  "maschiff": {
+    "num": 972
+  },
+  "mabosstiff": {
+    "num": 973
+  },
+  "bramblin": {
+    "num": 974
+  },
+  "brambleghast": {
+    "num": 975
+  },
+  "gimmighoul": {
+    "num": 976
+  },
+  "gimmighoulroaming": {
+    "num": 976
+  },
+  "gholdengo": {
+    "num": 977
+  },
+  "greattusk": {
+    "num": 978
+  },
+  "brutebonnet": {
+    "num": 979
+  },
+  "sandyshocks": {
+    "num": 981
+  },
+  "screamtail": {
+    "num": 982
+  },
+  "fluttermane": {
+    "num": 983
+  },
+  "slitherwing": {
+    "num": 984
+  },
+  "roaringmoon": {
+    "num": 985
+  },
+  "irontreads": {
+    "num": 986
+  },
+  "ironmoth": {
+    "num": 988
+  },
+  "ironhands": {
+    "num": 989
+  },
+  "ironjugulis": {
+    "num": 990
+  },
+  "ironthorns": {
+    "num": 991
+  },
+  "ironbundle": {
+    "num": 992
+  },
+  "ironvaliant": {
+    "num": 993
+  },
+  "tinglu": {
+    "num": 994
+  },
+  "chienpao": {
+    "num": 995
+  },
+  "wochien": {
+    "num": 996
+  },
+  "chiyu": {
+    "num": 997
+  },
+  "koraidon": {
+    "num": 998
+  },
+  "miraidon": {
+    "num": 999
+  },
+  "tinkatink": {
+    "num": 1000
+  },
+  "tinkatuff": {
+    "num": 1001
+  },
+  "tinkaton": {
+    "num": 1002
+  },
+  "charcadet": {
+    "num": 1003
+  },
+  "armarouge": {
+    "num": 1004
+  },
+  "ceruledge": {
+    "num": 1005
+  },
+  "toedscool": {
+    "num": 1006
+  },
+  "toedscruel": {
+    "num": 1007
+  },
+  "kingambit": {
+    "num": 1008
+  },
+  "clodsire": {
+    "num": 1009
+  },
+  "annihilape": {
+    "num": 1010
   },
   "missingno": {
     "num": 0
