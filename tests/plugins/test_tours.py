@@ -2,73 +2,129 @@ from __future__ import annotations
 
 import pytest
 
+obtainable = {
+    "species": "pikachu",
+    "ability": "static",
+    "move": "thunderbolt",
+    "move_past": "hiddenpower",
+}
+past = {
+    "species_past": "unown",
+    "ability": "levitate",
+    "move": "hiddenpower",
+}
+default_form = {
+    "species": "wooper",
+    "ability": "waterabsorb",
+    "move": "watergun",
+}
+regional_form = {
+    "species": "wooperpaldea",
+    "ability": "waterabsorb",
+    "move": "mudshot",
+}
+
+item_past = "beedrillite"
+
+
+@pytest.mark.parametrize(
+    "pokemon_data", [obtainable, past, default_form, regional_form]
+)
+async def test_obtainability(
+    showdown_connection, *, pokemon_data: dict[str, str]
+) -> None:
+    async with showdown_connection() as (bot, _):
+        valid = "species" in pokemon_data
+
+        species = pokemon_data["species" if valid else "species_past"]
+        ability = pokemon_data["ability"]
+        move = pokemon_data["move"]
+
+        await bot.send(f"|/utm {species}|||{ability}|{move}||4,,,,,|||||")
+        await bot.send("|/vtm ou")
+        msg = await bot.await_message("|popup|", startswith=True)
+
+        if valid:
+            assert msg.startswith("|popup|Your team is valid")
+        else:
+            assert msg.startswith("|popup|Your team was rejected")
+
+        if "move_past" in pokemon_data:
+            move_past = pokemon_data["move_past"]
+
+            await bot.send(f"|/utm {species}|||{ability}|{move_past}||4,,,,,|||||")
+            await bot.send("|/vtm ou")
+            msg = await bot.await_message("|popup|", startswith=True)
+
+            assert msg.startswith("|popup|Your team was rejected")
+
 
 @pytest.mark.parametrize(
     "monopoke, species, item, ability, moves, valid",
-    (
+    [
         (
             # Pokemon with `Past` moves should be accepted
-            "venonat",
-            "venonat",
+            obtainable["species"],
+            obtainable["species"],
             "",
-            "compoundeyes",
-            "flash",
+            obtainable["ability"],
+            obtainable["move_past"],
             True,
         ),
         (
             # Pokemon with `Past` items should be accepted
-            "venonat",
-            "venonat",
-            "beedrillite",
-            "compoundeyes",
-            "agility",
+            obtainable["species"],
+            obtainable["species"],
+            item_past,
+            obtainable["ability"],
+            obtainable["move"],
             True,
         ),
         pytest.param(
             # `Past` pokemon should be rejected
-            "venonat",
-            "unown",
+            obtainable["species"],
+            past["species_past"],
             "",
-            "levitate",
-            "hiddenpower",
+            past["ability"],
+            past["move"],
             False,
             marks=pytest.mark.xfail,
         ),
         (
-            "vulpix",
-            "vulpix",
+            default_form["species"],
+            default_form["species"],
             "",
-            "drought",
-            "sunnyday",
+            default_form["ability"],
+            default_form["move"],
             True,
         ),
         (
             # Non-default forms should be rejected
-            "vulpix",
-            "vulpix-alola",
+            default_form["species"],
+            regional_form["species"],
             "",
-            "snowwarning",
-            "hail",
+            regional_form["ability"],
+            regional_form["move"],
             False,
         ),
         (
-            "vulpix-alola",
-            "vulpix-alola",
+            regional_form["species"],
+            regional_form["species"],
             "",
-            "snowwarning",
-            "hail",
+            regional_form["ability"],
+            regional_form["move"],
             True,
         ),
         (
             # Default forms should be rejected
-            "vulpix-alola",
-            "vulpix",
+            regional_form["species"],
+            default_form["species"],
             "",
-            "drought",
-            "sunnyday",
+            default_form["ability"],
+            default_form["move"],
             False,
         ),
-    ),
+    ],
 )
 async def test_monopoke(
     showdown_connection,
