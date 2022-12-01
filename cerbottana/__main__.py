@@ -30,7 +30,6 @@ def main() -> None:
         rooms=env.list("ROOMS", default=[]),
         main_room=env.str("MAIN_ROOM"),
         command_character=env.str("COMMAND_CHARACTER"),
-        administrators=env.list("ADMINISTRATORS", default=[]),
         webhooks=env.json("WEBHOOKS", default={}),
     )
 

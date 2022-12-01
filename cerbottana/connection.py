@@ -31,7 +31,6 @@ class Connection:
         rooms: list[str],
         main_room: str,
         command_character: str,
-        administrators: list[str],
         webhooks: dict[str, str],
         unittesting: bool = False,
     ) -> None:
@@ -44,7 +43,6 @@ class Connection:
         self.rooms: dict[RoomId, Room] = {}
         self.main_room = Room.get(self, main_room)
         self.command_character = command_character
-        self.administrators = {utils.to_user_id(user) for user in administrators}
         self.webhooks = {utils.to_room_id(room): url for room, url in webhooks.items()}
         self.unittesting = unittesting
         self.public_roomids: set[str] = set()

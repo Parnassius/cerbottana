@@ -195,7 +195,6 @@ def mock_connection(
         rooms: list[str] | None = None,
         main_room: str = "lobby",
         command_character: str = ".",
-        administrators: list[str] | None = None,
         webhooks: dict[str, str] | None = None,
     ) -> None:
         async def handler(request: aiohttp.web_request.BaseRequest) -> ServerWs:
@@ -215,8 +214,6 @@ def mock_connection(
 
         if rooms is None:
             rooms = ["room1"]
-        if administrators is None:
-            administrators = ["parnassius"]
         if webhooks is None:
             webhooks = {"room1": "https://discord.com/api/webhooks/00000/aaaaa"}
 
@@ -229,7 +226,6 @@ def mock_connection(
             rooms=rooms,
             main_room=main_room,
             command_character=command_character,
-            administrators=administrators,
             webhooks=webhooks,
             unittesting=True,
         )
@@ -259,7 +255,6 @@ class TestConnection(Connection):
         rooms: list[str],
         main_room: str,
         command_character: str,
-        administrators: list[str],
         webhooks: dict[str, str],
         unittesting: bool = False,
     ) -> None:
@@ -274,7 +269,6 @@ class TestConnection(Connection):
             rooms=rooms,
             main_room=main_room,
             command_character=command_character,
-            administrators=administrators,
             webhooks=webhooks,
             unittesting=unittesting,
         )
@@ -378,7 +372,6 @@ def showdown_connection(
         rooms: list[str] | None = None,
         main_room: str = "lobby",
         command_character: str = ".",
-        administrators: list[str] | None = None,
         webhooks: dict[str, str] | None = None,
     ) -> AsyncGenerator[Any, None]:
         if username is None:
@@ -409,8 +402,6 @@ def showdown_connection(
 
         if rooms is None:
             rooms = ["lobby"]
-        if administrators is None:
-            administrators = ["parnassius"]
         if webhooks is None:
             webhooks = {"room1": "https://discord.com/api/webhooks/00000/aaaaa"}
 
@@ -423,7 +414,6 @@ def showdown_connection(
             rooms=rooms,
             main_room=main_room,
             command_character=command_character,
-            administrators=administrators,
             webhooks=webhooks,
             unittesting=True,
         )

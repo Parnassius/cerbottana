@@ -30,7 +30,6 @@ class User:
         userid (UserId): Uniquely identifies a user, see utils.to_user_id.
         global_rank (str): PS global rank, defaults to " " if rank is unknown.
         idle (bool): True if user is marked as idle.
-        is_administrator (bool): True if user is a bot administrator.
         rooms (set[Room]): List of rooms the user is in.
     """
 
@@ -61,10 +60,6 @@ class User:
     @property
     def idle(self) -> bool:
         return self.userstring[-2:] == "@!"
-
-    @property
-    def is_administrator(self) -> bool:
-        return self.userid in self.conn.administrators
 
     @property
     def rooms(self) -> set[Room]:
