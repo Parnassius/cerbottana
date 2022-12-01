@@ -29,7 +29,7 @@ If you are running a local Pokémon Showdown instance, make sure it is active. T
 
     poetry run bot
 
-To stop the execution, use the command `.kill` on PS (the first character might differ, depending on the configured `COMMAND_CHARACTER`) or just raise a `SIGINT` (`Ctrl + C`) in the console.
+To stop the execution just raise a `SIGINT` (`Ctrl + C`) in the console.
 
 ## Contributing
 
