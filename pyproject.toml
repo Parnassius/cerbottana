@@ -76,7 +76,7 @@ description = ""
 authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 aiohttp = "3.8.3"
 domify = "0.4.0"
 imageprobe = "0.3.0"
