@@ -15,7 +15,7 @@ from cerbottana.plugins.sprites import SPRITE_CATEGORIES, generate_sprite_url
         ("Mewtwo-Mega-Y", "mewtwo-megay", "ani", False),
         ("Unown-B", "unown-b", "ani", False),
         ("Alcremie-Lemon-Cream", "alcremie-lemoncream", "ani", False),
-        ("Celesteela", "celesteela", "gen5", True),
+        ("Venusaur-Mega", "venusaur-mega", "gen5", True),
         ("Arghonaut", "arghonaut", "ani", True),
     ),
 )
