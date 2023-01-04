@@ -52,7 +52,6 @@ class Connection:
         self.commands = commands
         self.timestamp: float = 0
         self.lastmessage: float = 0
-        self.loop: asyncio.AbstractEventLoop | None = None
         self.websocket: aiohttp.ClientWebSocketResponse | None = None
         self.connection_start: float | None = None
         self.tiers: dict[str, Tier] = {}
@@ -64,7 +63,6 @@ class Connection:
             pass
 
     async def _start_websocket(self) -> None:
-        self.loop = asyncio.get_running_loop()
         itasks: list[asyncio.Task[None]]
         for prio in range(5):
             itasks = []
