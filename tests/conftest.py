@@ -421,7 +421,7 @@ def showdown_connection(
         if not enable_commands:
             conn.commands = {}
 
-        asyncio.create_task(conn._start_websocket())
+        task = asyncio.create_task(conn.open_connection())
 
         rooms_to_join = {utils.to_room_id(room) for room in rooms}
         while rooms_to_join:
@@ -439,11 +439,8 @@ def showdown_connection(
         try:
             yield conn
         finally:
-            if conn.websocket is not None:
-                for task in asyncio.all_tasks():
-                    if not task.get_coro().__name__.startswith("test_"):  # type: ignore
-                        task.cancel()
-                await conn.websocket.close()
+            task.cancel()
+            await task
 
     return make_connection
 

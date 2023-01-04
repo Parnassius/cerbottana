@@ -57,9 +57,9 @@ class Connection:
         self.connection_start: float | None = None
         self.tiers: dict[str, Tier] = {}
 
-    def open_connection(self) -> None:
+    async def open_connection(self) -> None:
         try:
-            asyncio.run(self._start_websocket())
+            await self._start_websocket()
         except asyncio.CancelledError:
             pass
 
