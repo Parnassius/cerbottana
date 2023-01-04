@@ -63,16 +63,12 @@ class Connection:
             pass
 
     async def _start_websocket(self) -> None:
-        itasks: list[asyncio.Task[None]]
-        for prio in range(5):
-            itasks = []
-            for func, skip_unittesting in [
-                t[1:3] for t in self.init_tasks if t[0] == prio + 1
-            ]:
-                if self.unittesting and skip_unittesting:
-                    continue
-                itasks.append(asyncio.create_task(func(self)))
-            await asyncio.gather(*itasks)
+        for prio in range(1, 6):
+            async with asyncio.TaskGroup() as tg:
+                for task_prio, func, skip_unittesting in self.init_tasks:
+                    if prio != task_prio or self.unittesting and skip_unittesting:
+                        continue
+                    tg.create_task(func(self))
 
         if not self.unittesting:
             for rtask in self.recurring_tasks:

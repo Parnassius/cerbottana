@@ -282,7 +282,8 @@ class TestConnection(Connection):
         while True:
             # Wait at most 5 seconds. It should be more than enough for normal cases,
             # and allows to easily identify eventual problems.
-            msg = await asyncio.wait_for(self.recv_queue.get(), 5)
+            async with asyncio.timeout(5):
+                msg = await self.recv_queue.get()
             if startswith:
                 cond = msg.startswith(messages)
             else:

@@ -120,14 +120,12 @@ class Room:
             await self._message_queue.join()
 
     async def _process_message_queue(self) -> None:
-        tasks: list[asyncio.Task[None]]
         try:
             while msg := self._message_queue.get_nowait():
                 if msg.type in self.conn.handlers:
-                    tasks = []
-                    for handler in self.conn.handlers[msg.type]:
-                        tasks.append(asyncio.create_task(handler.callback(msg)))
-                    await asyncio.gather(*tasks)
+                    async with asyncio.TaskGroup() as tg:
+                        for handler in self.conn.handlers[msg.type]:
+                            tg.create_task(handler.callback(msg))
                 self._message_queue.task_done()
         except asyncio.QueueEmpty:
             del self._message_queue
