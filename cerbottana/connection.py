@@ -70,23 +70,42 @@ class Connection:
         await self._run_init_recurring_tasks()
 
         async with aiohttp.ClientSession() as session:
-            try:
-                async with session.ws_connect(
-                    self.url, max_msg_size=0, heartbeat=60
-                ) as websocket:
-                    self.websocket = websocket
-                    self.connection_start = time()
-                    async for message in websocket:
-                        if message.type == aiohttp.WSMsgType.TEXT:
-                            print(f"<< {message.data}")
-                            await self._parse_text_message(message.data)
-                        elif message.type == aiohttp.WSMsgType.BINARY:
-                            print(f"<b {message.data.decode()}")
-                            await self._parse_binary_message(message.data)
-                        elif message.type == aiohttp.WSMsgType.ERROR:
-                            break
-            except aiohttp.ClientConnectionError:
-                pass
+            connection_retries = 0
+            while True:
+                try:
+                    async with session.ws_connect(
+                        self.url, max_msg_size=0, heartbeat=60
+                    ) as websocket:
+                        self.websocket = websocket
+                        self.connection_start = time()
+                        async for message in websocket:
+                            if message.type == aiohttp.WSMsgType.TEXT:
+                                print(f"<< {message.data}")
+                                await self._parse_text_message(message.data)
+                            elif message.type == aiohttp.WSMsgType.BINARY:
+                                print(f"<b {message.data.decode()}")
+                                await self._parse_binary_message(message.data)
+                            elif message.type == aiohttp.WSMsgType.ERROR:
+                                break
+                except (aiohttp.ClientConnectionError, ConnectionResetError):
+                    pass
+
+                for task in self.background_tasks:
+                    task.cancel()
+
+                if (
+                    self.connection_start is not None
+                    and time() - self.connection_start > 60
+                ):
+                    connection_retries = 0
+
+                self.websocket = None
+                self.connection_start = None
+
+                connection_retries += 1
+                backoff = 2**connection_retries
+                print(f"Connection closed, retrying in {backoff} seconds")
+                await asyncio.sleep(backoff)
 
     async def _run_init_recurring_tasks(self) -> None:
         for prio in range(1, 6):

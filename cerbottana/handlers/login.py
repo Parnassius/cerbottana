@@ -25,12 +25,23 @@ async def challstr(msg: ProtocolMessage) -> None:
         "challstr": "|".join(msg.params),
     }
 
+    assertion: str | None = None
+    assertion_retries = 0
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, data=payload) as resp:
-            assertion = json.loads((await resp.text("utf-8"))[1:])["assertion"]
+        while assertion is None:
+            async with session.post(url, data=payload) as resp:
+                try:
+                    assertion = json.loads((await resp.text("utf-8"))[1:])["assertion"]
+                except (json.JSONDecodeError, KeyError):
+                    if assertion_retries == 5:
+                        print("Unable to login, closing connection")
+                        if msg.conn.websocket is not None:
+                            await msg.conn.websocket.close()
+                        return
+                    await asyncio.sleep(2**assertion_retries)
+                    assertion_retries += 1
 
-    if assertion:
-        await msg.conn.send(f"|/trn {msg.conn.username},0,{assertion}")
+    await msg.conn.send(f"|/trn {msg.conn.username},0,{assertion}")
 
     # Startup commands
     await msg.conn.send("|/cmd rooms")
