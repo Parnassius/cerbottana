@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import asyncio
 import re
+from collections.abc import Coroutine, Generator
+from contextvars import Context
 from time import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import aiohttp
 
@@ -17,6 +19,9 @@ from .typedefs import RoomId
 
 if TYPE_CHECKING:
     from .typedefs import Tier
+
+
+_T = TypeVar("_T")
 
 
 class Connection:
@@ -53,6 +58,7 @@ class Connection:
         self.websocket: aiohttp.ClientWebSocketResponse | None = None
         self.connection_start: float | None = None
         self.tiers: dict[str, Tier] = {}
+        self.background_tasks: set[asyncio.Task[Any]] = set()  # type: ignore[misc]
 
     async def open_connection(self) -> None:
         try:
@@ -91,7 +97,7 @@ class Connection:
                     tg.create_task(func(self))
 
         for rtask in self.recurring_tasks:
-            asyncio.create_task(rtask(self))
+            self.create_task(rtask(self))
 
     async def _parse_text_message(self, message: str) -> None:
         """Extracts a Room object from a raw message.
@@ -148,3 +154,15 @@ class Connection:
             await self._send_message_delay()
             print(f">> {message}")
             await self.websocket.send_str(message)
+
+    def create_task(  # type: ignore[misc]
+        self,
+        coro: Generator[Any, None, _T] | Coroutine[Any, Any, _T],
+        *,
+        name: str | None = None,
+        context: Context | None = None,
+    ) -> asyncio.Task[_T]:
+        task = asyncio.create_task(coro, name=name, context=context)
+        self.background_tasks.add(task)
+        task.add_done_callback(self.background_tasks.discard)
+        return task

@@ -112,7 +112,7 @@ class Room:
     def add_message_to_queue(self, msg: ProtocolMessage) -> None:
         if not hasattr(self, "_message_queue"):
             self._message_queue = asyncio.Queue()
-            asyncio.create_task(self._process_message_queue())
+            self.conn.create_task(self._process_message_queue())
         self._message_queue.put_nowait(msg)
 
     async def process_all_messages(self) -> None:
@@ -129,6 +129,9 @@ class Room:
                 self._message_queue.task_done()
         except asyncio.QueueEmpty:
             del self._message_queue
+        except asyncio.CancelledError:
+            del self._message_queue
+            raise
 
     async def send(self, message: str, escape: bool = True) -> None:
         """Sends a message to the room.
