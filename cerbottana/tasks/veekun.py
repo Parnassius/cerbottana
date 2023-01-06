@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from cerbottana.connection import Connection
 
 
-@init_task_wrapper(skip_unittesting=True)
+@init_task_wrapper()
 async def csv_to_sqlite(conn: Connection) -> None:
     csv_dir = Path(__file__).parent.parent / "data/veekun"
     files = chain(

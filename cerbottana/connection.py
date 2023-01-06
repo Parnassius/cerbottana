@@ -32,7 +32,6 @@ class Connection:
         main_room: str,
         command_character: str,
         webhooks: dict[str, str],
-        unittesting: bool = False,
     ) -> None:
         self.url = url
         self.username = username
@@ -44,7 +43,6 @@ class Connection:
         self.main_room = Room.get(self, main_room)
         self.command_character = command_character
         self.webhooks = {utils.to_room_id(room): url for room, url in webhooks.items()}
-        self.unittesting = unittesting
         self.public_roomids: set[str] = set()
         self.init_tasks = init_tasks
         self.recurring_tasks = recurring_tasks
@@ -63,16 +61,7 @@ class Connection:
             pass
 
     async def _start_websocket(self) -> None:
-        for prio in range(1, 6):
-            async with asyncio.TaskGroup() as tg:
-                for task_prio, func, skip_unittesting in self.init_tasks:
-                    if prio != task_prio or self.unittesting and skip_unittesting:
-                        continue
-                    tg.create_task(func(self))
-
-        if not self.unittesting:
-            for rtask in self.recurring_tasks:
-                asyncio.create_task(rtask(self))
+        await self._run_init_recurring_tasks()
 
         async with aiohttp.ClientSession() as session:
             try:
@@ -92,6 +81,17 @@ class Connection:
                             break
             except aiohttp.ClientConnectionError:
                 pass
+
+    async def _run_init_recurring_tasks(self) -> None:
+        for prio in range(1, 6):
+            async with asyncio.TaskGroup() as tg:
+                for task_prio, func in self.init_tasks:
+                    if prio != task_prio:
+                        continue
+                    tg.create_task(func(self))
+
+        for rtask in self.recurring_tasks:
+            asyncio.create_task(rtask(self))
 
     async def _parse_text_message(self, message: str) -> None:
         """Extracts a Room object from a raw message.

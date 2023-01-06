@@ -1,13 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import pytest
 
 from cerbottana.plugins.translations import _get_translations
-
-if TYPE_CHECKING:
-    from tests.conftest import ServerWs, TestConnection
 
 
 @pytest.mark.parametrize(
@@ -85,77 +80,75 @@ async def test_translations(
 
 
 async def test_translations_conn(mock_connection):
-    async def handler(ws: ServerWs, conn: TestConnection) -> None:
+    async with mock_connection() as conn:
 
-        await ws.add_messages(
+        await conn.add_messages(
             [
                 ">room1",
                 "|init|chat",
             ]
         )
 
-        await ws.add_user_join("room1", "user1", "+")
-        await ws.add_user_join("room1", "cerbottana", "*")
-        await ws.get_messages()
+        await conn.add_user_join("room1", "user1", "+")
+        await conn.add_user_join("room1", "cerbottana", "*")
+        await conn.get_messages()
 
-        await ws.add_messages(
+        await conn.add_messages(
             [
                 f"|pm| user1| {conn.username}|.translate azione",
             ]
         )
-        reply = await ws.get_messages()
+        reply = await conn.get_messages()
         assert len(reply) == 1
         assert next(iter(reply)).replace("|/w user1, ", "") == "Tackle"
 
-        await ws.add_messages(
+        await conn.add_messages(
             [
                 f"|pm| user1| {conn.username}|.translate Metronome",
             ]
         )
-        reply = await ws.get_messages()
+        reply = await conn.get_messages()
         assert len(reply) == 1
         assert {
             i.strip() for i in next(iter(reply)).replace("|/w user1, ", "").split(",")
         } == {"Metronomo (move)", "Plessimetro (item)"}
 
-        await ws.add_messages(
+        await conn.add_messages(
             [
                 ">room1",
                 "This room's primary language is German",
             ]
         )
-        await ws.get_messages()
+        await conn.get_messages()
 
-        await ws.add_messages(
+        await conn.add_messages(
             [
                 ">room1",
                 "|c|+user1|.translate Pound",
             ]
         )
-        reply = await ws.get_messages()
+        reply = await conn.get_messages()
         assert len(reply) == 1
         assert next(iter(reply)).replace("room1|", "") == "Klaps"
 
-        await ws.add_messages(
+        await conn.add_messages(
             [
                 ">room1",
                 "|c|+user1|.translate Klaps, fr",
             ]
         )
-        reply = await ws.get_messages()
+        reply = await conn.get_messages()
         assert len(reply) == 1
         assert next(iter(reply)).replace("room1|", "") == "Écras’Face"
 
-        await ws.add_messages(
+        await conn.add_messages(
             [
                 ">room1",
                 "|c|+user1|.translate Charge, fr, en",
             ]
         )
-        reply = await ws.get_messages()
+        reply = await conn.get_messages()
         assert len(reply) == 1
         assert {
             i.strip() for i in next(iter(reply)).replace("room1|", "").split(",")
         } == {"Chargeur (move)", "Tackle (move)"}
-
-    await mock_connection(handler)

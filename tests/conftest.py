@@ -4,7 +4,7 @@ import asyncio
 import json
 import subprocess
 from collections import Counter
-from collections.abc import AsyncGenerator, Awaitable, Callable, Generator
+from collections.abc import AsyncGenerator, Callable, Generator
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from enum import Enum
 from pathlib import Path
@@ -12,7 +12,6 @@ from shutil import copy, rmtree
 from time import time
 from typing import Any
 
-import aiohttp
 import pytest
 from aiohttp.test_utils import unused_port
 from sqlalchemy import create_engine
@@ -52,6 +51,44 @@ class ControlMessage(bytes, Enum):
 
 
 class MockedConnection(Connection):
+    def __init__(
+        self,
+        *,
+        url: str,
+        username: str,
+        password: str,
+        avatar: str,
+        statustext: str,
+        rooms: list[str],
+        main_room: str,
+        command_character: str,
+        webhooks: dict[str, str],
+    ) -> None:
+        self.recv_queue: asyncio.Queue[str | bytes] = asyncio.Queue()
+        self.send_queue: asyncio.Queue[str | bytes] = asyncio.Queue()
+
+        super().__init__(
+            url=url,
+            username=username,
+            password=password,
+            avatar=avatar,
+            statustext=statustext,
+            rooms=rooms,
+            main_room=main_room,
+            command_character=command_character,
+            webhooks=webhooks,
+        )
+
+    async def _start_websocket(self) -> None:
+        while True:
+            message = await self.recv_queue.get()
+            if isinstance(message, str):
+                print(f"<< {message}")
+                await self._parse_text_message(message)
+            elif isinstance(message, bytes):
+                print(f"<b {message.decode()}")
+                await self._parse_binary_message(message)
+
     async def _parse_binary_message(self, message: bytes) -> None:
         if message in (
             ControlMessage.PROCESS_MESSAGES,
@@ -66,14 +103,14 @@ class MockedConnection(Connection):
         # No need to throttle messages
         self.lastmessage = time()
 
+    async def send(self, message: str) -> None:
+        print(f">> {message}")
+        await self.send_queue.put(message)
+
     async def send_bytes(self, message: bytes) -> None:
-        if self.websocket is not None:
-            await self._send_message_delay()
-            print(f">b {message.decode()}")
-            await self.websocket.send_bytes(message)
+        print(f">b {message.decode()}")
+        await self.send_queue.put(message)
 
-
-class ServerWs(aiohttp.web.WebSocketResponse):
     async def add_user_join(
         self,
         room: str,
@@ -93,40 +130,6 @@ class ServerWs(aiohttp.web.WebSocketResponse):
         )
         await self.add_queryresponse_userdetails(
             user, group=group, rooms={roomid: rank}
-        )
-
-    async def add_user_namechange(
-        self,
-        room: str,
-        user: str,
-        olduser: str,
-        rank: str = " ",
-        *,
-        group: str = " ",
-    ) -> None:
-        roomid = utils.to_room_id(room)
-        userid = utils.to_user_id(user)
-        olduserid = utils.to_user_id(olduser)
-
-        await self.add_messages(
-            [
-                f">{roomid}",
-                f"|n|{rank}{userid}|{olduserid}",
-            ]
-        )
-        await self.add_queryresponse_userdetails(
-            user, group=group, rooms={roomid: rank}
-        )
-
-    async def add_user_leave(self, room: str, user: str) -> None:
-        roomid = utils.to_room_id(room)
-        userid = utils.to_user_id(user)
-
-        await self.add_messages(
-            [
-                f">{roomid}",
-                f"|l|{userid}",
-            ]
         )
 
     async def add_queryresponse_userdetails(
@@ -160,33 +163,29 @@ class ServerWs(aiohttp.web.WebSocketResponse):
 
     async def add_messages(self, *items: list[str]) -> None:
         for item in items:
-            await self.send_str("\n".join(item))
+            await self.recv_queue.put("\n".join(item))
 
-        await self.send_bytes(ControlMessage.PROCESS_MESSAGES)
+        await self.recv_queue.put(ControlMessage.PROCESS_MESSAGES)
 
     async def get_messages(self) -> Counter[str]:
-        await self.send_bytes(ControlMessage.PROCESS_AND_REPLY)
+        await self.recv_queue.put(ControlMessage.PROCESS_AND_REPLY)
 
         messages: Counter[str] = Counter()
-        async for message in self:
-            if message.type == aiohttp.WSMsgType.TEXT:
-                messages.update([message.data])
-            elif (
-                message.type == aiohttp.WSMsgType.BINARY
-                and message.data == ControlMessage.PROCESSING_DONE
-            ):
+        while True:
+            message = await self.send_queue.get()
+            print(message)
+            if isinstance(message, str):
+                messages.update([message])
+            elif message == ControlMessage.PROCESSING_DONE:
                 break
+
         return messages
 
 
 @pytest.fixture()
-def mock_connection(
-    aiohttp_raw_server,
-) -> Callable[
-    [Callable[[ServerWs, MockedConnection], Awaitable[None]]], Awaitable[None]
-]:
+def mock_connection() -> Callable[[], AbstractAsyncContextManager[Any]]:
+    @asynccontextmanager
     async def make_mock_connection(
-        server_handler: Callable[[ServerWs, MockedConnection], Awaitable[None]],
         *,
         username: str = "cerbottana",
         password: str = "",
@@ -196,29 +195,14 @@ def mock_connection(
         main_room: str = "lobby",
         command_character: str = ".",
         webhooks: dict[str, str] | None = None,
-    ) -> None:
-        async def handler(request: aiohttp.web_request.BaseRequest) -> ServerWs:
-            ws = ServerWs(max_msg_size=0)
-            await ws.prepare(request)
-
-            await ws.add_messages(["|updateuser|*cerbottana|1|0|{}"])
-            await ws.get_messages()
-
-            await server_handler(ws, conn)
-
-            await ws.close()
-            return ws
-
-        raw_server = await aiohttp_raw_server(handler)
-        url = raw_server.make_url("/")
-
+    ) -> AsyncGenerator[Any, None]:
         if rooms is None:
             rooms = ["room1"]
         if webhooks is None:
             webhooks = {"room1": "https://discord.com/api/webhooks/00000/aaaaa"}
 
         conn = MockedConnection(
-            url=url,
+            url="",
             username=username,
             password=password,
             avatar=avatar,
@@ -227,15 +211,17 @@ def mock_connection(
             main_room=main_room,
             command_character=command_character,
             webhooks=webhooks,
-            unittesting=True,
         )
 
-        await conn._start_websocket()
+        task = asyncio.create_task(conn.open_connection())
 
-        if conn.websocket is not None:
-            exc = conn.websocket.exception()
-            if exc:
-                raise exc
+        await conn.get_messages()
+
+        try:
+            yield conn
+        finally:
+            task.cancel()
+            await task
 
     return make_mock_connection
 
@@ -256,7 +242,6 @@ class TestConnection(Connection):
         main_room: str,
         command_character: str,
         webhooks: dict[str, str],
-        unittesting: bool = False,
     ) -> None:
         self.recv_queue: asyncio.Queue[str] = asyncio.Queue()
 
@@ -270,8 +255,10 @@ class TestConnection(Connection):
             main_room=main_room,
             command_character=command_character,
             webhooks=webhooks,
-            unittesting=unittesting,
         )
+
+    async def _run_init_recurring_tasks(self) -> None:
+        pass
 
     async def _parse_text_message(self, message: str) -> None:
         await super()._parse_text_message(message)
@@ -416,7 +403,6 @@ def showdown_connection(
             main_room=main_room,
             command_character=command_character,
             webhooks=webhooks,
-            unittesting=True,
         )
 
         if not enable_commands:

@@ -12,14 +12,12 @@ if TYPE_CHECKING:
     RecurringTaskFunc = Callable[[Connection], Coroutine[None, None, None]]
 
 
-init_tasks: list[tuple[int, InitTaskFunc, bool]] = []
+init_tasks: list[tuple[int, InitTaskFunc]] = []
 
 
-def init_task_wrapper(
-    *, priority: int = 3, skip_unittesting: bool = False
-) -> Callable[[InitTaskFunc], InitTaskFunc]:
+def init_task_wrapper(*, priority: int = 3) -> Callable[[InitTaskFunc], InitTaskFunc]:
     def wrapper(func: InitTaskFunc) -> InitTaskFunc:
-        init_tasks.append((priority, func, skip_unittesting))
+        init_tasks.append((priority, func))
         return func
 
     return wrapper

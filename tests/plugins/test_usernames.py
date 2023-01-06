@@ -2,19 +2,15 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
-from typing import TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
 from freezegun import freeze_time
 
-if TYPE_CHECKING:
-    from tests.conftest import ServerWs, TestConnection
-
 
 async def test_usernames(mock_connection):
-    async def handler(ws: ServerWs, conn: TestConnection) -> None:
+    async with mock_connection() as conn:
 
-        await ws.add_messages(
+        await conn.add_messages(
             [
                 ">publicroom",
                 "|init|chat",
@@ -25,13 +21,13 @@ async def test_usernames(mock_connection):
             ],
         )
 
-        await ws.add_user_join("publicroom", "user1", "+")
-        await ws.add_user_join("publicroom", "cerbottana", "*")
-        await ws.add_user_join("privateroom", "user1", "+")
-        await ws.add_user_join("privateroom", "cerbottana", "*")
+        await conn.add_user_join("publicroom", "user1", "+")
+        await conn.add_user_join("publicroom", "cerbottana", "*")
+        await conn.add_user_join("privateroom", "user1", "+")
+        await conn.add_user_join("privateroom", "cerbottana", "*")
 
         # Add a couple of formats, needed for .silver97
-        await ws.add_messages(
+        await conn.add_messages(
             ["|formats|,LL|,1|Sw/Sh Singles|Random Battle,f|OU,e|Custom Game,c"]
         )
 
@@ -41,9 +37,9 @@ async def test_usernames(mock_connection):
             "userCount": 2,
             "battleCount": 0,
         }
-        await ws.add_messages([f"|queryresponse|rooms|{json.dumps(data)}"])
+        await conn.add_messages([f"|queryresponse|rooms|{json.dumps(data)}"])
 
-        await ws.get_messages()
+        await conn.get_messages()
 
         username_commands = [
             i
@@ -52,26 +48,26 @@ async def test_usernames(mock_connection):
         ]
 
         for cmd in username_commands:
-            await ws.add_messages(
+            await conn.add_messages(
                 [
                     ">publicroom",
                     f"|c|+user1|.{cmd.name}",
                 ]
             )
-            reply_public = await ws.get_messages()
-            await ws.add_messages(
+            reply_public = await conn.get_messages()
+            await conn.add_messages(
                 [
                     ">privateroom",
                     f"|c|+user1|.{cmd.name}",
                 ]
             )
-            reply_private = await ws.get_messages()
-            await ws.add_messages(
+            reply_private = await conn.get_messages()
+            await conn.add_messages(
                 [
                     f"|pm|+user1|*cerbottana|.{cmd.name}",
                 ]
             )
-            reply_pm = await ws.get_messages()
+            reply_pm = await conn.get_messages()
 
             if cmd.name == "annika":
                 assert len(reply_public) == len(reply_pm) == 0
@@ -89,22 +85,20 @@ async def test_usernames(mock_connection):
         # I hate you plato
         tz = ZoneInfo("Europe/Rome")
         with freeze_time(datetime(2020, 1, 1, hour=10, tzinfo=tz)):
-            await ws.add_messages(
+            await conn.add_messages(
                 [
                     ">publicroom",
                     "|c|+user1|.plat0",
                 ]
             )
-            reply_plat0_daytime = await ws.get_messages()
+            reply_plat0_daytime = await conn.get_messages()
         with freeze_time(datetime(2020, 1, 1, hour=4, tzinfo=tz)):
-            await ws.add_messages(
+            await conn.add_messages(
                 [
                     ">publicroom",
                     "|c|+user1|.plat0",
                 ]
             )
-            reply_plat0_nighttime = await ws.get_messages()
+            reply_plat0_nighttime = await conn.get_messages()
         assert not next(iter(reply_plat0_daytime)).endswith("appena svegliato")
         assert next(iter(reply_plat0_nighttime)).endswith("appena svegliato")
-
-    await mock_connection(handler)
