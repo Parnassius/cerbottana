@@ -1,4 +1,4 @@
-FROM python:3.11-slim as base
+FROM python:3.11-alpine as base
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -19,15 +19,12 @@ RUN /opt/poetry-venv/bin/poetry install --no-interaction --only main --no-root
 
 COPY . .
 RUN /opt/poetry-venv/bin/poetry build --no-interaction --format wheel
+RUN .venv/bin/pip install ./dist/*.whl
 
 
 FROM base as final
 
 COPY --from=builder /app/.venv .venv
-COPY --from=builder /app/dist .
-
-RUN .venv/bin/pip install *.whl
-RUN rm *.whl
 
 VOLUME /data
 
