@@ -2175,13 +2175,13 @@
       "h": 104
     }
   },
-  "taurospaldea": {
+  "taurospaldeacombat": {
     "num": 128
   },
-  "taurospaldeafire": {
+  "taurospaldeablaze": {
     "num": 128
   },
-  "taurospaldeawater": {
+  "taurospaldeaaqua": {
     "num": 128
   },
   "magikarp": {
@@ -14713,10 +14713,26 @@
     }
   },
   "flittle": {
-    "num": 955
+    "num": 955,
+    "front": {
+      "w": 39,
+      "h": 44
+    },
+    "back": {
+      "w": 37,
+      "h": 45
+    }
   },
   "espathra": {
-    "num": 956
+    "num": 956,
+    "front": {
+      "w": 82,
+      "h": 106
+    },
+    "back": {
+      "w": 101,
+      "h": 96
+    }
   },
   "tinkatink": {
     "num": 957
@@ -14728,22 +14744,62 @@
     "num": 959
   },
   "wiglett": {
-    "num": 960
+    "num": 960,
+    "front": {
+      "w": 44,
+      "h": 80
+    },
+    "back": {
+      "w": 49,
+      "h": 75
+    }
   },
   "wugtrio": {
-    "num": 961
+    "num": 961,
+    "front": {
+      "w": 83,
+      "h": 70
+    },
+    "back": {
+      "w": 88,
+      "h": 73
+    }
   },
   "bombirdier": {
     "num": 962
   },
   "finizen": {
-    "num": 963
+    "num": 963,
+    "front": {
+      "w": 66,
+      "h": 55
+    },
+    "back": {
+      "w": 85,
+      "h": 53
+    }
   },
   "palafin": {
-    "num": 964
+    "num": 964,
+    "front": {
+      "w": 66,
+      "h": 55
+    },
+    "back": {
+      "w": 85,
+      "h": 53
+    }
   },
   "palafinhero": {
-    "num": 964
+    "num": 964,
+    "front": {
+      "w": 55,
+      "h": 102
+    },
+    "back": {
+      "w": 51,
+      "h": 103
+    }
   },
   "varoom": {
     "num": 965
@@ -14764,10 +14820,26 @@
     "num": 970
   },
   "greavard": {
-    "num": 971
+    "num": 971,
+    "front": {
+      "w": 42,
+      "h": 62
+    },
+    "back": {
+      "w": 59,
+      "h": 60
+    }
   },
   "houndstone": {
-    "num": 972
+    "num": 972,
+    "front": {
+      "w": 77,
+      "h": 79
+    },
+    "back": {
+      "w": 106,
+      "h": 76
+    }
   },
   "flamigo": {
     "num": 973
@@ -14779,10 +14851,26 @@
     "num": 975
   },
   "veluza": {
-    "num": 976
+    "num": 976,
+    "front": {
+      "w": 77,
+      "h": 93
+    },
+    "back": {
+      "w": 91,
+      "h": 88
+    }
   },
   "dondozo": {
-    "num": 977
+    "num": 977,
+    "front": {
+      "w": 152,
+      "h": 69
+    },
+    "back": {
+      "w": 179,
+      "h": 68
+    }
   },
   "tatsugiri": {
     "num": 978
@@ -14800,7 +14888,15 @@
     "num": 980
   },
   "farigiraf": {
-    "num": 981
+    "num": 981,
+    "front": {
+      "w": 62,
+      "h": 128
+    },
+    "back": {
+      "w": 78,
+      "h": 118
+    }
   },
   "dudunsparce": {
     "num": 982,

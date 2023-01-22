@@ -1832,13 +1832,13 @@
       "h": 56
     }
   },
-  "taurospaldea": {
+  "taurospaldeacombat": {
     "num": 128
   },
-  "taurospaldeafire": {
+  "taurospaldeablaze": {
     "num": 128
   },
-  "taurospaldeawater": {
+  "taurospaldeaaqua": {
     "num": 128
   },
   "magikarp": {
