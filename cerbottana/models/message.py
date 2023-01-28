@@ -58,7 +58,7 @@ class Message:
     @property
     def parametrized_room(self) -> Room:
         if self._parametrized_room is None:
-            raise BaseException(
+            raise AttributeError(
                 "Trying to access parametrized_room attribute without prior decoration"
             )
         return self._parametrized_room

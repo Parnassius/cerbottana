@@ -68,7 +68,7 @@ async def antonio200509(msg: Message) -> None:
         stmt = (
             select(v.PokemonSpeciesNames)
             .filter_by(local_language_id=msg.language_id)
-            .order_by(func.random())
+            .order_by(func.random())  # pylint: disable=not-callable
         )
         # TODO: remove annotation
         species: v.PokemonSpeciesNames = session.scalar(stmt)

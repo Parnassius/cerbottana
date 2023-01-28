@@ -45,7 +45,7 @@ def linkify(text: str) -> str:
     table[ord("\n")] = "<br>"
     text = text.translate(table)
 
-    # pylint: disable=line-too-long
+    # pylint: disable-next=line-too-long
     url_regex = r'(?i)(?:(?:https?:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)*|www\.[a-z0-9-]+(?:\.[a-z0-9-]+)+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com?|org|net|edu|info|us|jp|[a-z]{2,3}(?=[:/])))(?::[0-9]+)?(?:\/(?:(?:[^\s()&<>]|&amp;|&quot;|\((?:[^\\s()<>&]|&amp;)*\))*(?:[^\s()[\]{}".,!?;:&<>*`^~\\]|\((?:[^\s()<>&]|&amp;)*\)))?)?|[a-z0-9.]+@[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,})(?![^ ]*&gt;)'
     return re.sub(url_regex, lambda m: _linkify_uri(m.group()), text)
 
@@ -158,6 +158,7 @@ class HTMLPageCommand(BaseHTMLCommand):
     def load_page(self, page: int) -> None:
         db = Database.open()
         with db.get_session() as session:
+            # pylint: disable-next=not-callable
             stmt_last_page = self._stmt.with_only_columns(func.count())
             last_page = math.ceil(session.scalar(stmt_last_page) / 100)
             page = min(page, last_page)

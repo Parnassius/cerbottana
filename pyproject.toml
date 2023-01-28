@@ -52,7 +52,7 @@ isort-check = "isort cerbottana tests --check"
 black-check = "black cerbottana tests --check"
 darglint = "darglint cerbottana tests -v 2"
 mypy = "mypy cerbottana tests"
-pylint = "pylint cerbottana tests --disable=fixme"
+pylint = "pylint cerbottana tests"
 pytest-full = [
     {ref="pytest"},
     {shell="""
@@ -114,19 +114,23 @@ load-plugins = [
 
 [tool.pylint.messages_control]
 disable = [
+    # basic
     "invalid-name",
     "missing-class-docstring",
     "missing-function-docstring",
     "missing-module-docstring",
-    "unused-argument",
-    "too-few-public-methods",
 
-    # temporarily disabled, should be re-enabled sooner or later
-    "duplicate-code",  # encounters / locations plugins
-    "too-many-branches",
-    "too-many-instance-attributes",
-    "too-many-locals",
-    "too-many-statements",
+    # design
+    "design",
+
+    # miscellaneous
+    "fixme",
+
+    # similarities
+    "duplicate-code",
+
+    # variables
+    "unused-argument",
 ]
 enable = ["useless-suppression"]
 fail-on = ["useless-suppression"]

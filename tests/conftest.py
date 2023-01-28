@@ -26,8 +26,6 @@ from cerbottana.models.room import Room
 from cerbottana.tasks.veekun import csv_to_sqlite
 from cerbottana.utils import env
 
-# pylint: disable=protected-access, redefined-outer-name
-
 
 def pytest_collection_modifyitems(items):
     for item in items:
@@ -94,6 +92,7 @@ class MockedConnection(Connection):
             ControlMessage.PROCESS_MESSAGES,
             ControlMessage.PROCESS_AND_REPLY,
         ):
+            # pylint: disable-next=protected-access
             for room in list(Room._instances.get(self, {}).values()):
                 await room.process_all_messages()
             if message == ControlMessage.PROCESS_AND_REPLY:
@@ -347,7 +346,7 @@ def showdown_server(xprocess) -> Generator[int, None, None]:
 
 @pytest.fixture()
 def showdown_connection(
-    showdown_server,
+    showdown_server,  # pylint: disable=redefined-outer-name
 ) -> Callable[[], AbstractAsyncContextManager[Any]]:
     @asynccontextmanager
     async def make_connection(

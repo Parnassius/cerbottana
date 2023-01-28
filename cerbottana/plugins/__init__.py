@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 class Command:
     _instances: dict[str, Command] = {}
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         func: CommandFunc,
         aliases: tuple[str, ...],

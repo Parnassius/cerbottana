@@ -33,14 +33,14 @@ def to_html_quotebox(quote: str) -> str:
         quote (str): Raw quote string, added through `.addquote`.
 
     Raises:
-        BaseException: quote is empty.
+        ValueError: quote is empty.
 
     Returns:
         str: htmlbox.
     """
     if not quote:
         # This shouldn't happen because empty quotes are ignored by `.addquote`.
-        raise BaseException("Trying to create quotebox for empty quote.")
+        raise ValueError("Trying to create quotebox for empty quote.")
 
     # Valid timestamp formats: [xx:xx], [xx:xx:xx]
     timestamp_regex = r"(\[\d{2}:\d{2}(?::\d{2})?\])"
@@ -107,10 +107,11 @@ def to_html_quotebox(quote: str) -> str:
             sublines[0] = f"<small>{timestamp}</small> <em>{sublines[0]}</em>"
             lines += sublines
     # Merge lines
-    html = '<div class="message-log" style="display: inline-block">'
-    for line in lines:
-        html += f'<div class="chat">{line}</div>'
-    html += "</div>"
+    html = (
+        '<div class="message-log" style="display: inline-block">'
+        + "".join(f'<div class="chat">{line}</div>' for line in lines)
+        + "</div>"
+    )
     return html
 
 
@@ -161,7 +162,7 @@ async def randquote(msg: Message) -> None:
         stmt = (
             select(d.Quotes)
             .filter_by(roomid=msg.parametrized_room.roomid)
-            .order_by(func.random())
+            .order_by(func.random())  # pylint: disable=not-callable
         )
         if msg.arg:
             # LIKE wildcards are supported and "*" is considered an alias for "%".

@@ -35,7 +35,7 @@ async def guessthemon(msg: Message) -> None:
         stmt = (
             select(v.PokemonSpecies)
             .where(v.PokemonSpecies.identifier.notin_(invalid_identifiers))
-            .order_by(func.random())
+            .order_by(func.random())  # pylint: disable=not-callable
         )
         # TODO: remove annotation
         species: v.PokemonSpecies | None = session.scalar(stmt)
