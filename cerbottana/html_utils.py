@@ -124,12 +124,14 @@ class HTMLPageCommand(BaseHTMLCommand):
         user: User,
         room: Room,
         command: str,
-        stmt: Select,
+        stmt: Select,  # type: ignore[type-arg]
         *,
         title: str,
-        fields: list[tuple[str, str | Callable[[Row], BaseElement | str]]],
+        fields: list[  # type: ignore[type-arg]
+            tuple[str, str | Callable[[Row], BaseElement | str]]
+        ],
         actions_header: str = "",
-        actions: list[
+        actions: list[  # type: ignore[type-arg]
             tuple[
                 str,  # cmd
                 list[str | Callable[[Row], str]],  # params
@@ -160,7 +162,7 @@ class HTMLPageCommand(BaseHTMLCommand):
         with db.get_session() as session:
             # pylint: disable-next=not-callable
             stmt_last_page = self._stmt.with_only_columns(func.count())
-            last_page = math.ceil(session.scalar(stmt_last_page) / 100)
+            last_page = math.ceil(session.scalars(stmt_last_page).one() / 100)
             page = min(page, last_page)
             stmt_rs = self._stmt.limit(100).offset(100 * (page - 1))
 
@@ -203,7 +205,7 @@ class HTMLPageCommand(BaseHTMLCommand):
                             btn["name"] = "send"
                             btn["value"] = f"{page_cmd}{p + 1}"
 
-    def _add_action_buttons(self, row: Row) -> None:
+    def _add_action_buttons(self, row: Row) -> None:  # type: ignore[type-arg]
         for cmd, params, disabled, btn_icon, btn_text in self._actions:
             req_rank = self._commands[cmd].get_required_rank(self._room.roomid, False)
             if not self._user.has_role(req_rank, self._room):

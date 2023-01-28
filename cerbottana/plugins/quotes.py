@@ -11,7 +11,6 @@ from domify import html_elements as e
 from domify.base_element import BaseElement
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm.exc import ObjectDeletedError
-from sqlalchemy.sql import Select
 
 import cerbottana.databases.database as d
 from cerbottana import utils
@@ -169,7 +168,7 @@ async def randquote(msg: Message) -> None:
             keyword = msg.arg.replace("*", "%")
             stmt = stmt.where(d.Quotes.message.ilike(f"%{keyword}%"))
 
-        quote: d.Quotes = session.scalar(stmt)  # TODO: remove annotation
+        quote = session.scalar(stmt)
         if not quote:
             await msg.reply("Nessuna quote trovata.")
             return
@@ -218,7 +217,6 @@ async def removequoteid(msg: Message) -> None:
     db = Database.open()
     with db.get_session() as session:
         stmt = select(d.Quotes).filter_by(id=msg.args[0], roomid=room.roomid)
-        quote: d.Quotes  # TODO: remove annotation
         if quote := session.scalar(stmt):
             await msg.parametrized_room.send_modnote(
                 "QUOTE REMOVED", msg.user, quote.message
@@ -239,8 +237,7 @@ async def removequoteid(msg: Message) -> None:
     allow_pm="regularuser",
 )
 def quotelist_htmlpage(user: User, room: Room, page: int) -> BaseElement:
-    # TODO: remove annotation
-    stmt: Select = (
+    stmt = (
         select(d.Quotes)
         .filter_by(roomid=room.roomid)
         .order_by(d.Quotes.date.desc(), d.Quotes.id.desc())

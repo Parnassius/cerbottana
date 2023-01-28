@@ -1,20 +1,24 @@
 from __future__ import annotations
 
-from sqlalchemy import Column, Integer, String, UniqueConstraint
-from sqlalchemy.orm import declarative_base
+from typing import Annotated
 
-from cerbottana.typedefs import Role
+from sqlalchemy import UniqueConstraint
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-Base = declarative_base()
+intpk = Annotated[int, mapped_column(primary_key=True)]  # pylint: disable=invalid-name
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 class Badges(Base):
     __tablename__ = "badges"
 
-    id: int = Column(Integer, primary_key=True)
-    userid: str | None = Column(String, index=True)
-    image: str = Column(String, nullable=False)
-    label: str = Column(String, nullable=False)
+    id: Mapped[intpk]
+    userid: Mapped[str | None] = mapped_column(index=True)
+    image: Mapped[str]
+    label: Mapped[str]
 
 
 class CustomPermissions(Base):
@@ -23,10 +27,10 @@ class CustomPermissions(Base):
         UniqueConstraint("roomid", "command", sqlite_on_conflict="REPLACE"),
     )
 
-    id: int = Column(Integer, primary_key=True)
-    roomid: str = Column(String, nullable=False)
-    command: str = Column(String, nullable=False)
-    required_rank: Role = Column(String, nullable=False)
+    id: Mapped[intpk]
+    roomid: Mapped[str]
+    command: Mapped[str]
+    required_rank: Mapped[str]
 
 
 class EightBall(Base):
@@ -35,9 +39,9 @@ class EightBall(Base):
         UniqueConstraint("answer", "roomid", sqlite_on_conflict="IGNORE"),
     )
 
-    id: int = Column(Integer, primary_key=True)
-    answer: str = Column(String, nullable=False)
-    roomid: str = Column(String, nullable=False)
+    id: Mapped[intpk]
+    answer: Mapped[str]
+    roomid: Mapped[str]
 
 
 class Quotes(Base):
@@ -46,11 +50,11 @@ class Quotes(Base):
         UniqueConstraint("message", "roomid", sqlite_on_conflict="IGNORE"),
     )
 
-    id: int = Column(Integer, primary_key=True)
-    message: str = Column(String, nullable=False)
-    roomid: str = Column(String, nullable=False)
-    author: str | None = Column(String)
-    date: str | None = Column(String)
+    id: Mapped[intpk]
+    message: Mapped[str]
+    roomid: Mapped[str]
+    author: Mapped[str | None]
+    date: Mapped[str | None]
 
 
 class Repeats(Base):
@@ -59,12 +63,12 @@ class Repeats(Base):
         UniqueConstraint("message", "roomid", sqlite_on_conflict="REPLACE"),
     )
 
-    id: int = Column(Integer, primary_key=True)
-    message: str = Column(String, nullable=False)
-    roomid: str = Column(String, nullable=False)
-    delta_minutes: int = Column(Integer, nullable=False)
-    initial_dt: str = Column(String, nullable=False)
-    expire_dt: str | None = Column(String)
+    id: Mapped[intpk]
+    message: Mapped[str]
+    roomid: Mapped[str]
+    delta_minutes: Mapped[int]
+    initial_dt: Mapped[str]
+    expire_dt: Mapped[str | None]
 
 
 class TemporaryVoices(Base):
@@ -73,20 +77,20 @@ class TemporaryVoices(Base):
         UniqueConstraint("roomid", "userid", sqlite_on_conflict="IGNORE"),
     )
 
-    id: int = Column(Integer, primary_key=True)
-    roomid: str = Column(String, nullable=False)
-    userid: str = Column(String, nullable=False)
-    date: str = Column(String, nullable=False)
+    id: Mapped[intpk]
+    roomid: Mapped[str]
+    userid: Mapped[str]
+    date: Mapped[str]
 
 
 class Users(Base):
     __tablename__ = "users"
     __table_opts__ = (UniqueConstraint("userid", sqlite_on_conflict="IGNORE"),)
 
-    id: int = Column(Integer, primary_key=True)
-    userid: str = Column(String, nullable=False)
-    username: str | None = Column(String)
-    avatar: str | None = Column(String)
-    description: str | None = Column(String)
-    description_pending: str | None = Column(String, index=True)
-    icon: str | None = Column(String)
+    id: Mapped[intpk]
+    userid: Mapped[str]
+    username: Mapped[str | None]
+    avatar: Mapped[str | None]
+    description: Mapped[str | None]
+    description_pending: Mapped[str | None] = mapped_column(index=True)
+    icon: Mapped[str | None]

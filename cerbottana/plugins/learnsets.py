@@ -127,14 +127,12 @@ async def learnset(msg: Message) -> None:
     db = Database.open("veekun")
 
     with db.get_session(language_id) as session:
-        stmt = select(v.VersionGroups).filter_by(identifier=version_id)
-        # TODO: remove annotation
-        version_group: v.VersionGroups | None = session.scalar(stmt)
+        stmt_version_group = select(v.VersionGroups).filter_by(identifier=version_id)
+        version_group = session.scalar(stmt_version_group)
 
         if version_group is None:
-            stmt = select(v.Versions).filter_by(identifier=version_id)
-            # TODO: remove annotation
-            version: v.Versions | None = session.scalar(stmt)
+            stmt_version = select(v.Versions).filter_by(identifier=version_id)
+            version = session.scalar(stmt_version)
             if version is None:
                 await msg.reply("Game version not found.")
                 return
@@ -145,7 +143,7 @@ async def learnset(msg: Message) -> None:
             .options(
                 selectinload(v.PokemonSpecies.pokemon)
                 .selectinload(
-                    v.Pokemon.pokemon_moves.and_(
+                    v.Pokemon.pokemon_moves.and_(  # type: ignore[arg-type]
                         v.PokemonMoves.version_group_id == version_group.id
                     )
                 )
@@ -153,7 +151,7 @@ async def learnset(msg: Message) -> None:
                     selectinload(v.PokemonMoves.move).options(
                         selectinload(v.Moves.move_names),
                         selectinload(
-                            v.Moves.machines.and_(
+                            v.Moves.machines.and_(  # type: ignore[arg-type]
                                 v.Machines.version_group_id == version_group.id
                             )
                         )
@@ -167,8 +165,7 @@ async def learnset(msg: Message) -> None:
             )
             .filter_by(identifier=pokemon_id)
         )
-        # TODO: remove annotation
-        pokemon_species: v.PokemonSpecies | None = session.scalar(stmt)
+        pokemon_species = session.scalar(stmt)
         if pokemon_species is None:
             await msg.reply("Pokémon not found.")
             return

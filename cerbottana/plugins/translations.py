@@ -47,9 +47,6 @@ def _get_translations(
                     t[1].name_normalized == word,
                 )
             )
-            # TODO: remove annotations
-            row: v.TranslatableMixin
-            language_id: int
             for row, language_id in session.execute(stmt):
                 translation = row.get_translation(
                     f"{category_name}_names",

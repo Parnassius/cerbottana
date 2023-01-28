@@ -15,8 +15,6 @@ profile = "black"
 
 
 [tool.mypy]
-plugins = "sqlalchemy.ext.mypy.plugin"
-
 strict = true
 implicit_reexport = true
 
@@ -37,9 +35,6 @@ disallow_any_explicit = false
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
 
-
-[tool.poe.env]
-SQLALCHEMY_WARN_20 = "1"
 
 [tool.poe.tasks]
 format = ["isort", "black"]
@@ -81,7 +76,7 @@ aiohttp = "3.8.4"
 domify = "0.4.1"
 imageprobe = "0.3.0"
 python-dateutil = "2.8.2"
-SQLAlchemy = "1.4.46"
+SQLAlchemy = "2.0.3"
 typenv = "0.2.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -97,7 +92,6 @@ pytest-asyncio = "0.20.3"
 pytest-cov = "4.0.0"
 pytest-mock = "3.10.0"
 pytest-xprocess = "0.22.2"
-sqlalchemy2-stubs = "0.0.2a32"
 types-python-dateutil = "2.8.19.7"
 
 [tool.poetry.scripts]

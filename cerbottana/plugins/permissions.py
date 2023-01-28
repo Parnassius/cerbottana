@@ -4,9 +4,8 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Literal, cast
 
 from domify.base_element import BaseElement
-from sqlalchemy import and_, delete, literal, select, union
+from sqlalchemy import String, and_, delete, literal, select, type_coerce, union
 from sqlalchemy.engine import Row
-from sqlalchemy.sql import Select
 
 import cerbottana.databases.database as d
 from cerbottana.database import Database
@@ -78,14 +77,13 @@ async def setpermission(msg: Message) -> None:
 @htmlpage_wrapper("permissions", aliases=("permission",), required_rank="owner")
 def permissions_htmlpage(user: User, room: Room, page: int) -> BaseElement:
     stmts = (
-        select(literal(i).label("command_name"))
+        select(literal(i, String).label("command_name"))
         for i in Command.get_rank_editable_commands()
     )
     commands = union(*stmts).alias("commands")
 
-    # TODO: remove annotation
-    stmt: Select = (
-        select(d.CustomPermissions, commands.c.command_name)
+    stmt = (
+        select(d.CustomPermissions, type_coerce(commands.c.command_name, String))
         .select_from(commands)
         .outerjoin(
             d.CustomPermissions,
@@ -97,13 +95,18 @@ def permissions_htmlpage(user: User, room: Room, page: int) -> BaseElement:
         .order_by(commands.c.command_name)
     )
 
-    def btn_disabled(role: str) -> Callable[[Row], bool]:
-        if role == "default":
-            return lambda row: row.CustomPermissions is None
-        return lambda row: (
-            row.CustomPermissions is not None
-            and row.CustomPermissions.required_rank == role
-        )
+    def btn_disabled(
+        role: str,
+    ) -> Callable[[Row[tuple[d.CustomPermissions, str]]], bool]:
+        def inner(row: Row[tuple[d.CustomPermissions, str]]) -> bool:
+            if role == "default":
+                return row.CustomPermissions is None
+            return (
+                row.CustomPermissions is not None
+                and row.CustomPermissions.required_rank == role
+            )
+
+        return inner
 
     html = HTMLPageCommand(
         user,

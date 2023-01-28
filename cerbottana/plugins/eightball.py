@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 from domify.base_element import BaseElement
 from sqlalchemy import delete, select
 from sqlalchemy.orm.exc import ObjectDeletedError
-from sqlalchemy.sql import Select
 
 import cerbottana.databases.database as d
 from cerbottana import utils
@@ -113,7 +112,6 @@ async def removeeightballanswerid(msg: Message) -> None:
         stmt = select(d.EightBall).filter_by(
             id=msg.args[0], roomid=msg.parametrized_room.roomid
         )
-        answer: d.EightBall  # TODO: remove annotation
         if answer := session.scalar(stmt):
             if msg.room is None:
                 await msg.parametrized_room.send_modnote(
@@ -131,8 +129,7 @@ async def removeeightballanswerid(msg: Message) -> None:
 
 @htmlpage_wrapper("eightballanswers", aliases=("8ballanswers",), required_rank="driver")
 def eightball_htmlpage(user: User, room: Room, page: int) -> BaseElement:
-    # TODO: remove annotation
-    stmt: Select = (
+    stmt = (
         select(d.EightBall).filter_by(roomid=room.roomid).order_by(d.EightBall.answer)
     )
 

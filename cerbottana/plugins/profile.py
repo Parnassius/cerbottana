@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from domify import html_elements as e
 from domify.base_element import BaseElement
 from sqlalchemy import select, update
-from sqlalchemy.sql import Select
 
 import cerbottana.databases.database as d
 from cerbottana import custom_elements as ce
@@ -57,7 +57,7 @@ class ProfileHTML(BaseHTMLCommand):
         avatar_dir: str,
         avatar_name: str,
         username: str,
-        badges: list[d.Badges],
+        badges: Sequence[d.Badges],
         description: str | None,
         pokemon_icon: str | None,
     ) -> None:
@@ -102,15 +102,14 @@ async def profile(msg: Message) -> None:
 
     db = Database.open()
     with db.get_session() as session:
-        stmt = select(d.Users).filter_by(userid=userid)
-        # TODO: remove annotation
-        userdata: d.Users = session.scalar(stmt)
+        stmt_user = select(d.Users).filter_by(userid=userid)
+        userdata = session.scalar(stmt_user)
 
         if userdata and userdata.userid and userdata.avatar:
             stmt = (
                 select(d.Badges).filter_by(userid=userdata.userid).order_by(d.Badges.id)
             )
-            badges: list[d.Badges] = session.execute(stmt).scalars().all()
+            badges = session.execute(stmt).scalars().all()
 
             if userdata.avatar[0] == "#":
                 avatar_dir = "trainers-custom"
@@ -227,8 +226,7 @@ async def rifiutaprofilo(msg: Message) -> None:
 
 @htmlpage_wrapper("pendingdescriptions", required_rank="driver", main_room_only=True)
 def pendingdescriptions_htmlpage(user: User, room: Room, page: int) -> BaseElement:
-    # TODO: remove annotation
-    stmt: Select = (
+    stmt = (
         select(d.Users)
         .where(d.Users.description_pending != "")
         .order_by(d.Users.userid)

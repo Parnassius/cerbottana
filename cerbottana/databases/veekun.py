@@ -1,22 +1,24 @@
 from __future__ import annotations
 
 from functools import total_ordering
-from typing import Literal, cast, overload
+from typing import Annotated, Literal, cast, overload
 
-from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
-from sqlalchemy.orm import Mapped, declarative_base, relationship
+from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-Base = declarative_base()
+intpk = Annotated[int, mapped_column(primary_key=True)]  # pylint: disable=invalid-name
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 @total_ordering
 class HashableMixin:
-    id: Mapped[int]
-
     @property
     def _id(self) -> int:
         # Tables without an `id` column should override this property.
-        return self.id
+        return self.id  # type: ignore[attr-defined, no-any-return]
 
     def __eq__(self, other: object) -> bool:
         if other is None:
@@ -118,20 +120,22 @@ class TranslatableMixin:
 class LatestVersion(Base):
     __tablename__ = "latest_version"
 
-    crc: int = Column(Integer, primary_key=True)
+    crc: Mapped[intpk]
 
 
 class Abilities(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "abilities"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
-    generation_id: int = Column(Integer, ForeignKey("generations.id"), nullable=False)
-    is_main_series: int = Column(Integer, index=True, nullable=False)
+    id: Mapped[intpk]
+    identifier: Mapped[str]
+    generation_id: Mapped[int] = mapped_column(ForeignKey("generations.id"))
+    is_main_series: Mapped[int] = mapped_column(index=True)
 
-    generation: Generations = relationship("Generations", viewonly=True)
+    generation: Mapped[Generations] = relationship("Generations", viewonly=True)
 
-    ability_names: list[AbilityNames] = relationship("AbilityNames", viewonly=True)
+    ability_names: Mapped[list[AbilityNames]] = relationship(
+        "AbilityNames", viewonly=True
+    )
 
     @property
     def name(self) -> str:
@@ -141,28 +145,26 @@ class Abilities(HashableMixin, TranslatableMixin, Base):
 class AbilityNames(Base):
     __tablename__ = "ability_names"
 
-    ability_id: int = Column(Integer, ForeignKey("abilities.id"), primary_key=True)
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str = Column(String, index=True, nullable=False)
+    ability_id: Mapped[intpk] = mapped_column(ForeignKey("abilities.id"))
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str] = mapped_column(index=True)
 
-    name_normalized: str | None = Column(String)
+    name_normalized: Mapped[str | None]
 
-    ability: Abilities = relationship("Abilities", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    ability: Mapped[Abilities] = relationship("Abilities", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class EncounterConditionValueMap(Base):
     __tablename__ = "encounter_condition_value_map"
 
-    encounter_id: int = Column(Integer, ForeignKey("encounters.id"), primary_key=True)
-    encounter_condition_value_id: int = Column(
-        Integer, ForeignKey("encounter_condition_values.id"), primary_key=True
+    encounter_id: Mapped[intpk] = mapped_column(ForeignKey("encounters.id"))
+    encounter_condition_value_id: Mapped[intpk] = mapped_column(
+        ForeignKey("encounter_condition_values.id")
     )
 
-    encounter: Encounters = relationship("Encounters", viewonly=True)
-    encounter_condition_value: EncounterConditionValues = relationship(
+    encounter: Mapped[Encounters] = relationship("Encounters", viewonly=True)
+    encounter_condition_value: Mapped[EncounterConditionValues] = relationship(
         "EncounterConditionValues", viewonly=True
     )
 
@@ -170,37 +172,35 @@ class EncounterConditionValueMap(Base):
 class EncounterConditionValueProse(Base):
     __tablename__ = "encounter_condition_value_prose"
 
-    encounter_condition_value_id: int = Column(
-        Integer, ForeignKey("encounter_condition_values.id"), primary_key=True
+    encounter_condition_value_id: Mapped[intpk] = mapped_column(
+        ForeignKey("encounter_condition_values.id")
     )
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str = Column(String, index=True, nullable=False)
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str] = mapped_column(index=True)
 
-    encounter_condition_value: EncounterConditionValues = relationship(
+    encounter_condition_value: Mapped[EncounterConditionValues] = relationship(
         "EncounterConditionValues", viewonly=True
     )
-    local_language: Languages = relationship("Languages", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class EncounterConditionValues(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "encounter_condition_values"
 
-    id: int = Column(Integer, primary_key=True)
-    encounter_condition_id: int = Column(
-        Integer, ForeignKey("encounter_conditions.id"), nullable=False
+    id: Mapped[intpk]
+    encounter_condition_id: Mapped[int] = mapped_column(
+        ForeignKey("encounter_conditions.id")
     )
-    identifier: str = Column(String, nullable=False)
-    is_default: int = Column(Integer, nullable=False)
+    identifier: Mapped[str]
+    is_default: Mapped[int]
 
-    encounter_condition: EncounterConditions = relationship(
+    encounter_condition: Mapped[EncounterConditions] = relationship(
         "EncounterConditions", viewonly=True
     )
 
-    encounter_condition_value_prose: list[EncounterConditionValueProse] = relationship(
-        "EncounterConditionValueProse", viewonly=True
-    )
+    encounter_condition_value_prose: Mapped[
+        list[EncounterConditionValueProse]
+    ] = relationship("EncounterConditionValueProse", viewonly=True)
 
     @property
     def prose(self) -> str:
@@ -210,10 +210,10 @@ class EncounterConditionValues(HashableMixin, TranslatableMixin, Base):
 class EncounterConditions(HashableMixin, Base):
     __tablename__ = "encounter_conditions"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
+    id: Mapped[intpk]
+    identifier: Mapped[str]
 
-    encounter_condition_values: list[EncounterConditionValues] = relationship(
+    encounter_condition_values: Mapped[list[EncounterConditionValues]] = relationship(
         "EncounterConditionValues", viewonly=True
     )
 
@@ -221,26 +221,26 @@ class EncounterConditions(HashableMixin, Base):
 class EncounterMethodProse(Base):
     __tablename__ = "encounter_method_prose"
 
-    encounter_method_id: int = Column(
-        Integer, ForeignKey("encounter_methods.id"), primary_key=True
+    encounter_method_id: Mapped[intpk] = mapped_column(
+        ForeignKey("encounter_methods.id")
     )
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str = Column(String, index=True, nullable=False)
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str] = mapped_column(index=True)
 
-    encounter_method: EncounterMethods = relationship("EncounterMethods", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    encounter_method: Mapped[EncounterMethods] = relationship(
+        "EncounterMethods", viewonly=True
+    )
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class EncounterMethods(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "encounter_methods"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, unique=True, nullable=False)
-    order: int = Column(Integer, unique=True, nullable=False)
+    id: Mapped[intpk]
+    identifier: Mapped[str] = mapped_column(unique=True)
+    order: Mapped[int] = mapped_column(unique=True)
 
-    encounter_method_prose: list[EncounterMethodProse] = relationship(
+    encounter_method_prose: Mapped[list[EncounterMethodProse]] = relationship(
         "EncounterMethodProse", viewonly=True
     )
 
@@ -252,96 +252,94 @@ class EncounterMethods(HashableMixin, TranslatableMixin, Base):
 class EncounterSlots(HashableMixin, Base):
     __tablename__ = "encounter_slots"
 
-    id: int = Column(Integer, primary_key=True)
-    version_group_id: int = Column(
-        Integer, ForeignKey("version_groups.id"), nullable=False
-    )
-    encounter_method_id: int = Column(
-        Integer, ForeignKey("encounter_methods.id"), nullable=False
-    )
-    slot: int | None = Column(Integer)
-    rarity: int | None = Column(Integer)
+    id: Mapped[intpk]
+    version_group_id: Mapped[int] = mapped_column(ForeignKey("version_groups.id"))
+    encounter_method_id: Mapped[int] = mapped_column(ForeignKey("encounter_methods.id"))
+    slot: Mapped[int | None]
+    rarity: Mapped[int | None]
 
-    version_group: VersionGroups = relationship("VersionGroups", viewonly=True)
-    encounter_method: EncounterMethods = relationship("EncounterMethods", viewonly=True)
+    version_group: Mapped[VersionGroups] = relationship("VersionGroups", viewonly=True)
+    encounter_method: Mapped[EncounterMethods] = relationship(
+        "EncounterMethods", viewonly=True
+    )
 
-    encounter: Encounters = relationship("Encounters", viewonly=True)
+    encounter: Mapped[Encounters] = relationship("Encounters", viewonly=True)
 
 
 class Encounters(HashableMixin, Base):
     __tablename__ = "encounters"
 
-    id: int = Column(Integer, primary_key=True)
-    version_id: int = Column(Integer, ForeignKey("versions.id"), nullable=False)
-    location_area_id: int = Column(
-        Integer, ForeignKey("location_areas.id"), nullable=False
-    )
-    encounter_slot_id: int = Column(
-        Integer, ForeignKey("encounter_slots.id"), nullable=False
-    )
-    pokemon_id: int = Column(Integer, ForeignKey("pokemon.id"), nullable=False)
-    min_level: int = Column(Integer, nullable=False)
-    max_level: int = Column(Integer, nullable=False)
+    id: Mapped[intpk]
+    version_id: Mapped[int] = mapped_column(ForeignKey("versions.id"))
+    location_area_id: Mapped[int] = mapped_column(ForeignKey("location_areas.id"))
+    encounter_slot_id: Mapped[int] = mapped_column(ForeignKey("encounter_slots.id"))
+    pokemon_id: Mapped[int] = mapped_column(ForeignKey("pokemon.id"))
+    min_level: Mapped[int]
+    max_level: Mapped[int]
 
-    version: Versions = relationship("Versions", viewonly=True)
-    location_area: LocationAreas = relationship("LocationAreas", viewonly=True)
-    encounter_slot: EncounterSlots = relationship("EncounterSlots", viewonly=True)
-    pokemon: Pokemon = relationship("Pokemon", viewonly=True)
-
-    encounter_condition_value_map: list[EncounterConditionValueMap] = relationship(
-        "EncounterConditionValueMap", viewonly=True
+    version: Mapped[Versions] = relationship("Versions", viewonly=True)
+    location_area: Mapped[LocationAreas] = relationship("LocationAreas", viewonly=True)
+    encounter_slot: Mapped[EncounterSlots] = relationship(
+        "EncounterSlots", viewonly=True
     )
+    pokemon: Mapped[Pokemon] = relationship("Pokemon", viewonly=True)
+
+    encounter_condition_value_map: Mapped[
+        list[EncounterConditionValueMap]
+    ] = relationship("EncounterConditionValueMap", viewonly=True)
 
 
 class EvolutionChains(HashableMixin, Base):
     __tablename__ = "evolution_chains"
 
-    id: int = Column(Integer, primary_key=True)
-    baby_trigger_item_id: int = Column(Integer, ForeignKey("items.id"))
+    id: Mapped[intpk]
+    baby_trigger_item_id: Mapped[int | None] = mapped_column(ForeignKey("items.id"))
 
-    baby_trigger_item: Items = relationship("Items", viewonly=True)
+    baby_trigger_item: Mapped[Items] = relationship("Items", viewonly=True)
 
-    pokemon_species: PokemonSpecies = relationship("PokemonSpecies", viewonly=True)
+    pokemon_species: Mapped[PokemonSpecies] = relationship(
+        "PokemonSpecies", viewonly=True
+    )
 
 
 class Generations(HashableMixin, Base):
     __tablename__ = "generations"
 
-    id: int = Column(Integer, primary_key=True)
-    main_region_id: int = Column(Integer, ForeignKey("regions.id"), nullable=False)
-    identifier: str = Column(String, nullable=False)
+    id: Mapped[intpk]
+    main_region_id: Mapped[int] = mapped_column(ForeignKey("regions.id"))
+    identifier: Mapped[str]
 
-    main_region: Regions = relationship("Regions", viewonly=True)
+    main_region: Mapped[Regions] = relationship("Regions", viewonly=True)
 
-    version_groups: list[VersionGroups] = relationship("VersionGroups", viewonly=True)
+    version_groups: Mapped[list[VersionGroups]] = relationship(
+        "VersionGroups", viewonly=True
+    )
 
 
 class ItemNames(Base):
     __tablename__ = "item_names"
 
-    item_id: int = Column(Integer, ForeignKey("items.id"), primary_key=True)
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str = Column(String, index=True, nullable=False)
+    item_id: Mapped[intpk] = mapped_column(ForeignKey("items.id"))
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str] = mapped_column(index=True)
 
-    name_normalized: str | None = Column(String)
+    name_normalized: Mapped[str | None]
 
-    item: Items = relationship("Items", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    item: Mapped[Items] = relationship("Items", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class Items(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "items"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
-    category_id: int = Column(Integer, nullable=False)
-    cost: int = Column(Integer, nullable=False)
-    fling_power: int | None = Column(Integer)
-    fling_effect_id: int | None = Column(Integer)
+    id: Mapped[intpk]
+    identifier: Mapped[str]
+    category_id: Mapped[int]
+    cost: Mapped[int]
+    fling_power: Mapped[int | None]
+    fling_effect_id: Mapped[int | None]
 
-    item_names: list[ItemNames] = relationship("ItemNames", viewonly=True)
+    item_names: Mapped[list[ItemNames]] = relationship("ItemNames", viewonly=True)
 
     @property
     def name(self) -> str:
@@ -351,44 +349,40 @@ class Items(HashableMixin, TranslatableMixin, Base):
 class Languages(HashableMixin, Base):
     __tablename__ = "languages"
 
-    id: int = Column(Integer, primary_key=True)
-    iso639 = Column(String, nullable=False)
-    iso3166 = Column(String, nullable=False)
-    identifier: str = Column(String, nullable=False)
-    official: int = Column(Integer, index=True, nullable=False)
-    order: int | None = Column(Integer)
+    id: Mapped[intpk]
+    iso639: Mapped[str]
+    iso3166: Mapped[str]
+    identifier: Mapped[str]
+    official: Mapped[int] = mapped_column(index=True)
+    order: Mapped[int | None]
 
 
 class LocationAreaProse(Base):
     __tablename__ = "location_area_prose"
 
-    location_area_id: int = Column(
-        Integer, ForeignKey("location_areas.id"), primary_key=True
-    )
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str | None = Column(String, index=True)
+    location_area_id: Mapped[intpk] = mapped_column(ForeignKey("location_areas.id"))
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str | None] = mapped_column(index=True)
 
-    location_area: LocationAreas = relationship("LocationAreas", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    location_area: Mapped[LocationAreas] = relationship("LocationAreas", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class LocationAreas(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "location_areas"
     __table_opts__ = (UniqueConstraint("location_id", "identifier"),)
 
-    id: int = Column(Integer, primary_key=True)
-    location_id: int = Column(Integer, ForeignKey("locations.id"), nullable=False)
-    game_index: int = Column(Integer, nullable=False)
-    identifier: str | None = Column(String)
+    id: Mapped[intpk]
+    location_id: Mapped[int] = mapped_column(ForeignKey("locations.id"))
+    game_index: Mapped[int]
+    identifier: Mapped[str | None]
 
-    location: Locations = relationship("Locations", viewonly=True)
-    location_area_prose: list[LocationAreaProse] = relationship(
+    location: Mapped[Locations] = relationship("Locations", viewonly=True)
+    location_area_prose: Mapped[list[LocationAreaProse]] = relationship(
         "LocationAreaProse", viewonly=True
     )
 
-    encounters: list[Encounters] = relationship("Encounters", viewonly=True)
+    encounters: Mapped[list[Encounters]] = relationship("Encounters", viewonly=True)
 
     @property
     def name(self) -> str:
@@ -398,30 +392,32 @@ class LocationAreas(HashableMixin, TranslatableMixin, Base):
 class LocationNames(Base):
     __tablename__ = "location_names"
 
-    location_id: int = Column(Integer, ForeignKey("locations.id"), primary_key=True)
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str = Column(String, index=True, nullable=False)
-    subtitle: str | None = Column(String)
+    location_id: Mapped[intpk] = mapped_column(ForeignKey("locations.id"))
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str] = mapped_column(index=True)
+    subtitle: Mapped[str | None]
 
-    location: Locations = relationship("Locations", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    location: Mapped[Locations] = relationship("Locations", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class Locations(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "locations"
 
-    id: int = Column(Integer, primary_key=True)
-    region_id: int = Column(Integer, ForeignKey("regions.id"))
-    identifier: str = Column(String, unique=True, nullable=False)
+    id: Mapped[intpk]
+    region_id: Mapped[int] = mapped_column(ForeignKey("regions.id"))
+    identifier: Mapped[str] = mapped_column(unique=True)
 
-    route_number: int | None = Column(Integer)
+    route_number: Mapped[int | None]
 
-    region: Regions = relationship("Regions", viewonly=True)
+    region: Mapped[Regions] = relationship("Regions", viewonly=True)
 
-    location_names: list[LocationNames] = relationship("LocationNames", viewonly=True)
-    location_areas: list[LocationAreas] = relationship("LocationAreas", viewonly=True)
+    location_names: Mapped[list[LocationNames]] = relationship(
+        "LocationNames", viewonly=True
+    )
+    location_areas: Mapped[list[LocationAreas]] = relationship(
+        "LocationAreas", viewonly=True
+    )
 
     @property
     def name(self) -> str:
@@ -437,16 +433,14 @@ class Locations(HashableMixin, TranslatableMixin, Base):
 class Machines(HashableMixin, Base):
     __tablename__ = "machines"
 
-    machine_number: int = Column(Integer, primary_key=True)
-    version_group_id: int = Column(
-        Integer, ForeignKey("version_groups.id"), primary_key=True
-    )
-    item_id: int = Column(Integer, ForeignKey("items.id"), nullable=False)
-    move_id: int = Column(Integer, ForeignKey("moves.id"), nullable=False)
+    machine_number: Mapped[intpk]
+    version_group_id: Mapped[intpk] = mapped_column(ForeignKey("version_groups.id"))
+    item_id: Mapped[int] = mapped_column(ForeignKey("items.id"))
+    move_id: Mapped[int] = mapped_column(ForeignKey("moves.id"))
 
-    version_group: VersionGroups = relationship("VersionGroups", viewonly=True)
-    item: Items = relationship("Items", viewonly=True)
-    move: Moves = relationship("Moves", viewonly=True)
+    version_group: Mapped[VersionGroups] = relationship("VersionGroups", viewonly=True)
+    item: Mapped[Items] = relationship("Items", viewonly=True)
+    move: Mapped[Moves] = relationship("Moves", viewonly=True)
 
     @property
     def _id(self) -> int:
@@ -456,41 +450,39 @@ class Machines(HashableMixin, Base):
 class MoveNames(Base):
     __tablename__ = "move_names"
 
-    move_id: int = Column(Integer, ForeignKey("moves.id"), primary_key=True)
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str = Column(String, index=True, nullable=False)
+    move_id: Mapped[intpk] = mapped_column(ForeignKey("moves.id"))
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str] = mapped_column(index=True)
 
-    name_normalized: str | None = Column(String)
+    name_normalized: Mapped[str | None]
 
-    move: Moves = relationship("Moves", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    move: Mapped[Moves] = relationship("Moves", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class Moves(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "moves"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
-    generation_id: int = Column(Integer, ForeignKey("generations.id"), nullable=False)
-    type_id: int = Column(Integer, nullable=False)
-    power: int | None = Column(Integer)
-    pp: int | None = Column(Integer)
-    accuracy: int | None = Column(Integer)
-    priority: int = Column(Integer, nullable=False)
-    target_id: int = Column(Integer, nullable=False)
-    damage_class_id: int = Column(Integer, nullable=False)
-    effect_id: int = Column(Integer, nullable=False)
-    effect_chance: int | None = Column(Integer)
-    contest_type_id: int | None = Column(Integer)
-    contest_effect_id: int | None = Column(Integer)
-    super_contest_effect_id: int | None = Column(Integer)
+    id: Mapped[intpk]
+    identifier: Mapped[str]
+    generation_id: Mapped[int] = mapped_column(ForeignKey("generations.id"))
+    type_id: Mapped[int]
+    power: Mapped[int | None]
+    pp: Mapped[int | None]
+    accuracy: Mapped[int | None]
+    priority: Mapped[int]
+    target_id: Mapped[int]
+    damage_class_id: Mapped[int]
+    effect_id: Mapped[int]
+    effect_chance: Mapped[int | None]
+    contest_type_id: Mapped[int | None]
+    contest_effect_id: Mapped[int | None]
+    super_contest_effect_id: Mapped[int | None]
 
-    generation: Generations = relationship("Generations", viewonly=True)
+    generation: Mapped[Generations] = relationship("Generations", viewonly=True)
 
-    move_names: list[MoveNames] = relationship("MoveNames", viewonly=True)
-    machines: list[Machines] = relationship("Machines", viewonly=True)
+    move_names: Mapped[list[MoveNames]] = relationship("MoveNames", viewonly=True)
+    machines: Mapped[list[Machines]] = relationship("Machines", viewonly=True)
 
     @property
     def name(self) -> str:
@@ -500,30 +492,28 @@ class Moves(HashableMixin, TranslatableMixin, Base):
 class NatureNames(Base):
     __tablename__ = "nature_names"
 
-    nature_id: int = Column(Integer, ForeignKey("natures.id"), primary_key=True)
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str = Column(String, index=True, nullable=False)
+    nature_id: Mapped[intpk] = mapped_column(ForeignKey("natures.id"))
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str] = mapped_column(index=True)
 
-    name_normalized: str | None = Column(String)
+    name_normalized: Mapped[str | None]
 
-    nature: Natures = relationship("Natures", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    nature: Mapped[Natures] = relationship("Natures", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class Natures(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "natures"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
-    decreased_stat_id: int = Column(Integer, nullable=False)
-    increased_stat_id: int = Column(Integer, nullable=False)
-    hates_flavor_id: int = Column(Integer, nullable=False)
-    likes_flavor_id: int = Column(Integer, nullable=False)
-    game_index: int = Column(Integer, unique=True, nullable=False)
+    id: Mapped[intpk]
+    identifier: Mapped[str]
+    decreased_stat_id: Mapped[int]
+    increased_stat_id: Mapped[int]
+    hates_flavor_id: Mapped[int]
+    likes_flavor_id: Mapped[int]
+    game_index: Mapped[int] = mapped_column(unique=True)
 
-    nature_names: list[NatureNames] = relationship("NatureNames", viewonly=True)
+    nature_names: Mapped[list[NatureNames]] = relationship("NatureNames", viewonly=True)
 
     @property
     def name(self) -> str:
@@ -533,20 +523,24 @@ class Natures(HashableMixin, TranslatableMixin, Base):
 class Pokemon(HashableMixin, Base):
     __tablename__ = "pokemon"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
-    species_id: int = Column(Integer, ForeignKey("pokemon_species.id"))
-    height: int = Column(Integer, nullable=False)
-    weight: int = Column(Integer, nullable=False)
-    base_experience: int = Column(Integer, nullable=False)
-    order: int = Column(Integer, index=True, nullable=False)
-    is_default: int = Column(Integer, index=True, nullable=False)
+    id: Mapped[intpk]
+    identifier: Mapped[str]
+    species_id: Mapped[int] = mapped_column(ForeignKey("pokemon_species.id"))
+    height: Mapped[int]
+    weight: Mapped[int]
+    base_experience: Mapped[int]
+    order: Mapped[int] = mapped_column(index=True)
+    is_default: Mapped[int] = mapped_column(index=True)
 
-    species: PokemonSpecies = relationship("PokemonSpecies", viewonly=True)
+    species: Mapped[PokemonSpecies] = relationship("PokemonSpecies", viewonly=True)
 
-    encounters: list[Encounters] = relationship("Encounters", viewonly=True)
-    pokemon_forms: list[PokemonForms] = relationship("PokemonForms", viewonly=True)
-    pokemon_moves: list[PokemonMoves] = relationship("PokemonMoves", viewonly=True)
+    encounters: Mapped[list[Encounters]] = relationship("Encounters", viewonly=True)
+    pokemon_forms: Mapped[list[PokemonForms]] = relationship(
+        "PokemonForms", viewonly=True
+    )
+    pokemon_moves: Mapped[list[PokemonMoves]] = relationship(
+        "PokemonMoves", viewonly=True
+    )
 
     @property
     def name(self) -> str:
@@ -565,41 +559,37 @@ class Pokemon(HashableMixin, Base):
 class PokemonFormNames(Base):
     __tablename__ = "pokemon_form_names"
 
-    pokemon_form_id: int = Column(
-        Integer, ForeignKey("pokemon_forms.id"), primary_key=True
-    )
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    form_name: str | None = Column(String, index=True)
-    pokemon_name: str | None = Column(String, index=True)
+    pokemon_form_id: Mapped[intpk] = mapped_column(ForeignKey("pokemon_forms.id"))
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    form_name: Mapped[str | None] = mapped_column(index=True)
+    pokemon_name: Mapped[str | None] = mapped_column(index=True)
 
-    pokemon_form: PokemonForms = relationship("PokemonForms", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    pokemon_form: Mapped[PokemonForms] = relationship("PokemonForms", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class PokemonForms(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "pokemon_forms"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
-    form_identifier: str | None = Column(String)
-    pokemon_id: int = Column(Integer, ForeignKey("pokemon.id"), nullable=False)
-    introduced_in_version_group_id: int = Column(
-        Integer, ForeignKey("version_groups.id")
+    id: Mapped[intpk]
+    identifier: Mapped[str]
+    form_identifier: Mapped[str | None]
+    pokemon_id: Mapped[int] = mapped_column(ForeignKey("pokemon.id"))
+    introduced_in_version_group_id: Mapped[int] = mapped_column(
+        ForeignKey("version_groups.id")
     )
-    is_default: int = Column(Integer, nullable=False)
-    is_battle_only: int = Column(Integer, nullable=False)
-    is_mega: int = Column(Integer, nullable=False)
-    form_order: int = Column(Integer, nullable=False)
-    order: int = Column(Integer, nullable=False)
+    is_default: Mapped[int]
+    is_battle_only: Mapped[int]
+    is_mega: Mapped[int]
+    form_order: Mapped[int]
+    order: Mapped[int]
 
-    pokemon: Pokemon = relationship("Pokemon", viewonly=True)
-    introduced_in_version_group: VersionGroups = relationship(
+    pokemon: Mapped[Pokemon] = relationship("Pokemon", viewonly=True)
+    introduced_in_version_group: Mapped[VersionGroups] = relationship(
         "VersionGroups", viewonly=True
     )
 
-    pokemon_form_names: list[PokemonFormNames] = relationship(
+    pokemon_form_names: Mapped[list[PokemonFormNames]] = relationship(
         "PokemonFormNames", viewonly=True
     )
 
@@ -613,28 +603,26 @@ class PokemonForms(HashableMixin, TranslatableMixin, Base):
 class PokemonMoveMethodProse(Base):
     __tablename__ = "pokemon_move_method_prose"
 
-    pokemon_move_method_id: int = Column(
-        Integer, ForeignKey("pokemon_move_methods.id"), primary_key=True
+    pokemon_move_method_id: Mapped[intpk] = mapped_column(
+        ForeignKey("pokemon_move_methods.id")
     )
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str | None = Column(String, index=True)
-    description: str | None = Column(String)
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str | None] = mapped_column(index=True)
+    description: Mapped[str | None]
 
-    pokemon_move_method: PokemonMoveMethods = relationship(
+    pokemon_move_method: Mapped[PokemonMoveMethods] = relationship(
         "PokemonMoveMethods", viewonly=True
     )
-    local_language: Languages = relationship("Languages", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class PokemonMoveMethods(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "pokemon_move_methods"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
+    id: Mapped[intpk]
+    identifier: Mapped[str]
 
-    pokemon_move_method_prose: list[PokemonMoveMethodProse] = relationship(
+    pokemon_move_method_prose: Mapped[list[PokemonMoveMethodProse]] = relationship(
         "PokemonMoveMethodProse", viewonly=True
     )
 
@@ -646,23 +634,21 @@ class PokemonMoveMethods(HashableMixin, TranslatableMixin, Base):
 class PokemonMoves(Base):
     __tablename__ = "pokemon_moves"
 
-    pokemon_id: int = Column(
-        Integer, ForeignKey("pokemon.id"), primary_key=True, index=True
+    pokemon_id: Mapped[intpk] = mapped_column(ForeignKey("pokemon.id"), index=True)
+    version_group_id: Mapped[intpk] = mapped_column(
+        ForeignKey("version_groups.id"), index=True
     )
-    version_group_id: int = Column(
-        Integer, ForeignKey("version_groups.id"), primary_key=True, index=True
+    move_id: Mapped[intpk] = mapped_column(ForeignKey("moves.id"), index=True)
+    pokemon_move_method_id: Mapped[intpk] = mapped_column(
+        ForeignKey("pokemon_move_methods.id"), index=True
     )
-    move_id: int = Column(Integer, ForeignKey("moves.id"), primary_key=True, index=True)
-    pokemon_move_method_id: int = Column(
-        Integer, ForeignKey("pokemon_move_methods.id"), primary_key=True, index=True
-    )
-    level: int = Column(Integer, primary_key=True, index=True, nullable=True)
-    order: int | None = Column(Integer)
+    level: Mapped[intpk] = mapped_column(index=True)
+    order: Mapped[int | None]
 
-    pokemon: Pokemon = relationship("Pokemon", viewonly=True)
-    version_group: VersionGroups = relationship("VersionGroups", viewonly=True)
-    move: Moves = relationship("Moves", viewonly=True)
-    pokemon_move_method: PokemonMoveMethods = relationship(
+    pokemon: Mapped[Pokemon] = relationship("Pokemon", viewonly=True)
+    version_group: Mapped[VersionGroups] = relationship("VersionGroups", viewonly=True)
+    move: Mapped[Moves] = relationship("Moves", viewonly=True)
+    pokemon_move_method: Mapped[PokemonMoveMethods] = relationship(
         "PokemonMoveMethods", viewonly=True
     )
 
@@ -670,38 +656,44 @@ class PokemonMoves(Base):
 class PokemonSpecies(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "pokemon_species"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
-    generation_id: int = Column(Integer, ForeignKey("generations.id"))
-    evolves_from_species_id: int = Column(Integer, ForeignKey("pokemon_species.id"))
-    evolution_chain_id: int = Column(Integer, ForeignKey("evolution_chains.id"))
-    color_id: int = Column(Integer, nullable=False)
-    shape_id: int | None = Column(Integer)
-    habitat_id: int | None = Column(Integer)
-    gender_rate: int = Column(Integer, nullable=False)
-    capture_rate: int = Column(Integer, nullable=False)
-    base_happiness: int = Column(Integer, nullable=False)
-    is_baby: int = Column(Integer, nullable=False)
-    hatch_counter: int = Column(Integer, nullable=False)
-    has_gender_differences: int = Column(Integer, nullable=False)
-    growth_rate_id: int = Column(Integer, nullable=False)
-    forms_switchable: int = Column(Integer, nullable=False)
-    is_legendary: int = Column(Integer, nullable=False)
-    is_mythical: int = Column(Integer, nullable=False)
-    order: int = Column(Integer, index=True, nullable=False)
-    conquest_order: int | None = Column(Integer, index=True)
+    id: Mapped[intpk]
+    identifier: Mapped[str]
+    generation_id: Mapped[int] = mapped_column(ForeignKey("generations.id"))
+    evolves_from_species_id: Mapped[int | None] = mapped_column(
+        ForeignKey("pokemon_species.id")
+    )
+    evolution_chain_id: Mapped[int] = mapped_column(ForeignKey("evolution_chains.id"))
+    color_id: Mapped[int]
+    shape_id: Mapped[int | None]
+    habitat_id: Mapped[int | None]
+    gender_rate: Mapped[int]
+    capture_rate: Mapped[int]
+    base_happiness: Mapped[int]
+    is_baby: Mapped[int]
+    hatch_counter: Mapped[int]
+    has_gender_differences: Mapped[int]
+    growth_rate_id: Mapped[int]
+    forms_switchable: Mapped[int]
+    is_legendary: Mapped[int]
+    is_mythical: Mapped[int]
+    order: Mapped[int] = mapped_column(index=True)
+    conquest_order: Mapped[int | None] = mapped_column(index=True)
 
-    generation: Generations = relationship("Generations", viewonly=True)
-    evolves_from_species: PokemonSpecies = relationship("PokemonSpecies", viewonly=True)
-    evolution_chain: EvolutionChains = relationship("EvolutionChains", viewonly=True)
+    generation: Mapped[Generations] = relationship("Generations", viewonly=True)
+    evolves_from_species: Mapped[PokemonSpecies] = relationship(
+        "PokemonSpecies", viewonly=True
+    )
+    evolution_chain: Mapped[EvolutionChains] = relationship(
+        "EvolutionChains", viewonly=True
+    )
 
-    pokemon_species_flavor_text: list[PokemonSpeciesFlavorText] = relationship(
+    pokemon_species_flavor_text: Mapped[list[PokemonSpeciesFlavorText]] = relationship(
         "PokemonSpeciesFlavorText", viewonly=True
     )
-    pokemon_species_names: list[PokemonSpeciesNames] = relationship(
+    pokemon_species_names: Mapped[list[PokemonSpeciesNames]] = relationship(
         "PokemonSpeciesNames", viewonly=True
     )
-    pokemon: list[Pokemon] = relationship("Pokemon", viewonly=True)
+    pokemon: Mapped[list[Pokemon]] = relationship("Pokemon", viewonly=True)
 
     @property
     def name(self) -> str:
@@ -711,81 +703,75 @@ class PokemonSpecies(HashableMixin, TranslatableMixin, Base):
 class PokemonSpeciesFlavorText(Base):
     __tablename__ = "pokemon_species_flavor_text"
 
-    species_id: int = Column(
-        Integer, ForeignKey("pokemon_species.id"), primary_key=True
-    )
-    version_id: int = Column(Integer, ForeignKey("versions.id"), primary_key=True)
-    language_id: int = Column(Integer, ForeignKey("languages.id"), primary_key=True)
-    flavor_text: str = Column(String, nullable=False)
+    species_id: Mapped[intpk] = mapped_column(ForeignKey("pokemon_species.id"))
+    version_id: Mapped[intpk] = mapped_column(ForeignKey("versions.id"))
+    language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    flavor_text: Mapped[str]
 
-    species: PokemonSpecies = relationship("PokemonSpecies", viewonly=True)
-    version: Versions = relationship("Versions", viewonly=True)
-    language: Languages = relationship("Languages", viewonly=True)
+    species: Mapped[PokemonSpecies] = relationship("PokemonSpecies", viewonly=True)
+    version: Mapped[Versions] = relationship("Versions", viewonly=True)
+    language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class PokemonSpeciesNames(Base):
     __tablename__ = "pokemon_species_names"
 
-    pokemon_species_id: int = Column(
-        Integer, ForeignKey("pokemon_species.id"), primary_key=True
-    )
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str | None = Column(String, index=True)
-    genus: str | None = Column(String)
+    pokemon_species_id: Mapped[intpk] = mapped_column(ForeignKey("pokemon_species.id"))
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str | None] = mapped_column(index=True)
+    genus: Mapped[str | None]
 
-    pokemon_species: PokemonSpecies = relationship("PokemonSpecies", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    pokemon_species: Mapped[PokemonSpecies] = relationship(
+        "PokemonSpecies", viewonly=True
+    )
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class Regions(HashableMixin, Base):
     __tablename__ = "regions"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, nullable=False)
+    id: Mapped[intpk]
+    identifier: Mapped[str]
 
-    locations: list[Locations] = relationship("Locations", viewonly=True)
+    locations: Mapped[list[Locations]] = relationship("Locations", viewonly=True)
 
 
 class VersionGroups(HashableMixin, Base):
     __tablename__ = "version_groups"
 
-    id: int = Column(Integer, primary_key=True)
-    identifier: str = Column(String, unique=True, nullable=False)
-    generation_id: int = Column(Integer, ForeignKey("generations.id"), nullable=False)
-    order: int | None = Column(Integer)
+    id: Mapped[intpk]
+    identifier: Mapped[str] = mapped_column(unique=True)
+    generation_id: Mapped[int] = mapped_column(ForeignKey("generations.id"))
+    order: Mapped[int | None]
 
-    generation: Generations = relationship("Generations", viewonly=True)
+    generation: Mapped[Generations] = relationship("Generations", viewonly=True)
 
-    versions: list[Versions] = relationship("Versions", viewonly=True)
+    versions: Mapped[list[Versions]] = relationship("Versions", viewonly=True)
 
 
 class VersionNames(Base):
     __tablename__ = "version_names"
 
-    version_id: int = Column(Integer, ForeignKey("versions.id"), primary_key=True)
-    local_language_id: int = Column(
-        Integer, ForeignKey("languages.id"), primary_key=True
-    )
-    name: str = Column(String, index=True, nullable=False)
+    version_id: Mapped[intpk] = mapped_column(ForeignKey("versions.id"))
+    local_language_id: Mapped[intpk] = mapped_column(ForeignKey("languages.id"))
+    name: Mapped[str] = mapped_column(index=True)
 
-    version: Versions = relationship("Versions", viewonly=True)
-    local_language: Languages = relationship("Languages", viewonly=True)
+    version: Mapped[Versions] = relationship("Versions", viewonly=True)
+    local_language: Mapped[Languages] = relationship("Languages", viewonly=True)
 
 
 class Versions(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "versions"
 
-    id: int = Column(Integer, primary_key=True)
-    version_group_id: int = Column(
-        Integer, ForeignKey("version_groups.id"), nullable=False
+    id: Mapped[intpk]
+    version_group_id: Mapped[int] = mapped_column(ForeignKey("version_groups.id"))
+    identifier: Mapped[str]
+
+    version_group: Mapped[VersionGroups] = relationship("VersionGroups", viewonly=True)
+
+    version_names: Mapped[list[VersionNames]] = relationship(
+        "VersionNames", viewonly=True
     )
-    identifier: str = Column(String, nullable=False)
-
-    version_group: VersionGroups = relationship("VersionGroups", viewonly=True)
-
-    version_names: list[VersionNames] = relationship("VersionNames", viewonly=True)
 
     @property
     def name(self) -> str:

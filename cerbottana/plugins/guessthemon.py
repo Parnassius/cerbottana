@@ -37,8 +37,7 @@ async def guessthemon(msg: Message) -> None:
             .where(v.PokemonSpecies.identifier.notin_(invalid_identifiers))
             .order_by(func.random())  # pylint: disable=not-callable
         )
-        # TODO: remove annotation
-        species: v.PokemonSpecies | None = session.scalar(stmt)
+        species = session.scalar(stmt)
 
         if not species:
             raise SQLAlchemyError("Missing PokemonSpecies data")

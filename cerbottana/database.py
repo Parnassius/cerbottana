@@ -15,8 +15,8 @@ class Database:
     def __init__(self, dbname: str) -> None:
         dbpath = str(utils.get_config_file(f"{dbname}.sqlite"))
         engine = f"sqlite:///{dbpath}"
-        self.engine = create_engine(engine, future=True)
-        self.Session = sessionmaker(self.engine, future=True)
+        self.engine = create_engine(engine)
+        self.Session = sessionmaker(self.engine)
         self._instances[dbname] = self
 
     @classmethod

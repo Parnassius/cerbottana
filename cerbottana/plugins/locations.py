@@ -193,8 +193,7 @@ async def locations(msg: Message) -> None:
             )
             .filter_by(identifier=pokemon_id)
         )
-        # TODO: remove annotation
-        pokemon_species: v.PokemonSpecies | None = session.scalar(stmt)
+        pokemon_species = session.scalar(stmt)
         if pokemon_species is None:
             await msg.reply("Pokémon not found.")
             return
@@ -392,8 +391,7 @@ async def encounters(msg: Message) -> None:
             )
             .filter_by(identifier=location_id)
         )
-        # TODO: remove annotation
-        location: v.Locations | None = session.scalar(stmt)
+        location = session.scalar(stmt)
         if location is None:
             await msg.reply("Location not found.")
             return

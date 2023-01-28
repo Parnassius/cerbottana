@@ -11,7 +11,6 @@ from dateutil.parser import parse
 from domify import html_elements as e
 from domify.base_element import BaseElement
 from sqlalchemy import delete, select
-from sqlalchemy.sql import Select
 
 import cerbottana.databases.database as d
 from cerbottana.database import Database
@@ -195,8 +194,6 @@ class Repeat:
         db = Database.open()
         with db.get_session() as session:
             stmt = select(d.Repeats)
-            # TODO: remove annotation
-            row: d.Repeats
             for row in session.execute(stmt).scalars():
                 instance = cls(
                     row.message,
@@ -296,10 +293,7 @@ async def stoprepeat(msg: Message) -> None:
 
 @htmlpage_wrapper("repeats", aliases=("showrepeats",), required_rank="driver")
 def repeats_htmlpage(user: User, room: Room, page: int) -> BaseElement:
-    # TODO: remove annotation
-    stmt: Select = (
-        select(d.Repeats).filter_by(roomid=room.roomid).order_by(d.Repeats.message)
-    )
+    stmt = select(d.Repeats).filter_by(roomid=room.roomid).order_by(d.Repeats.message)
 
     html = HTMLPageCommand(
         user,
