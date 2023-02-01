@@ -79,16 +79,6 @@ class TemporaryVoices(Base):
     date: str = Column(String, nullable=False)
 
 
-class Tokens(Base):
-    __tablename__ = "tokens"
-
-    id: int = Column(Integer, primary_key=True)
-    token: str = Column(String, index=True, nullable=False)
-    room: str | None = Column(String)
-    rank: str = Column(String, nullable=False)
-    expiry: str = Column(String, nullable=False)
-
-
 class Users(Base):
     __tablename__ = "users"
     __table_opts__ = (UniqueConstraint("userid", sqlite_on_conflict="IGNORE"),)
