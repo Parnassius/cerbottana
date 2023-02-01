@@ -81,7 +81,6 @@ async def test_translations(
 
 async def test_translations_conn(mock_connection):
     async with mock_connection() as conn:
-
         await conn.add_messages(
             [
                 ">room1",

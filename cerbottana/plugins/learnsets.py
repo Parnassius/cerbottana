@@ -127,7 +127,6 @@ async def learnset(msg: Message) -> None:
     db = Database.open("veekun")
 
     with db.get_session(language_id) as session:
-
         stmt = select(v.VersionGroups).filter_by(identifier=version_id)
         # TODO: remove annotation
         version_group: v.VersionGroups | None = session.scalar(stmt)

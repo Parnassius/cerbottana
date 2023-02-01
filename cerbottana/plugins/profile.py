@@ -64,7 +64,6 @@ class ProfileHTML(BaseHTMLCommand):
         super().__init__()
 
         with self.doc, e.Div():
-
             with e.Div(style=self._get_css("avatar")):
                 e.Img(
                     src=(

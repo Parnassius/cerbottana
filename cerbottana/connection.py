@@ -136,7 +136,6 @@ class Connection:
         room = Room.get(self, roomid)
 
         for raw_msg in message.split("\n"):
-
             if language := re.match(r"This room's primary language is (.*)", raw_msg):
                 room.language = language.group(1)
                 continue

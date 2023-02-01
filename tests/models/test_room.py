@@ -18,7 +18,6 @@ from cerbottana.models.user import User
 )
 async def test_roomid(mock_connection, room: str, roomid: str) -> None:
     async with mock_connection() as conn:
-
         assert Room.get(conn, room).roomid == roomid
 
 
@@ -87,7 +86,6 @@ async def test_buffer(
     mock_connection, messages: list[list[str]], buffer: list[str]
 ) -> None:
     async with mock_connection() as conn:
-
         room = Room.get(conn, "room1")
         for message in messages:
             await conn.add_messages(message)
@@ -108,7 +106,6 @@ async def test_is_private(
     mock_connection, public_roomids: set[str], room: str, is_private: bool
 ) -> None:
     async with mock_connection() as conn:
-
         conn.public_roomids = public_roomids
         assert Room.get(conn, room).is_private == is_private
 
@@ -130,7 +127,6 @@ async def test_language_id(
     mock_connection, language: str | None, language_id: int
 ) -> None:
     async with mock_connection() as conn:
-
         room = Room.get(conn, "room1")
         if language is not None:
             room.language = language
@@ -150,7 +146,6 @@ async def test_users(
     mock_connection, usernames_add: dict[str, str], usernames_remove: set[str]
 ) -> None:
     async with mock_connection() as conn:
-
         room = Room.get(conn, "room1")
         users = {}
 

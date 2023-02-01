@@ -25,7 +25,6 @@ def test_generate_sprite_url(
     """Tests that PS sprite URLs are generated correctly from pokemon names."""
     for back in (False, True):
         for shiny in (False, True):
-
             category = SPRITE_CATEGORIES.get(category, category)
 
             dex_entry = utils.get_ps_dex_entry(pokemon)

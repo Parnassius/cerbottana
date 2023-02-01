@@ -9,7 +9,6 @@ from freezegun import freeze_time
 
 async def test_usernames(mock_connection):
     async with mock_connection() as conn:
-
         await conn.add_messages(
             [
                 ">publicroom",

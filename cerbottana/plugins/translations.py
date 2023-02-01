@@ -28,7 +28,6 @@ def _get_translations(
     db = Database.open("veekun")
 
     with db.get_session() as session:
-
         tables: dict[
             str, tuple[type[v.TranslatableMixin], type[TranslatableTableNames]]
         ] = {

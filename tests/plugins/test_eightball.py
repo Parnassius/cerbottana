@@ -5,7 +5,6 @@ from cerbottana.plugins import eightball
 
 async def test_eightball(mock_connection) -> None:
     async with mock_connection() as conn:
-
         await conn.add_messages(
             [
                 ">room1",

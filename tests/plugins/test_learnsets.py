@@ -3,7 +3,6 @@ from __future__ import annotations
 
 async def test_learnsets(mock_connection, veekun_database):
     async with mock_connection() as conn:
-
         await conn.add_messages(
             [
                 ">room1",

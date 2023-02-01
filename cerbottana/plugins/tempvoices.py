@@ -44,7 +44,6 @@ async def demote_old_temporary_voices(conn: Connection) -> None:
 
     db = Database.open()
     while True:
-
         with db.get_session() as session:
             stmt = select(d.TemporaryVoices).filter(
                 d.TemporaryVoices.date < datetime.utcnow() - timedelta(days=30)

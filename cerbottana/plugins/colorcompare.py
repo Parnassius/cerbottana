@@ -37,10 +37,8 @@ class ColorCompareHTML(BaseHTMLCommand):
         super().__init__()
 
         with self.doc, e.Table(style=self._get_css("table")), e.Tr():
-
             for username in usernames:
                 with e.Td():
-
                     with ce.Username(name=username):
                         e.Div(style=self._get_css("background1"))
 

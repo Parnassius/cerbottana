@@ -8,7 +8,6 @@ from cerbottana.models.user import User
 
 async def test_room(mock_connection) -> None:
     async with mock_connection() as conn:
-
         # Join a room with only an user in it
         await conn.add_messages(
             [

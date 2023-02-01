@@ -3,7 +3,6 @@ from __future__ import annotations
 
 async def test_locations(mock_connection, veekun_database):
     async with mock_connection() as conn:
-
         await conn.add_messages(
             [
                 ">room1",
@@ -45,7 +44,6 @@ async def test_locations(mock_connection, veekun_database):
 
 async def test_encounters(mock_connection, veekun_database):
     async with mock_connection() as conn:
-
         await conn.add_messages(
             [
                 ">room1",

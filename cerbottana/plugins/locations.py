@@ -164,7 +164,6 @@ async def locations(msg: Message) -> None:
     db = Database.open("veekun")
 
     with db.get_session(language_id) as session:
-
         stmt = (
             select(v.PokemonSpecies)
             .options(
@@ -366,7 +365,6 @@ async def encounters(msg: Message) -> None:
     db = Database.open("veekun")
 
     with db.get_session(language_id) as session:
-
         stmt = (
             select(v.Locations)
             .options(
