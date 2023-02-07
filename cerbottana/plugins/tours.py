@@ -170,6 +170,7 @@ async def waffletour(msg: Message) -> None:
         "HP Percentage Mod",
         "Sleep Clause Mod",
         "Species Clause",
+        "Terastal Clause",
     ]
 
     await create_tour(
