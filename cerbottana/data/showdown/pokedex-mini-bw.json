@@ -10777,6 +10777,10 @@
   },
   "eldegoss": {
     "num": 830,
+    "front": {
+      "w": 53,
+      "h": 59
+    },
     "back": {
       "w": 55,
       "h": 58
@@ -11062,10 +11066,18 @@
     }
   },
   "alcremie": {
-    "num": 869
+    "num": 869,
+    "front": {
+      "w": 46,
+      "h": 70
+    }
   },
   "alcremierubycream": {
-    "num": 869
+    "num": 869,
+    "front": {
+      "w": 46,
+      "h": 70
+    }
   },
   "alcremiematchacream": {
     "num": 869
@@ -11080,7 +11092,11 @@
     "num": 869
   },
   "alcremierubyswirl": {
-    "num": 869
+    "num": 869,
+    "front": {
+      "w": 46,
+      "h": 70
+    }
   },
   "alcremiecaramelswirl": {
     "num": 869
