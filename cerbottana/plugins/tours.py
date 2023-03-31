@@ -6,14 +6,11 @@ from typing import TYPE_CHECKING
 import aiohttp
 
 from cerbottana.handlers import handler_wrapper
-
-from . import command_wrapper
+from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
-    from cerbottana.connection import Connection
     from cerbottana.models.message import Message
     from cerbottana.models.protocol_message import ProtocolMessage
-    from cerbottana.models.room import Room
 
 
 async def create_tour(

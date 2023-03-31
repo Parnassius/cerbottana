@@ -10,10 +10,6 @@ exclude_lines = ["if TYPE_CHECKING:"]
 source = ["cerbottana"]
 
 
-[tool.isort]
-profile = "black"
-
-
 [tool.mypy]
 strict = true
 implicit_reexport = true
@@ -37,17 +33,13 @@ disallow_incomplete_defs = false
 
 
 [tool.poe.tasks]
-format = ["isort", "black"]
-isort = "isort cerbottana tests"
+ruff-fix = "ruff cerbottana tests --fix-only --exit-zero"
 black = "black cerbottana tests"
+format = ["ruff-fix", "black"]
 
-tests = ["test"]
-test = ["isort-check", "black-check", "darglint", "mypy", "pylint", "pytest-full"]
-isort-check = "isort cerbottana tests --check"
-black-check = "black cerbottana tests --check"
 darglint = "darglint cerbottana tests -v 2"
 mypy = "mypy cerbottana tests"
-pylint = "pylint cerbottana tests"
+ruff = "ruff cerbottana tests"
 pytest-full = [
     {ref="pytest"},
     {shell="""
@@ -62,6 +54,7 @@ pytest-full = [
 ]
 pytest = "pytest -m 'not real_ps_instance'"
 pytest-real-ps-instance = "pytest -m 'real_ps_instance'"
+all = ["format", "darglint", "mypy", "ruff", "pytest-full"]
 
 
 [tool.poetry]
@@ -83,58 +76,72 @@ typenv = "0.2.0"
 black = "23.1.0"
 darglint = "1.8.1"
 freezegun = "1.2.2"
-isort = "5.12.0"
 mypy = "1.0.0"
 poethepoet = "0.18.1"
-pylint = "2.16.2"
 pytest = "7.2.1"
 pytest-asyncio = "0.20.3"
 pytest-cov = "4.0.0"
 pytest-mock = "3.10.0"
 pytest-xprocess = "0.22.2"
+ruff = "0.0.260"
 types-python-dateutil = "2.8.19.7"
 
 [tool.poetry.scripts]
 bot = "cerbottana.__main__:main"
 
 
-[tool.pylint.main]
-load-plugins = [
-    "pylint.extensions.bad_builtin",
-    "pylint.extensions.check_elif",
-    "pylint.extensions.for_any_all",
-    "pylint.extensions.typing",
+[tool.ruff]
+target-version = "py311"
+select = [
+    "A",     # flake8-builtins
+    "ARG",   # flake8-unused-arguments
+    "B",     # flake8-bugbear
+    "C4",    # flake8-comprehensions
+    "DTZ",   # flake8-datetimez
+    "E",     # pycodestyle
+    "EM",    # flake8-errmsg
+    "F",     # pyflakes
+    "I",     # isort
+    "ICN",   # flake8-import-conventions
+    "ISC",   # flake8-implicit-str-concat
+    "N",     # pep8-naming
+    "PGH",   # pygrep-hooks
+    "PTH",   # flake8-use-pathlib
+    "RET",   # flake8-return
+    "RUF",   # Ruff-specific rules
+    "T10",   # flake8-debugger
+    "TID",   # flake8-tidy-imports
+    "TRY",   # tryceratops
+    "UP",    # pyupgrade
+    "W",     # pycodestyle
+    "YTT",   # flake8-2020
+]
+ignore = [
+    "A003",  # builtin-attribute-shadowing
+]
+fixable = [
+    "I",     # isort
+    "F401",  # unused-import
+    "TID",   # flake8-tidy-imports
+    "UP",    # pyupgrade
+]
+dummy-variable-rgx = "^_$"
+ignore-init-module-imports = true
+
+[tool.ruff.per-file-ignores]
+"tests/*" = ["ARG001"]
+
+[tool.ruff.flake8-bugbear]
+extend-immutable-calls = [
+    "cerbottana.typedefs.RoomId",
 ]
 
-[tool.pylint.messages_control]
-disable = [
-    # basic
-    "invalid-name",
-    "missing-class-docstring",
-    "missing-function-docstring",
-    "missing-module-docstring",
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
 
-    # design
-    "design",
-
-    # miscellaneous
-    "fixme",
-
-    # similarities
-    "duplicate-code",
-
-    # variables
-    "unused-argument",
-]
-enable = ["useless-suppression"]
-fail-on = ["useless-suppression"]
-
-[tool.pylint.format]
-expected-line-ending-format = "LF"
-max-line-length = "88"
-
-[tool.pylint.typing]
-runtime-typing = "no"
+[tool.ruff.isort]
+required-imports = ["from __future__ import annotations"]
+split-on-trailing-comma = false
 
 
 [tool.pytest.ini_options]

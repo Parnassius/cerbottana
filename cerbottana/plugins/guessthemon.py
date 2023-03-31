@@ -11,8 +11,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 import cerbottana.databases.veekun as v
 from cerbottana.database import Database
-
-from . import command_wrapper
+from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message
@@ -35,12 +34,13 @@ async def guessthemon(msg: Message) -> None:
         stmt = (
             select(v.PokemonSpecies)
             .where(v.PokemonSpecies.identifier.notin_(invalid_identifiers))
-            .order_by(func.random())  # pylint: disable=not-callable
+            .order_by(func.random())
         )
         species = session.scalar(stmt)
 
         if not species:
-            raise SQLAlchemyError("Missing PokemonSpecies data")
+            err = "Missing PokemonSpecies data"
+            raise SQLAlchemyError(err)
 
         # Get localized pokemon name
         species_name = next(
@@ -52,9 +52,8 @@ async def guessthemon(msg: Message) -> None:
             None,
         )
         if species_name is None:
-            raise SQLAlchemyError(
-                f"PokemonSpecies row {species.id}: no {msg.language} localization"
-            )
+            err = f"PokemonSpecies row {species.id}: no {msg.language} localization"
+            raise SQLAlchemyError(err)
 
         # Get pokedex flavor text
         dex_entries = [

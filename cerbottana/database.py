@@ -6,7 +6,7 @@ from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from . import utils
+from cerbottana import utils
 
 
 class Database:

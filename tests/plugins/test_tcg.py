@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import glob
 import json
+from pathlib import Path
 
 import pytest
 
@@ -20,11 +20,13 @@ def is_errmsg(html: str) -> bool:
     return html.startswith("Immagine per")
 
 
-@pytest.mark.parametrize("layout", glob.glob("tests/fixtures/scryfall/layouts/*.json"))
-def test_thumbnail_layout(layout: str) -> None:
+@pytest.mark.parametrize(
+    "layout", Path("tests/fixtures/scryfall/layouts").glob("*.json")
+)
+def test_thumbnail_layout(layout: Path) -> None:
     """Tests whether a card layout is rendered correctly."""
     print(f"Testing against: {layout}")
-    with open(layout, encoding="utf-8") as testdata:
+    with layout.open(encoding="utf-8") as testdata:
         card_json = json.load(testdata)
     assert not is_errmsg(str(to_card_thumbnail(card_json)))
 

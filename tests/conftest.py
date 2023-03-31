@@ -92,7 +92,6 @@ class MockedConnection(Connection):
             ControlMessage.PROCESS_MESSAGES,
             ControlMessage.PROCESS_AND_REPLY,
         ):
-            # pylint: disable-next=protected-access
             for room in list(Room._instances.get(self, {}).values()):
                 await room.process_all_messages()
             if message == ControlMessage.PROCESS_AND_REPLY:
@@ -331,7 +330,7 @@ def showdown_server(xprocess) -> Generator[int, None, None]:
         f.write(f"{env.str('TESTS_MOD_USERNAME')},@\n")
 
     # Start the server
-    class PokemonShowdownStarter(ProcessStarter):  # type: ignore
+    class PokemonShowdownStarter(ProcessStarter):  # type: ignore  # noqa: PGH003
         pattern = rf" listening on 127\.0\.0\.1:{port}$"
         timeout = 600
         args = ["./pokemon-showdown", str(port)]
@@ -346,7 +345,7 @@ def showdown_server(xprocess) -> Generator[int, None, None]:
 
 @pytest.fixture()
 def showdown_connection(
-    showdown_server,  # pylint: disable=redefined-outer-name
+    showdown_server,
 ) -> Callable[[], AbstractAsyncContextManager[Any]]:
     @asynccontextmanager
     async def make_connection(

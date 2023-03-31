@@ -6,8 +6,7 @@ from domify import html_elements as e
 
 from cerbottana import custom_elements as ce
 from cerbottana.html_utils import BaseHTMLCommand
-
-from . import command_wrapper
+from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message

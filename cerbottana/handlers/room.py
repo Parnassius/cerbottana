@@ -9,11 +9,10 @@ from sqlalchemy import update
 import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
+from cerbottana.handlers import handler_wrapper
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
 from cerbottana.typedefs import JsonDict
-
-from . import handler_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection

@@ -39,21 +39,18 @@ jobs:
       - name: Install dependencies on a cache miss
         if: steps.setup-python.outputs.cache-hit != 'true'
         run: poetry install --sync
-      - name: Check import order
+      - name: Check formatting with black
         if: github.event_name != 'schedule'
-        run: poetry run poe isort-check
-      - name: Check formatting using black
-        if: github.event_name != 'schedule'
-        run: poetry run poe black-check
+        run: poetry run poe black --check
       - name: Check docstrings with darglint
         if: github.event_name != 'schedule'
         run: poetry run poe darglint
-      - name: Test with mypy
+      - name: Type check with mypy
         if: github.event_name != 'schedule'
         run: poetry run poe mypy
-      - name: Test with pylint
+      - name: Lint with ruff
         if: github.event_name != 'schedule'
-        run: poetry run poe pylint
+        run: poetry run poe ruff
       - name: Test with pytest
         if: github.event_name != 'schedule'
         run: poetry run poe pytest --cov --cov-report=xml

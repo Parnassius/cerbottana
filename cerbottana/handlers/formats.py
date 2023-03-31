@@ -3,14 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cerbottana import utils
+from cerbottana.handlers import handler_wrapper
 from cerbottana.typedefs import Tier
 
-from . import handler_wrapper
-
 if TYPE_CHECKING:
-    from cerbottana.connection import Connection
     from cerbottana.models.protocol_message import ProtocolMessage
-    from cerbottana.models.room import Room
 
 
 @handler_wrapper(["formats"], required_parameters=1)

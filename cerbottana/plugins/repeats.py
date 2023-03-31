@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import math
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
 from dateutil.parser import parse
@@ -16,9 +16,8 @@ import cerbottana.databases.database as d
 from cerbottana.database import Database
 from cerbottana.html_utils import HTMLPageCommand
 from cerbottana.models.room import Room
+from cerbottana.plugins import command_wrapper, htmlpage_wrapper
 from cerbottana.tasks import init_task_wrapper
-
-from . import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
@@ -59,7 +58,7 @@ class Repeat:
         expire_dt: datetime | None = None,
         max_iters: int | None = None,
     ) -> None:
-        now = datetime.utcnow()  # Fixes the time for calculations within this method.
+        now = datetime.now(UTC)  # Fixes the time for calculations within this method.
 
         self.message = message
         self.room = room
@@ -91,7 +90,7 @@ class Repeat:
     @property
     def expired(self) -> bool:
         if self.expire_dt:
-            return self.expire_dt + timedelta(seconds=1) < datetime.utcnow()
+            return self.expire_dt + timedelta(seconds=1) < datetime.now(UTC)
         return False
 
     @property
@@ -116,12 +115,12 @@ class Repeat:
         await asyncio.sleep(self.offset.total_seconds())
 
         while not self.expired:
-            start = datetime.utcnow()
+            start = datetime.now(UTC)
             if self.message not in self.room.buffer:  # Throttling
                 await self.room.send(self.message, False)
             else:
                 print(f"Not sending {self.message}")
-            sleep_interval = self.delta - (datetime.utcnow() - start)
+            sleep_interval = self.delta - (datetime.now(UTC) - start)
             await asyncio.sleep(sleep_interval.total_seconds())
 
         self._unlist()
@@ -248,7 +247,7 @@ async def repeat(msg: Message) -> None:
         )
     else:
         try:  # Is the third param an expire date string?
-            expire_dt = parse(msg.args[2], default=datetime.utcnow(), dayfirst=True)
+            expire_dt = parse(msg.args[2], default=datetime.now(UTC), dayfirst=True)
             instance = Repeat(
                 phrase, msg.parametrized_room, delta_minutes, expire_dt=expire_dt
             )

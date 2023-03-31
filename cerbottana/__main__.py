@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import asyncio
 
-from .connection import Connection
-from .utils import env
+from cerbottana.connection import Connection
+from cerbottana.utils import env
 
 
 def main() -> None:

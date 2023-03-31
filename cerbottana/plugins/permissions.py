@@ -10,9 +10,8 @@ from sqlalchemy.engine import Row
 import cerbottana.databases.database as d
 from cerbottana.database import Database
 from cerbottana.html_utils import HTMLPageCommand
+from cerbottana.plugins import Command, command_wrapper, htmlpage_wrapper
 from cerbottana.typedefs import Role
-
-from . import Command, command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message

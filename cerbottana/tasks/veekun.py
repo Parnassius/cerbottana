@@ -14,15 +14,14 @@ from sqlalchemy.exc import OperationalError
 import cerbottana.databases.veekun as v
 from cerbottana import utils
 from cerbottana.database import Database
-
-from . import init_task_wrapper
+from cerbottana.tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
 
 
 @init_task_wrapper()
-async def csv_to_sqlite(conn: Connection) -> None:
+async def csv_to_sqlite(conn: Connection) -> None:  # noqa: ARG001
     csv_dir = Path(__file__).parent.parent / "data/veekun"
     files = chain(
         csv_dir.iterdir(),

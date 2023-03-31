@@ -12,8 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 import cerbottana.databases.veekun as v
 from cerbottana import custom_elements as ce
 from cerbottana.database import Database
-
-from . import command_wrapper
+from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message
@@ -68,11 +67,12 @@ async def antonio200509(msg: Message) -> None:
         stmt = (
             select(v.PokemonSpeciesNames)
             .filter_by(local_language_id=msg.language_id)
-            .order_by(func.random())  # pylint: disable=not-callable
+            .order_by(func.random())
         )
         species = session.scalar(stmt)
         if not species:
-            raise SQLAlchemyError("Missing PokemonSpeciesNames data")
+            err = "Missing PokemonSpeciesNames data"
+            raise SQLAlchemyError(err)
         species_name = species.name
     numbers = str(random.randint(0, 999999)).zfill(6)
     await msg.reply(f'Antonio{numbers} guessed "{species_name}"!')

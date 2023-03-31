@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 import string
-from datetime import date
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from domify import html_elements as e
@@ -16,8 +16,7 @@ import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.html_utils import HTMLPageCommand, linkify
-
-from . import command_wrapper, htmlpage_wrapper
+from cerbottana.plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message
@@ -39,7 +38,8 @@ def to_html_quotebox(quote: str) -> str:
     """
     if not quote:
         # This shouldn't happen because empty quotes are ignored by `.addquote`.
-        raise ValueError("Trying to create quotebox for empty quote.")
+        err = "Trying to create quotebox for empty quote."
+        raise ValueError(err)
 
     # Valid timestamp formats: [xx:xx], [xx:xx:xx]
     timestamp_regex = r"(\[\d{2}:\d{2}(?::\d{2})?\])"
@@ -53,7 +53,7 @@ def to_html_quotebox(quote: str) -> str:
         return linkify(quote)
 
     lines: list[str] = []
-    for timestamp, phrase in zip(splitted[1::2], splitted[2::2]):
+    for timestamp, phrase in zip(splitted[1::2], splitted[2::2], strict=True):
         # Wrap every line in a <div class="chat"></div> and if it is a regular chat
         # message format it accordingly.
 
@@ -106,12 +106,11 @@ def to_html_quotebox(quote: str) -> str:
             sublines[0] = f"<small>{timestamp}</small> <em>{sublines[0]}</em>"
             lines += sublines
     # Merge lines
-    html = (
+    return (
         '<div class="message-log" style="display: inline-block">'
         + "".join(f'<div class="chat">{line}</div>' for line in lines)
         + "</div>"
     )
-    return html
 
 
 @command_wrapper(
@@ -131,7 +130,7 @@ async def addquote(msg: Message) -> None:
             message=msg.arg,
             roomid=msg.parametrized_room.roomid,
             author=msg.user.userid,
-            date=str(date.today()),
+            date=str(datetime.now(UTC).date()),
         )
         session.add(result)
         session.commit()
@@ -161,7 +160,7 @@ async def randquote(msg: Message) -> None:
         stmt = (
             select(d.Quotes)
             .filter_by(roomid=msg.parametrized_room.roomid)
-            .order_by(func.random())  # pylint: disable=not-callable
+            .order_by(func.random())
         )
         if msg.arg:
             # LIKE wildcards are supported and "*" is considered an alias for "%".

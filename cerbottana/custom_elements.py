@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from domify import validators as v
 from domify.html_elements import HtmlElement
 

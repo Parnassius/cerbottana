@@ -12,8 +12,7 @@ from cerbottana import custom_elements as ce
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.html_utils import BaseHTMLCommand, HTMLPageCommand
-
-from . import command_wrapper, htmlpage_wrapper
+from cerbottana.plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message

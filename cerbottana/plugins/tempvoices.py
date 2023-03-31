@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
 from sqlalchemy import select, update
@@ -11,9 +11,8 @@ from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.handlers import handler_wrapper
 from cerbottana.models.room import Room
+from cerbottana.plugins import command_wrapper
 from cerbottana.tasks import recurring_task_wrapper
-
-from . import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
@@ -33,7 +32,7 @@ async def tempvoice(msg: Message) -> None:
                 d.TemporaryVoices(
                     roomid=msg.parametrized_room.roomid,
                     userid=msg.user.userid,
-                    date=str(datetime.utcnow()),
+                    date=str(datetime.now(UTC)),
                 )
             )
 
@@ -46,7 +45,7 @@ async def demote_old_temporary_voices(conn: Connection) -> None:
     while True:
         with db.get_session() as session:
             stmt = select(d.TemporaryVoices).filter(
-                d.TemporaryVoices.date < datetime.utcnow() - timedelta(days=30)
+                d.TemporaryVoices.date < datetime.now(UTC) - timedelta(days=30)
             )
             user: d.TemporaryVoices | None = session.scalar(stmt)
 
@@ -72,6 +71,6 @@ async def join_leave_name(msg: ProtocolMessage) -> None:
             stmt = (
                 update(d.TemporaryVoices)
                 .filter_by(roomid=msg.room.roomid, userid=utils.to_user_id(user))
-                .values(date=str(datetime.utcnow()))
+                .values(date=str(datetime.now(UTC)))
             )
             session.execute(stmt)

@@ -2,17 +2,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from domify.base_element import BaseElement
 
 from cerbottana import utils
-
-from .room import Room
-from .user import User
-
-if TYPE_CHECKING:
-    from cerbottana.connection import Connection
+from cerbottana.models.room import Room
+from cerbottana.models.user import User
 
 
 class Message:
@@ -58,9 +52,10 @@ class Message:
     @property
     def parametrized_room(self) -> Room:
         if self._parametrized_room is None:
-            raise AttributeError(
+            err = (
                 "Trying to access parametrized_room attribute without prior decoration"
             )
+            raise AttributeError(err)
         return self._parametrized_room
 
     @parametrized_room.setter

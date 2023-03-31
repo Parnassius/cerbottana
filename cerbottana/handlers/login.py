@@ -7,11 +7,9 @@ from typing import TYPE_CHECKING
 import aiohttp
 
 from cerbottana import utils
-
-from . import handler_wrapper
+from cerbottana.handlers import handler_wrapper
 
 if TYPE_CHECKING:
-    from cerbottana.connection import Connection
     from cerbottana.models.protocol_message import ProtocolMessage
 
 

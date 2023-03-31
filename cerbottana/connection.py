@@ -9,16 +9,16 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 import aiohttp
 
-from . import utils
-from .handlers import handlers
-from .models.protocol_message import ProtocolMessage
-from .models.room import Room
-from .plugins import commands
-from .tasks import init_tasks, recurring_tasks
-from .typedefs import RoomId
+from cerbottana import utils
+from cerbottana.handlers import handlers
+from cerbottana.models.protocol_message import ProtocolMessage
+from cerbottana.models.room import Room
+from cerbottana.plugins import commands
+from cerbottana.tasks import init_tasks, recurring_tasks
+from cerbottana.typedefs import RoomId
 
 if TYPE_CHECKING:
-    from .typedefs import Tier
+    from cerbottana.typedefs import Tier
 
 
 _T = TypeVar("_T")
@@ -154,7 +154,8 @@ class Connection:
             room.add_message_to_queue(msg)
 
     async def _parse_binary_message(self, message: bytes) -> None:
-        raise TypeError("Received unexpected binary message")
+        err = f"Received unexpected binary message {message!r}"
+        raise TypeError(err)
 
     async def _send_message_delay(self) -> None:
         now = time()

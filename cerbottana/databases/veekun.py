@@ -6,7 +6,7 @@ from typing import Annotated, Literal, cast, overload
 from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-intpk = Annotated[int, mapped_column(primary_key=True)]  # pylint: disable=invalid-name
+intpk = Annotated[int, mapped_column(primary_key=True)]
 
 
 class Base(DeclarativeBase):

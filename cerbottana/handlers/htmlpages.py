@@ -2,13 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cerbottana.handlers import handler_wrapper
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
 
-from . import handler_wrapper
-
 if TYPE_CHECKING:
-    from cerbottana.connection import Connection
     from cerbottana.models.protocol_message import ProtocolMessage
 
 

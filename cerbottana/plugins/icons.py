@@ -7,8 +7,7 @@ from sqlalchemy import select, update
 import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
-
-from . import command_wrapper
+from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message

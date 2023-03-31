@@ -15,9 +15,8 @@ from cerbottana.typedefs import RoomId
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
-
-    from .protocol_message import ProtocolMessage
-    from .user import User
+    from cerbottana.models.protocol_message import ProtocolMessage
+    from cerbottana.models.user import User
 
 
 class Room:

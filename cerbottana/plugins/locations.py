@@ -11,8 +11,7 @@ import cerbottana.databases.veekun as v
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.html_utils import BaseHTMLCommand
-
-from . import command_wrapper
+from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message

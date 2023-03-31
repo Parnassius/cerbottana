@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .room import Room
+    from cerbottana.models.room import Room
 
 
 class ProtocolMessage:

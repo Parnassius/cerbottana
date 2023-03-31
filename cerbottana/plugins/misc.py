@@ -6,8 +6,7 @@ from typing import TYPE_CHECKING
 from domify import html_elements as e
 
 from cerbottana.html_utils import to_obfuscated_html
-
-from . import command_wrapper
+from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message

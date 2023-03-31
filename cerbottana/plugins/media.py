@@ -9,8 +9,7 @@ from domify import html_elements as e
 from domify.base_element import BaseElement
 
 from cerbottana import utils
-
-from . import command_wrapper
+from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message

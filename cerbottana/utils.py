@@ -9,7 +9,7 @@ from pathlib import Path
 
 from typenv import Env
 
-from .typedefs import JsonDict, Role, RoomId, UserId
+from cerbottana.typedefs import JsonDict, Role, RoomId, UserId
 
 
 def to_id(text: str) -> str:
@@ -17,8 +17,7 @@ def to_id(text: str) -> str:
 
 
 def to_user_id(user: str) -> UserId:
-    userid = UserId(to_id(user))
-    return userid
+    return UserId(to_id(user))
 
 
 def to_room_id(room: str, fallback: RoomId = RoomId("lobby")) -> RoomId:

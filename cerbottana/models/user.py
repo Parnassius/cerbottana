@@ -13,8 +13,7 @@ from cerbottana.typedefs import Role, UserId
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
-
-    from .room import Room
+    from cerbottana.models.room import Room
 
 
 class User:

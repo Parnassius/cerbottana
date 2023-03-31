@@ -5,7 +5,7 @@ from typing import Annotated
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-intpk = Annotated[int, mapped_column(primary_key=True)]  # pylint: disable=invalid-name
+intpk = Annotated[int, mapped_column(primary_key=True)]
 
 
 class Base(DeclarativeBase):
