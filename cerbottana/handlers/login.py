@@ -15,9 +15,8 @@ if TYPE_CHECKING:
 
 @handler_wrapper(["challstr"], required_parameters=1)
 async def challstr(msg: ProtocolMessage) -> None:
-    url = "https://play.pokemonshowdown.com/action.php"
+    url = "https://play.pokemonshowdown.com/api/login"
     payload = {
-        "act": "login",
         "name": msg.conn.username,
         "pass": msg.conn.password,
         "challstr": "|".join(msg.params),
