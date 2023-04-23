@@ -8336,7 +8336,11 @@
     }
   },
   "zoroarkhisui": {
-    "num": 571
+    "num": 571,
+    "front": {
+      "w": 72,
+      "h": 77
+    }
   },
   "minccino": {
     "num": 572,
@@ -11240,8 +11244,12 @@
   "dragapult": {
     "num": 887,
     "front": {
-      "w": 86,
+      "w": 92,
       "h": 82
+    },
+    "back": {
+      "w": 91,
+      "h": 81
     }
   },
   "zacian": {
@@ -11582,13 +11590,25 @@
     "num": 977
   },
   "tatsugiri": {
-    "num": 978
+    "num": 978,
+    "front": {
+      "w": 34,
+      "h": 31
+    }
   },
   "tatsugiridroopy": {
-    "num": 978
+    "num": 978,
+    "front": {
+      "w": 34,
+      "h": 31
+    }
   },
   "tatsugiristretchy": {
-    "num": 978
+    "num": 978,
+    "front": {
+      "w": 34,
+      "h": 31
+    }
   },
   "annihilape": {
     "num": 979
@@ -11684,7 +11704,11 @@
     "num": 1007
   },
   "miraidon": {
-    "num": 1008
+    "num": 1008,
+    "front": {
+      "w": 108,
+      "h": 100
+    }
   },
   "walkingwake": {
     "num": 1009
