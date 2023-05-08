@@ -102,7 +102,9 @@ class Connection:
                 self.websocket = None
                 self.connection_start = None
 
-                connection_retries += 1
+                if connection_retries < 12:
+                    # Cap the backoff to 2**12 seconds, which is a little over one hour
+                    connection_retries += 1
                 backoff = 2**connection_retries
                 print(f"Connection closed, retrying in {backoff} seconds")
                 await asyncio.sleep(backoff)
