@@ -66,25 +66,25 @@ authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "^3.11"
 aiohttp = "3.8.4"
-domify = "0.4.1"
+domify = "0.4.2"
 imageprobe = "0.3.0"
 python-dateutil = "2.8.2"
-sqlalchemy = "2.0.8"
+sqlalchemy = "2.0.15"
 typenv = "0.2.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "23.3.0"
 darglint = "1.8.1"
 freezegun = "1.2.2"
-mypy = "1.1.1"
-poethepoet = "0.19.0"
-pytest = "7.2.2"
+mypy = "1.3.0"
+poethepoet = "0.20.0"
+pytest = "7.3.1"
 pytest-asyncio = "0.21.0"
-pytest-cov = "4.0.0"
+pytest-cov = "4.1.0"
 pytest-mock = "3.10.0"
 pytest-xprocess = "0.22.2"
-ruff = "0.0.260"
-types-python-dateutil = "2.8.19.11"
+ruff = "0.0.270"
+types-python-dateutil = "2.8.19.13"
 
 [tool.poetry.scripts]
 bot = "cerbottana.__main__:main"

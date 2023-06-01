@@ -142,7 +142,7 @@ async def learnset(msg: Message) -> None:
             .options(
                 selectinload(v.PokemonSpecies.pokemon)
                 .selectinload(
-                    v.Pokemon.pokemon_moves.and_(  # type: ignore[arg-type]
+                    v.Pokemon.pokemon_moves.and_(
                         v.PokemonMoves.version_group_id == version_group.id
                     )
                 )
@@ -150,7 +150,7 @@ async def learnset(msg: Message) -> None:
                     selectinload(v.PokemonMoves.move).options(
                         selectinload(v.Moves.move_names),
                         selectinload(
-                            v.Moves.machines.and_(  # type: ignore[arg-type]
+                            v.Moves.machines.and_(
                                 v.Machines.version_group_id == version_group.id
                             )
                         )
