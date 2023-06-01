@@ -27,7 +27,7 @@ First of all, you need to install the dependencies (drop `--no-dev` if you wish 
 
 If you are running a local Pokémon Showdown instance, make sure it is active. Then, to start cerbottana, run:
 
-    poetry run bot
+    poetry run cerbottana
 
 To stop the execution just raise a `SIGINT` (`Ctrl + C`) in the console.
 

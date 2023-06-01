@@ -24,8 +24,9 @@ RUN .venv/bin/pip install ./dist/*.whl
 
 FROM base as final
 
+ENV PATH="/app/.venv/bin:$PATH"
 COPY --from=builder /app/.venv .venv
 
 VOLUME /data
 
-ENTRYPOINT [ ".venv/bin/bot" ]
+ENTRYPOINT [ "cerbottana" ]
