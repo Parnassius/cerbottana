@@ -10139,6 +10139,9 @@
       "h": 73
     }
   },
+  "greninjabond": {
+    "num": 658
+  },
   "greninjaash": {
     "num": 658,
     "front": {
@@ -14445,12 +14448,12 @@
   "crocalor": {
     "num": 910,
     "front": {
-      "w": 59,
-      "h": 71
+      "w": 55,
+      "h": 67
     },
     "back": {
-      "w": 71,
-      "h": 69
+      "w": 67,
+      "h": 64
     }
   },
   "skeledirge": {
