@@ -4,7 +4,7 @@ import asyncio
 import json
 import subprocess
 from collections import Counter
-from collections.abc import AsyncGenerator, Callable, Generator
+from collections.abc import AsyncGenerator, Callable, Generator, Mapping
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from enum import Enum
 from pathlib import Path
@@ -333,8 +333,8 @@ def showdown_server(xprocess) -> Generator[int, None, None]:
     class PokemonShowdownStarter(ProcessStarter):  # type: ignore  # noqa: PGH003
         pattern = rf" listening on 127\.0\.0\.1:{port}$"
         timeout = 600
-        args = ["./pokemon-showdown", str(port)]
-        popen_kwargs = {"cwd": cwd}
+        args = ("./pokemon-showdown", str(port))
+        popen_kwargs: Mapping[str, str] = {"cwd": str(cwd)}
         terminate_on_interrupt = True
         max_read_lines = None
 

@@ -167,9 +167,7 @@ def get_ps_dex_entry(query: str, *, _female: bool = False) -> JsonDict | None:
 
 
 def _escape(text: str) -> str:
-    text = remove_diacritics(text)
-    text = to_id(text)
-    return text
+    return to_id(remove_diacritics(text))
 
 
 def get_config_file(path: str) -> Path:

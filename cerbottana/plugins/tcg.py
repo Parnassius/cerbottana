@@ -64,8 +64,6 @@ def to_card_thumbnail(card_json: JsonDict) -> BaseElement:
         BaseElement: htmlbox code.
     """
 
-    html: BaseElement
-
     # img_uris ~ URI for card thumbnail(s)
     if "card_faces" in card_json and "image_uris" in card_json["card_faces"][0]:
         # Double-faced cards have 2 thumbnails, i.e. transform cards.
@@ -76,12 +74,11 @@ def to_card_thumbnail(card_json: JsonDict) -> BaseElement:
     else:
         # Fallback: image_uris isn't guaranteed to exist or be non-null but the previous
         # conditional cases should cover most cards.
-        html = (
+        return (
             "Immagine per "
             + e.A(card_json["name"], href=card_json["scryfall_uri"])
             + " non disponibile."
         )
-        return html
 
     html = e.A(href=card_json["scryfall_uri"])
     for img_uri in img_uris:

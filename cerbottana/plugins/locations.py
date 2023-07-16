@@ -111,7 +111,7 @@ class Locations:
 
 
 class LocationsHTML(BaseHTMLCommand):
-    _STYLES = {
+    _STYLES = {  # noqa: RUF012
         "table": {
             "margin": "5px 0",
         },
@@ -310,7 +310,7 @@ class Encounters:
 
 
 class EncountersHTML(BaseHTMLCommand):
-    _STYLES = {
+    _STYLES = {  # noqa: RUF012
         "table": {
             "margin": "5px 0",
         },

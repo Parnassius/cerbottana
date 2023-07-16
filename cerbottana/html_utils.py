@@ -4,7 +4,7 @@ import math
 import random
 import re
 import string
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from html import escape
 from typing import TYPE_CHECKING
 
@@ -93,7 +93,7 @@ def to_obfuscated_html(text: str) -> BaseElement:
 class BaseHTMLCommand:
     """Base class to implement html commands and html pages"""
 
-    _STYLES: dict[str, dict[str, str]] = {}
+    _STYLES: Mapping[str, Mapping[str, str]] = {}
 
     def __init__(self) -> None:
         self.doc = e.BaseElement()
@@ -106,7 +106,7 @@ class BaseHTMLCommand:
 
 
 class HTMLPageCommand(BaseHTMLCommand):
-    _STYLES = {
+    _STYLES = {  # noqa: RUF012
         "btn_disabled": {
             "background": "#D3D3D3",
             "color": "#575757",

@@ -68,7 +68,7 @@ class Learnset:
 
 
 class LearnsetHTML(BaseHTMLCommand):
-    _STYLES = {
+    _STYLES = {  # noqa: RUF012
         "table": {
             "margin": "5px 0",
         },

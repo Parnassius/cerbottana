@@ -1,3 +1,5 @@
+# ruff: noqa: RUF012
+
 from __future__ import annotations
 
 from domify import validators as v

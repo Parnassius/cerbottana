@@ -120,7 +120,7 @@ def permissions_htmlpage(user: User, room: Room, page: int) -> BaseElement:
                 "setpermission",
                 [
                     "_roomid",
-                    lambda row: row.command_name,  # type: ignore[no-any-return]
+                    lambda row: row.command_name,
                     "_page",
                     f"__{role}",
                 ],

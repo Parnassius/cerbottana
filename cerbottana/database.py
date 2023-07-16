@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from contextlib import contextmanager
+from typing import ClassVar
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -10,7 +11,7 @@ from cerbottana import utils
 
 
 class Database:
-    _instances: dict[str, Database] = {}
+    _instances: ClassVar[dict[str, Database]] = {}
 
     def __init__(self, dbname: str) -> None:
         dbpath = str(utils.get_config_file(f"{dbname}.sqlite"))

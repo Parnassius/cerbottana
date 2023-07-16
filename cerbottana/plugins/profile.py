@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 
 class ProfileHTML(BaseHTMLCommand):
-    _STYLES = {
+    _STYLES = {  # noqa: RUF012
         "avatar": {
             "display": "table-cell",
             "vertical-align": "top",

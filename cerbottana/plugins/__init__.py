@@ -6,7 +6,7 @@ import importlib
 from collections.abc import Callable, Coroutine
 from functools import wraps
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from domify.base_element import BaseElement
 from sqlalchemy import select
@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
 
 class Command:
-    _instances: dict[str, Command] = {}
+    _instances: ClassVar[dict[str, Command]] = {}
 
     def __init__(
         self,

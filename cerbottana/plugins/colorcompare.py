@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class ColorCompareHTML(BaseHTMLCommand):
-    _STYLES = {
+    _STYLES = {  # noqa: RUF012
         "table": {
             "table-layout": "fixed",
             "width": "100%",

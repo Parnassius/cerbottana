@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import math
 from datetime import UTC, datetime, timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from dateutil.parser import parse
 from domify import html_elements as e
@@ -46,7 +46,9 @@ class Repeat:
     also registers a task to the base asyncio loop of the Connection param.
     """
 
-    _instances: dict[tuple[str, Room], Repeat] = {}  # Record of active instances
+    _instances: ClassVar[
+        dict[tuple[str, Room], Repeat]
+    ] = {}  # Record of active instances
 
     def __init__(
         self,
