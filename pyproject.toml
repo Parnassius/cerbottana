@@ -65,7 +65,7 @@ authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-aiohttp = "3.8.4"
+aiohttp = "3.8.5"
 domify = "0.4.2"
 imageprobe = "0.3.0"
 python-dateutil = "2.8.2"
