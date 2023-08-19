@@ -49,7 +49,7 @@ def _get_translations(
             for row, language_id in session.execute(stmt):
                 translation = row.get_translation(
                     f"{category_name}_names",
-                    language_id=list(set(languages) - {language_id})[0],
+                    language_id=next(iter(set(languages) - {language_id})),
                     fallback_english=False,
                 )
 
@@ -97,7 +97,7 @@ async def translate(msg: Message) -> None:
 
     if results:
         if len(results) == 1:
-            await msg.reply(" / ".join(sorted(list(results.values())[0])))
+            await msg.reply(" / ".join(sorted(next(iter(results.values())))))
             return
         resultstext = ""
         for key, val in results.items():
