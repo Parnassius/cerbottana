@@ -449,7 +449,11 @@
     }
   },
   "raichualola": {
-    "num": 26
+    "num": 26,
+    "front": {
+      "w": 93,
+      "h": 91
+    }
   },
   "sandshrew": {
     "num": 27,
@@ -764,7 +768,11 @@
     }
   },
   "diglettalola": {
-    "num": 50
+    "num": 50,
+    "front": {
+      "w": 31,
+      "h": 34
+    }
   },
   "dugtrio": {
     "num": 51,
@@ -778,7 +786,11 @@
     }
   },
   "dugtrioalola": {
-    "num": 51
+    "num": 51,
+    "front": {
+      "w": 48,
+      "h": 45
+    }
   },
   "meowth": {
     "num": 52,
@@ -977,7 +989,11 @@
     }
   },
   "alakazammega": {
-    "num": 65
+    "num": 65,
+    "front": {
+      "w": 88,
+      "h": 98
+    }
   },
   "machop": {
     "num": 66,
@@ -1454,7 +1470,11 @@
     }
   },
   "voltorbhisui": {
-    "num": 100
+    "num": 100,
+    "front": {
+      "w": 51,
+      "h": 48
+    }
   },
   "electrode": {
     "num": 101,
@@ -1493,7 +1513,11 @@
     }
   },
   "exeggutoralola": {
-    "num": 103
+    "num": 103,
+    "front": {
+      "w": 102,
+      "h": 96
+    }
   },
   "cubone": {
     "num": 104,
@@ -2056,7 +2080,11 @@
     }
   },
   "articunogalar": {
-    "num": 144
+    "num": 144,
+    "front": {
+      "w": 86,
+      "h": 71
+    }
   },
   "zapdos": {
     "num": 145,
@@ -3219,7 +3247,11 @@
     }
   },
   "steelixmega": {
-    "num": 208
+    "num": 208,
+    "front": {
+      "w": 96,
+      "h": 88
+    }
   },
   "snubbull": {
     "num": 209,
@@ -5537,7 +5569,11 @@
     }
   },
   "rayquazamega": {
-    "num": 384
+    "num": 384,
+    "front": {
+      "w": 100,
+      "h": 108
+    }
   },
   "jirachi": {
     "num": 385,
@@ -9438,7 +9474,15 @@
     }
   },
   "braixen": {
-    "num": 654
+    "num": 654,
+    "front": {
+      "w": 63,
+      "h": 69
+    },
+    "back": {
+      "w": 55,
+      "h": 69
+    }
   },
   "delphox": {
     "num": 655
@@ -9518,91 +9562,271 @@
   "vivillon": {
     "num": 666,
     "front": {
-      "w": 96,
-      "h": 96
+      "w": 67,
+      "h": 74
     },
     "back": {
-      "w": 96,
-      "h": 96
+      "w": 67,
+      "h": 73
     }
   },
   "vivillonarchipelago": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivilloncontinental": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonelegant": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillongarden": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonhighplains": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonicysnow": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonjungle": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonmarine": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonmodern": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonmonsoon": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonocean": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonpolar": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonriver": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonsandstorm": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonsavanna": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonsun": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillontundra": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonfancy": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "vivillonpokeball": {
-    "num": 666
+    "num": 666,
+    "front": {
+      "w": 67,
+      "h": 74
+    },
+    "back": {
+      "w": 67,
+      "h": 73
+    }
   },
   "litleo": {
-    "num": 667
+    "num": 667,
+    "front": {
+      "w": 42,
+      "h": 49
+    },
+    "back": {
+      "w": 43,
+      "h": 48
+    }
   },
   "pyroar": {
     "num": 668
   },
   "flabebe": {
-    "num": 669
+    "num": 669,
+    "front": {
+      "w": 44,
+      "h": 63
+    }
   },
   "flabebeblue": {
-    "num": 669
+    "num": 669,
+    "front": {
+      "w": 44,
+      "h": 63
+    }
   },
   "flabebeorange": {
-    "num": 669
+    "num": 669,
+    "front": {
+      "w": 44,
+      "h": 63
+    }
   },
   "flabebewhite": {
-    "num": 669
+    "num": 669,
+    "front": {
+      "w": 44,
+      "h": 63
+    }
   },
   "flabebeyellow": {
-    "num": 669
+    "num": 669,
+    "front": {
+      "w": 44,
+      "h": 63
+    }
   },
   "floette": {
     "num": 670,
@@ -9650,7 +9874,11 @@
     "num": 671
   },
   "skiddo": {
-    "num": 672
+    "num": 672,
+    "front": {
+      "w": 44,
+      "h": 58
+    }
   },
   "gogoat": {
     "num": 673
@@ -9778,7 +10006,11 @@
     }
   },
   "slurpuff": {
-    "num": 685
+    "num": 685,
+    "front": {
+      "w": 62,
+      "h": 69
+    }
   },
   "inkay": {
     "num": 686,
@@ -9819,7 +10051,15 @@
     "num": 691
   },
   "clauncher": {
-    "num": 692
+    "num": 692,
+    "front": {
+      "w": 63,
+      "h": 35
+    },
+    "back": {
+      "w": 63,
+      "h": 35
+    }
   },
   "clawitzer": {
     "num": 693
@@ -9831,7 +10071,15 @@
     "num": 695
   },
   "tyrunt": {
-    "num": 696
+    "num": 696,
+    "front": {
+      "w": 61,
+      "h": 50
+    },
+    "back": {
+      "w": 66,
+      "h": 50
+    }
   },
   "tyrantrum": {
     "num": 697,
@@ -9845,7 +10093,15 @@
     }
   },
   "amaura": {
-    "num": 698
+    "num": 698,
+    "front": {
+      "w": 38,
+      "h": 60
+    },
+    "back": {
+      "w": 45,
+      "h": 58
+    }
   },
   "aurorus": {
     "num": 699
@@ -9853,22 +10109,38 @@
   "sylveon": {
     "num": 700,
     "front": {
-      "w": 96,
-      "h": 96
+      "w": 51,
+      "h": 62
     },
     "back": {
-      "w": 96,
-      "h": 96
+      "w": 55,
+      "h": 64
     }
   },
   "hawlucha": {
     "num": 701
   },
   "dedenne": {
-    "num": 702
+    "num": 702,
+    "front": {
+      "w": 47,
+      "h": 36
+    },
+    "back": {
+      "w": 47,
+      "h": 35
+    }
   },
   "carbink": {
-    "num": 703
+    "num": 703,
+    "front": {
+      "w": 40,
+      "h": 49
+    },
+    "back": {
+      "w": 40,
+      "h": 49
+    }
   },
   "goomy": {
     "num": 704,
@@ -9962,7 +10234,11 @@
     }
   },
   "avalugg": {
-    "num": 713
+    "num": 713,
+    "front": {
+      "w": 84,
+      "h": 66
+    }
   },
   "avalugghisui": {
     "num": 713
@@ -9978,13 +10254,21 @@
     }
   },
   "xerneas": {
-    "num": 716
+    "num": 716,
+    "front": {
+      "w": 81,
+      "h": 96
+    }
   },
   "xerneasneutral": {
     "num": 716
   },
   "yveltal": {
-    "num": 717
+    "num": 717,
+    "front": {
+      "w": 113,
+      "h": 104
+    }
   },
   "zygarde": {
     "num": 718,
@@ -10010,10 +10294,18 @@
     "num": 719
   },
   "hoopa": {
-    "num": 720
+    "num": 720,
+    "front": {
+      "w": 90,
+      "h": 62
+    }
   },
   "hoopaunbound": {
-    "num": 720
+    "num": 720,
+    "front": {
+      "w": 105,
+      "h": 103
+    }
   },
   "volcanion": {
     "num": 721
@@ -10035,7 +10327,15 @@
     "num": 724
   },
   "litten": {
-    "num": 725
+    "num": 725,
+    "front": {
+      "w": 48,
+      "h": 49
+    },
+    "back": {
+      "w": 48,
+      "h": 50
+    }
   },
   "torracat": {
     "num": 726
@@ -10064,7 +10364,15 @@
     }
   },
   "trumbeak": {
-    "num": 732
+    "num": 732,
+    "front": {
+      "w": 47,
+      "h": 52
+    },
+    "back": {
+      "w": 44,
+      "h": 52
+    }
   },
   "toucannon": {
     "num": 733
@@ -10090,16 +10398,40 @@
     }
   },
   "charjabug": {
-    "num": 737
+    "num": 737,
+    "front": {
+      "w": 45,
+      "h": 32
+    },
+    "back": {
+      "w": 47,
+      "h": 32
+    }
   },
   "vikavolt": {
-    "num": 738
+    "num": 738,
+    "front": {
+      "w": 74,
+      "h": 72
+    },
+    "back": {
+      "w": 74,
+      "h": 74
+    }
   },
   "vikavolttotem": {
     "num": 738
   },
   "crabrawler": {
-    "num": 739
+    "num": 739,
+    "front": {
+      "w": 72,
+      "h": 57
+    },
+    "back": {
+      "w": 74,
+      "h": 57
+    }
   },
   "crabominable": {
     "num": 740
@@ -10117,7 +10449,15 @@
     "num": 741
   },
   "cutiefly": {
-    "num": 742
+    "num": 742,
+    "front": {
+      "w": 41,
+      "h": 46
+    },
+    "back": {
+      "w": 42,
+      "h": 44
+    }
   },
   "ribombee": {
     "num": 743,
@@ -10134,7 +10474,15 @@
     "num": 743
   },
   "rockruff": {
-    "num": 744
+    "num": 744,
+    "front": {
+      "w": 42,
+      "h": 42
+    },
+    "back": {
+      "w": 42,
+      "h": 47
+    }
   },
   "lycanroc": {
     "num": 745,
@@ -10162,16 +10510,36 @@
     }
   },
   "wishiwashi": {
-    "num": 746
+    "num": 746,
+    "front": {
+      "w": 37,
+      "h": 30
+    },
+    "back": {
+      "w": 38,
+      "h": 30
+    }
   },
   "wishiwashischool": {
-    "num": 746
+    "num": 746,
+    "front": {
+      "w": 101,
+      "h": 92
+    }
   },
   "mareanie": {
     "num": 747
   },
   "toxapex": {
-    "num": 748
+    "num": 748,
+    "front": {
+      "w": 90,
+      "h": 77
+    },
+    "back": {
+      "w": 91,
+      "h": 76
+    }
   },
   "mudbray": {
     "num": 749
@@ -10180,7 +10548,15 @@
     "num": 750
   },
   "dewpider": {
-    "num": 751
+    "num": 751,
+    "front": {
+      "w": 35,
+      "h": 43
+    },
+    "back": {
+      "w": 33,
+      "h": 44
+    }
   },
   "araquanid": {
     "num": 752
@@ -10189,7 +10565,15 @@
     "num": 752
   },
   "fomantis": {
-    "num": 753
+    "num": 753,
+    "front": {
+      "w": 30,
+      "h": 52
+    },
+    "back": {
+      "w": 31,
+      "h": 53
+    }
   },
   "lurantis": {
     "num": 754,
@@ -10206,7 +10590,15 @@
     "num": 754
   },
   "morelull": {
-    "num": 755
+    "num": 755,
+    "front": {
+      "w": 26,
+      "h": 55
+    },
+    "back": {
+      "w": 27,
+      "h": 55
+    }
   },
   "shiinotic": {
     "num": 756,
@@ -10236,7 +10628,15 @@
     }
   },
   "bewear": {
-    "num": 760
+    "num": 760,
+    "front": {
+      "w": 64,
+      "h": 84
+    },
+    "back": {
+      "w": 60,
+      "h": 78
+    }
   },
   "bounsweet": {
     "num": 761,
@@ -10250,13 +10650,29 @@
     }
   },
   "steenee": {
-    "num": 762
+    "num": 762,
+    "front": {
+      "w": 52,
+      "h": 55
+    },
+    "back": {
+      "w": 52,
+      "h": 55
+    }
   },
   "tsareena": {
     "num": 763
   },
   "comfey": {
-    "num": 764
+    "num": 764,
+    "front": {
+      "w": 60,
+      "h": 83
+    },
+    "back": {
+      "w": 58,
+      "h": 87
+    }
   },
   "oranguru": {
     "num": 765
@@ -10265,7 +10681,15 @@
     "num": 766
   },
   "wimpod": {
-    "num": 767
+    "num": 767,
+    "front": {
+      "w": 53,
+      "h": 42
+    },
+    "back": {
+      "w": 49,
+      "h": 39
+    }
   },
   "golisopod": {
     "num": 768
@@ -10282,7 +10706,15 @@
     }
   },
   "palossand": {
-    "num": 770
+    "num": 770,
+    "front": {
+      "w": 96,
+      "h": 57
+    },
+    "back": {
+      "w": 96,
+      "h": 57
+    }
   },
   "pyukumuku": {
     "num": 771,
@@ -10296,61 +10728,213 @@
     }
   },
   "typenull": {
-    "num": 772
+    "num": 772,
+    "front": {
+      "w": 68,
+      "h": 78
+    },
+    "back": {
+      "w": 72,
+      "h": 78
+    }
   },
   "silvally": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallybug": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallydark": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallydragon": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallyelectric": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallyfairy": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallyfighting": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallyfire": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallyflying": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallyghost": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallygrass": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallyground": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallyice": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallypoison": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallypsychic": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallyrock": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallysteel": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "silvallywater": {
-    "num": 773
+    "num": 773,
+    "front": {
+      "w": 68,
+      "h": 86
+    },
+    "back": {
+      "w": 64,
+      "h": 88
+    }
   },
   "minior": {
     "num": 774,
@@ -10452,10 +11036,22 @@
     }
   },
   "turtonator": {
-    "num": 776
+    "num": 776,
+    "front": {
+      "w": 79,
+      "h": 65
+    }
   },
   "togedemaru": {
-    "num": 777
+    "num": 777,
+    "front": {
+      "w": 40,
+      "h": 44
+    },
+    "back": {
+      "w": 41,
+      "h": 46
+    }
   },
   "togedemarutotem": {
     "num": 777
@@ -10496,7 +11092,11 @@
     }
   },
   "drampa": {
-    "num": 780
+    "num": 780,
+    "front": {
+      "w": 78,
+      "h": 72
+    }
   },
   "dhelmise": {
     "num": 781,
@@ -10510,10 +11110,22 @@
     }
   },
   "jangmoo": {
-    "num": 782
+    "num": 782,
+    "front": {
+      "w": 49,
+      "h": 52
+    },
+    "back": {
+      "w": 49,
+      "h": 52
+    }
   },
   "hakamoo": {
-    "num": 783
+    "num": 783,
+    "front": {
+      "w": 67,
+      "h": 71
+    }
   },
   "kommoo": {
     "num": 784
@@ -10652,7 +11264,15 @@
     "num": 806
   },
   "zeraora": {
-    "num": 807
+    "num": 807,
+    "front": {
+      "w": 77,
+      "h": 68
+    },
+    "back": {
+      "w": 79,
+      "h": 69
+    }
   },
   "meltan": {
     "num": 808,
@@ -10679,7 +11299,15 @@
     }
   },
   "thwackey": {
-    "num": 811
+    "num": 811,
+    "front": {
+      "w": 57,
+      "h": 58
+    },
+    "back": {
+      "w": 50,
+      "h": 55
+    }
   },
   "rillaboom": {
     "num": 812
@@ -10771,7 +11399,11 @@
     "num": 826
   },
   "orbeetlegmax": {
-    "num": 826
+    "num": 826,
+    "front": {
+      "w": 100,
+      "h": 87
+    }
   },
   "nickit": {
     "num": 827
@@ -10916,7 +11548,15 @@
     "num": 845
   },
   "arrokuda": {
-    "num": 846
+    "num": 846,
+    "front": {
+      "w": 104,
+      "h": 54
+    },
+    "back": {
+      "w": 100,
+      "h": 37
+    }
   },
   "barraskewda": {
     "num": 847,
@@ -11050,7 +11690,11 @@
     }
   },
   "cursola": {
-    "num": 864
+    "num": 864,
+    "front": {
+      "w": 96,
+      "h": 98
+    }
   },
   "sirfetchd": {
     "num": 865
@@ -11683,7 +12327,11 @@
     "num": 999
   },
   "gholdengo": {
-    "num": 1000
+    "num": 1000,
+    "front": {
+      "w": 119,
+      "h": 105
+    }
   },
   "wochien": {
     "num": 1001
