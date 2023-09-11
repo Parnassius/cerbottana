@@ -12,7 +12,7 @@ jobs:
     env:
       HAS_SECRETS: ${{ secrets.TESTS_BOT_USERNAME != '' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Poetry
         run: pipx install poetry
       - name: Set up python 3.11
