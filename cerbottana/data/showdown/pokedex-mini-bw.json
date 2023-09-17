@@ -11984,6 +11984,9 @@
       "h": 74
     }
   },
+  "ursalunabloodmoon": {
+    "num": 901
+  },
   "basculegion": {
     "num": 902
   },
@@ -12366,6 +12369,54 @@
   },
   "ironleaves": {
     "num": 1010
+  },
+  "dipplin": {
+    "num": 1011
+  },
+  "poltchageist": {
+    "num": 1012
+  },
+  "poltchageistartisan": {
+    "num": 1012
+  },
+  "sinistcha": {
+    "num": 1013
+  },
+  "sinistchamasterpiece": {
+    "num": 1013
+  },
+  "okidogi": {
+    "num": 1014
+  },
+  "munkidori": {
+    "num": 1015
+  },
+  "fezandipiti": {
+    "num": 1016
+  },
+  "ogerpon": {
+    "num": 1017
+  },
+  "ogerponwellspring": {
+    "num": 1017
+  },
+  "ogerponhearthflame": {
+    "num": 1017
+  },
+  "ogerponcornerstone": {
+    "num": 1017
+  },
+  "ogerpontealtera": {
+    "num": 1017
+  },
+  "ogerponwellspringtera": {
+    "num": 1017
+  },
+  "ogerponhearthflametera": {
+    "num": 1017
+  },
+  "ogerponcornerstonetera": {
+    "num": 1017
   },
   "missingno": {
     "num": 0
