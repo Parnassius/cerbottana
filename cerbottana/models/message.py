@@ -108,7 +108,6 @@ class Message:
             room (Room): Room to be passed to the function.
             page (int): Page number. Defaults to 1.
         """
-        if self.room is None:
-            await self.user.send_htmlpage(pageid, room, page)
-        else:
+        await self.user.send_htmlpage(pageid, room, page)
+        if self.room is not None:
             await self.room.send_htmlpage(pageid, room)

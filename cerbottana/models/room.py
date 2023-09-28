@@ -8,6 +8,7 @@ from textwrap import shorten
 from typing import TYPE_CHECKING
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
+from domify import html_elements as e
 from domify.base_element import BaseElement
 
 from cerbottana import utils
@@ -170,9 +171,16 @@ class Room:
             pageid (str): id of the htmlpage.
             page_room (Room): Room to be passed to the function.
         """
-        if page_room:
-            pageid += "0" + page_room.roomid
-        await self.send(f"<<view-bot-{utils.to_user_id(self.conn.username)}-{pageid}>>")
+        await self.send_htmlbox(
+            e.Button(
+                pageid,
+                name="send",
+                value=(
+                    f"/pm {self.conn.username}, "
+                    f"{self.conn.command_character}{pageid} {page_room.roomid}"
+                ),
+            )
+        )
 
     async def send_modnote(self, action: str, user: User, note: str = "") -> None:
         """Adds a modnote to a room.
