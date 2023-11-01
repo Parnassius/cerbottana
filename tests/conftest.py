@@ -16,7 +16,7 @@ import pytest
 from aiohttp.test_utils import unused_port
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from xprocess import ProcessStarter  # type: ignore[import]
+from xprocess import ProcessStarter  # type: ignore[import-untyped]
 
 import cerbottana.databases.database as d
 from cerbottana import utils
