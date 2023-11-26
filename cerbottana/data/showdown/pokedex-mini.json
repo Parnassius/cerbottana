@@ -8667,7 +8667,15 @@
     }
   },
   "lilliganthisui": {
-    "num": 549
+    "num": 549,
+    "front": {
+      "w": 84,
+      "h": 93
+    },
+    "back": {
+      "w": 77,
+      "h": 98
+    }
   },
   "basculin": {
     "num": 550,
@@ -8692,7 +8700,15 @@
     }
   },
   "basculinwhitestriped": {
-    "num": 550
+    "num": 550,
+    "front": {
+      "w": 57,
+      "h": 55
+    },
+    "back": {
+      "w": 65,
+      "h": 55
+    }
   },
   "sandile": {
     "num": 551,
@@ -11376,7 +11392,15 @@
     }
   },
   "avalugghisui": {
-    "num": 713
+    "num": 713,
+    "front": {
+      "w": 109,
+      "h": 46
+    },
+    "back": {
+      "w": 129,
+      "h": 50
+    }
   },
   "noibat": {
     "num": 714,
@@ -14476,7 +14500,15 @@
     }
   },
   "overqwil": {
-    "num": 904
+    "num": 904,
+    "front": {
+      "w": 112,
+      "h": 119
+    },
+    "back": {
+      "w": 89,
+      "h": 120
+    }
   },
   "enamorus": {
     "num": 905
@@ -15710,6 +15742,9 @@
   },
   "hemogoblin": {
     "num": -71
+  },
+  "cresceidon": {
+    "num": -72
   },
   "pokestarsmeargle": {
     "num": -5000,
