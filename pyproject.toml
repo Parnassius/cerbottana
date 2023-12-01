@@ -65,25 +65,25 @@ authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-aiohttp = "3.8.6"
+aiohttp = "3.9.1"
 domify = "0.4.3"
 imageprobe = "0.3.0"
 python-dateutil = "2.8.2"
-sqlalchemy = "2.0.22"
+sqlalchemy = "2.0.23"
 typenv = "0.2.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "23.10.1"
+black = "23.11.0"
 darglint = "1.8.1"
 freezegun = "1.2.2"
-mypy = "1.6.1"
-poethepoet = "0.24.1"
+mypy = "1.7.1"
+poethepoet = "0.24.4"
 pytest = "7.4.3"
 pytest-asyncio = "0.21.1"
 pytest-cov = "4.1.0"
 pytest-mock = "3.12.0"
 pytest-xprocess = "0.23.0"
-ruff = "0.1.3"
+ruff = "0.1.6"
 types-python-dateutil = "2.8.19.14"
 
 [tool.poetry.scripts]
