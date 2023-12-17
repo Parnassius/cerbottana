@@ -11232,7 +11232,15 @@
     }
   },
   "sliggoohisui": {
-    "num": 705
+    "num": 705,
+    "front": {
+      "w": 61,
+      "h": 84
+    },
+    "back": {
+      "w": 67,
+      "h": 75
+    }
   },
   "goodra": {
     "num": 706,
@@ -11246,7 +11254,15 @@
     }
   },
   "goodrahisui": {
-    "num": 706
+    "num": 706,
+    "front": {
+      "w": 71,
+      "h": 115
+    },
+    "back": {
+      "w": 99,
+      "h": 123
+    }
   },
   "klefki": {
     "num": 707,
@@ -14511,10 +14527,26 @@
     }
   },
   "enamorus": {
-    "num": 905
+    "num": 905,
+    "front": {
+      "w": 59,
+      "h": 110
+    },
+    "back": {
+      "w": 72,
+      "h": 115
+    }
   },
   "enamorustherian": {
-    "num": 905
+    "num": 905,
+    "front": {
+      "w": 74,
+      "h": 71
+    },
+    "back": {
+      "w": 97,
+      "h": 70
+    }
   },
   "sprigatito": {
     "num": 906,
@@ -15212,6 +15244,36 @@
   },
   "ogerponcornerstonetera": {
     "num": 1017
+  },
+  "archaludon": {
+    "num": 1018
+  },
+  "hydrapple": {
+    "num": 1019
+  },
+  "gougingfire": {
+    "num": 1020
+  },
+  "ragingbolt": {
+    "num": 1021
+  },
+  "ironboulder": {
+    "num": 1022
+  },
+  "ironcrown": {
+    "num": 1023
+  },
+  "terapagos": {
+    "num": 1024
+  },
+  "terapagosterastal": {
+    "num": 1024
+  },
+  "terapagosstellar": {
+    "num": 1024
+  },
+  "pecharunt": {
+    "num": 1024
   },
   "missingno": {
     "num": 0
