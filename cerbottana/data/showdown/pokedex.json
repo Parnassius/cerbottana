@@ -41315,9 +41315,6 @@
     "heightm": 3.5,
     "weightkg": 590,
     "color": "Brown",
-    "tags": [
-      "Paradox"
-    ],
     "eggGroups": [
       "Undiscovered"
     ]
@@ -41344,9 +41341,6 @@
     "heightm": 5.2,
     "weightkg": 480,
     "color": "Yellow",
-    "tags": [
-      "Paradox"
-    ],
     "eggGroups": [
       "Undiscovered"
     ]
@@ -41373,9 +41367,6 @@
     "heightm": 1.5,
     "weightkg": 162.5,
     "color": "Gray",
-    "tags": [
-      "Paradox"
-    ],
     "eggGroups": [
       "Undiscovered"
     ]
@@ -41402,9 +41393,6 @@
     "heightm": 1.6,
     "weightkg": 156,
     "color": "Blue",
-    "tags": [
-      "Paradox"
-    ],
     "eggGroups": [
       "Undiscovered"
     ]
@@ -41509,7 +41497,7 @@
     "forceTeraType": "Stellar"
   },
   "pecharunt": {
-    "num": 1024,
+    "num": 1025,
     "name": "Pecharunt",
     "types": [
       "Poison",
