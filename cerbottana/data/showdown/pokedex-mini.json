@@ -14469,10 +14469,26 @@
     }
   },
   "ursaluna": {
-    "num": 901
+    "num": 901,
+    "front": {
+      "w": 105,
+      "h": 86
+    },
+    "back": {
+      "w": 113,
+      "h": 77
+    }
   },
   "ursalunabloodmoon": {
-    "num": 901
+    "num": 901,
+    "front": {
+      "w": 98,
+      "h": 105
+    },
+    "back": {
+      "w": 87,
+      "h": 97
+    }
   },
   "basculegion": {
     "num": 902,
