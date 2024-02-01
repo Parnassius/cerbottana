@@ -32,9 +32,9 @@ class User:
         rooms (set[Room]): List of rooms the user is in.
     """
 
-    _instances: WeakKeyDictionary[
-        Connection, WeakValueDictionary[UserId, User]
-    ] = WeakKeyDictionary()
+    _instances: WeakKeyDictionary[Connection, WeakValueDictionary[UserId, User]] = (
+        WeakKeyDictionary()
+    )
 
     def __init__(
         self,

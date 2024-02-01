@@ -38,9 +38,9 @@ class Room:
         webhook (str | None): Discord webhook URL. None if missing.
     """
 
-    _instances: WeakKeyDictionary[
-        Connection, WeakValueDictionary[RoomId, Room]
-    ] = WeakKeyDictionary()
+    _instances: WeakKeyDictionary[Connection, WeakValueDictionary[RoomId, Room]] = (
+        WeakKeyDictionary()
+    )
 
     def __init__(
         self,

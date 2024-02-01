@@ -50,8 +50,7 @@ class TranslatableMixin:
         fallback_column: str | None = None,
         fallback_english: Literal[True] = True,
         fallback: str | None = None,
-    ) -> str:
-        ...
+    ) -> str: ...
 
     @overload
     def get_translation(
@@ -64,8 +63,7 @@ class TranslatableMixin:
         fallback_column: str | None = None,
         fallback_english: Literal[False] = False,
         fallback: str | None = None,
-    ) -> str | None:
-        ...
+    ) -> str | None: ...
 
     def get_translation(
         self,
@@ -198,9 +196,9 @@ class EncounterConditionValues(HashableMixin, TranslatableMixin, Base):
         "EncounterConditions", viewonly=True
     )
 
-    encounter_condition_value_prose: Mapped[
-        list[EncounterConditionValueProse]
-    ] = relationship("EncounterConditionValueProse", viewonly=True)
+    encounter_condition_value_prose: Mapped[list[EncounterConditionValueProse]] = (
+        relationship("EncounterConditionValueProse", viewonly=True)
+    )
 
     @property
     def prose(self) -> str:
@@ -284,9 +282,9 @@ class Encounters(HashableMixin, Base):
     )
     pokemon: Mapped[Pokemon] = relationship("Pokemon", viewonly=True)
 
-    encounter_condition_value_map: Mapped[
-        list[EncounterConditionValueMap]
-    ] = relationship("EncounterConditionValueMap", viewonly=True)
+    encounter_condition_value_map: Mapped[list[EncounterConditionValueMap]] = (
+        relationship("EncounterConditionValueMap", viewonly=True)
+    )
 
 
 class EvolutionChains(HashableMixin, Base):
