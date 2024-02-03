@@ -64,7 +64,7 @@ description = ""
 authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 aiohttp = "3.9.3"
 domify = "0.4.4"
 imageprobe = "0.3.0"
@@ -91,7 +91,7 @@ cerbottana = "cerbottana.__main__:main"
 
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 select = [
     "A",     # flake8-builtins
     "ARG",   # flake8-unused-arguments

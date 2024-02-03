@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import re
-from collections.abc import Coroutine, Generator
+from collections.abc import Coroutine
 from contextvars import Context
 from time import time
 from typing import TYPE_CHECKING, Any, TypeVar
@@ -178,7 +178,7 @@ class Connection:
 
     def create_task(  # type: ignore[misc]
         self,
-        coro: Generator[Any, None, _T] | Coroutine[Any, Any, _T],
+        coro: Coroutine[Any, Any, _T],
         *,
         name: str | None = None,
         context: Context | None = None,

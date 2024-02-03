@@ -1,6 +1,6 @@
 # cerbottana
 
-[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Tests status](https://img.shields.io/github/actions/workflow/status/Parnassius/cerbottana/main.yml?branch=main&label=tests)](https://github.com/Parnassius/cerbottana/actions/workflows/main.yml)
 [![Codecov](https://img.shields.io/codecov/c/gh/Parnassius/cerbottana/main?token=RYDAXOWCUS)](https://codecov.io/gh/Parnassius/cerbottana)
