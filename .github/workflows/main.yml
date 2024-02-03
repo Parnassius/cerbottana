@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HAS_SECRETS: ${{ secrets.TESTS_BOT_USERNAME != '' }}
+    outputs:
+      coverage-percentage: ${{ steps.percentage.outputs.percentage }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Poetry
@@ -53,12 +55,14 @@ jobs:
         run: poetry run poe ruff
       - name: Test with pytest
         if: github.event_name != 'schedule'
-        run: poetry run poe pytest --cov --cov-report=xml
-      - name: Upload coverage to Codecov
-        if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v4
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: poetry run poe pytest --cov
+      - name: Output coverage percentage
+        id: percentage
+        run: |
+          poetry run coverage json
+          echo "percentage=$(jq '.totals.percent_covered_display' coverage.json)" >> $GITHUB_OUTPUT
+      - name: Save coverage report
+        run: poetry run coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
       - name: Test with pytest (integration)
         if: env.HAS_SECRETS == 'true'
         env:
@@ -67,3 +71,44 @@ jobs:
           TESTS_MOD_USERNAME: ${{ secrets.TESTS_MOD_USERNAME }}
           TESTS_MOD_PASSWORD: ${{ secrets.TESTS_MOD_PASSWORD }}
         run: poetry run poe pytest-real-ps-instance
+
+  coverage-badge:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: "coverage-badge"
+      - name: Calculate badge color
+        id: color
+        run: |
+          echo "color=$(python3 -Ic 'print(
+            min(
+              (percentage, color)
+              for percentage, color in [
+                (100, "brightgreen"),
+                (90, "green"),
+                (70, "yellowgreen"),
+                (50, "yellow"),
+                (30, "orange"),
+                (0, "red"),
+              ]
+              if percentage >= int(${{ needs.build.outputs.coverage-percentage }})
+            )[1]
+          )')" >> $GITHUB_OUTPUT
+      - name: Update JSON file
+        run: |
+          jq -n \
+            --argjson schemaVersion 1 \
+            --arg label coverage \
+            --arg message ${{ needs.build.outputs.coverage-percentage }}% \
+            --arg color ${{ steps.color.outputs.color }} \
+            '$ARGS.named' > coverage-badge.json
+      - name: Create commit
+        run: |
+          git config user.name 'prns'
+          git config user.email '77806190+prnss@users.noreply.github.com'
+          git commit -am "Update coverage" && git push || true
