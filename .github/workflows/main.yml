@@ -57,11 +57,13 @@ jobs:
         if: github.event_name != 'schedule'
         run: poetry run poe pytest --cov
       - name: Output coverage percentage
+        if: github.event_name != 'schedule'
         id: percentage
         run: |
           poetry run coverage json
           echo "percentage=$(jq '.totals.percent_covered_display' coverage.json)" >> $GITHUB_OUTPUT
       - name: Save coverage report
+        if: github.event_name != 'schedule'
         run: poetry run coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
       - name: Test with pytest (integration)
         if: env.HAS_SECRETS == 'true'
