@@ -33,7 +33,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
       - name: Delete old image versions
-        uses: actions/delete-package-versions@v4
+        uses: actions/delete-package-versions@v5
         with:
           package-name: ${{ github.event.repository.name }}
           package-type: container
