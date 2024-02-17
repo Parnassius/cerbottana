@@ -1,0 +1,136 @@
+name: ci/cd
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 6'  # weekly integration tests
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule'
+    outputs:
+      coverage-percentage: ${{ steps.percentage.outputs.percentage }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache veekun database
+        uses: actions/cache@v4
+        with:
+          path: data/veekun.sqlite
+          key: veekun-${{ hashFiles('cerbottana/data/veekun/*.csv', 'cerbottana/databases/veekun.py', 'cerbottana/tasks/veekun.py') }}
+      - name: Cache pokedex database
+        uses: actions/cache@v4
+        with:
+          path: data/pokedex.sqlite
+          key: pokedex-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            pokedex-
+      - name: Create folders
+        run: mkdir -p coverage data
+      - name: Lint and test in container
+        run: podman build --volume "$PWD"/coverage:/coverage:z --volume "$PWD"/data:/data:z --target test .
+      - name: Output coverage percentage
+        id: percentage
+        if: github.event_name == 'push' && github.ref_name == 'main'
+        run: echo "percentage=$(jq '.totals.percent_covered_display' coverage/coverage.json)" >> $GITHUB_OUTPUT
+      - name: Save coverage report
+        run: cat coverage/coverage.md >> $GITHUB_STEP_SUMMARY
+
+  integration:
+    runs-on: ubuntu-24.04  # switch back to ubuntu-latest as soon as it defaults to 24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache veekun database
+        uses: actions/cache@v4
+        with:
+          path: data/veekun.sqlite
+          key: veekun-${{ hashFiles('cerbottana/data/veekun/*.csv', 'cerbottana/databases/veekun.py', 'cerbottana/tasks/veekun.py') }}
+      - name: Cache pokedex database
+        uses: actions/cache@v4
+        with:
+          path: data/pokedex.sqlite
+          key: pokedex-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            pokedex-
+      - name: Cache pokemon-showdown instance
+        uses: actions/cache@v4
+        with:
+          path: pokemon-showdown
+          key: pokemon-showdown-${{ github.run_id }}
+          restore-keys: |
+            pokemon-showdown-
+      - name: Create folders
+        run: mkdir -p data pokemon-showdown
+      - name: Run integration tests
+        run: podman build --env USERNAME --env PASSWORD --env TESTS_MOD_USERNAME --env TESTS_MOD_PASSWORD --volume "$PWD"/pokemon-showdown:/pokemon-showdown:z --volume "$PWD"/data:/data:z --target integration .
+        env:
+          USERNAME: ${{ secrets.TESTS_BOT_USERNAME }}
+          PASSWORD: ${{ secrets.TESTS_BOT_PASSWORD }}
+          TESTS_MOD_USERNAME: ${{ secrets.TESTS_MOD_USERNAME }}
+          TESTS_MOD_PASSWORD: ${{ secrets.TESTS_MOD_PASSWORD }}
+
+  coverage-badge:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: "coverage-badge"
+      - name: Calculate badge color
+        id: color
+        run: |
+          echo "color=$(python3 -Ic 'print(
+            min(
+              (percentage, color)
+              for percentage, color in [
+                (100, "brightgreen"),
+                (90, "green"),
+                (70, "yellowgreen"),
+                (50, "yellow"),
+                (30, "orange"),
+                (0, "red"),
+              ]
+              if percentage >= int(${{ needs.test.outputs.coverage-percentage }})
+            )[1]
+          )')" >> $GITHUB_OUTPUT
+      - name: Update JSON file
+        run: |
+          jq -n \
+            --argjson schemaVersion 1 \
+            --arg label coverage \
+            --arg message ${{ needs.test.outputs.coverage-percentage }}% \
+            --arg color ${{ steps.color.outputs.color }} \
+            '$ARGS.named' > coverage-badge.json
+      - name: Create commit
+        run: |
+          git config user.name 'prns'
+          git config user.email '77806190+prnss@users.noreply.github.com'
+          git commit -am "Update coverage" && git push || true
+
+  publish:
+    permissions:
+      contents: read
+      packages: write
+    needs: [test, integration]
+    if: contains(fromJSON('["push", "workflow_dispatch"]'), github.event_name) && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get target image name
+        id: image
+        run: echo "image_name=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+      - name: Build image
+        run: podman build --tag ${{ steps.image.outputs.image_name }}:latest .
+      - name: Push to ghcr.io
+        run: podman push --creds=${{ github.actor }}:${{ github.token }} ${{ steps.image.outputs.image_name }}:latest ghcr.io/${{ steps.image.outputs.image_name }}:latest
+      - name: Delete old image versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ github.event.repository.name }}
+          package-type: container
+          min-versions-to-keep: 10
