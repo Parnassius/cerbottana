@@ -165,7 +165,7 @@ async def waffletour(msg: Message) -> None:
         "Endless Battle Clause",
         "Evasion Moves Clause",
         "HP Percentage Mod",
-        "Open Team Sheets",
+        "Force Open Team Sheets",
         "Sleep Clause Mod",
         "Species Clause",
         "Terastal Clause",
