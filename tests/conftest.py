@@ -285,6 +285,8 @@ def showdown_server(xprocess) -> Generator[int, None, None]:
         return
 
     cwd = Path(__file__).parent.parent / "pokemon-showdown"
+    if cwd_ := env.str("CERBOTTANA_SHOWDOWN_PATH", default=""):
+        cwd = Path(cwd_)
     port = unused_port()
 
     # Clone pokemon showdown
