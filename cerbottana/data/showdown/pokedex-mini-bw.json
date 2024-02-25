@@ -5537,7 +5537,11 @@
     }
   },
   "kyogreprimal": {
-    "num": 382
+    "num": 382,
+    "front": {
+      "w": 121,
+      "h": 109
+    }
   },
   "groudon": {
     "num": 383,
@@ -5553,7 +5557,7 @@
   "groudonprimal": {
     "num": 383,
     "front": {
-      "w": 85,
+      "w": 96,
       "h": 79
     }
   },
@@ -8176,7 +8180,15 @@
     "num": 555
   },
   "darmanitangalarzen": {
-    "num": 555
+    "num": 555,
+    "front": {
+      "w": 52,
+      "h": 72
+    },
+    "back": {
+      "w": 46,
+      "h": 68
+    }
   },
   "maractus": {
     "num": 556,
@@ -9449,7 +9461,15 @@
     "num": 650
   },
   "quilladin": {
-    "num": 651
+    "num": 651,
+    "front": {
+      "w": 60,
+      "h": 53
+    },
+    "back": {
+      "w": 59,
+      "h": 54
+    }
   },
   "chesnaught": {
     "num": 652,
@@ -9551,12 +9571,12 @@
   "spewpa": {
     "num": 665,
     "front": {
-      "w": 96,
-      "h": 96
+      "w": 81,
+      "h": 45
     },
     "back": {
-      "w": 96,
-      "h": 96
+      "w": 81,
+      "h": 45
     }
   },
   "vivillon": {
@@ -9878,6 +9898,10 @@
     "front": {
       "w": 44,
       "h": 58
+    },
+    "back": {
+      "w": 44,
+      "h": 58
     }
   },
   "gogoat": {
@@ -10084,12 +10108,12 @@
   "tyrantrum": {
     "num": 697,
     "front": {
-      "w": 96,
-      "h": 96
+      "w": 100,
+      "h": 82
     },
     "back": {
-      "w": 96,
-      "h": 96
+      "w": 100,
+      "h": 78
     }
   },
   "amaura": {
@@ -10288,7 +10312,15 @@
     "num": 718
   },
   "diancie": {
-    "num": 719
+    "num": 719,
+    "front": {
+      "w": 63,
+      "h": 81
+    },
+    "back": {
+      "w": 61,
+      "h": 80
+    }
   },
   "dianciemega": {
     "num": 719
@@ -11038,8 +11070,12 @@
   "turtonator": {
     "num": 776,
     "front": {
-      "w": 79,
+      "w": 77,
       "h": 65
+    },
+    "back": {
+      "w": 69,
+      "h": 68
     }
   },
   "togedemaru": {
@@ -11587,7 +11623,11 @@
     "num": 849
   },
   "toxtricitygmax": {
-    "num": 849
+    "num": 849,
+    "front": {
+      "w": 90,
+      "h": 93
+    }
   },
   "toxtricitylowkeygmax": {
     "num": 849
@@ -11900,7 +11940,15 @@
     }
   },
   "zacian": {
-    "num": 888
+    "num": 888,
+    "front": {
+      "w": 89,
+      "h": 82
+    },
+    "back": {
+      "w": 91,
+      "h": 85
+    }
   },
   "zaciancrowned": {
     "num": 888
@@ -12279,7 +12327,11 @@
     "num": 983
   },
   "greattusk": {
-    "num": 984
+    "num": 984,
+    "front": {
+      "w": 98,
+      "h": 65
+    }
   },
   "screamtail": {
     "num": 985
@@ -12303,7 +12355,11 @@
     "num": 991
   },
   "ironhands": {
-    "num": 992
+    "num": 992,
+    "front": {
+      "w": 107,
+      "h": 74
+    }
   },
   "ironjugulis": {
     "num": 993
@@ -12324,7 +12380,11 @@
     "num": 998
   },
   "gimmighoul": {
-    "num": 999
+    "num": 999,
+    "front": {
+      "w": 49,
+      "h": 61
+    }
   },
   "gimmighoulroaming": {
     "num": 999
