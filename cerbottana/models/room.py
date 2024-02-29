@@ -10,6 +10,7 @@ from weakref import WeakKeyDictionary, WeakValueDictionary
 
 from domify import html_elements as e
 from domify.base_element import BaseElement
+from pokedex.enums import Language
 
 from cerbottana import utils
 from cerbottana.typedefs import RoomId
@@ -30,8 +31,9 @@ class Room:
         roomid (RoomId): Uniquely identifies a room, see utils.to_room_id.
         is_private (bool): True if room is unlisted/private.
         buffer (deque[str]): Fixed list of the last room messages.
-        language (str): Room language.
+        language_name (str): Room language.
         language_id (int): Veekun id for language.
+        language (Language): Pokedex enum for language.
         roombot (bool): True if the bot is roombot in this room.
         title (str): Formatted variant of roomid.
         users (dict[User, str]): User instance, rank string.
@@ -53,7 +55,7 @@ class Room:
 
         # Attributes initialized through handlers
         self.dynamic_buffer: deque[str] = deque(maxlen=20)
-        self.language = "English"
+        self.language_name = "English"
         self.roombot = False
         self.title = ""
 
@@ -71,7 +73,11 @@ class Room:
 
     @property
     def language_id(self) -> int:
-        return utils.get_language_id(self.language)
+        return utils.get_language_id(self.language_name)
+
+    @property
+    def language(self) -> Language:
+        return Language.get(self.language_name) or Language.get_default()
 
     @property
     def users(self) -> dict[User, str]:

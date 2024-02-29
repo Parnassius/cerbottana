@@ -23,7 +23,7 @@ from cerbottana import utils
 from cerbottana.connection import Connection
 from cerbottana.database import Database
 from cerbottana.models.room import Room
-from cerbottana.tasks.veekun import csv_to_sqlite
+from cerbottana.tasks import pokedex, veekun
 from cerbottana.utils import env
 
 
@@ -461,8 +461,15 @@ def mock_database(mocker) -> None:
     mocker.patch.object(Database, "open", mock_database_open)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def veekun_database() -> None:
     # csv_to_sqlite is an init_task, and as such it expects an instance of Connection as
     # its first parameter. However it is never used so we just pass None instead.
-    asyncio.run(csv_to_sqlite(None))  # type: ignore[arg-type]
+    asyncio.run(veekun.csv_to_sqlite(None))  # type: ignore[arg-type]
+
+
+@pytest.fixture(scope="session", autouse=True)
+def pokedex_database() -> None:
+    # setup_database is an init_task, and as such it expects an instance of Connection
+    # as its first parameter. However it is never used so we just pass None instead.
+    asyncio.run(pokedex.setup_database(None))  # type: ignore[arg-type]

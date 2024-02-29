@@ -6,6 +6,7 @@ __pycache__/
 /database.sqlite
 /dist
 /poetry.toml
+/pokedex.sqlite
 /pokemon-showdown
 /userlist_icons.csv
 /veekun.sqlite

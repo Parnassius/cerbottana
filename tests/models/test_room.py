@@ -111,7 +111,7 @@ async def test_is_private(
 
 
 @pytest.mark.parametrize(
-    "language, language_id",
+    "language_name, language_id",
     (
         (None, 9),  # English
         ("Japanese", 9),  # English
@@ -124,12 +124,12 @@ async def test_is_private(
     ),
 )
 async def test_language_id(
-    mock_connection, language: str | None, language_id: int
+    mock_connection, language_name: str | None, language_id: int
 ) -> None:
     async with mock_connection() as conn:
         room = Room.get(conn, "room1")
-        if language is not None:
-            room.language = language
+        if language_name is not None:
+            room.language_name = language_name
         assert room.language_id == language_id
 
 

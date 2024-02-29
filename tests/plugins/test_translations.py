@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+from pokedex.enums import Language
 
 from cerbottana.plugins.translations import _get_translations
 
@@ -10,17 +11,17 @@ from cerbottana.plugins.translations import _get_translations
     (
         (
             "azione",
-            (8, 9),
+            (Language.ITALIAN, Language.ENGLISH),
             {("move", "tackle"): {"Tackle"}},
         ),
         (
             "tackle",
-            (8, 9),
+            (Language.ITALIAN, Language.ENGLISH),
             {("move", "azione"): {"Azione"}},
         ),
         (
             "metronome",
-            (8, 9),
+            (Language.ITALIAN, Language.ENGLISH),
             {
                 ("item", "plessimetro"): {"Plessimetro"},
                 ("move", "metronomo"): {"Metronomo"},
@@ -28,55 +29,57 @@ from cerbottana.plugins.translations import _get_translations
         ),
         (
             "pound",
-            (6, 9),
+            (Language.GERMAN, Language.ENGLISH),
             {("move", "klaps"): {"Klaps"}},
         ),
         (
             "klaps",
-            (6, 9),
+            (Language.GERMAN, Language.ENGLISH),
             {("move", "pound"): {"Pound"}},
         ),
         (
             "klaps",
-            (6, 5),
+            (Language.GERMAN, Language.FRENCH),
             {("move", "ecrasface"): {"Écras’Face"}},  # noqa: RUF001
         ),
         (
             "charge",
-            (5, 9),
+            (Language.FRENCH, Language.ENGLISH),
             {("move", "chargeur"): {"Chargeur"}, ("move", "tackle"): {"Tackle"}},
         ),
         (
             "hdb",
-            (8, 9),
+            (Language.ITALIAN, Language.ENGLISH),
             {("item", "scarponirobusti"): {"Scarponi robusti"}},
         ),
         (
             "sub",
-            (8, 9),
+            (Language.ITALIAN, Language.ENGLISH),
             {("move", "dive"): {"Dive"}},
         ),
         (
             "sub",
-            (9, 5),
+            (Language.ENGLISH, Language.FRENCH),
             {("move", "clonage"): {"Clonage"}},
         ),
         (
             "aaaa",
-            (8, 5),
+            (Language.ITALIAN, Language.FRENCH),
             {},
         ),
         (
             "aaaa",
-            (9, 5),
+            (Language.ENGLISH, Language.FRENCH),
             {},
         ),
     ),
 )
 async def test_translations(
-    word: str, languages: tuple[int, int], results: dict[tuple[str, str], set[str]]
+    word: str,
+    languages: tuple[Language, Language],
+    results: dict[tuple[str, str], set[str]],
 ) -> None:
-    assert _get_translations(word, languages) == results
+    assert await _get_translations(word, languages) == results
 
 
 async def test_translations_conn(mock_connection):

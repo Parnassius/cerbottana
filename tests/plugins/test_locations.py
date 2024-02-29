@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-async def test_locations(mock_connection, veekun_database):
+async def test_locations(mock_connection):
     async with mock_connection() as conn:
         await conn.add_messages(
             [
@@ -42,7 +42,7 @@ async def test_locations(mock_connection, veekun_database):
         assert "/pminfobox " in next(iter(reply))
 
 
-async def test_encounters(mock_connection, veekun_database):
+async def test_encounters(mock_connection):
     async with mock_connection() as conn:
         await conn.add_messages(
             [

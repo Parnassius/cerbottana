@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from domify.base_element import BaseElement
+from pokedex.enums import Language
 
 from cerbottana import utils
 from cerbottana.models.room import Room
@@ -20,8 +21,9 @@ class Message:
         arg (str): Text body of the message without the initial command keyword.
         args (list[str]): arg attribute splitted by commas.
         parametrized_room (Room): See plugins.parametrize_room decorator.
-        language (str): Room language if room is not None, defaults to English.
+        language_name (str): Room language if room is not None, defaults to English.
         language_id (int): Veekun id for language.
+        language (Language): Pokedex enum for language.
     """
 
     def __init__(self, room: Room | None, user: User, arg: str) -> None:
@@ -63,14 +65,18 @@ class Message:
         self._parametrized_room = room
 
     @property
-    def language(self) -> str:
+    def language_name(self) -> str:
         if self.room:
-            return self.room.language
+            return self.room.language_name
         return "English"
 
     @property
     def language_id(self) -> int:
-        return utils.get_language_id(self.language)
+        return utils.get_language_id(self.language_name)
+
+    @property
+    def language(self) -> Language:
+        return Language.get(self.language_name) or Language.get_default()
 
     async def reply(self, message: str, escape: bool = True) -> None:
         """Sends a text message to a room or in PM to a user, depending on the context.

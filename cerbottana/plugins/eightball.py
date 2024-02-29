@@ -27,7 +27,7 @@ async def eightball(msg: Message) -> None:
     db = Database.open()
 
     with db.get_session() as session:
-        language_name = msg.language
+        language_name = msg.language_name
         if language_name not in DEFAULT_ANSWERS:
             language_name = "English"
         answers = DEFAULT_ANSWERS[language_name]

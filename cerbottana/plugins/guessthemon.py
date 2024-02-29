@@ -6,11 +6,12 @@ import random
 import re
 from typing import TYPE_CHECKING
 
+from pokedex import pokedex
+from pokedex import tables as t
 from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import selectinload
 
-import cerbottana.databases.veekun as v
-from cerbottana.database import Database
 from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
@@ -24,44 +25,39 @@ if TYPE_CHECKING:
     required_rank_editable=True,
 )
 async def guessthemon(msg: Message) -> None:
-    db = Database.open("veekun")
-    with db.get_session() as session:
+    async with pokedex.async_session() as session:
         # Retrieve a random pokemon
         # Hangman words can only have ascii letters, so a few pokemon names wouldn't be
         # parsed correctly. Punctuation signs are preserved.
         # Some exceptions pass silently for simplicity, i.e. Nidoran♂ / Nidoran♀.
         invalid_identifiers = ("porygon2",)
         stmt = (
-            select(v.PokemonSpecies)
-            .where(v.PokemonSpecies.identifier.notin_(invalid_identifiers))
+            select(t.PokemonSpecies)
+            .where(t.PokemonSpecies.identifier.notin_(invalid_identifiers))
             .order_by(func.random())
+            .limit(1)
+            .options(
+                selectinload(t.PokemonSpecies.names),
+                selectinload(t.PokemonSpecies.pokemon).selectinload(
+                    t.Pokemon.flavor_text
+                ),
+            )
         )
-        species = session.scalar(stmt)
+        species = await session.scalar(stmt)
 
         if not species:
             err = "Missing PokemonSpecies data"
             raise SQLAlchemyError(err)
 
         # Get localized pokemon name
-        species_name = next(
-            (
-                i.name
-                for i in species.pokemon_species_names
-                if i.local_language_id == msg.language_id
-            ),
-            None,
-        )
-        if species_name is None:
-            err = f"PokemonSpecies row {species.id}: no {msg.language} localization"
-            raise SQLAlchemyError(err)
+        species_name = species.names.get(language=msg.language).name
 
         # Get pokedex flavor text
         dex_entries = [
-            i.flavor_text
-            for i in species.pokemon_species_flavor_text
-            if i.language_id == msg.language_id
-            and i.flavor_text
-            and len(i.flavor_text) <= 150
+            x.flavor_text
+            for poke in species.pokemon
+            for x in poke.flavor_text.all(language=msg.language)
+            if len(x.flavor_text) <= 150
         ]
         if not dex_entries:  # This might fail but practically it never should
             return

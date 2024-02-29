@@ -1,57 +1,48 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol, cast
+from typing import TYPE_CHECKING, Any, cast
 
+from pokedex import pokedex
+from pokedex import tables as t
+from pokedex.enums import Language
 from sqlalchemy import select
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import selectinload
 
-import cerbottana.databases.veekun as v
 from cerbottana import utils
-from cerbottana.database import Database
 from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message
 
 
-class TranslatableTableNames(Protocol):
-    local_language_id: Mapped[int]
-    name_normalized: Mapped[str | None]
-
-
-def _get_translations(
-    word: str, languages: tuple[int, int]
+async def _get_translations(
+    word: str, languages: tuple[Language, Language]
 ) -> dict[tuple[str, str], set[str]]:
     results: dict[tuple[str, str], set[str]] = {}
 
-    db = Database.open("veekun")
-
-    with db.get_session() as session:
-        tables: dict[
-            str, tuple[type[v.TranslatableMixin], type[TranslatableTableNames]]
-        ] = {
-            "ability": (v.Abilities, v.AbilityNames),
-            "item": (v.Items, v.ItemNames),
-            "move": (v.Moves, v.MoveNames),
-            "nature": (v.Natures, v.NatureNames),
+    async with pokedex.async_session() as session:
+        tables: dict[str, tuple[Any, Any]] = {  # type: ignore[misc]
+            "ability": (t.Ability, t.AbilityName),
+            "item": (t.Item, t.ItemName),
+            "move": (t.Move, t.MoveName),
+            "nature": (t.Nature, t.NatureName),
         }
 
-        for category_name, t in tables.items():
+        for category_name, (entity_table, entity_name_table) in tables.items():
             stmt = (
-                select(t[0], t[1].local_language_id)
-                .select_from(t[0])
-                .join(t[1])
+                select(entity_table, entity_name_table.language_identifier)
+                .select_from(entity_table)
+                .join(entity_table.names)
                 .where(
-                    t[1].local_language_id.in_(languages),
-                    t[1].name_normalized == word,
+                    entity_name_table.language_identifier.in_(languages),
+                    entity_name_table.normalized_name == word,
                 )
+                .group_by(entity_table, entity_name_table.language_identifier)
+                .options(selectinload(entity_table.names))
             )
-            for row, language_id in session.execute(stmt):
-                translation = row.get_translation(
-                    f"{category_name}_names",
-                    language_id=next(iter(set(languages) - {language_id})),
-                    fallback_english=False,
-                )
+            async for row, language in await session.stream(stmt):
+                other_language = next(iter(set(languages) - {language}))
+                translation = row.names.get(language=other_language).name
 
                 if translation is not None:
                     res = (
@@ -62,11 +53,11 @@ def _get_translations(
                         results[res] = set()
                     results[res].add(translation)
 
-    if not results and 9 in languages:
+    if not results and Language.ENGLISH in languages:
         # Use aliases if english is one of the languages
         new_word = utils.to_id(utils.remove_diacritics(utils.get_alias(word)))
         if new_word != word:
-            return _get_translations(new_word, languages)
+            return await _get_translations(new_word, languages)
 
     return results
 
@@ -83,17 +74,21 @@ async def translate(msg: Message) -> None:
         await msg.reply("Cosa devo tradurre?")
         return
 
-    languages_list: list[int] = []
-    for lang in msg.args[1:]:  # Get language ids from the command parameters
-        languages_list.append(utils.get_language_id(lang))
-    languages_list.append(msg.language_id)  # Add the room language
-    languages_list.extend([9, 8])  # Hardcode english and italian as fallbacks
+    languages_list: list[Language] = []
+    for lang_name in msg.args[1:]:  # Get language ids from the command parameters
+        lang = Language.get(lang_name)
+        if lang:
+            languages_list.append(lang)
+    languages_list.append(msg.language)  # Add the room language
+    languages_list.extend(  # Hardcode english and italian as fallbacks
+        [Language.ENGLISH, Language.ITALIAN]
+    )
 
     # Get the first two unique languages
     languages = tuple(dict.fromkeys(languages_list))[:2]
-    languages = cast(tuple[int, int], languages)
+    languages = cast(tuple[Language, Language], languages)
 
-    results = _get_translations(word, languages)
+    results = await _get_translations(word, languages)
 
     if results:
         if len(results) == 1:
