@@ -165,9 +165,9 @@ async def guessthecard(msg: Message) -> None:
         hint = "Planeswalker"
     else:
         hint = card_["type_line"]
-    if "mana_cost" in card_ and card_["mana_cost"]:
+    if card_.get("mana_cost"):
         hint += ", " + card_["mana_cost"]
-    if "flavor_text" in card_ and card_["flavor_text"]:
+    if card_.get("flavor_text"):
         # Add flavor text if the hint won't exceed PS' limits.
         hint_with_flavor = hint + " ~ " + card_["flavor_text"]
         hint = hint_with_flavor if len(hint_with_flavor) <= 150 else hint
