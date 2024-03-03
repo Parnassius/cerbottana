@@ -63,6 +63,29 @@ from cerbottana.plugins.translations import _get_translations
             {("move", "clonage"): {"Clonage"}},
         ),
         (
+            "fee",
+            (Language.GERMAN, Language.ENGLISH),
+            {("egg_group", "fairy"): {"Fairy"}, ("type", "fairy"): {"Fairy"}},
+        ),
+        (
+            "dragon",
+            (Language.ENGLISH, Language.FRENCH),
+            {
+                ("egg_group", "draconique"): {"Draconique"},
+                ("type", "dragon"): {"Dragon"},
+            },
+        ),
+        (
+            "ditto",
+            (Language.SPANISH, Language.ITALIAN),
+            {("egg_group", "ditto"): {"Ditto"}, ("pokemon", "ditto"): {"Ditto"}},
+        ),
+        (
+            "flygon",
+            (Language.ENGLISH, Language.FRENCH),
+            {("pokemon", "libegon"): {"Libégon"}},
+        ),
+        (
             "aaaa",
             (Language.ITALIAN, Language.FRENCH),
             {},

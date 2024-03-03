@@ -23,9 +23,13 @@ async def _get_translations(
     async with pokedex.async_session() as session:
         tables: dict[str, tuple[Any, Any]] = {  # type: ignore[misc]
             "ability": (t.Ability, t.AbilityName),
+            "egg_group": (t.EggGroup, t.EggGroupName),
             "item": (t.Item, t.ItemName),
             "move": (t.Move, t.MoveName),
             "nature": (t.Nature, t.NatureName),
+            "pokemon": (t.PokemonSpecies, t.PokemonSpeciesName),
+            "stat": (t.Stat, t.StatName),
+            "type": (t.Type, t.TypeName),
         }
 
         for category_name, (entity_table, entity_name_table) in tables.items():
