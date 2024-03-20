@@ -75,7 +75,7 @@ sqlalchemy = "2.0.27"
 typenv = "0.2.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "24.2.0"
+black = "24.3.0"
 darglint = "1.8.1"
 freezegun = "1.4.0"
 mypy = "1.8.0"
