@@ -32517,7 +32517,7 @@
     "weightkg": 55.5,
     "color": "White",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "eggGroups": [
       "Undiscovered"
@@ -32546,7 +32546,7 @@
     "weightkg": 333.6,
     "color": "Red",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "eggGroups": [
       "Undiscovered"
@@ -32575,7 +32575,7 @@
     "weightkg": 25,
     "color": "White",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "eggGroups": [
       "Undiscovered"
@@ -32603,7 +32603,7 @@
     "weightkg": 100,
     "color": "Black",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "eggGroups": [
       "Undiscovered"
@@ -32632,7 +32632,7 @@
     "weightkg": 999.9,
     "color": "Green",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "eggGroups": [
       "Undiscovered"
@@ -32661,7 +32661,7 @@
     "weightkg": 0.1,
     "color": "White",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "eggGroups": [
       "Undiscovered"
@@ -32690,7 +32690,7 @@
     "weightkg": 888,
     "color": "Black",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "eggGroups": [
       "Undiscovered"
@@ -32941,7 +32941,7 @@
     "weightkg": 1.8,
     "color": "Purple",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "evos": [
       "Naganadel"
@@ -32973,7 +32973,7 @@
     "weightkg": 150,
     "color": "Purple",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "prevo": "Poipole",
     "evoType": "levelMove",
@@ -33005,7 +33005,7 @@
     "weightkg": 820,
     "color": "Gray",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "eggGroups": [
       "Undiscovered"
@@ -33034,7 +33034,7 @@
     "weightkg": 13,
     "color": "White",
     "tags": [
-      "Sub-Legendary"
+      "Ultra Beast"
     ],
     "eggGroups": [
       "Undiscovered"
@@ -40912,6 +40912,9 @@
     "heightm": 1.8,
     "weightkg": 92,
     "color": "Black",
+    "tags": [
+      "Sub-Legendary"
+    ],
     "eggGroups": [
       "Undiscovered"
     ]
@@ -40939,6 +40942,9 @@
     "heightm": 1,
     "weightkg": 12.2,
     "color": "Black",
+    "tags": [
+      "Sub-Legendary"
+    ],
     "eggGroups": [
       "Undiscovered"
     ]
@@ -40966,6 +40972,9 @@
     "heightm": 1.4,
     "weightkg": 30.1,
     "color": "Black",
+    "tags": [
+      "Sub-Legendary"
+    ],
     "eggGroups": [
       "Undiscovered"
     ]
@@ -40992,6 +41001,9 @@
     "heightm": 1.2,
     "weightkg": 39.8,
     "color": "Green",
+    "tags": [
+      "Sub-Legendary"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -41456,9 +41468,6 @@
     "heightm": 0.3,
     "weightkg": 16,
     "color": "Blue",
-    "tags": [
-      "Restricted Legendary"
-    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -41487,9 +41496,6 @@
     "heightm": 1.7,
     "weightkg": 77,
     "color": "Blue",
-    "tags": [
-      "Restricted Legendary"
-    ],
     "eggGroups": [
       "Undiscovered"
     ],
