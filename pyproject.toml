@@ -66,7 +66,7 @@ authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-aiohttp = "3.9.3"
+aiohttp = "3.9.4"
 domify = "0.4.4"
 imageprobe = "0.3.0"
 pokedex = {git="https://github.com/Parnassius/pokedex.git", extras=["asyncio"]}
