@@ -34,19 +34,19 @@ async def _get_translations(
 
         for category_name, (entity_table, entity_name_table) in tables.items():
             stmt = (
-                select(entity_table, entity_name_table.language_identifier)
+                select(entity_table, entity_name_table.language)
                 .select_from(entity_table)
-                .join(entity_table.names)
+                .join(entity_table.name_associations)
                 .where(
-                    entity_name_table.language_identifier.in_(languages),
+                    entity_name_table.language.in_(languages),
                     entity_name_table.normalized_name == word,
                 )
-                .group_by(entity_table, entity_name_table.language_identifier)
-                .options(selectinload(entity_table.names))
+                .group_by(entity_table, entity_name_table.language)
+                .options(selectinload(entity_table.name_associations))
             )
             async for row, language in await session.stream(stmt):
                 other_language = next(iter(set(languages) - {language}))
-                translation = row.names.get(language=other_language).name
+                translation = row.names.get(other_language)
 
                 if translation is not None:
                     res = (

@@ -10,7 +10,6 @@ from pokedex import pokedex
 from pokedex import tables as t
 from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import selectinload
 
 from cerbottana import custom_elements as ce
 from cerbottana.plugins import command_wrapper
@@ -65,16 +64,15 @@ async def annika(msg: Message) -> None:
 async def antonio200509(msg: Message) -> None:
     async with pokedex.async_session() as session:
         stmt = (
-            select(t.PokemonSpecies)
+            select(t.PokemonSpeciesName.name)
+            .filter_by(language=msg.language)
             .order_by(func.random())
             .limit(1)
-            .options(selectinload(t.PokemonSpecies.names))
         )
-        species = await session.scalar(stmt)
-        if not species:
+        species_name = await session.scalar(stmt)
+        if not species_name:
             err = "Missing PokemonSpecies data"
             raise SQLAlchemyError(err)
-        species_name = species.names.get(language=msg.language).name
     numbers = str(random.randint(0, 999999)).zfill(6)
     await msg.reply(f'Antonio{numbers} guessed "{species_name}"!')
 

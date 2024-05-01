@@ -37,9 +37,9 @@ async def guessthemon(msg: Message) -> None:
             .order_by(func.random())
             .limit(1)
             .options(
-                selectinload(t.PokemonSpecies.names),
+                selectinload(t.PokemonSpecies.name_associations),
                 selectinload(t.PokemonSpecies.pokemon).selectinload(
-                    t.Pokemon.flavor_text
+                    t.Pokemon.flavor_text_associations
                 ),
             )
         )
@@ -50,14 +50,14 @@ async def guessthemon(msg: Message) -> None:
             raise SQLAlchemyError(err)
 
         # Get localized pokemon name
-        species_name = species.names.get(language=msg.language).name
+        species_name = species.names[msg.language]
 
         # Get pokedex flavor text
         dex_entries = [
-            x.flavor_text
+            entry
             for poke in species.pokemon
-            for x in poke.flavor_text.all(language=msg.language)
-            if len(x.flavor_text) <= 150
+            for (lang, _), entry in poke.flavor_text.items()
+            if lang == msg.language and len(entry) <= 150
         ]
         if not dex_entries:  # This might fail but practically it never should
             return
