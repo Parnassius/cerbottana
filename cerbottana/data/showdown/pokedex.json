@@ -28250,6 +28250,7 @@
     "color": "Purple",
     "prevo": "Sliggoo",
     "evoLevel": 50,
+    "evoCondition": "during rain",
     "eggGroups": [
       "Dragon"
     ],
@@ -28288,6 +28289,7 @@
     "color": "Purple",
     "prevo": "Sliggoo-Hisui",
     "evoLevel": 50,
+    "evoCondition": "during rain",
     "eggGroups": [
       "Dragon"
     ]
@@ -37070,7 +37072,7 @@
     "weightkg": 89,
     "color": "Brown",
     "prevo": "Scyther",
-    "evoType": "other",
+    "evoType": "useItem",
     "evoCondition": "Black Augurite",
     "eggGroups": [
       "Bug"
