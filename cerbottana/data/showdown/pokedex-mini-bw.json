@@ -451,8 +451,12 @@
   "raichualola": {
     "num": 26,
     "front": {
-      "w": 93,
-      "h": 91
+      "w": 105,
+      "h": 96
+    },
+    "back": {
+      "w": 123,
+      "h": 93
     }
   },
   "sandshrew": {
@@ -10195,6 +10199,10 @@
     "front": {
       "w": 88,
       "h": 91
+    },
+    "back": {
+      "w": 89,
+      "h": 93
     }
   },
   "klefki": {
@@ -10591,7 +10599,15 @@
     }
   },
   "araquanid": {
-    "num": 752
+    "num": 752,
+    "front": {
+      "w": 84,
+      "h": 64
+    },
+    "back": {
+      "w": 82,
+      "h": 63
+    }
   },
   "araquanidtotem": {
     "num": 752
@@ -11275,10 +11291,26 @@
     "num": 800
   },
   "magearna": {
-    "num": 801
+    "num": 801,
+    "front": {
+      "w": 49,
+      "h": 68
+    },
+    "back": {
+      "w": 48,
+      "h": 69
+    }
   },
   "magearnaoriginal": {
-    "num": 801
+    "num": 801,
+    "front": {
+      "w": 49,
+      "h": 68
+    },
+    "back": {
+      "w": 48,
+      "h": 69
+    }
   },
   "marshadow": {
     "num": 802
@@ -11702,7 +11734,15 @@
     "num": 860
   },
   "grimmsnarl": {
-    "num": 861
+    "num": 861,
+    "front": {
+      "w": 93,
+      "h": 80
+    },
+    "back": {
+      "w": 85,
+      "h": 80
+    }
   },
   "grimmsnarlgmax": {
     "num": 861
@@ -11954,7 +11994,15 @@
     "num": 888
   },
   "zamazenta": {
-    "num": 889
+    "num": 889,
+    "front": {
+      "w": 82,
+      "h": 96
+    },
+    "back": {
+      "w": 94,
+      "h": 90
+    }
   },
   "zamazentacrowned": {
     "num": 889
@@ -12261,7 +12309,11 @@
     "num": 968
   },
   "glimmet": {
-    "num": 969
+    "num": 969,
+    "front": {
+      "w": 65,
+      "h": 75
+    }
   },
   "glimmora": {
     "num": 970
@@ -12312,7 +12364,11 @@
     "num": 979
   },
   "clodsire": {
-    "num": 980
+    "num": 980,
+    "front": {
+      "w": 74,
+      "h": 55
+    }
   },
   "farigiraf": {
     "num": 981
@@ -12340,7 +12396,11 @@
     "num": 986
   },
   "fluttermane": {
-    "num": 987
+    "num": 987,
+    "front": {
+      "w": 72,
+      "h": 70
+    }
   },
   "slitherwing": {
     "num": 988
@@ -12403,7 +12463,11 @@
     "num": 1002
   },
   "tinglu": {
-    "num": 1003
+    "num": 1003,
+    "front": {
+      "w": 97,
+      "h": 82
+    }
   },
   "chiyu": {
     "num": 1004
@@ -12412,7 +12476,11 @@
     "num": 1005
   },
   "ironvaliant": {
-    "num": 1006
+    "num": 1006,
+    "front": {
+      "w": 93,
+      "h": 86
+    }
   },
   "koraidon": {
     "num": 1007
