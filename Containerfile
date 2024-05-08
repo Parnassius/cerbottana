@@ -21,7 +21,7 @@ RUN /opt/poetry-venv/bin/poetry install --no-interaction --only main --no-root
 
 COPY . .
 RUN /opt/poetry-venv/bin/poetry build --no-interaction --format wheel
-RUN .venv/bin/pip install ./dist/*.whl
+RUN .venv/bin/pip install --no-deps ./dist/*.whl
 
 
 FROM base as final
