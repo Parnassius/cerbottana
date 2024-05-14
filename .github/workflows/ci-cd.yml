@@ -118,7 +118,7 @@ jobs:
       packages: write
     needs: [test, integration]
     if: contains(fromJSON('["push", "workflow_dispatch"]'), github.event_name) && github.ref_name == 'main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # switch back to ubuntu-latest as soon as it defaults to 24.04
     steps:
       - uses: actions/checkout@v4
       - name: Get target image name
