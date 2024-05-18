@@ -8,6 +8,7 @@ WORKDIR /app
 
 FROM base as builder
 
+RUN apk add --no-cache gcc musl-dev libffi-dev
 RUN apk add --no-cache git
 
 RUN python -m venv /opt/poetry-venv

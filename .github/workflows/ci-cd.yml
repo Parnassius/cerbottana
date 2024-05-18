@@ -10,11 +10,19 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
     if: github.event_name != 'schedule'
     outputs:
       coverage-percentage: ${{ steps.percentage.outputs.percentage }}
     steps:
       - uses: actions/checkout@v4
+      - name: Install qemu-user-static
+        if: matrix.arch != 'amd64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install qemu-user-static
       - name: Cache veekun database
         uses: actions/cache@v4
         with:
@@ -30,10 +38,10 @@ jobs:
       - name: Create folders
         run: mkdir -p coverage data
       - name: Lint and test in container
-        run: podman build --volume "$PWD"/coverage:/coverage:z --volume "$PWD"/data:/data:z --target test .
+        run: podman build --platform linux/${{ matrix.arch }} --volume "$PWD"/coverage:/coverage:z --volume "$PWD"/data:/data:z --target test .
       - name: Output coverage percentage
         id: percentage
-        if: github.event_name == 'push' && github.ref_name == 'main'
+        if: github.event_name == 'push' && github.ref_name == 'main' && matrix.arch == 'amd64'
         run: echo "percentage=$(jq '.totals.percent_covered_display' coverage/coverage.json)" >> $GITHUB_OUTPUT
       - name: Save coverage report
         run: cat coverage/coverage.md >> $GITHUB_STEP_SUMMARY
@@ -121,13 +129,17 @@ jobs:
     runs-on: ubuntu-24.04  # switch back to ubuntu-latest as soon as it defaults to 24.04
     steps:
       - uses: actions/checkout@v4
+      - name: Install qemu-user-static
+        run: |
+          sudo apt-get update
+          sudo apt-get install qemu-user-static
       - name: Get target image name
         id: image
         run: echo "image_name=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
       - name: Build image
-        run: podman build --tag ${{ steps.image.outputs.image_name }}:latest .
+        run: podman build --platform linux/amd64,linux/arm64 --manifest ${{ steps.image.outputs.image_name }}:latest .
       - name: Push to ghcr.io
-        run: podman push --creds=${{ github.actor }}:${{ github.token }} ${{ steps.image.outputs.image_name }}:latest ghcr.io/${{ steps.image.outputs.image_name }}:latest
+        run: podman manifest push --creds=${{ github.actor }}:${{ github.token }} ${{ steps.image.outputs.image_name }}:latest ghcr.io/${{ steps.image.outputs.image_name }}:latest
       - name: Delete old image versions
         uses: actions/delete-package-versions@v5
         with:
