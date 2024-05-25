@@ -127,9 +127,13 @@ jobs:
     needs: [test, integration]
     if: contains(fromJSON('["push", "workflow_dispatch"]'), github.event_name) && github.ref_name == 'main'
     runs-on: ubuntu-24.04  # switch back to ubuntu-latest as soon as it defaults to 24.04
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
     steps:
       - uses: actions/checkout@v4
       - name: Install qemu-user-static
+        if: matrix.arch != 'amd64'
         run: |
           sudo apt-get update
           sudo apt-get install qemu-user-static
@@ -137,7 +141,26 @@ jobs:
         id: image
         run: echo "image_name=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
       - name: Build image
-        run: podman build --platform linux/amd64,linux/arm64 --manifest ${{ steps.image.outputs.image_name }}:latest .
+        run: podman build --platform linux/${{ matrix.arch }} --tag ${{ steps.image.outputs.image_name }}:latest-${{ matrix.arch }} .
+      - name: Push to ghcr.io
+        run: podman push --creds=${{ github.actor }}:${{ github.token }} ${{ steps.image.outputs.image_name }}:latest-${{ matrix.arch }} ghcr.io/${{ steps.image.outputs.image_name }}:latest-${{ matrix.arch }}
+
+  publish-multiarch:
+    permissions:
+      contents: read
+      packages: write
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get target image name
+        id: image
+        run: echo "image_name=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+      - name: Create manifest
+        run: podman manifest create ${{ steps.image.outputs.image_name }}:latest
+      - name: Add images to the manifest
+        run: |
+          podman manifest add ${{ steps.image.outputs.image_name }}:latest ghcr.io/${{ steps.image.outputs.image_name }}:latest-amd64
+          podman manifest add ${{ steps.image.outputs.image_name }}:latest ghcr.io/${{ steps.image.outputs.image_name }}:latest-arm64
       - name: Push to ghcr.io
         run: podman manifest push --creds=${{ github.actor }}:${{ github.token }} ${{ steps.image.outputs.image_name }}:latest ghcr.io/${{ steps.image.outputs.image_name }}:latest
       - name: Delete old image versions
