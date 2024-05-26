@@ -46,8 +46,19 @@ jobs:
       - name: Save coverage report
         run: cat coverage/coverage.md >> $GITHUB_STEP_SUMMARY
 
+  secrets-check:
+    runs-on: ubuntu-latest
+    outputs:
+      has-secrets: ${{ steps.secrets-check.ouputs.has-secrets }}
+    steps:
+      - name: Check if secrets are available
+        id: secrets-check
+        run: echo "has-secrets=${{ secrets.TESTS_BOT_USERNAME != '' }}" >> $GITHUB_OUTPUT
+
   integration:
     runs-on: ubuntu-24.04  # switch back to ubuntu-latest as soon as it defaults to 24.04
+    needs: secrets-check
+    if: needs.secrets-check.outputs.has-secrets == 'true'
     steps:
       - uses: actions/checkout@v4
       - name: Cache veekun database
