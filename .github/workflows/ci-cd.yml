@@ -62,6 +62,13 @@ jobs:
           key: pokedex-${{ hashFiles('poetry.lock') }}
           restore-keys: |
             pokedex-
+      - name: Cache pokemon-showdown instance
+        uses: actions/cache@v4
+        with:
+          path: pokemon-showdown
+          key: pokemon-showdown-${{ github.run_id }}
+          restore-keys: |
+            pokemon-showdown-
       - name: Create folders
         run: mkdir -p data pokemon-showdown
       - name: Run integration tests
