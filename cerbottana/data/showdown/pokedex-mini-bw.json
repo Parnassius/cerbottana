@@ -2163,7 +2163,11 @@
     }
   },
   "mewtwomegax": {
-    "num": 150
+    "num": 150,
+    "front": {
+      "w": 55,
+      "h": 71
+    }
   },
   "mewtwomegay": {
     "num": 150
@@ -7125,7 +7129,11 @@
     }
   },
   "dialgaorigin": {
-    "num": 483
+    "num": 483,
+    "front": {
+      "w": 104,
+      "h": 106
+    }
   },
   "palkia": {
     "num": 484,
@@ -9551,8 +9559,8 @@
       "h": 96
     },
     "back": {
-      "w": 96,
-      "h": 96
+      "w": 38,
+      "h": 40
     }
   },
   "fletchinder": {
@@ -9570,7 +9578,15 @@
     }
   },
   "scatterbug": {
-    "num": 664
+    "num": 664,
+    "front": {
+      "w": 28,
+      "h": 46
+    },
+    "back": {
+      "w": 28,
+      "h": 49
+    }
   },
   "spewpa": {
     "num": 665,
@@ -9815,7 +9831,23 @@
     }
   },
   "pyroar": {
-    "num": 668
+    "num": 668,
+    "front": {
+      "w": 79,
+      "h": 77
+    },
+    "frontf": {
+      "w": 80,
+      "h": 78
+    },
+    "back": {
+      "w": 80,
+      "h": 74
+    },
+    "backf": {
+      "w": 89,
+      "h": 78
+    }
   },
   "flabebe": {
     "num": 669,
@@ -10025,12 +10057,12 @@
   "swirlix": {
     "num": 684,
     "front": {
-      "w": 96,
-      "h": 96
+      "w": 45,
+      "h": 53
     },
     "back": {
-      "w": 96,
-      "h": 96
+      "w": 43,
+      "h": 52
     }
   },
   "slurpuff": {
@@ -10090,7 +10122,15 @@
     }
   },
   "clawitzer": {
-    "num": 693
+    "num": 693,
+    "front": {
+      "w": 118,
+      "h": 90
+    },
+    "back": {
+      "w": 111,
+      "h": 83
+    }
   },
   "helioptile": {
     "num": 694
@@ -10270,6 +10310,10 @@
     "front": {
       "w": 84,
       "h": 66
+    },
+    "back": {
+      "w": 92,
+      "h": 66
     }
   },
   "avalugghisui": {
@@ -10355,6 +10399,10 @@
     "front": {
       "w": 63,
       "h": 35
+    },
+    "back": {
+      "w": 63,
+      "h": 35
     }
   },
   "dartrix": {
@@ -10384,7 +10432,15 @@
     "num": 727
   },
   "popplio": {
-    "num": 728
+    "num": 728,
+    "front": {
+      "w": 46,
+      "h": 55
+    },
+    "back": {
+      "w": 43,
+      "h": 59
+    }
   },
   "brionne": {
     "num": 729
@@ -10418,7 +10474,15 @@
     "num": 733
   },
   "yungoos": {
-    "num": 734
+    "num": 734,
+    "front": {
+      "w": 61,
+      "h": 37
+    },
+    "back": {
+      "w": 65,
+      "h": 39
+    }
   },
   "gumshoos": {
     "num": 735
@@ -10483,7 +10547,15 @@
     "num": 741
   },
   "oricoriopau": {
-    "num": 741
+    "num": 741,
+    "front": {
+      "w": 51,
+      "h": 52
+    },
+    "back": {
+      "w": 45,
+      "h": 55
+    }
   },
   "oricoriosensu": {
     "num": 741
@@ -10563,8 +10635,12 @@
   "wishiwashischool": {
     "num": 746,
     "front": {
-      "w": 101,
-      "h": 92
+      "w": 104,
+      "h": 89
+    },
+    "back": {
+      "w": 100,
+      "h": 111
     }
   },
   "mareanie": {
@@ -11244,7 +11320,11 @@
     }
   },
   "pheromosa": {
-    "num": 795
+    "num": 795,
+    "front": {
+      "w": 82,
+      "h": 93
+    }
   },
   "xurkitree": {
     "num": 796,
@@ -11313,13 +11393,25 @@
     }
   },
   "marshadow": {
-    "num": 802
+    "num": 802,
+    "front": {
+      "w": 32,
+      "h": 51
+    }
   },
   "poipole": {
     "num": 803
   },
   "naganadel": {
-    "num": 804
+    "num": 804,
+    "front": {
+      "w": 73,
+      "h": 94
+    },
+    "back": {
+      "w": 74,
+      "h": 94
+    }
   },
   "stakataka": {
     "num": 805,
@@ -11391,13 +11483,29 @@
     }
   },
   "raboot": {
-    "num": 814
+    "num": 814,
+    "front": {
+      "w": 45,
+      "h": 58
+    },
+    "back": {
+      "w": 36,
+      "h": 57
+    }
   },
   "cinderace": {
     "num": 815
   },
   "cinderacegmax": {
-    "num": 815
+    "num": 815,
+    "front": {
+      "w": 100,
+      "h": 100
+    },
+    "back": {
+      "w": 100,
+      "h": 100
+    }
   },
   "sobble": {
     "num": 816,
@@ -11575,6 +11683,10 @@
     "front": {
       "w": 41,
       "h": 42
+    },
+    "back": {
+      "w": 37,
+      "h": 44
     }
   },
   "flapple": {
@@ -11601,13 +11713,25 @@
     "num": 843
   },
   "sandaconda": {
-    "num": 844
+    "num": 844,
+    "front": {
+      "w": 87,
+      "h": 60
+    },
+    "back": {
+      "w": 84,
+      "h": 56
+    }
   },
   "sandacondagmax": {
     "num": 844
   },
   "cramorant": {
-    "num": 845
+    "num": 845,
+    "front": {
+      "w": 72,
+      "h": 78
+    }
   },
   "cramorantgulping": {
     "num": 845
@@ -11774,6 +11898,10 @@
     "front": {
       "w": 96,
       "h": 98
+    },
+    "back": {
+      "w": 100,
+      "h": 97
     }
   },
   "sirfetchd": {
@@ -11871,7 +11999,15 @@
     "num": 873
   },
   "stonjourner": {
-    "num": 874
+    "num": 874,
+    "front": {
+      "w": 71,
+      "h": 83
+    },
+    "back": {
+      "w": 74,
+      "h": 82
+    }
   },
   "eiscue": {
     "num": 875,
@@ -11946,7 +12082,15 @@
     }
   },
   "arctovish": {
-    "num": 883
+    "num": 883,
+    "front": {
+      "w": 91,
+      "h": 84
+    },
+    "back": {
+      "w": 101,
+      "h": 90
+    }
   },
   "duraludon": {
     "num": 884,
@@ -12010,8 +12154,12 @@
   "eternatus": {
     "num": 890,
     "front": {
-      "w": 96,
-      "h": 89
+      "w": 111,
+      "h": 102
+    },
+    "back": {
+      "w": 123,
+      "h": 103
     }
   },
   "eternatuseternamax": {
@@ -12084,10 +12232,34 @@
     "num": 901
   },
   "basculegion": {
-    "num": 902
+    "num": 902,
+    "front": {
+      "w": 110,
+      "h": 87
+    },
+    "frontf": {
+      "w": 110,
+      "h": 85
+    },
+    "back": {
+      "w": 122,
+      "h": 80
+    },
+    "backf": {
+      "w": 122,
+      "h": 80
+    }
   },
   "basculegionf": {
-    "num": 902
+    "num": 902,
+    "front": {
+      "w": 110,
+      "h": 85
+    },
+    "back": {
+      "w": 122,
+      "h": 80
+    }
   },
   "sneasler": {
     "num": 903
@@ -12159,13 +12331,25 @@
     "num": 923
   },
   "tandemaus": {
-    "num": 924
+    "num": 924,
+    "front": {
+      "w": 77,
+      "h": 42
+    }
   },
   "maushold": {
-    "num": 925
+    "num": 925,
+    "front": {
+      "w": 77,
+      "h": 42
+    }
   },
   "mausholdfour": {
-    "num": 925
+    "num": 925,
+    "front": {
+      "w": 78,
+      "h": 42
+    }
   },
   "fidough": {
     "num": 926
@@ -12428,7 +12612,11 @@
     "num": 994
   },
   "ironthorns": {
-    "num": 995
+    "num": 995,
+    "front": {
+      "w": 88,
+      "h": 79
+    }
   },
   "frigibax": {
     "num": 996
@@ -12457,7 +12645,11 @@
     }
   },
   "wochien": {
-    "num": 1001
+    "num": 1001,
+    "front": {
+      "w": 95,
+      "h": 93
+    }
   },
   "chienpao": {
     "num": 1002
@@ -12470,7 +12662,11 @@
     }
   },
   "chiyu": {
-    "num": 1004
+    "num": 1004,
+    "front": {
+      "w": 68,
+      "h": 62
+    }
   },
   "roaringmoon": {
     "num": 1005
@@ -12553,7 +12749,11 @@
     "num": 1019
   },
   "gougingfire": {
-    "num": 1020
+    "num": 1020,
+    "front": {
+      "w": 90,
+      "h": 86
+    }
   },
   "ragingbolt": {
     "num": 1021
@@ -12571,7 +12771,11 @@
     "num": 1024
   },
   "terapagosstellar": {
-    "num": 1024
+    "num": 1024,
+    "front": {
+      "w": 78,
+      "h": 96
+    }
   },
   "pecharunt": {
     "num": 1025
@@ -12884,6 +13088,9 @@
   },
   "cresceidon": {
     "num": -72
+  },
+  "chuggalong": {
+    "num": -75
   },
   "pokestarsmeargle": {
     "num": -5000,
