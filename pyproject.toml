@@ -69,21 +69,21 @@ domify = "0.4.4"
 imageprobe = "0.3.0"
 pokedex = {git="https://github.com/Parnassius/pokedex.git", extras=["asyncio"]}
 python-dateutil = "2.9.0.post0"
-sqlalchemy = "2.0.29"
+sqlalchemy = "2.0.30"
 typenv = "0.2.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "24.4.2"
 darglint = "1.8.1"
-freezegun = "1.5.0"
+freezegun = "1.5.1"
 mypy = "1.10.0"
 poethepoet = "0.26.1"
-pytest = "8.2.0"
-pytest-asyncio = "0.23.6"
+pytest = "8.2.1"
+pytest-asyncio = "0.23.7"
 pytest-cov = "5.0.0"
 pytest-mock = "3.14.0"
-pytest-xprocess = "1.0.1"
-ruff = "0.4.2"
+pytest-xprocess = "1.0.2"
+ruff = "0.4.7"
 types-python-dateutil = "2.9.0.20240316"
 
 [tool.poetry.scripts]
