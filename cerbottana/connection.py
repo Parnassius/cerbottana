@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import re
+import signal
 from collections.abc import Coroutine
 from contextvars import Context
 from time import time
@@ -61,6 +62,7 @@ class Connection:
         self.background_tasks: set[asyncio.Task[Any]] = set()  # type: ignore[misc]
 
     async def open_connection(self) -> None:
+        signal.signal(signal.SIGTERM, signal.getsignal(signal.SIGINT))
         try:
             await self._start_websocket()
         except asyncio.CancelledError:
