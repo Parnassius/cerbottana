@@ -297,6 +297,10 @@
     "front": {
       "w": 60,
       "h": 47
+    },
+    "back": {
+      "w": 70,
+      "h": 52
     }
   },
   "raticatealolatotem": {
@@ -384,25 +388,53 @@
     "num": 25
   },
   "pikachuoriginal": {
-    "num": 25
+    "num": 25,
+    "front": {
+      "w": 48,
+      "h": 44
+    }
   },
   "pikachuhoenn": {
-    "num": 25
+    "num": 25,
+    "front": {
+      "w": 48,
+      "h": 44
+    }
   },
   "pikachusinnoh": {
-    "num": 25
+    "num": 25,
+    "front": {
+      "w": 48,
+      "h": 44
+    }
   },
   "pikachuunova": {
-    "num": 25
+    "num": 25,
+    "front": {
+      "w": 48,
+      "h": 44
+    }
   },
   "pikachukalos": {
-    "num": 25
+    "num": 25,
+    "front": {
+      "w": 48,
+      "h": 44
+    }
   },
   "pikachualola": {
-    "num": 25
+    "num": 25,
+    "front": {
+      "w": 48,
+      "h": 44
+    }
   },
   "pikachupartner": {
-    "num": 25
+    "num": 25,
+    "front": {
+      "w": 48,
+      "h": 44
+    }
   },
   "pikachustarter": {
     "num": 25,
@@ -427,7 +459,11 @@
     "num": 25
   },
   "pikachuworld": {
-    "num": 25
+    "num": 25,
+    "front": {
+      "w": 48,
+      "h": 44
+    }
   },
   "raichu": {
     "num": 26,
@@ -471,7 +507,15 @@
     }
   },
   "sandshrewalola": {
-    "num": 27
+    "num": 27,
+    "front": {
+      "w": 40,
+      "h": 38
+    },
+    "back": {
+      "w": 44,
+      "h": 38
+    }
   },
   "sandslash": {
     "num": 28,
@@ -487,7 +531,11 @@
   "sandslashalola": {
     "num": 28,
     "front": {
-      "w": 59,
+      "w": 61,
+      "h": 58
+    },
+    "back": {
+      "w": 56,
       "h": 58
     }
   },
@@ -591,7 +639,15 @@
     }
   },
   "vulpixalola": {
-    "num": 37
+    "num": 37,
+    "front": {
+      "w": 59,
+      "h": 46
+    },
+    "back": {
+      "w": 63,
+      "h": 49
+    }
   },
   "ninetales": {
     "num": 38,
@@ -605,7 +661,15 @@
     }
   },
   "ninetalesalola": {
-    "num": 38
+    "num": 38,
+    "front": {
+      "w": 86,
+      "h": 67
+    },
+    "back": {
+      "w": 82,
+      "h": 69
+    }
   },
   "jigglypuff": {
     "num": 39,
@@ -775,7 +839,11 @@
     "num": 50,
     "front": {
       "w": 31,
-      "h": 34
+      "h": 33
+    },
+    "back": {
+      "w": 31,
+      "h": 33
     }
   },
   "dugtrio": {
@@ -794,6 +862,10 @@
     "front": {
       "w": 48,
       "h": 45
+    },
+    "back": {
+      "w": 50,
+      "h": 45
     }
   },
   "meowth": {
@@ -808,7 +880,15 @@
     }
   },
   "meowthalola": {
-    "num": 52
+    "num": 52,
+    "front": {
+      "w": 42,
+      "h": 46
+    },
+    "back": {
+      "w": 48,
+      "h": 46
+    }
   },
   "meowthgalar": {
     "num": 52,
@@ -836,7 +916,15 @@
     }
   },
   "persianalola": {
-    "num": 53
+    "num": 53,
+    "front": {
+      "w": 74,
+      "h": 66
+    },
+    "back": {
+      "w": 74,
+      "h": 67
+    }
   },
   "psyduck": {
     "num": 54,
@@ -1102,7 +1190,15 @@
     }
   },
   "geodudealola": {
-    "num": 74
+    "num": 74,
+    "front": {
+      "w": 70,
+      "h": 42
+    },
+    "back": {
+      "w": 71,
+      "h": 44
+    }
   },
   "graveler": {
     "num": 75,
@@ -1116,7 +1212,15 @@
     }
   },
   "graveleralola": {
-    "num": 75
+    "num": 75,
+    "front": {
+      "w": 84,
+      "h": 46
+    },
+    "back": {
+      "w": 81,
+      "h": 47
+    }
   },
   "golem": {
     "num": 76,
@@ -1130,7 +1234,15 @@
     }
   },
   "golemalola": {
-    "num": 76
+    "num": 76,
+    "front": {
+      "w": 61,
+      "h": 74
+    },
+    "back": {
+      "w": 61,
+      "h": 69
+    }
   },
   "ponyta": {
     "num": 77,
@@ -1319,7 +1431,15 @@
     }
   },
   "grimeralola": {
-    "num": 88
+    "num": 88,
+    "front": {
+      "w": 61,
+      "h": 40
+    },
+    "back": {
+      "w": 58,
+      "h": 39
+    }
   },
   "muk": {
     "num": 89,
@@ -1333,7 +1453,15 @@
     }
   },
   "mukalola": {
-    "num": 89
+    "num": 89,
+    "front": {
+      "w": 83,
+      "h": 64
+    },
+    "back": {
+      "w": 93,
+      "h": 62
+    }
   },
   "shellder": {
     "num": 90,
@@ -1519,8 +1647,12 @@
   "exeggutoralola": {
     "num": 103,
     "front": {
-      "w": 102,
-      "h": 96
+      "w": 113,
+      "h": 102
+    },
+    "back": {
+      "w": 109,
+      "h": 100
     }
   },
   "cubone": {
@@ -1546,7 +1678,15 @@
     }
   },
   "marowakalola": {
-    "num": 105
+    "num": 105,
+    "front": {
+      "w": 71,
+      "h": 72
+    },
+    "back": {
+      "w": 66,
+      "h": 76
+    }
   },
   "marowakalolatotem": {
     "num": 105
@@ -2102,7 +2242,15 @@
     }
   },
   "zapdosgalar": {
-    "num": 145
+    "num": 145,
+    "front": {
+      "w": 72,
+      "h": 70
+    },
+    "back": {
+      "w": 70,
+      "h": 69
+    }
   },
   "moltres": {
     "num": 146,
@@ -2170,7 +2318,11 @@
     }
   },
   "mewtwomegay": {
-    "num": 150
+    "num": 150,
+    "front": {
+      "w": 75,
+      "h": 87
+    }
   },
   "mew": {
     "num": 151,
@@ -4611,7 +4763,11 @@
     }
   },
   "manectricmega": {
-    "num": 310
+    "num": 310,
+    "front": {
+      "w": 92,
+      "h": 74
+    }
   },
   "plusle": {
     "num": 311,
@@ -5517,7 +5673,11 @@
     }
   },
   "latiasmega": {
-    "num": 380
+    "num": 380,
+    "front": {
+      "w": 94,
+      "h": 109
+    }
   },
   "latios": {
     "num": 381,
@@ -5531,7 +5691,11 @@
     }
   },
   "latiosmega": {
-    "num": 381
+    "num": 381,
+    "front": {
+      "w": 100,
+      "h": 104
+    }
   },
   "kyogre": {
     "num": 382,
@@ -6526,8 +6690,8 @@
   "garchompmega": {
     "num": 445,
     "front": {
-      "w": 96,
-      "h": 96
+      "w": 93,
+      "h": 80
     },
     "back": {
       "w": 96,
@@ -10093,12 +10257,12 @@
   "binacle": {
     "num": 688,
     "front": {
-      "w": 96,
-      "h": 96
+      "w": 54,
+      "h": 58
     },
     "back": {
-      "w": 96,
-      "h": 96
+      "w": 54,
+      "h": 56
     }
   },
   "barbaracle": {
@@ -10225,7 +10389,11 @@
     "num": 705
   },
   "sliggoohisui": {
-    "num": 705
+    "num": 705,
+    "front": {
+      "w": 61,
+      "h": 65
+    }
   },
   "goodra": {
     "num": 706,
@@ -10248,11 +10416,11 @@
   "klefki": {
     "num": 707,
     "front": {
-      "w": 96,
-      "h": 96
+      "w": 108,
+      "h": 97
     },
     "back": {
-      "w": 96,
+      "w": 108,
       "h": 96
     }
   },
@@ -10320,7 +10488,15 @@
     "num": 713
   },
   "noibat": {
-    "num": 714
+    "num": 714,
+    "front": {
+      "w": 66,
+      "h": 70
+    },
+    "back": {
+      "w": 68,
+      "h": 68
+    }
   },
   "noivern": {
     "num": 715,
@@ -10392,7 +10568,11 @@
     }
   },
   "volcanion": {
-    "num": 721
+    "num": 721,
+    "front": {
+      "w": 81,
+      "h": 89
+    }
   },
   "rowlet": {
     "num": 722,
@@ -10538,7 +10718,15 @@
     }
   },
   "crabominable": {
-    "num": 740
+    "num": 740,
+    "front": {
+      "w": 101,
+      "h": 86
+    },
+    "back": {
+      "w": 99,
+      "h": 86
+    }
   },
   "oricorio": {
     "num": 741
@@ -11224,6 +11412,10 @@
     "front": {
       "w": 78,
       "h": 72
+    },
+    "back": {
+      "w": 82,
+      "h": 79
     }
   },
   "dhelmise": {
@@ -11310,7 +11502,11 @@
     "num": 792
   },
   "nihilego": {
-    "num": 793
+    "num": 793,
+    "front": {
+      "w": 87,
+      "h": 85
+    }
   },
   "buzzwole": {
     "num": 794,
@@ -11345,7 +11541,15 @@
     }
   },
   "kartana": {
-    "num": 798
+    "num": 798,
+    "front": {
+      "w": 82,
+      "h": 88
+    },
+    "back": {
+      "w": 90,
+      "h": 88
+    }
   },
   "guzzlord": {
     "num": 799
@@ -11421,7 +11625,15 @@
     }
   },
   "blacephalon": {
-    "num": 806
+    "num": 806,
+    "front": {
+      "w": 100,
+      "h": 143
+    },
+    "back": {
+      "w": 85,
+      "h": 144
+    }
   },
   "zeraora": {
     "num": 807,
@@ -11802,6 +12014,10 @@
     "front": {
       "w": 96,
       "h": 96
+    },
+    "back": {
+      "w": 50,
+      "h": 35
     }
   },
   "grapploct": {
@@ -11824,6 +12040,10 @@
     "front": {
       "w": 96,
       "h": 96
+    },
+    "back": {
+      "w": 47,
+      "h": 42
     }
   },
   "hattrem": {
@@ -11908,7 +12128,15 @@
     "num": 865
   },
   "mrrime": {
-    "num": 866
+    "num": 866,
+    "front": {
+      "w": 69,
+      "h": 63
+    },
+    "back": {
+      "w": 65,
+      "h": 58
+    }
   },
   "runerigus": {
     "num": 867,
@@ -12014,11 +12242,19 @@
     "front": {
       "w": 58,
       "h": 85
+    },
+    "back": {
+      "w": 58,
+      "h": 85
     }
   },
   "eiscuenoice": {
     "num": 875,
     "front": {
+      "w": 50,
+      "h": 73
+    },
+    "back": {
       "w": 50,
       "h": 73
     }
@@ -12107,10 +12343,26 @@
     "num": 884
   },
   "dreepy": {
-    "num": 885
+    "num": 885,
+    "front": {
+      "w": 59,
+      "h": 58
+    },
+    "back": {
+      "w": 64,
+      "h": 55
+    }
   },
   "drakloak": {
-    "num": 886
+    "num": 886,
+    "front": {
+      "w": 88,
+      "h": 74
+    },
+    "back": {
+      "w": 94,
+      "h": 73
+    }
   },
   "dragapult": {
     "num": 887,
@@ -12216,7 +12468,11 @@
     "num": 898
   },
   "wyrdeer": {
-    "num": 899
+    "num": 899,
+    "front": {
+      "w": 82,
+      "h": 96
+    }
   },
   "kleavor": {
     "num": 900
@@ -12229,7 +12485,11 @@
     }
   },
   "ursalunabloodmoon": {
-    "num": 901
+    "num": 901,
+    "front": {
+      "w": 75,
+      "h": 77
+    }
   },
   "basculegion": {
     "num": 902,
@@ -12379,7 +12639,11 @@
     "num": 931
   },
   "nacli": {
-    "num": 932
+    "num": 932,
+    "front": {
+      "w": 37,
+      "h": 34
+    }
   },
   "naclstack": {
     "num": 933
@@ -12397,7 +12661,11 @@
     "num": 937
   },
   "tadbulb": {
-    "num": 938
+    "num": 938,
+    "front": {
+      "w": 27,
+      "h": 71
+    }
   },
   "bellibolt": {
     "num": 939
@@ -12622,7 +12890,11 @@
     "num": 996
   },
   "arctibax": {
-    "num": 997
+    "num": 997,
+    "front": {
+      "w": 57,
+      "h": 49
+    }
   },
   "baxcalibur": {
     "num": 998
@@ -12652,7 +12924,11 @@
     }
   },
   "chienpao": {
-    "num": 1002
+    "num": 1002,
+    "front": {
+      "w": 99,
+      "h": 90
+    }
   },
   "tinglu": {
     "num": 1003,
@@ -12746,7 +13022,11 @@
     "num": 1018
   },
   "hydrapple": {
-    "num": 1019
+    "num": 1019,
+    "front": {
+      "w": 67,
+      "h": 80
+    }
   },
   "gougingfire": {
     "num": 1020,
