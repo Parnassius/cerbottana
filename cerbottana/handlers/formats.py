@@ -25,13 +25,13 @@ async def formats(msg: ProtocolMessage) -> None:
             section = tier
             section_next = False
             continue
-        parts = tier.split(",")
+        tier_name, _, tier_code = tier.rpartition(",")
         if section is not None:
-            tier_id = utils.to_id(parts[0])
-            code = int(parts[1], 16)
+            tier_id = utils.to_id(tier_name)
+            code = int(tier_code, 16)
             tiers[tier_id] = Tier(
                 tier_id,
-                parts[0],  # name
+                tier_name,
                 section,
                 bool(code & 1),  # random
                 # bool(code & 2),  # ladder
