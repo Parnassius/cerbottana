@@ -41973,16 +41973,16 @@
     ],
     "baseStats": {
       "hp": 80,
-      "atk": 103,
+      "atk": 117,
       "def": 85,
       "spa": 55,
       "spd": 80,
-      "spe": 110
+      "spe": 128
     },
     "abilities": {
       "0": "Frisk",
       "1": "Limber",
-      "H": "Iron Fist"
+      "H": "Trace"
     },
     "heightm": 1.1,
     "weightkg": 51,
