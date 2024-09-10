@@ -25,8 +25,6 @@ jobs:
           path: cerbottana
           token: ${{ secrets.MACHINE_USER_PAT }}
           push-to-fork: prnss/cerbottana
-          committer: prns <77806190+prnss@users.noreply.github.com>
-          author: prns <77806190+prnss@users.noreply.github.com>
           commit-message: "Veekun: update data"
           title: "Veekun: update data"
           branch: veekun-update-data
