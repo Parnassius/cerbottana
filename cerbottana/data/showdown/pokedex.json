@@ -30239,7 +30239,7 @@
     "color": "Brown",
     "prevo": "Rockruff",
     "evoLevel": 25,
-    "evoCondition": "from a special Rockruff",
+    "evoCondition": "from a special Rockruff during the evening",
     "eggGroups": [
       "Field"
     ]
@@ -43935,16 +43935,19 @@
       "def": 117,
       "spa": 120,
       "spd": 110,
-      "spe": 115
+      "spe": 108
     },
     "abilities": {
-      "0": "Armor Tail"
+      "0": "Armor Tail",
+      "1": "White Smoke",
+      "H": "Slow Start"
     },
     "heightm": 6.2,
     "weightkg": 201.6,
     "color": "Black",
     "eggGroups": [
-      "Undiscovered"
+      "Dragon",
+      "Mineral"
     ],
     "gen": 9
   },
