@@ -26,7 +26,7 @@ PERMISSION_ROLES = {
     "driver": "%",
     "mod": "@",
     "owner": "#",
-    "admin": "&",
+    "admin": "~",
     "disabled": "disabled",
 }
 

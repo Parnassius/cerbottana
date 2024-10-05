@@ -328,7 +328,7 @@ def showdown_server(xprocess) -> Generator[int, None, None]:
     # Create the usergroups file
     usergroups = cwd / "config/usergroups.csv"
     with usergroups.open("w", encoding="utf-8") as f:
-        f.write(f"{env.str('USERNAME')},&\n")
+        f.write(f"{env.str('USERNAME')},~\n")
         f.write(f"{env.str('TESTS_MOD_USERNAME')},@\n")
 
     # Start the server
