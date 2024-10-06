@@ -40,6 +40,8 @@ jobs:
           path: cerbottana
           token: ${{ secrets.MACHINE_USER_PAT }}
           push-to-fork: prnss/cerbottana
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           commit-message: "Showdown: update data"
           title: "Showdown: update data"
           branch: showdown-update-data
