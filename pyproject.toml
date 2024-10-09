@@ -63,7 +63,7 @@ description = ""
 authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.13"
 aiohttp = "3.10.8"
 domify = "0.4.5"
 imageprobe = "0.3.0"
@@ -91,7 +91,7 @@ cerbottana = "cerbottana.__main__:main"
 
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py313"
 
 [tool.ruff.lint]
 select = [

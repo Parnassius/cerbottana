@@ -1148,7 +1148,7 @@ files = [
 
 [package.dependencies]
 aiosqlite = {version = "*", optional = true, markers = "extra == \"aiosqlite\""}
-greenlet = {version = "!=0.4.17", optional = true, markers = "python_version < \"3.13\" and (platform_machine == \"aarch64\" or platform_machine == \"ppc64le\" or platform_machine == \"x86_64\" or platform_machine == \"amd64\" or platform_machine == \"AMD64\" or platform_machine == \"win32\" or platform_machine == \"WIN32\") or extra == \"aiosqlite\""}
+greenlet = {version = "!=0.4.17", optional = true, markers = "extra == \"aiosqlite\""}
 typing-extensions = {version = ">=4.6.0", optional = true, markers = "extra == \"aiosqlite\""}
 
 [package.extras]
@@ -1319,5 +1319,5 @@ multidict = ">=4.0"
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.12"
-content-hash = "dcf523885e183a46e871eefe5918f11718e4cb2deb4262aa18f683ab33b54957"
+python-versions = "^3.13"
+content-hash = "3cb9b8dfac3fdccee23362bbc436eb623c50e345362f0f81f86a7f47fd2c1f1a"
