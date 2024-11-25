@@ -1,0 +1,7 @@
+.*
+!.editorconfig
+!.darglint
+**/__pycache__
+pokemon-showdown
+*.sqlite
+userlist_icons.csv
