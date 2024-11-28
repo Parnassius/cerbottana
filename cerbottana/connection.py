@@ -6,7 +6,7 @@ import signal
 from collections.abc import Coroutine
 from contextvars import Context
 from time import time
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any
 
 import aiohttp
 
@@ -20,9 +20,6 @@ from cerbottana.typedefs import RoomId
 
 if TYPE_CHECKING:
     from cerbottana.typedefs import Tier
-
-
-_T = TypeVar("_T")
 
 
 class Connection:
@@ -178,13 +175,13 @@ class Connection:
             print(f">> {message}")
             await self.websocket.send_str(message)
 
-    def create_task(  # type: ignore[misc]
+    def create_task[T](  # type: ignore[misc]
         self,
-        coro: Coroutine[Any, Any, _T],
+        coro: Coroutine[Any, Any, T],
         *,
         name: str | None = None,
         context: Context | None = None,
-    ) -> asyncio.Task[_T]:
+    ) -> asyncio.Task[T]:
         task = asyncio.create_task(coro, name=name, context=context)
         self.background_tasks.add(task)
         task.add_done_callback(self.background_tasks.discard)
