@@ -372,11 +372,12 @@ def showdown_connection(
             bot_userid = utils.to_user_id(bot_username)
             mod_userid = utils.to_user_id(mod_username)
 
-            async with make_connection(
-                True, username=bot_username, password=bot_password
-            ) as bot, make_connection(
-                username=mod_username, password=mod_password
-            ) as mod:
+            async with (
+                make_connection(
+                    True, username=bot_username, password=bot_password
+                ) as bot,
+                make_connection(username=mod_username, password=mod_password) as mod,
+            ):
                 await bot.await_message(
                     f'|queryresponse|userdetails|{{"id":"{mod_userid}"', startswith=True
                 )

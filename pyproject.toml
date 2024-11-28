@@ -32,9 +32,9 @@ disallow_incomplete_defs = false
 
 
 [tool.poe.tasks]
-ruff-fix = "ruff check cerbottana tests --fix-only --exit-zero"
-black = "black cerbottana tests"
-format = ["ruff-fix", "black"]
+ruff-fix = "ruff check cerbottana tests --fix-only"
+ruff-format = "ruff format cerbottana tests"
+format = ["ruff-fix", "ruff-format"]
 
 darglint = "darglint cerbottana tests -v 2"
 mypy = "mypy cerbottana tests"
@@ -73,7 +73,6 @@ sqlalchemy = "2.0.36"
 typenv = "0.2.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "24.10.0"
 darglint = "1.8.1"
 freezegun = "1.5.1"
 mypy = "1.13.0"
@@ -83,6 +82,7 @@ pytest-asyncio = "0.24.0"
 pytest-cov = "6.0.0"
 pytest-mock = "3.14.0"
 pytest-xprocess = "1.0.2"
+python-dotenv = {version="1.0.1", extras=["cli"]}
 ruff = "0.7.2"
 types-python-dateutil = "2.9.0.20241003"
 

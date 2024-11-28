@@ -35,7 +35,7 @@ RUN /opt/poetry-venv/bin/poetry install --no-interaction --no-root
 
 FROM test-base as test
 
-RUN /opt/poetry-venv/bin/poetry run poe black --check
+RUN /opt/poetry-venv/bin/poetry run poe ruff-format --check
 RUN /opt/poetry-venv/bin/poetry run poe darglint
 RUN /opt/poetry-venv/bin/poetry run poe mypy
 RUN /opt/poetry-venv/bin/poetry run poe ruff

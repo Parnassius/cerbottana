@@ -46,9 +46,9 @@ class Repeat:
     also registers a task to the base asyncio loop of the Connection param.
     """
 
-    _instances: ClassVar[dict[tuple[str, Room], Repeat]] = (
-        {}  # Record of active instances
-    )
+    _instances: ClassVar[
+        dict[tuple[str, Room], Repeat]
+    ] = {}  # Record of active instances
 
     def __init__(
         self,

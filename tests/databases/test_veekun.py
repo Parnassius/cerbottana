@@ -18,8 +18,7 @@ def test_table_order() -> None:
             (
                 i.value.value  # type: ignore[attr-defined]
                 for i in cls.body
-                if isinstance(i, ast.Assign)
-                and i.targets[0].id == "__tablename__"  # type: ignore[attr-defined]
+                if isinstance(i, ast.Assign) and i.targets[0].id == "__tablename__"  # type: ignore[attr-defined]
             ),
             None,
         ):

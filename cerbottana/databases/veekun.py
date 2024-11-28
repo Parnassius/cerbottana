@@ -77,10 +77,8 @@ class TranslatableMixin:
         fallback: str | None = None,
     ) -> str | None:
         if language_id is None:
-            language_id = (
-                self._sa_instance_state.session.info.get(  # type: ignore[attr-defined]
-                    "language_id", 9
-                )
+            language_id = self._sa_instance_state.session.info.get(  # type: ignore[attr-defined]
+                "language_id", 9
             )
             language_id = cast(int, language_id)
         if translation_column is None:
