@@ -15163,13 +15163,37 @@
     }
   },
   "tatsugiri": {
-    "num": 978
+    "num": 978,
+    "front": {
+      "w": 60,
+      "h": 44
+    },
+    "back": {
+      "w": 63,
+      "h": 46
+    }
   },
   "tatsugiridroopy": {
-    "num": 978
+    "num": 978,
+    "front": {
+      "w": 60,
+      "h": 44
+    },
+    "back": {
+      "w": 63,
+      "h": 46
+    }
   },
   "tatsugiristretchy": {
-    "num": 978
+    "num": 978,
+    "front": {
+      "w": 60,
+      "h": 44
+    },
+    "back": {
+      "w": 63,
+      "h": 46
+    }
   },
   "annihilape": {
     "num": 979
