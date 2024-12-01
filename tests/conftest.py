@@ -193,7 +193,7 @@ def mock_connection() -> Callable[[], AbstractAsyncContextManager[Any]]:
         main_room: str = "lobby",
         command_character: str = ".",
         webhooks: dict[str, str] | None = None,
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncGenerator[Any]:
         if rooms is None:
             rooms = ["room1"]
         if webhooks is None:
@@ -278,7 +278,7 @@ class TestConnection(Connection):
 
 
 @pytest.fixture(scope="session")
-def showdown_server(xprocess) -> Generator[int, None, None]:
+def showdown_server(xprocess) -> Generator[int]:
     external_ps_port = env.int("PS_PORT", default=None)
     if external_ps_port:
         yield external_ps_port
@@ -361,7 +361,7 @@ def showdown_connection(
         main_room: str = "lobby",
         command_character: str = ".",
         webhooks: dict[str, str] | None = None,
-    ) -> AsyncGenerator[Any, None]:
+    ) -> AsyncGenerator[Any]:
         if username is None:
             # Create and yield two default connections if no username is passed
             bot_username = env.str("USERNAME")
