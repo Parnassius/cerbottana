@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/veekun.sqlite
-          key: veekun-${{ hashFiles('cerbottana/data/veekun/*.csv', 'cerbottana/databases/veekun.py', 'cerbottana/tasks/veekun.py') }}
+          key: veekun-${{ hashFiles('src/cerbottana/data/veekun/*.csv', 'src/cerbottana/databases/veekun.py', 'src/cerbottana/tasks/veekun.py') }}
       - name: Cache pokedex database
         uses: actions/cache@v4
         with:
@@ -69,7 +69,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/veekun.sqlite
-          key: veekun-${{ hashFiles('cerbottana/data/veekun/*.csv', 'cerbottana/databases/veekun.py', 'cerbottana/tasks/veekun.py') }}
+          key: veekun-${{ hashFiles('src/cerbottana/data/veekun/*.csv', 'src/cerbottana/databases/veekun.py', 'src/cerbottana/tasks/veekun.py') }}
       - name: Cache pokedex database
         uses: actions/cache@v4
         with:

@@ -171,7 +171,7 @@ def _escape(text: str) -> str:
 
 
 def get_config_file(path: str) -> Path:
-    config_path = Path(__file__).parent.parent
+    config_path = Path(__file__).parent.parent.parent
     if config_path_ := env.str("CERBOTTANA_CONFIG_PATH", default=""):
         config_path = Path(config_path_)
     return config_path / path

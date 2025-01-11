@@ -8,7 +8,7 @@ exclude_lines = ["if TYPE_CHECKING:"]
 
 [tool.coverage.run]
 relative_files = true
-source = ["cerbottana"]
+source = ["src/cerbottana"]
 
 
 [tool.mypy]
@@ -32,13 +32,13 @@ disallow_incomplete_defs = false
 
 
 [tool.poe.tasks]
-ruff-fix = "ruff check cerbottana tests --fix-only"
-ruff-format = "ruff format cerbottana tests"
+ruff-fix = "ruff check src tests --fix-only"
+ruff-format = "ruff format src tests"
 format = ["ruff-fix", "ruff-format"]
 
-darglint = "darglint cerbottana tests -v 2"
-mypy = "mypy cerbottana tests"
-ruff = "ruff check cerbottana tests"
+darglint = "darglint src tests -v 2"
+mypy = "mypy src tests"
+ruff = "ruff check src tests"
 pytest-full = [
     {ref="pytest"},
     {shell="""
