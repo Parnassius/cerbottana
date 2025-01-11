@@ -29,9 +29,9 @@ from cerbottana.utils import env
 
 def pytest_collection_modifyitems(items):
     for item in items:
-        # Mark tests using a real showdown instance with `pytest.mark.real_ps_instance`
+        # Mark tests using a real showdown instance with `pytest.mark.integration`
         if "showdown_connection" in item.fixturenames:
-            item.add_marker(pytest.mark.real_ps_instance)
+            item.add_marker(pytest.mark.integration)
 
 
 database_metadata: dict[str, Any] = {

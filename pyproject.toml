@@ -1,6 +1,39 @@
+[project]
+name = "cerbottana"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp==3.11.11",
+    "domify==0.4.5",
+    "imageprobe==0.3.0",
+    "pokedex[asyncio] @ https://github.com/Parnassius/pokedex.git",
+    "python-dateutil==2.9.0.post0",
+    "sqlalchemy==2.0.36",
+    "typenv==0.2.0",
+]
+
+[project.scripts]
+cerbottana = "cerbottana.__main__:main"
+
+[dependency-groups]
+dev = [
+    "darglint==1.8.1",
+    "freezegun==1.5.1",
+    "mypy==1.14.1",
+    "poethepoet==0.32.0",
+    "pytest==8.3.4",
+    "pytest-asyncio==0.25.0",
+    "pytest-cov==6.0.0",
+    "pytest-mock==3.14.0",
+    "pytest-xprocess==1.0.2",
+    "python-dotenv[cli]==1.0.1",
+    "ruff==0.8.4",
+    "types-python-dateutil==2.9.0.20241206",
+]
+
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 
 [tool.coverage.report]
@@ -11,7 +44,12 @@ relative_files = true
 source = ["src/cerbottana"]
 
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
+
 [tool.mypy]
+python_version = "3.13"
 strict = true
 implicit_reexport = true
 
@@ -31,67 +69,12 @@ disallow_untyped_defs = false
 disallow_incomplete_defs = false
 
 
-[tool.poe.tasks]
-ruff-fix = "ruff check src tests --fix-only"
-ruff-format = "ruff format src tests"
-format = ["ruff-fix", "ruff-format"]
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers"
+markers = ["integration"]
+asyncio_mode = "auto"
+xfail_strict = true
 
-darglint = "darglint src tests -v 2"
-mypy = "mypy src tests"
-ruff = "ruff check src tests"
-pytest-full = [
-    {ref="pytest"},
-    {shell="""
-        dotenv get TESTS_MOD_USERNAME > /dev/null
-        if [ $? -ne 0 ]
-        then
-            echo 'Skipping tests using a real Showdown instance'
-        else
-            poe pytest-real-ps-instance
-        fi
-    """},
-]
-pytest = "pytest -m 'not real_ps_instance'"
-pytest-real-ps-instance = "pytest -m 'real_ps_instance'"
-all = ["format", "darglint", "mypy", "ruff", "pytest-full"]
-
-
-[tool.poetry]
-name = "cerbottana"
-version = "0.1.0"
-description = ""
-authors = ["Parnassius <Parnassius@users.noreply.github.com>"]
-
-[tool.poetry.dependencies]
-python = "^3.13"
-aiohttp = "3.11.11"
-domify = "0.4.5"
-imageprobe = "0.3.0"
-pokedex = {git="https://github.com/Parnassius/pokedex.git", extras=["asyncio"]}
-python-dateutil = "2.9.0.post0"
-sqlalchemy = "2.0.36"
-typenv = "0.2.0"
-
-[tool.poetry.group.dev.dependencies]
-darglint = "1.8.1"
-freezegun = "1.5.1"
-mypy = "1.14.1"
-poethepoet = "0.32.0"
-pytest = "8.3.4"
-pytest-asyncio = "0.25.0"
-pytest-cov = "6.0.0"
-pytest-mock = "3.14.0"
-pytest-xprocess = "1.0.2"
-python-dotenv = {version="1.0.1", extras=["cli"]}
-ruff = "0.8.4"
-types-python-dateutil = "2.9.0.20241206"
-
-[tool.poetry.scripts]
-cerbottana = "cerbottana.__main__:main"
-
-
-[tool.ruff]
-target-version = "py313"
 
 [tool.ruff.lint]
 select = [
@@ -143,10 +126,3 @@ ban-relative-imports = "all"
 [tool.ruff.lint.isort]
 required-imports = ["from __future__ import annotations"]
 split-on-trailing-comma = false
-
-
-[tool.pytest.ini_options]
-addopts = "--strict-config --strict-markers"
-markers = ["real_ps_instance"]
-asyncio_mode = "auto"
-xfail_strict = true
