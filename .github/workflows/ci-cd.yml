@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         arch: [amd64, arm64]
@@ -51,7 +51,7 @@ jobs:
         run: cat coverage/coverage.md >> $GITHUB_STEP_SUMMARY
 
   secrets-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       has-secrets: ${{ steps.secrets-check.outputs.has-secrets }}
     steps:
@@ -60,7 +60,7 @@ jobs:
         run: echo "has-secrets=${{ secrets.TESTS_BOT_USERNAME != '' }}" >> $GITHUB_OUTPUT
 
   integration:
-    runs-on: ubuntu-24.04  # switch back to ubuntu-latest as soon as it defaults to 24.04
+    runs-on: ubuntu-24.04
     needs: secrets-check
     if: needs.secrets-check.outputs.has-secrets == 'true'
     steps:
@@ -95,7 +95,7 @@ jobs:
           TESTS_MOD_PASSWORD: ${{ secrets.TESTS_MOD_PASSWORD }}
 
   coverage-badge:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: test
     if: github.event_name == 'push' && github.ref_name == 'main'
     permissions:
@@ -141,7 +141,7 @@ jobs:
       packages: write
     needs: [test, integration]
     if: contains(fromJSON('["push", "workflow_dispatch"]'), github.event_name) && github.ref_name == 'main'
-    runs-on: ubuntu-24.04  # switch back to ubuntu-latest as soon as it defaults to 24.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         arch: [amd64, arm64]
@@ -165,7 +165,7 @@ jobs:
       contents: read
       packages: write
     needs: publish
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Get target image name
         id: image
