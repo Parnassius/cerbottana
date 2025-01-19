@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/pokedex.sqlite
-          key: pokedex-${{ hashFiles('poetry.lock') }}
+          key: pokedex-${{ hashFiles('uv.lock') }}
           restore-keys: |
             pokedex-
       - name: Create folders
@@ -74,7 +74,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/pokedex.sqlite
-          key: pokedex-${{ hashFiles('poetry.lock') }}
+          key: pokedex-${{ hashFiles('uv.lock') }}
           restore-keys: |
             pokedex-
       - name: Cache pokemon-showdown instance
