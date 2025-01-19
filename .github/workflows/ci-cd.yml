@@ -192,3 +192,12 @@ jobs:
           package-name: ${{ github.event.repository.name }}
           package-type: container
           min-versions-to-keep: 10
+
+  dummy-required-job:
+    runs-on: ubuntu-24.04
+    needs:
+      - test
+    if: always()
+    steps:
+      - run: exit 1
+        if: ${{ contains( needs.*.result, 'failure' ) || contains( needs.*.result, 'cancelled' ) }}
