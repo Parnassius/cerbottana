@@ -46,7 +46,7 @@ jobs:
       - name: Create folders
         run: mkdir -p coverage data
       - name: Lint and test in container
-        run: podman build --platform linux/${{ matrix.arch.name }} --volume "$PWD"/coverage:/coverage:z --volume "$PWD"/data:/data:z --target test .
+        run: podman build --platform linux/${{ matrix.arch.name }} --volume "$PWD"/coverage:/coverage --volume "$PWD"/data:/data --target test .
       - name: Output coverage percentage
         id: percentage
         if: github.event_name == 'push' && github.ref_name == 'main' && matrix.arch.name == 'amd64'
@@ -91,7 +91,7 @@ jobs:
       - name: Create folders
         run: mkdir -p data pokemon-showdown
       - name: Run integration tests
-        run: podman build --env USERNAME --env PASSWORD --env TESTS_MOD_USERNAME --env TESTS_MOD_PASSWORD --volume "$PWD"/pokemon-showdown:/pokemon-showdown:z --volume "$PWD"/data:/data:z --target integration .
+        run: podman build --env USERNAME --env PASSWORD --env TESTS_MOD_USERNAME --env TESTS_MOD_PASSWORD --volume "$PWD"/pokemon-showdown:/pokemon-showdown --volume "$PWD"/data:/data --target integration .
         env:
           USERNAME: ${{ secrets.TESTS_BOT_USERNAME }}
           PASSWORD: ${{ secrets.TESTS_BOT_PASSWORD }}
