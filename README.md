@@ -13,7 +13,7 @@ These instructions assume you are in the root directory of a cloned cerbottana r
 
 If you are going to test your bot locally, you will also need an active instance of a [Pokémon Showdown server](https://github.com/smogon/pokemon-showdown).
 
-This project uses [Poetry](https://python-poetry.org/) to manage its dependencies, so you will need to install that as well.
+This project uses [uv](https://docs.astral.sh/uv/) to manage its dependencies, so you will need to install that as well.
 
 ### Generating complementary files
 
@@ -21,18 +21,14 @@ Copy `.env-example` into `.env` and edit the file accordingly. Optional environm
 
 ### Running a bot instance
 
-First of all, you need to install the dependencies (drop `--only main` if you wish to contribute):
-
-    poetry install --only main
-
 If you are running a local Pokémon Showdown instance, make sure it is active. Then, to start cerbottana, run:
 
-    poetry run cerbottana
+    uv run cerbottana
 
 To stop the execution just raise a `SIGINT` (`Ctrl + C`) in the console.
 
 ## Contributing
 
-Before submitting a pull request, please make sure that `poetry run poe all` passes without errors.
+Before submitting a pull request, please make sure that `make` passes without errors.
 
 The bulk of cerbottana code is plugins (see [plugins reference](cerbottana/plugins/README.md)). Working on a simple plugin is a good first contribution.
