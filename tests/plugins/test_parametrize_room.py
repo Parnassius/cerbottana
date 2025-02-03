@@ -43,6 +43,6 @@ def test_parametrize_room() -> None:
                 ),
                 False,
             )
-            assert (
-                not uses_parametrized_room
-            ), f"{command.name} shouldn't use msg.parametrized_room"
+            assert not uses_parametrized_room, (
+                f"{command.name} shouldn't use msg.parametrized_room"
+            )

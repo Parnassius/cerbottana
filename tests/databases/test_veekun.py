@@ -26,6 +26,6 @@ def test_table_order() -> None:
                 continue
             classes.append(tblname)
 
-    assert classes == sorted(
-        classes
-    ), "Classes are not sorted alphabetically in databases/veekun.py"
+    assert classes == sorted(classes), (
+        "Classes are not sorted alphabetically in databases/veekun.py"
+    )
