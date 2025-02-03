@@ -112,6 +112,7 @@ fixable = [
 dummy-variable-rgx = "^_$"
 
 [tool.ruff.lint.per-file-ignores]
+"src/cerbottana/plugins/*" = ["A005"]  # stdlib-module-shadowing
 "tests/*" = ["ARG001"]
 
 [tool.ruff.lint.flake8-bugbear]
