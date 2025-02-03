@@ -73,7 +73,7 @@ async def translate(msg: Message) -> None:
     if len(msg.args) > 3:
         return
 
-    word = utils.to_id(utils.remove_diacritics(msg.args[0]))
+    word = utils.to_id(utils.remove_diacritics(msg.args[0])) if msg.args else ""
     if word == "":
         await msg.reply("Cosa devo tradurre?")
         return
