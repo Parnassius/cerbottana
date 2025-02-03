@@ -9,16 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           path: cerbottana
       - name: Clone pokemon showdown
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           repository: smogon/pokemon-showdown
           path: pokemon-showdown
       - name: Set up node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
       - name: Build pokemon showdown
         run: pokemon-showdown/build
       - name: Download minidex files
@@ -35,7 +35,7 @@ jobs:
                 fs.writeFileSync("cerbottana/src/cerbottana/data/showdown/pokedex-mini-bw.json", JSON.stringify(require("./pokedex-mini-bw.js").BattlePokemonSpritesBW, null, 2) + "\n");
           ' | node -
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7
         with:
           path: cerbottana
           token: ${{ secrets.MACHINE_USER_PAT }}

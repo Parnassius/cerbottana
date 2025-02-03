@@ -25,19 +25,19 @@ jobs:
     outputs:
       coverage-percentage: ${{ steps.percentage.outputs.percentage }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install podman and buildah
         if: matrix.arch.name == 'arm64'
         run: |
           sudo apt-get update
           sudo apt-get install podman buildah
       - name: Cache veekun database
-        uses: actions/cache@v4
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
         with:
           path: data/veekun.sqlite
           key: veekun-${{ hashFiles('src/cerbottana/data/veekun/*.csv', 'src/cerbottana/databases/veekun.py', 'src/cerbottana/tasks/veekun.py') }}
       - name: Cache pokedex database
-        uses: actions/cache@v4
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
         with:
           path: data/pokedex.sqlite
           key: pokedex-${{ hashFiles('uv.lock') }}
@@ -68,21 +68,21 @@ jobs:
     needs: secrets-check
     if: needs.secrets-check.outputs.has-secrets == 'true'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Cache veekun database
-        uses: actions/cache@v4
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
         with:
           path: data/veekun.sqlite
           key: veekun-${{ hashFiles('src/cerbottana/data/veekun/*.csv', 'src/cerbottana/databases/veekun.py', 'src/cerbottana/tasks/veekun.py') }}
       - name: Cache pokedex database
-        uses: actions/cache@v4
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
         with:
           path: data/pokedex.sqlite
           key: pokedex-${{ hashFiles('uv.lock') }}
           restore-keys: |
             pokedex-
       - name: Cache pokemon-showdown instance
-        uses: actions/cache@v4
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
         with:
           path: pokemon-showdown
           key: pokemon-showdown-${{ github.run_id }}
@@ -105,7 +105,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: "coverage-badge"
       - name: Calculate badge color
@@ -154,7 +154,7 @@ jobs:
           - name: arm64
             os: ubuntu-24.04-arm  # renovate: github-runner
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install podman and buildah
         if: matrix.arch.name == 'arm64'
         run: |
@@ -187,7 +187,7 @@ jobs:
       - name: Push to ghcr.io
         run: podman manifest push --creds=${{ github.actor }}:${{ github.token }} ${{ steps.image.outputs.image_name }}:latest ghcr.io/${{ steps.image.outputs.image_name }}:latest
       - name: Delete old image versions
-        uses: actions/delete-package-versions@v5
+        uses: actions/delete-package-versions@e5bc658cc4c965c472efe991f8beea3981499c55 # v5
         with:
           package-name: ${{ github.event.repository.name }}
           package-type: container
