@@ -12,6 +12,7 @@ ENV UV_COMPILE_BYTECODE=1
 ENV UV_FROZEN=1
 ENV UV_LINK_MODE=copy
 
+RUN apk upgrade --no-cache
 RUN apk add --no-cache gcc musl-dev libffi-dev
 RUN apk add --no-cache git
 
