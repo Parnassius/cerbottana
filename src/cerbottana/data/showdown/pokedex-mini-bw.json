@@ -10980,6 +10980,9 @@
       "h": 47
     }
   },
+  "rockruffdusk": {
+    "num": 744
+  },
   "lycanroc": {
     "num": 745,
     "front": {
@@ -13876,6 +13879,12 @@
   },
   "cresceidon": {
     "num": -72
+  },
+  "chuggon": {
+    "num": -73
+  },
+  "draggalong": {
+    "num": -74
   },
   "chuggalong": {
     "num": -75
