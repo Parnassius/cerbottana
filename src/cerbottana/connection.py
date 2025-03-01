@@ -56,7 +56,7 @@ class Connection:
         self.websocket: aiohttp.ClientWebSocketResponse | None = None
         self.connection_start: float | None = None
         self.tiers: dict[str, Tier] = {}
-        self.background_tasks: set[asyncio.Task[Any]] = set()  # type: ignore[misc]
+        self.background_tasks: set[asyncio.Task[Any]] = set()  # type: ignore[explicit-any]
 
     async def open_connection(self) -> None:
         signal.signal(signal.SIGTERM, signal.getsignal(signal.SIGINT))
@@ -175,7 +175,7 @@ class Connection:
             print(f">> {message}")
             await self.websocket.send_str(message)
 
-    def create_task[T](  # type: ignore[misc]
+    def create_task[T](  # type: ignore[explicit-any]
         self,
         coro: Coroutine[Any, Any, T],
         *,

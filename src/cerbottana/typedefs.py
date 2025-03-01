@@ -20,7 +20,7 @@ Role = Literal[
     "regularuser",
 ]
 
-JsonDict = dict[str, Any]  # type: ignore[misc]
+JsonDict = dict[str, Any]  # type: ignore[explicit-any]
 
 
 @dataclass
