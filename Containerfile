@@ -1,4 +1,4 @@
-FROM python:3.13-alpine@sha256:f9d772b2b40910ee8de2ac2b15ff740b5f26b37fc811f6ada28fce71a2542b0e as base
+FROM python:3.13-alpine@sha256:323a717dc4a010fee21e3f1aac738ee10bb485de4e7593ce242b36ee48d6b352 as base
 
 ENV PYTHONUNBUFFERED=1
 
@@ -16,7 +16,7 @@ RUN apk upgrade --no-cache
 RUN apk add --no-cache gcc musl-dev libffi-dev
 RUN apk add --no-cache git
 
-COPY --from=ghcr.io/astral-sh/uv@sha256:a0c0e6aed043f5138957ea89744536eed81f1db633dc9bb3be2b882116060be2 /uv /bin/uv
+COPY --from=ghcr.io/astral-sh/uv@sha256:8257f3d17fd04794feaf89d83b4ccca3b2eaa5501de9399fa53929843c0a5b55 /uv /bin/uv
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
