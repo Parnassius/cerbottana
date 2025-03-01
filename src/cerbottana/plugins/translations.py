@@ -21,7 +21,7 @@ async def _get_translations(
     results: dict[tuple[str, str], set[str]] = {}
 
     async with pokedex.async_session() as session:
-        tables: dict[str, tuple[Any, Any]] = {  # type: ignore[misc]
+        tables: dict[str, tuple[Any, Any]] = {  # type: ignore[explicit-any]
             "ability": (t.Ability, t.AbilityName),
             "egg_group": (t.EggGroup, t.EggGroupName),
             "item": (t.Item, t.ItemName),
