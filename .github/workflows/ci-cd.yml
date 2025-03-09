@@ -128,7 +128,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [test, integration]
+    needs: test
     if: contains(fromJSON('["push", "workflow_dispatch"]'), github.event_name) && github.ref_name == 'main'
     runs-on: ${{ matrix.arch.os }}
     strategy:
