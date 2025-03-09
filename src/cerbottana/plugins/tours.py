@@ -160,7 +160,6 @@ async def randpoketour(msg: Message) -> None:
 async def waffletour(msg: Message) -> None:
     name = "Super Italian Bros. Brawl"
     rules = [
-        "Cancel Mod",
         "Dynamax Clause",
         "Endless Battle Clause",
         "Evasion Moves Clause",
