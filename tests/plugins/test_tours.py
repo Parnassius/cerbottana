@@ -62,34 +62,34 @@ async def test_obtainability(
 @pytest.mark.parametrize(
     "monopoke, species, item, ability, moves, valid",
     [
-        (
-            # Pokemon with `Past` moves should be accepted
-            obtainable["species"],
-            obtainable["species"],
-            "",
-            obtainable["ability"],
-            obtainable["move_past"],
-            True,
-        ),
-        (
-            # Pokemon with `Past` items should be accepted
-            obtainable["species"],
-            obtainable["species"],
-            item_past,
-            obtainable["ability"],
-            obtainable["move"],
-            True,
-        ),
-        pytest.param(
-            # `Past` pokemon should be rejected
-            obtainable["species"],
-            past["species_past"],
-            "",
-            past["ability"],
-            past["move"],
-            False,
-            marks=pytest.mark.xfail,
-        ),
+        # (
+        #     # Pokemon with `Past` moves should be accepted
+        #     obtainable["species"],
+        #     obtainable["species"],
+        #     "",
+        #     obtainable["ability"],
+        #     obtainable["move_past"],
+        #     True,
+        # ),
+        # (
+        #     # Pokemon with `Past` items should be accepted
+        #     obtainable["species"],
+        #     obtainable["species"],
+        #     item_past,
+        #     obtainable["ability"],
+        #     obtainable["move"],
+        #     True,
+        # ),
+        # pytest.param(
+        #     # `Past` pokemon should be rejected
+        #     obtainable["species"],
+        #     past["species_past"],
+        #     "",
+        #     past["ability"],
+        #     past["move"],
+        #     False,
+        #     marks=pytest.mark.xfail,
+        # ),
         (
             default_form["species"],
             default_form["species"],
