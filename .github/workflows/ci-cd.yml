@@ -54,19 +54,9 @@ jobs:
       - name: Save coverage report
         run: cat coverage/coverage.md >> $GITHUB_STEP_SUMMARY
 
-  secrets-check:
-    runs-on: ubuntu-24.04
-    outputs:
-      has-secrets: ${{ steps.secrets-check.outputs.has-secrets }}
-    steps:
-      - name: Check if secrets are available
-        id: secrets-check
-        run: echo "has-secrets=${{ secrets.TESTS_BOT_USERNAME != '' }}" >> $GITHUB_OUTPUT
-
   integration:
     runs-on: ubuntu-24.04
-    needs: secrets-check
-    if: needs.secrets-check.outputs.has-secrets == 'true'
+    if: github.event_name == 'schedule'
     steps:
       - uses: actions/checkout@v4
       - name: Cache veekun database
@@ -91,12 +81,7 @@ jobs:
       - name: Create folders
         run: mkdir -p data pokemon-showdown
       - name: Run integration tests
-        run: podman build --env USERNAME --env PASSWORD --env TESTS_MOD_USERNAME --env TESTS_MOD_PASSWORD --volume "$PWD"/pokemon-showdown:/pokemon-showdown --volume "$PWD"/data:/data --target integration .
-        env:
-          USERNAME: ${{ secrets.TESTS_BOT_USERNAME }}
-          PASSWORD: ${{ secrets.TESTS_BOT_PASSWORD }}
-          TESTS_MOD_USERNAME: ${{ secrets.TESTS_MOD_USERNAME }}
-          TESTS_MOD_PASSWORD: ${{ secrets.TESTS_MOD_PASSWORD }}
+        run: podman build --volume "$PWD"/pokemon-showdown:/pokemon-showdown --volume "$PWD"/data:/data --target integration .
 
   coverage-badge:
     runs-on: ubuntu-24.04

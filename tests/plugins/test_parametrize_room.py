@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import inspect
+import textwrap
 
 from cerbottana.plugins import commands
 
@@ -9,7 +10,9 @@ from cerbottana.plugins import commands
 def test_parametrize_room() -> None:
     """Checks if msg.parametrized_room is only used in properly decorated commands."""
     for command in commands.values():
-        func_source = inspect.getsource(command.callback).lstrip()
+        func_source = textwrap.dedent(
+            inspect.getsource(command.cls or command.callback)  # type: ignore[arg-type]
+        )
         func_ast = ast.parse(func_source)
 
         decorator = next(

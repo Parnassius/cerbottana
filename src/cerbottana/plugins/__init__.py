@@ -6,7 +6,7 @@ import importlib
 from collections.abc import Callable, Coroutine
 from functools import wraps
 from pathlib import Path
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING, ClassVar, Protocol, runtime_checkable
 
 from domify.base_element import BaseElement
 from sqlalchemy import select
@@ -25,6 +25,12 @@ if TYPE_CHECKING:
     HTMLPageFunc = Callable[[User, Room, int], BaseElement | None]
 
 
+@runtime_checkable
+class CommandClass(Protocol):
+    @classmethod
+    async def cmd_func(cls, msg: Message) -> None: ...
+
+
 # --- Command logic and complementary decorators ---
 
 
@@ -33,7 +39,9 @@ class Command:
 
     def __init__(
         self,
+        func_name: str,
         func: CommandFunc,
+        cls: CommandClass | None,
         aliases: tuple[str, ...],
         helpstr: str,
         is_unlisted: bool,
@@ -41,16 +49,17 @@ class Command:
         required_rank_editable: bool | str,
         allow_pm: bool | Role,
     ) -> None:
-        self.name = func.__name__
+        self.name = func_name
         self.module = func.__module__
         self.callback = func
+        self.cls = cls
         self.aliases = (self.name, *aliases)
         self.helpstr = helpstr
         self.is_unlisted = is_unlisted
         self.required_rank = required_rank
         self.required_rank_editable = required_rank_editable
         self.allow_pm = allow_pm
-        self._instances[func.__name__] = self
+        self._instances[func_name] = self
 
     @property
     def splitted_aliases(self) -> dict[str, Command]:
@@ -107,6 +116,7 @@ class Command:
 
 
 def command_check_permission(
+    func_name: str,
     func: CommandFunc,
     allow_pm: bool | Role,
     main_room_only: bool,
@@ -120,7 +130,7 @@ def command_check_permission(
         elif msg.room:
             roomid = msg.room.roomid
         is_pm = msg.room is None
-        req_rank = msg.conn.commands[func.__name__].get_required_rank(roomid, is_pm)
+        req_rank = msg.conn.commands[func_name].get_required_rank(roomid, is_pm)
 
         if main_room_only and not msg.user.has_role(req_rank, msg.conn.main_room):
             return
@@ -151,7 +161,7 @@ def command_wrapper(
     required_rank_editable: bool | str = False,
     main_room_only: bool = False,
     parametrize_room: bool = False,
-) -> Callable[[CommandFunc], Command]:
+) -> Callable[[CommandFunc | CommandClass], Command]:
     """Decorates a function to generate a Command instance.
 
     Args:
@@ -174,11 +184,17 @@ def command_wrapper(
             the docstring of `parametrize_room_wrapper`. Defaults to False.
 
     Returns:
-        Callable[[CommandFunc], Command]: Wrapper.
+        Callable[[CommandFunc | CommandClass], Command]: Wrapper.
     """
 
-    def cls_wrapper(func: CommandFunc) -> Command:
+    def cls_wrapper(func: CommandFunc | CommandClass) -> Command:
+        func_name = func.__name__.lower()  # type: ignore[union-attr]
+        cls = None
+        if isinstance(func, CommandClass):
+            cls = func
+            func = cls.cmd_func
         func = command_check_permission(
+            func_name,
             func,
             allow_pm,
             main_room_only,
@@ -187,7 +203,9 @@ def command_wrapper(
         if parametrize_room:
             func = parametrize_room_wrapper(func)
         return Command(
+            func_name,
             func,
+            cls,
             aliases,
             helpstr,
             is_unlisted,

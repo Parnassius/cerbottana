@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 import aiohttp
 
@@ -13,42 +13,81 @@ if TYPE_CHECKING:
     from cerbottana.models.protocol_message import ProtocolMessage
 
 
-async def create_tour(
-    msg: Message,
-    *,
-    formatid: str = "customgame",
-    generator: str = "elimination",
-    playercap: int | None = None,
-    generatormod: str = "",
-    name: str = "",
-    autostart: float = 2,
-    autodq: float = 1.5,
-    allow_scouting: bool = False,
-    forcetimer: bool = False,
-    rules: list[str] | None = None,
-) -> None:
-    tournew = "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
-    await msg.reply(
-        tournew.format(
-            formatid=formatid,
-            generator=generator,
-            playercap=str(playercap) if playercap else "",
-            generatormod=generatormod,
-            name=name,
-        ),
-        False,
-    )
-    if autostart is not None:
-        await msg.reply(f"/tour autostart {autostart}", False)
-    if autodq is not None:
-        await msg.reply(f"/tour autodq {autodq}", False)
-    if not allow_scouting:
-        await msg.reply("/tour scouting off", False)
-    if forcetimer:
-        await msg.reply("/tour forcetimer on", False)
-    if rules:
-        rules_str = ",".join(rules)
-        await msg.reply(f"/tour rules {rules_str}", False)
+class Tour:
+    formatid = "customgame"
+    generator: Literal["elimination", "roundrobin"] = "elimination"
+    playercap: int = 0
+    generatormod: int = 0
+    name = ""
+
+    autostart: float = 2
+    autodq: float = 1.5
+    allow_scouting = False
+    forcetimer = False
+    rules: ClassVar[list[str]] = []
+
+    @classmethod
+    async def create_tour(
+        cls,
+        msg: Message,
+        *,
+        formatid: str | None = None,
+        generator: Literal["elimination", "roundrobin"] | None = None,
+        playercap: int | None = None,
+        generatormod: int | None = None,
+        name: str | None = None,
+        autostart: float | None = None,
+        autodq: float | None = None,
+        allow_scouting: bool | None = None,
+        forcetimer: bool | None = None,
+        rules: list[str] | None = None,
+    ) -> None:
+        if formatid is None:
+            formatid = cls.formatid
+        if generator is None:
+            generator = cls.generator
+        if playercap is None:
+            playercap = cls.playercap
+        if generatormod is None:
+            generatormod = cls.generatormod
+        if name is None:
+            name = cls.name
+
+        if autostart is None:
+            autostart = cls.autostart
+        if autodq is None:
+            autodq = cls.autodq
+        if allow_scouting is None:
+            allow_scouting = cls.allow_scouting
+        if forcetimer is None:
+            forcetimer = cls.forcetimer
+        if rules is None:
+            rules = cls.rules
+
+        tournew = (
+            "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
+        )
+        await msg.reply(
+            tournew.format(
+                formatid=formatid,
+                generator=generator,
+                playercap=str(playercap) if playercap else "",
+                generatormod=str(generatormod) if generatormod else "",
+                name=name,
+            ),
+            False,
+        )
+        if autostart:
+            await msg.reply(f"/tour autostart {autostart}", False)
+        if autodq:
+            await msg.reply(f"/tour autodq {autodq}", False)
+        if not allow_scouting:
+            await msg.reply("/tour scouting off", False)
+        if forcetimer:
+            await msg.reply("/tour forcetimer on", False)
+        if rules:
+            rules_str = ",".join(rules)
+            await msg.reply(f"/tour rules {rules_str}", False)
 
 
 # --- Commands for generic tours ---
@@ -61,44 +100,44 @@ async def create_tour(
     required_rank="driver",
     allow_pm=False,
 )
-async def randtour(msg: Message) -> None:
-    tiers = [x.name for x in msg.conn.tiers.values() if x.random and x.tournament]
+class Randtour(Tour):
+    autostart = 3.5
+    allow_scouting = True
+    rules: ClassVar[list[str]] = [
+        "Blitz",
+        "Inverse Mod",
+        "Scalemons Mod",
+        "Camomons Mod",
+        "Shared Power",
+    ]
 
-    formatid = random.choice(tiers)
+    @classmethod
+    async def cmd_func(cls, msg: Message) -> None:
+        tier = random.choice(
+            [x for x in msg.conn.tiers.values() if x.random and x.tournament]
+        )
 
-    rules = []
-    forcetimer = False
+        if "1v1" in tier.id or "2v2" in tier.id:
+            generator: Literal["elimination", "roundrobin"] = "roundrobin"
+        else:
+            generator = "elimination"
 
-    if random.randint(1, 100) <= 10:
-        rules.append("Blitz")
-        forcetimer = True
+        rules = []
+        for rule in cls.rules:
+            if rule == "Shared Power" and any(
+                x in tier.id for x in ["1v1", "2v2", "doubles", "triples"]
+            ):
+                continue
+            if random.randint(1, 100) <= 10:
+                rules.append(rule)
 
-    if random.randint(1, 100) <= 10:
-        rules.append("Inverse Mod")
-
-    if random.randint(1, 100) <= 10:
-        rules.append("Scalemons Mod")
-
-    if random.randint(1, 100) <= 10:
-        rules.append("Gen 8 Camomons")
-
-    if random.randint(1, 100) <= 10 and "1v1" not in formatid and "2v2" not in formatid:
-        rules.append("Gen 8 Shared Power")
-
-    if "1v1" in formatid or "2v2" in formatid:
-        generator = "roundrobin"
-    else:
-        generator = "elimination"
-
-    await create_tour(
-        msg,
-        formatid=formatid,
-        generator=generator,
-        autostart=3.5,
-        allow_scouting=True,
-        rules=rules,
-        forcetimer=forcetimer,
-    )
+        await super().create_tour(
+            msg,
+            formatid=tier.id,
+            generator=generator,
+            forcetimer="Blitz" in rules,
+            rules=rules,
+        )
 
 
 # --- Commands for tours with custom rules ---
@@ -107,18 +146,24 @@ async def randtour(msg: Message) -> None:
 @command_wrapper(
     aliases=("monopoke",), is_unlisted=True, required_rank="driver", allow_pm=False
 )
-async def monopoketour(msg: Message) -> None:
-    if len(msg.args) != 1:
-        await msg.reply("Specifica un (solo) Pokémon")
-        return
+class Monopoketour(Tour):
+    formatid = "nationaldex"
+    name = "MONOPOKE TOUR"
 
-    await create_tour(
-        msg,
-        formatid="nationaldex",
-        name="MONOPOKE TOUR",
-        autostart=6.5,
-        rules=["-All Pokemon", f"+{msg.arg}-base", "-Focus Sash", "Z-Move Clause"],
-    )
+    autostart = 6.5
+    rules: ClassVar[list[str]] = [
+        "Z-Move Clause",
+        "-All Pokemon",
+        "-Focus Sash",
+    ]
+
+    @classmethod
+    async def cmd_func(cls, msg: Message) -> None:
+        if len(msg.args) != 1:
+            await msg.reply("Specifica un (solo) Pokémon")
+            return
+
+        await super().create_tour(msg, rules=[*cls.rules, f"+{msg.arg}-base"])
 
 
 @command_wrapper(
@@ -127,39 +172,46 @@ async def monopoketour(msg: Message) -> None:
     required_rank="driver",
     allow_pm=False,
 )
-async def randpoketour(msg: Message) -> None:
-    if not msg.arg:
-        await msg.reply("Inserisci almeno un Pokémon")
-        return
-
+class Randpoketour(Tour):
     formatid = "nationaldex"
     name = "!RANDPOKE TOUR"
-    rules = ["Z-Move Clause", "Dynamax Clause"]
-    bans = ["All Pokemon"]
-    unbans = []
-    if "," in msg.arg:
-        sep = ","
-    else:
-        sep = " "
-    for item in msg.arg.split(sep):
-        unbans.append(item.strip() + "-base")
 
-    rules.extend(["-" + i for i in bans])
-    rules.extend(["+" + i for i in unbans])
+    autostart = 12
+    rules: ClassVar[list[str]] = [
+        "Z-Move Clause",
+        "Dynamax Clause",
+        "-All Pokemon",
+    ]
 
-    await create_tour(msg, formatid=formatid, name=name, autostart=12, rules=rules)
+    @classmethod
+    async def cmd_func(cls, msg: Message) -> None:
+        if not msg.arg:
+            await msg.reply("Inserisci almeno un Pokémon")
+            return
+
+        if "," in msg.arg:
+            sep = ","
+        else:
+            sep = " "
+        unbans = [f"+{x}-base" for x in msg.arg.split(sep)]
+
+        await super().create_tour(msg, rules=[*cls.rules, *unbans])
 
 
 @command_wrapper(
-    aliases=("sibb",),
+    aliases=("waffletour",),
     helpstr="Avvia un torneo Super Italian Bros. Brawl",
     is_unlisted=True,
     required_rank="driver",
     allow_pm=False,
 )
-async def waffletour(msg: Message) -> None:
+class Sibb(Tour):
     name = "Super Italian Bros. Brawl"
-    rules = [
+
+    autostart = 5
+    autodq = 3
+    forcetimer = True
+    rules: ClassVar[list[str]] = [
         "Dynamax Clause",
         "Endless Battle Clause",
         "Evasion Moves Clause",
@@ -170,11 +222,11 @@ async def waffletour(msg: Message) -> None:
         "Terastal Clause",
     ]
 
-    await create_tour(
-        msg, name=name, autostart=5, autodq=3, forcetimer=True, rules=rules
-    )
+    @classmethod
+    async def cmd_func(cls, msg: Message) -> None:
+        await super().create_tour(msg)
 
-    await msg.reply("!viewfaq sibb", False)
+        await msg.reply("!viewfaq sibb", False)
 
 
 # --- Tour generation enhancements ---

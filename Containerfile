@@ -31,8 +31,11 @@ FROM builder as test-base
 
 RUN apk add --no-cache gcc musl-dev linux-headers
 RUN apk add --no-cache make
+RUN apk add --no-cache nodejs npm
 
-RUN mkdir -p /data
+ENV CERBOTTANA_SHOWDOWN_PATH=/pokemon-showdown
+
+RUN mkdir -p /data /pokemon-showdown
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --no-editable
@@ -49,13 +52,7 @@ RUN uv run coverage report --format=markdown > /coverage/coverage.md
 
 FROM test-base as integration
 
-ENV CERBOTTANA_SHOWDOWN_PATH=/pokemon-showdown
-
-RUN apk add --no-cache nodejs npm
-
-RUN mkdir -p /pokemon-showdown
-
-RUN make pytest-integration
+RUN uv run pytest -m integration
 
 
 FROM base as final

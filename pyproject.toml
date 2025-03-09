@@ -24,7 +24,6 @@ dev = [
     "pytest-asyncio==0.25.3",
     "pytest-cov==6.0.0",
     "pytest-mock==3.14.0",
-    "pytest-xprocess==1.0.2",
     "python-dotenv[cli]==1.0.1",
     "ruff==0.9.9",
     "types-python-dateutil==2.9.0.20241206",

@@ -21,16 +21,12 @@ ruff:
 
 .PHONY: pytest
 pytest:
-	@uv run pytest -m 'not integration' --cov
-
-.PHONY: pytest-integration
-pytest-integration:
-	@uv run pytest -m 'integration'
+	@uv run pytest --cov
 
 .PHONY: lint
 lint: format-check darglint mypy ruff
 
 .PHONY: all
-all: format darglint mypy ruff pytest pytest-integration
+all: format darglint mypy ruff pytest
 
 .DEFAULT_GOAL := all
