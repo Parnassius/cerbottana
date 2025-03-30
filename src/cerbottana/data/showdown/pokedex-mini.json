@@ -3714,7 +3714,15 @@
     }
   },
   "qwilfishhisui": {
-    "num": 211
+    "num": 211,
+    "front": {
+      "w": 64,
+      "h": 53
+    },
+    "back": {
+      "w": 77,
+      "h": 52
+    }
   },
   "scizor": {
     "num": 212,
@@ -14764,13 +14772,37 @@
     }
   },
   "pawmi": {
-    "num": 921
+    "num": 921,
+    "front": {
+      "w": 41,
+      "h": 50
+    },
+    "back": {
+      "w": 48,
+      "h": 47
+    }
   },
   "pawmo": {
-    "num": 922
+    "num": 922,
+    "front": {
+      "w": 52,
+      "h": 62
+    },
+    "back": {
+      "w": 57,
+      "h": 62
+    }
   },
   "pawmot": {
-    "num": 923
+    "num": 923,
+    "front": {
+      "w": 54,
+      "h": 76
+    },
+    "back": {
+      "w": 68,
+      "h": 75
+    }
   },
   "tandemaus": {
     "num": 924,
@@ -14845,16 +14877,48 @@
     }
   },
   "squawkabilly": {
-    "num": 931
+    "num": 931,
+    "front": {
+      "w": 118,
+      "h": 99
+    },
+    "back": {
+      "w": 96,
+      "h": 97
+    }
   },
   "squawkabillyblue": {
-    "num": 931
+    "num": 931,
+    "front": {
+      "w": 118,
+      "h": 99
+    },
+    "back": {
+      "w": 96,
+      "h": 97
+    }
   },
   "squawkabillyyellow": {
-    "num": 931
+    "num": 931,
+    "front": {
+      "w": 118,
+      "h": 99
+    },
+    "back": {
+      "w": 96,
+      "h": 97
+    }
   },
   "squawkabillywhite": {
-    "num": 931
+    "num": 931,
+    "front": {
+      "w": 118,
+      "h": 99
+    },
+    "back": {
+      "w": 96,
+      "h": 97
+    }
   },
   "nacli": {
     "num": 932
