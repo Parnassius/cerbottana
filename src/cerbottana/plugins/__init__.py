@@ -63,7 +63,7 @@ class Command:
 
     @property
     def splitted_aliases(self) -> dict[str, Command]:
-        return {alias: self for alias in self.aliases}
+        return dict.fromkeys(self.aliases, self)
 
     def get_required_rank(self, roomid: RoomId | None, is_pm: bool) -> Role:
         req_rank = self.required_rank
