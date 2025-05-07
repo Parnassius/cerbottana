@@ -1,21 +1,23 @@
 {
     extends: [
-        "config:recommended",
-        "config:semverAllMonthly",
-        ":configMigration",
-        ":disableRateLimiting",
+        'config:recommended',
+        'config:semverAllMonthly',
+        ':configMigration',
+        ':disableRateLimiting',
     ],
-    additionalBranchPrefix: "{{datasource}}-",
-    commitMessagePrefix: "[{{datasource}}]",
+    additionalBranchPrefix: '{{datasource}}-',
+    commitMessagePrefix: '[{{datasource}}]',
     customManagers: [
         {
-            customType: "regex",
-            datasourceTemplate: "github-runners",
-            depTypeTemplate: "github-runner",
-            versioningTemplate: "docker",
-            fileMatch: ["^\\.github/workflows/.+\\.ya?ml$"],
+            customType: 'regex',
+            datasourceTemplate: 'github-runners',
+            depTypeTemplate: 'github-runner',
+            versioningTemplate: 'docker',
+            managerFilePatterns: [
+                '/^\\.github/workflows/.+\\.ya?ml$/',
+            ],
             matchStrings: [
-                "[\"']?(?<depName>[^\\s]+?)-(?<currentValue>[^\\s]+?)[\"']?\\s+# renovate: github-runner",
+                '["\']?(?<depName>[^\\s]+?)-(?<currentValue>[^\\s]+?)["\']?\\s+# renovate: github-runner',
             ],
         },
     ],
