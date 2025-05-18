@@ -31199,6 +31199,7 @@
   "silvally": {
     "num": 773,
     "name": "Silvally",
+    "baseForme": "Normal",
     "types": [
       "Normal"
     ],
@@ -35637,7 +35638,7 @@
   "alcremie": {
     "num": 869,
     "name": "Alcremie",
-    "baseForme": "Vanilla Cream",
+    "baseForme": "Vanilla-Cream",
     "types": [
       "Fairy"
     ],
@@ -35855,6 +35856,7 @@
   "eiscue": {
     "num": 875,
     "name": "Eiscue",
+    "baseForme": "Ice",
     "types": [
       "Ice"
     ],
@@ -35983,6 +35985,7 @@
   "morpeko": {
     "num": 877,
     "name": "Morpeko",
+    "baseForme": "Full-Belly",
     "types": [
       "Electric",
       "Dark"
@@ -41062,7 +41065,7 @@
       "Ogerpon-Hearthflame-Tera",
       "Ogerpon-Cornerstone-Tera"
     ],
-    "forceTeraType": "Grass"
+    "requiredTeraType": "Grass"
   },
   "ogerponwellspring": {
     "num": 1017,
@@ -41093,7 +41096,7 @@
     ],
     "requiredItem": "Wellspring Mask",
     "changesFrom": "Ogerpon",
-    "forceTeraType": "Water"
+    "requiredTeraType": "Water"
   },
   "ogerponhearthflame": {
     "num": 1017,
@@ -41124,7 +41127,7 @@
     ],
     "requiredItem": "Hearthflame Mask",
     "changesFrom": "Ogerpon",
-    "forceTeraType": "Fire"
+    "requiredTeraType": "Fire"
   },
   "ogerponcornerstone": {
     "num": 1017,
@@ -41155,7 +41158,7 @@
     ],
     "requiredItem": "Cornerstone Mask",
     "changesFrom": "Ogerpon",
-    "forceTeraType": "Rock"
+    "requiredTeraType": "Rock"
   },
   "ogerpontealtera": {
     "num": 1017,
@@ -41184,7 +41187,7 @@
       "Undiscovered"
     ],
     "battleOnly": "Ogerpon",
-    "forceTeraType": "Grass"
+    "requiredTeraType": "Grass"
   },
   "ogerponwellspringtera": {
     "num": 1017,
@@ -41215,7 +41218,7 @@
     ],
     "requiredItem": "Wellspring Mask",
     "battleOnly": "Ogerpon-Wellspring",
-    "forceTeraType": "Water"
+    "requiredTeraType": "Water"
   },
   "ogerponhearthflametera": {
     "num": 1017,
@@ -41246,7 +41249,7 @@
     ],
     "requiredItem": "Hearthflame Mask",
     "battleOnly": "Ogerpon-Hearthflame",
-    "forceTeraType": "Fire"
+    "requiredTeraType": "Fire"
   },
   "ogerponcornerstonetera": {
     "num": 1017,
@@ -41277,7 +41280,7 @@
     ],
     "requiredItem": "Cornerstone Mask",
     "battleOnly": "Ogerpon-Cornerstone",
-    "forceTeraType": "Rock"
+    "requiredTeraType": "Rock"
   },
   "archaludon": {
     "num": 1018,
@@ -41480,7 +41483,7 @@
       "Terapagos-Terastal",
       "Terapagos-Stellar"
     ],
-    "forceTeraType": "Stellar"
+    "requiredTeraType": "Stellar"
   },
   "terapagosterastal": {
     "num": 1024,
@@ -41508,7 +41511,7 @@
       "Undiscovered"
     ],
     "battleOnly": "Terapagos",
-    "forceTeraType": "Stellar"
+    "requiredTeraType": "Stellar"
   },
   "terapagosstellar": {
     "num": 1024,
@@ -41536,7 +41539,7 @@
       "Undiscovered"
     ],
     "battleOnly": "Terapagos",
-    "forceTeraType": "Stellar"
+    "requiredTeraType": "Stellar"
   },
   "pecharunt": {
     "num": 1025,
