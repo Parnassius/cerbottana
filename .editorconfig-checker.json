@@ -1,0 +1,6 @@
+{
+  "Exclude": [
+    "LICENSE",
+    "src/cerbottana/data/veekun/.*\\.csv"
+  ]
+}
