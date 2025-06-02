@@ -31,4 +31,4 @@ To stop the execution just raise a `SIGINT` (`Ctrl + C`) in the console.
 
 Before submitting a pull request, please make sure that `make` passes without errors.
 
-The bulk of cerbottana code is plugins (see [plugins reference](cerbottana/plugins/README.md)). Working on a simple plugin is a good first contribution.
+The bulk of cerbottana code is plugins (see [plugins reference](src/cerbottana/plugins/README.md)). Working on a simple plugin is a good first contribution.
