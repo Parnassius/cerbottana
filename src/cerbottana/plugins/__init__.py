@@ -18,10 +18,11 @@ from cerbottana.models.room import Room
 from cerbottana.typedefs import Role, RoomId
 
 if TYPE_CHECKING:
-    from cerbottana.models.message import Message
+    from cerbottana.models.message import Message, RawMessage
     from cerbottana.models.user import User
 
     CommandFunc = Callable[[Message], Coroutine[None, None, None]]
+    MessageListenerFunc = Callable[[RawMessage], Coroutine[None, None, None]]
     HTMLPageFunc = Callable[[User, Room, int], BaseElement | None]
 
 
@@ -29,6 +30,12 @@ if TYPE_CHECKING:
 class CommandClass(Protocol):
     @classmethod
     async def cmd_func(cls, msg: Message) -> None: ...
+
+
+@runtime_checkable
+class LongRunningCommandClass(CommandClass, Protocol):
+    @classmethod
+    async def on_message(cls, msg: RawMessage) -> None: ...
 
 
 # --- Command logic and complementary decorators ---
@@ -48,6 +55,7 @@ class Command:
         required_rank: Role,
         required_rank_editable: bool | str,
         allow_pm: bool | Role,
+        single_instance: bool,
     ) -> None:
         self.name = func_name
         self.module = func.__module__
@@ -59,6 +67,7 @@ class Command:
         self.required_rank = required_rank
         self.required_rank_editable = required_rank_editable
         self.allow_pm = allow_pm
+        self.single_instance = single_instance
         self._instances[func_name] = self
 
     @property
@@ -161,6 +170,7 @@ def command_wrapper(
     required_rank_editable: bool | str = False,
     main_room_only: bool = False,
     parametrize_room: bool = False,
+    single_instance: bool = False,
 ) -> Callable[[CommandFunc | CommandClass], Command]:
     """Decorates a function to generate a Command instance.
 
@@ -182,6 +192,8 @@ def command_wrapper(
             has relevant auth. Defaults to False.
         parametrize_room (bool): Allows room-dependent commands to be used in PM. See
             the docstring of `parametrize_room_wrapper`. Defaults to False.
+        single_instance (bool): Disallows starting multiple instances of the same
+            command, mostly useful for long-running commands. Defaults to False.
 
     Returns:
         Callable[[CommandFunc | CommandClass], Command]: Wrapper.
@@ -212,6 +224,7 @@ def command_wrapper(
             required_rank,
             required_rank_editable,
             allow_pm,
+            single_instance,
         )
 
     return cls_wrapper
