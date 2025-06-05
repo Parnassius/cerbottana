@@ -10,59 +10,28 @@ from cerbottana.models.room import Room
 from cerbottana.models.user import User
 
 
-class Message:
-    """Chat message sent to a room or in PM to a user.
+class RawMessage:
+    """Raw chat message sent to a room or in PM to a user.
 
     Attributes:
         conn (Connection): Used to access the websocket.
         room: (Room | None): Room in which the message was sent to. None if the message
             is a PM.
         user (User): Message author.
-        arg (str): Text body of the message without the initial command keyword.
-        args (list[str]): arg attribute splitted by commas.
-        parametrized_room (Room): See plugins.parametrize_room decorator.
+        message (str): Raw message content.
         language_name (str): Room language if room is not None, defaults to English.
         language_id (int): Veekun id for language.
         language (Language): Pokedex enum for language.
     """
 
-    def __init__(self, room: Room | None, user: User, arg: str) -> None:
+    def __init__(self, room: Room | None, user: User, message: str) -> None:
         # Core attributes
         # Note: `self.conn` should become a property if it's not treated a singleton
         # anymore.
         self.conn = user.conn
         self.room = room
         self.user = user
-        self.arg = arg
-
-        # Attributes to support supplementary functionalities
-        self._parametrized_room: Room | None = None
-
-    @property
-    def args(self) -> list[str]:
-        # Special case to preserve msg.arg's truth.
-        # An empty string (False) would be translated to [""] (True).
-        if not self.arg:
-            return []
-
-        return [word.strip() for word in self.arg.split(",")]
-
-    @args.setter
-    def args(self, new: list[str]) -> None:
-        self.arg = ",".join(new)
-
-    @property
-    def parametrized_room(self) -> Room:
-        if self._parametrized_room is None:
-            err = (
-                "Trying to access parametrized_room attribute without prior decoration"
-            )
-            raise AttributeError(err)
-        return self._parametrized_room
-
-    @parametrized_room.setter
-    def parametrized_room(self, room: Room) -> None:
-        self._parametrized_room = room
+        self.message = message
 
     @property
     def language_name(self) -> str:
@@ -117,3 +86,55 @@ class Message:
         await self.user.send_htmlpage(pageid, room, page)
         if self.room is not None:
             await self.room.send_htmlpage(pageid, room)
+
+
+class Message(RawMessage):
+    """Chat message sent to a room or in PM to a user.
+
+    Attributes:
+        conn (Connection): Used to access the websocket.
+        room: (Room | None): Room in which the message was sent to. None if the message
+            is a PM.
+        user (User): Message author.
+        message (str): Raw message content.
+        arg (str): Text body of the message without the initial command keyword.
+        args (list[str]): arg attribute splitted by commas.
+        parametrized_room (Room): See plugins.parametrize_room decorator.
+        language_name (str): Room language if room is not None, defaults to English.
+        language_id (int): Veekun id for language.
+        language (Language): Pokedex enum for language.
+    """
+
+    def __init__(self, room: Room | None, user: User, message: str) -> None:
+        super().__init__(room, user, message)
+
+        self.arg = self.message.partition(" ")[2].strip()
+
+        # Attributes to support supplementary functionalities
+        self._parametrized_room: Room | None = None
+
+    @property
+    def args(self) -> list[str]:
+        # Special case to preserve msg.arg's truth.
+        # An empty string (False) would be translated to [""] (True).
+        if not self.arg:
+            return []
+
+        return [word.strip() for word in self.arg.split(",")]
+
+    @args.setter
+    def args(self, new: list[str]) -> None:
+        self.arg = ",".join(new)
+
+    @property
+    def parametrized_room(self) -> Room:
+        if self._parametrized_room is None:
+            err = (
+                "Trying to access parametrized_room attribute without prior decoration"
+            )
+            raise AttributeError(err)
+        return self._parametrized_room
+
+    @parametrized_room.setter
+    def parametrized_room(self, room: Room) -> None:
+        self._parametrized_room = room

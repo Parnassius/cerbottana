@@ -18,10 +18,11 @@ from cerbottana.models.room import Room
 from cerbottana.typedefs import Role, RoomId
 
 if TYPE_CHECKING:
-    from cerbottana.models.message import Message
+    from cerbottana.models.message import Message, RawMessage
     from cerbottana.models.user import User
 
     CommandFunc = Callable[[Message], Coroutine[None, None, None]]
+    MessageListenerFunc = Callable[[RawMessage], Coroutine[None, None, None]]
     HTMLPageFunc = Callable[[User, Room, int], BaseElement | None]
 
 
@@ -29,6 +30,12 @@ if TYPE_CHECKING:
 class CommandClass(Protocol):
     @classmethod
     async def cmd_func(cls, msg: Message) -> None: ...
+
+
+@runtime_checkable
+class LongRunningCommandClass(CommandClass, Protocol):
+    @classmethod
+    async def on_message(cls, msg: RawMessage) -> None: ...
 
 
 # --- Command logic and complementary decorators ---
@@ -93,6 +100,16 @@ class Command:
         for command in cls._instances.values():
             aliases.update(command.splitted_aliases)
         return aliases
+
+    @classmethod
+    def get_all_message_listeners(
+        cls,
+    ) -> set[MessageListenerFunc]:
+        listeners: set[MessageListenerFunc] = set()
+        for command in cls._instances.values():
+            if isinstance(command.cls, LongRunningCommandClass):
+                listeners.add(command.cls.on_message)
+        return listeners
 
     @classmethod
     def get_all_helpstrings(cls) -> dict[str, str]:
@@ -336,3 +353,4 @@ for f in modules:
         importlib.import_module(f".{name}", __name__)
 
 commands = Command.get_all_aliases()
+message_listeners = Command.get_all_message_listeners()
