@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from cerbottana import utils
 from cerbottana.handlers import handler_wrapper
-from cerbottana.models.message import Message
+from cerbottana.models.message import Message, RawMessage
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
 
@@ -24,15 +24,16 @@ async def parse_chat_message(
         user (User): User that requested the command.
         message (str): Command argument.
     """
+    for listener in conn.message_listeners:
+        msg = RawMessage(room, user, message)
+        conn.create_task(listener(msg))
+
     if message[: len(conn.command_character)] == conn.command_character:
         command = message.split(" ")[0][len(conn.command_character) :].lower()
 
         if command in conn.commands:
-            message = message[
-                (len(conn.command_character) + len(command) + 1) :
-            ].strip()
             msg = Message(room, user, message)
-            await conn.commands[command].callback(msg)
+            conn.create_task(conn.commands[command].callback(msg))
         elif room is None:
             await user.send("Invalid command")
 

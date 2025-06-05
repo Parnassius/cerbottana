@@ -92,6 +92,7 @@ class MockedConnection(Connection):
         ):
             for room in list(Room._instances.get(self, {}).values()):
                 await room.process_all_messages()
+                await asyncio.gather(*self.background_tasks)
             if message == ControlMessage.PROCESS_AND_REPLY:
                 await self.send_bytes(ControlMessage.PROCESSING_DONE)
 

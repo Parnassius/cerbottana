@@ -14,7 +14,7 @@ from cerbottana import utils
 from cerbottana.handlers import handlers
 from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.models.room import Room
-from cerbottana.plugins import commands
+from cerbottana.plugins import commands, message_listeners
 from cerbottana.tasks import init_tasks, recurring_tasks
 from cerbottana.typedefs import RoomId
 
@@ -51,6 +51,7 @@ class Connection:
         self.recurring_tasks = recurring_tasks
         self.handlers = handlers
         self.commands = commands
+        self.message_listeners = message_listeners
         self.timestamp: float = 0
         self.lastmessage: float = 0
         self.websocket: aiohttp.ClientWebSocketResponse | None = None
