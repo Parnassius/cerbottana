@@ -55,6 +55,7 @@ class Command:
         required_rank: Role,
         required_rank_editable: bool | str,
         allow_pm: bool | Role,
+        single_instance: bool,
     ) -> None:
         self.name = func_name
         self.module = func.__module__
@@ -66,6 +67,7 @@ class Command:
         self.required_rank = required_rank
         self.required_rank_editable = required_rank_editable
         self.allow_pm = allow_pm
+        self.single_instance = single_instance
         self._instances[func_name] = self
 
     @property
@@ -100,16 +102,6 @@ class Command:
         for command in cls._instances.values():
             aliases.update(command.splitted_aliases)
         return aliases
-
-    @classmethod
-    def get_all_message_listeners(
-        cls,
-    ) -> set[MessageListenerFunc]:
-        listeners: set[MessageListenerFunc] = set()
-        for command in cls._instances.values():
-            if isinstance(command.cls, LongRunningCommandClass):
-                listeners.add(command.cls.on_message)
-        return listeners
 
     @classmethod
     def get_all_helpstrings(cls) -> dict[str, str]:
@@ -178,6 +170,7 @@ def command_wrapper(
     required_rank_editable: bool | str = False,
     main_room_only: bool = False,
     parametrize_room: bool = False,
+    single_instance: bool = False,
 ) -> Callable[[CommandFunc | CommandClass], Command]:
     """Decorates a function to generate a Command instance.
 
@@ -199,6 +192,8 @@ def command_wrapper(
             has relevant auth. Defaults to False.
         parametrize_room (bool): Allows room-dependent commands to be used in PM. See
             the docstring of `parametrize_room_wrapper`. Defaults to False.
+        single_instance (bool): Disallows starting multiple instances of the same
+            command, mostly useful for long-running commands. Defaults to False.
 
     Returns:
         Callable[[CommandFunc | CommandClass], Command]: Wrapper.
@@ -229,6 +224,7 @@ def command_wrapper(
             required_rank,
             required_rank_editable,
             allow_pm,
+            single_instance,
         )
 
     return cls_wrapper
@@ -353,4 +349,3 @@ for f in modules:
         importlib.import_module(f".{name}", __name__)
 
 commands = Command.get_all_aliases()
-message_listeners = Command.get_all_message_listeners()
