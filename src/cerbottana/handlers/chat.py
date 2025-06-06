@@ -7,6 +7,7 @@ from cerbottana.handlers import handler_wrapper
 from cerbottana.models.message import Message, RawMessage
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
+from cerbottana.plugins import LongRunningCommandClass
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
@@ -24,16 +25,26 @@ async def parse_chat_message(
         user (User): User that requested the command.
         message (str): Command argument.
     """
-    for listener in conn.message_listeners:
-        msg = RawMessage(room, user, message)
-        conn.create_task(listener(msg))
+    for cmd in conn.active_commands[room or user].values():
+        if isinstance(cmd.cls, LongRunningCommandClass):
+            msg = RawMessage(room, user, message)
+            conn.create_task(cmd.cls.on_message(msg))
 
     if message[: len(conn.command_character)] == conn.command_character:
         command = message.split(" ")[0][len(conn.command_character) :].lower()
 
         if command in conn.commands:
             msg = Message(room, user, message)
-            conn.create_task(conn.commands[command].callback(msg))
+            cmd = conn.commands[command]
+            if (
+                cmd.single_instance
+                and cmd in conn.active_commands[room or user].values()
+            ):
+                return
+            cmd_task = conn.create_task(cmd.callback(msg))
+            if cmd.single_instance:
+                conn.active_commands[room or user][cmd_task] = cmd
+                cmd_task.add_done_callback(conn.active_commands[room or user].pop)
         elif room is None:
             await user.send("Invalid command")
 
