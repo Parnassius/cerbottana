@@ -12,7 +12,7 @@ from cerbottana.database import Database
 from cerbottana.handlers import handler_wrapper
 from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper
-from cerbottana.tasks import recurring_task_wrapper
+from cerbottana.tasks import background_task_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
@@ -37,7 +37,7 @@ async def tempvoice(msg: Message) -> None:
             )
 
 
-@recurring_task_wrapper()
+@background_task_wrapper()
 async def demote_old_temporary_voices(conn: Connection) -> None:
     await asyncio.sleep(3 * 60 * 60)
 

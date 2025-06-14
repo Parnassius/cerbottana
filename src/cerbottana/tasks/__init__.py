@@ -23,12 +23,12 @@ def init_task_wrapper(*, priority: int = 3) -> Callable[[InitTaskFunc], InitTask
     return wrapper
 
 
-recurring_tasks: list[RecurringTaskFunc] = []
+background_tasks: list[RecurringTaskFunc] = []
 
 
-def recurring_task_wrapper() -> Callable[[RecurringTaskFunc], RecurringTaskFunc]:
+def background_task_wrapper() -> Callable[[RecurringTaskFunc], RecurringTaskFunc]:
     def wrapper(func: RecurringTaskFunc) -> RecurringTaskFunc:
-        recurring_tasks.append(func)
+        background_tasks.append(func)
         return func
 
     return wrapper
