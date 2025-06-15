@@ -36,6 +36,7 @@ class Connection:
         rooms: list[str],
         main_room: str,
         command_character: str,
+        base_url: str,
         webhooks: dict[str, str],
     ) -> None:
         self.url = url
@@ -47,6 +48,7 @@ class Connection:
         self.rooms: dict[RoomId, Room] = {}
         self.main_room = Room.get(self, main_room)
         self.command_character = command_character
+        self.base_url = base_url
         self.webhooks = {utils.to_room_id(room): url for room, url in webhooks.items()}
         self.public_roomids: set[str] = set()
         self.init_tasks = init_tasks

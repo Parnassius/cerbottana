@@ -5,3 +5,5 @@
 pokemon-showdown
 *.sqlite
 userlist_icons.csv
+images
+images_cropped
