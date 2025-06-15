@@ -58,6 +58,7 @@ class MockedConnection(Connection):
         rooms: list[str],
         main_room: str,
         command_character: str,
+        base_url: str,
         webhooks: dict[str, str],
     ) -> None:
         self.recv_queue: asyncio.Queue[str | bytes] = asyncio.Queue()
@@ -72,6 +73,7 @@ class MockedConnection(Connection):
             rooms=rooms,
             main_room=main_room,
             command_character=command_character,
+            base_url=base_url,
             webhooks=webhooks,
         )
 
@@ -191,6 +193,7 @@ def mock_connection() -> Callable[[], AbstractAsyncContextManager[Any]]:
         rooms: list[str] | None = None,
         main_room: str = "lobby",
         command_character: str = ".",
+        base_url: str = "",
         webhooks: dict[str, str] | None = None,
     ) -> AsyncGenerator[Any]:
         if rooms is None:
@@ -207,6 +210,7 @@ def mock_connection() -> Callable[[], AbstractAsyncContextManager[Any]]:
             rooms=rooms,
             main_room=main_room,
             command_character=command_character,
+            base_url=base_url,
             webhooks=webhooks,
         )
 

@@ -10,3 +10,5 @@ wheels
 /*.sqlite
 /userlist_icons.csv
 /pokemon-showdown
+/images
+/images_cropped
