@@ -21,6 +21,7 @@ def main() -> None:
         rooms=env.list("ROOMS", default=[]),
         main_room=env.str("MAIN_ROOM"),
         command_character=env.str("COMMAND_CHARACTER"),
+        base_url=env.str("BASE_URL"),
         webhooks=env.json("WEBHOOKS", default={}),
     )
 
