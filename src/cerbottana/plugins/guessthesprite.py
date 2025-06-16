@@ -116,6 +116,7 @@ class Game:
     aliases=("gts", "gtz"),
     helpstr="Indovina un pokemon da zoom progressivamente sempre più rivelatori!",
     allow_pm=False,
+    required_rank_editable=True,
     single_instance=True,
 )
 class GuessTheSprite:
