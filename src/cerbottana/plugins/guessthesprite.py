@@ -3,8 +3,9 @@ from __future__ import annotations
 import asyncio
 import random
 import secrets
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from time import time
 from typing import TYPE_CHECKING, ClassVar
 
 from domify import html_elements as e
@@ -15,8 +16,10 @@ from cerbottana import custom_elements as ce
 from cerbottana import utils
 from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper
+from cerbottana.tasks import background_task_wrapper
 
 if TYPE_CHECKING:
+    from cerbottana.connection import Connection
     from cerbottana.models.message import Message, RawMessage
 
 images_dir = utils.get_config_file("images")
@@ -106,6 +109,7 @@ class Game:
     pokemon: str
     path: Path
     crop_origin: tuple[int, int] | None = None
+    finish_event: asyncio.Event = field(default_factory=asyncio.Event)
 
 
 @command_wrapper(
@@ -135,7 +139,14 @@ class GuessTheSprite:
             cropped_path = crop_and_save(game, size)
             html = get_image(cropped_path, msg.conn.base_url)
             await msg.reply_htmlbox(html)
-            await asyncio.sleep(10)
+            try:
+                await asyncio.wait_for(game.finish_event.wait(), 10)
+            except TimeoutError:
+                # Timeout expired, go to the next image
+                pass
+            else:
+                # The pokemon has been guessed
+                return
 
         if msg.room in cls.active_games:
             del cls.active_games[msg.room]
@@ -159,6 +170,7 @@ class GuessTheSprite:
         game = cls.active_games.get(msg.room)
         if game and game.pokemon == message:
             del cls.active_games[msg.room]
+            game.finish_event.set()
             ps_dex_entry = utils.get_ps_dex_entry(game.pokemon)
             name = ps_dex_entry["name"] if ps_dex_entry else game.pokemon
             html = (
@@ -170,3 +182,19 @@ class GuessTheSprite:
                 + "!"
             )
             await msg.reply_htmlbox(html)
+
+
+@background_task_wrapper()
+async def remove_old_cropped_images(conn: Connection) -> None:  # noqa: ARG001
+    await asyncio.sleep(1 * 60 * 60)
+
+    while True:
+        cutoff_time = time() - 3 * 24 * 60 * 60  # 3 days
+        for img in images_cropped_dir.iterdir():
+            try:
+                if img.is_file() and img.stat().st_mtime < cutoff_time:
+                    img.unlink()
+            except FileNotFoundError:
+                continue
+
+        await asyncio.sleep(24 * 60 * 60)
