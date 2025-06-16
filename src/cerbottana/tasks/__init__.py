@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from cerbottana.connection import Connection
 
     InitTaskFunc = Callable[[Connection], Coroutine[None, None, None]]
-    RecurringTaskFunc = Callable[[Connection], Coroutine[None, None, None]]
+    BackgroundTaskFunc = Callable[[Connection], Coroutine[None, None, None]]
 
 
 init_tasks: list[tuple[int, InitTaskFunc]] = []
@@ -23,11 +23,11 @@ def init_task_wrapper(*, priority: int = 3) -> Callable[[InitTaskFunc], InitTask
     return wrapper
 
 
-background_tasks: list[RecurringTaskFunc] = []
+background_tasks: list[BackgroundTaskFunc] = []
 
 
-def background_task_wrapper() -> Callable[[RecurringTaskFunc], RecurringTaskFunc]:
-    def wrapper(func: RecurringTaskFunc) -> RecurringTaskFunc:
+def background_task_wrapper() -> Callable[[BackgroundTaskFunc], BackgroundTaskFunc]:
+    def wrapper(func: BackgroundTaskFunc) -> BackgroundTaskFunc:
         background_tasks.append(func)
         return func
 
