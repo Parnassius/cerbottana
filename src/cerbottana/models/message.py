@@ -60,7 +60,12 @@ class RawMessage:
             await self.room.send(message, escape)
 
     async def reply_htmlbox(
-        self, message: BaseElement, simple_message: str = ""
+        self,
+        message: BaseElement,
+        simple_message: str = "",
+        *,
+        name: str | None = None,
+        change: bool = False,
     ) -> None:
         """Sends an HTML box to a room or in PM to a user, depending on the context.
 
@@ -68,11 +73,18 @@ class RawMessage:
             message (BaseElement): HTML to be sent.
             simple_message (str): Alt text, not needed if the HTML box is sent to a
                 room. Defaults to a generic message.
+            name (str | None): If set, the HTML can be updated by calling this function
+                again with the same name. Defaults to None.
+            change (bool): True if the HTML should be updated in place, False if the old
+                box should be removed and a new one added at the bottom of the chat.
+                Ignored if name is None. Defaults to False.
         """
         if self.room is None:
-            await self.user.send_htmlbox(message, simple_message)
+            await self.user.send_htmlbox(
+                message, simple_message, name=name, change=change
+            )
         else:
-            await self.room.send_htmlbox(message)
+            await self.room.send_htmlbox(message, name=name, change=change)
 
     async def reply_htmlpage(self, pageid: str, room: Room, page: int = 1) -> None:
         """Sends a link to an HTML page to a room or directly to a user, depending on

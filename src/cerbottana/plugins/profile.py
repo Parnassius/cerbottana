@@ -169,7 +169,7 @@ async def setprofile(msg: Message) -> None:
             + e.Button(cmd, name="send", value=f"/pm {botname}, {cmd}")
             + " per approvarla o rifiutarla"
         )
-        await msg.conn.main_room.send_rankhtmlbox("%", html)
+        await msg.conn.main_room.send_rankhtmlbox("%", html, name="newsetprofile")
 
 
 @command_wrapper(

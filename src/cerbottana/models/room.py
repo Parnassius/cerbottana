@@ -153,22 +153,51 @@ class Room:
                 message = " " + message
         await self.conn.send(f"{self.roomid}|{message}")
 
-    async def send_rankhtmlbox(self, rank: str, message: BaseElement) -> None:
+    async def send_rankhtmlbox(
+        self,
+        rank: str,
+        message: BaseElement,
+        *,
+        name: str | None = None,
+        change: bool = False,
+    ) -> None:
         """Sends an HTML box visible only to people with a specific rank.
 
         Args:
             rank (str): Minimum rank required to see the HTML box.
             message (BaseElement): HTML to be sent.
+            name (str | None): If set, the HTML can be updated by calling this function
+                again with the same name. Defaults to None.
+            change (bool): True if the HTML should be updated in place, False if the old
+                box should be removed and a new one added at the bottom of the chat.
+                Ignored if name is None. Defaults to False.
         """
-        await self.send(f"/addrankhtmlbox {rank}, {message}", False)
+        if name:
+            cmd = "changerankuhtml" if change else "addrankuhtml"
+            name = utils.to_user_id(self.conn.username) + name
+            await self.send(f"/{cmd} {rank}, {name}, {message}", False)
+        else:
+            await self.send(f"/addrankhtmlbox {rank}, {message}", False)
 
-    async def send_htmlbox(self, message: BaseElement) -> None:
+    async def send_htmlbox(
+        self, message: BaseElement, *, name: str | None = None, change: bool = False
+    ) -> None:
         """Sends an HTML box visible to every user in the room.
 
         Args:
             message (BaseElement): HTML to be sent.
+            name (str | None): If set, the HTML can be updated by calling this function
+                again with the same name. Defaults to None.
+            change (bool): True if the HTML should be updated in place, False if the old
+                box should be removed and a new one added at the bottom of the chat.
+                Ignored if name is None. Defaults to False.
         """
-        await self.send(f"/addhtmlbox {message}", False)
+        if name:
+            cmd = "changeuhtml" if change else "adduhtml"
+            name = utils.to_user_id(self.conn.username) + name
+            await self.send(f"/{cmd} {name}, {message}", False)
+        else:
+            await self.send(f"/addhtmlbox {message}", False)
 
     async def send_htmlpage(self, pageid: str, page_room: Room) -> None:
         """Sends link to an HTML page in a room.

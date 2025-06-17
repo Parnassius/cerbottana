@@ -174,13 +174,23 @@ class User:
         await self.conn.send(f"|/w {self.userid}, {message}")
 
     async def send_htmlbox(
-        self, message: BaseElement, simple_message: str = ""
+        self,
+        message: BaseElement,
+        simple_message: str = "",
+        *,
+        name: str | None = None,
+        change: bool = False,
     ) -> None:
         """Sends an HTML box in PM to user.
 
         Args:
             message (BaseElement): HTML to be sent.
             simple_message (str): Alt text. Defaults to a generic message.
+            name (str | None): If set, the HTML can be updated by calling this function
+                again with the same name. Defaults to None.
+            change (bool): True if the HTML should be updated in place, False if the old
+                box should be removed and a new one added at the bottom of the chat.
+                Ignored if name is None. Defaults to False.
         """
         room = self.can_pminfobox_to()
         if room is None:
@@ -188,6 +198,10 @@ class User:
                 simple_message = "Questo comando è disponibile in PM "
                 simple_message += "solo se sei online in una room dove sono Roombot"
             await self.send(simple_message)
+        elif name:
+            cmd = "pmuhtmlchange" if change else "pmuhtml"
+            name = utils.to_user_id(self.conn.username) + name
+            await room.send(f"/{cmd} {self.userid}, {name}, {message}", False)
         else:
             await room.send(f"/pminfobox {self.userid}, {message}", False)
 
