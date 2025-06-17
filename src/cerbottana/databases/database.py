@@ -23,7 +23,7 @@ class Badges(Base):
 
 class CustomPermissions(Base):
     __tablename__ = "custom_permissions"
-    __table_opts__ = (
+    __table_args__ = (
         UniqueConstraint("roomid", "command", sqlite_on_conflict="REPLACE"),
     )
 
@@ -35,7 +35,7 @@ class CustomPermissions(Base):
 
 class EightBall(Base):
     __tablename__ = "eightball"
-    __table_opts__ = (
+    __table_args__ = (
         UniqueConstraint("answer", "roomid", sqlite_on_conflict="IGNORE"),
     )
 
@@ -46,7 +46,7 @@ class EightBall(Base):
 
 class Quotes(Base):
     __tablename__ = "quotes"
-    __table_opts__ = (
+    __table_args__ = (
         UniqueConstraint("message", "roomid", sqlite_on_conflict="IGNORE"),
     )
 
@@ -59,7 +59,7 @@ class Quotes(Base):
 
 class Repeats(Base):
     __tablename__ = "repeats"
-    __table_opts__ = (
+    __table_args__ = (
         UniqueConstraint("message", "roomid", sqlite_on_conflict="REPLACE"),
     )
 
@@ -73,7 +73,7 @@ class Repeats(Base):
 
 class TemporaryVoices(Base):
     __tablename__ = "temporary_voices"
-    __table_opts__ = (
+    __table_args__ = (
         UniqueConstraint("roomid", "userid", sqlite_on_conflict="IGNORE"),
     )
 
@@ -85,7 +85,7 @@ class TemporaryVoices(Base):
 
 class Users(Base):
     __tablename__ = "users"
-    __table_opts__ = (UniqueConstraint("userid", sqlite_on_conflict="IGNORE"),)
+    __table_args__ = (UniqueConstraint("userid", sqlite_on_conflict="IGNORE"),)
 
     id: Mapped[intpk]
     userid: Mapped[str]

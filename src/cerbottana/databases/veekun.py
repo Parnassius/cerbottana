@@ -366,7 +366,7 @@ class LocationAreaProse(Base):
 
 class LocationAreas(HashableMixin, TranslatableMixin, Base):
     __tablename__ = "location_areas"
-    __table_opts__ = (UniqueConstraint("location_id", "identifier"),)
+    __table_args__ = (UniqueConstraint("location_id", "identifier"),)
 
     id: Mapped[intpk]
     location_id: Mapped[int] = mapped_column(ForeignKey("locations.id"))
