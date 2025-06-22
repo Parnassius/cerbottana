@@ -15267,10 +15267,26 @@
     }
   },
   "glimmet": {
-    "num": 969
+    "num": 969,
+    "front": {
+      "w": 41,
+      "h": 56
+    },
+    "back": {
+      "w": 71,
+      "h": 57
+    }
   },
   "glimmora": {
-    "num": 970
+    "num": 970,
+    "front": {
+      "w": 78,
+      "h": 86
+    },
+    "back": {
+      "w": 69,
+      "h": 91
+    }
   },
   "greavard": {
     "num": 971,
@@ -15544,16 +15560,48 @@
     }
   },
   "poltchageist": {
-    "num": 1012
+    "num": 1012,
+    "front": {
+      "w": 54,
+      "h": 54
+    },
+    "back": {
+      "w": 53,
+      "h": 54
+    }
   },
   "poltchageistartisan": {
-    "num": 1012
+    "num": 1012,
+    "front": {
+      "w": 54,
+      "h": 54
+    },
+    "back": {
+      "w": 53,
+      "h": 54
+    }
   },
   "sinistcha": {
-    "num": 1013
+    "num": 1013,
+    "front": {
+      "w": 73,
+      "h": 100
+    },
+    "back": {
+      "w": 73,
+      "h": 97
+    }
   },
   "sinistchamasterpiece": {
-    "num": 1013
+    "num": 1013,
+    "front": {
+      "w": 73,
+      "h": 100
+    },
+    "back": {
+      "w": 73,
+      "h": 97
+    }
   },
   "okidogi": {
     "num": 1014
