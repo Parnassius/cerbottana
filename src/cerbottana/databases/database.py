@@ -94,3 +94,14 @@ class Users(Base):
     description: Mapped[str | None]
     description_pending: Mapped[str | None] = mapped_column(index=True)
     icon: Mapped[str | None]
+
+class Player(Base):
+    __tablename__ = "players"
+    __table_opts__ = (
+        UniqueConstraint("room", "username", sqlite_on_conflict="IGNORE"),
+    )
+
+    id: Mapped[intpk]
+    room: Mapped[str]
+    username: Mapped[str]
+    points: Mapped[int] = mapped_column(default=0)

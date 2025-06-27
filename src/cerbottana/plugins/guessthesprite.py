@@ -11,12 +11,17 @@ from typing import TYPE_CHECKING, ClassVar
 from domify import html_elements as e
 from domify.base_element import BaseElement
 from PIL import Image
+from difflib import SequenceMatcher
 
 from cerbottana import custom_elements as ce
 from cerbottana import utils
 from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper
 from cerbottana.tasks import background_task_wrapper
+
+from sqlalchemy import select, update
+from cerbottana.database import Database
+import cerbottana.databases.database as d
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
@@ -25,6 +30,8 @@ if TYPE_CHECKING:
 images_dir = utils.get_config_file("images")
 images_cropped_dir = utils.get_config_file("images_cropped")
 
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
 
 def get_random_pokemon() -> Path:
     if random.randint(1, 128) == 128:
@@ -44,6 +51,14 @@ def get_random_pokemon() -> Path:
 
     return path
 
+def get_file_list()-> list[Path]:
+    path = images_dir / "regular"
+    subdirs = list(path.iterdir())
+    relative_subdirs = []
+    for subdir in subdirs:
+        subdir = subdir.relative_to(images_dir)
+        relative_subdirs.append(subdir)
+    return relative_subdirs
 
 def crop_and_save(game: Game, size: int) -> Path:
     with Image.open(game.path) as im:
@@ -109,6 +124,8 @@ class Game:
     pokemon: str
     path: Path
     crop_origin: tuple[int, int] | None = None
+    lista_user: list[str, ...] | None = None
+    guess_counter: int = 0
     finish_event: asyncio.Event = field(default_factory=asyncio.Event)
 
 
@@ -130,7 +147,7 @@ class GuessTheSprite:
         full_pokemon_path = get_random_pokemon()
         relative_path = full_pokemon_path.relative_to(images_dir)
         pokemon = relative_path.parts[1]
-        game = Game(pokemon, full_pokemon_path)
+        game = Game(pokemon, full_pokemon_path, None, [], 0)
         cls.active_games[msg.room] = game
 
         for size in range(4):
@@ -166,9 +183,15 @@ class GuessTheSprite:
     async def on_message(cls, msg: RawMessage) -> None:
         if msg.room is None:
             return
-
         message = utils.to_id(utils.remove_diacritics(msg.message))
         game = cls.active_games.get(msg.room)
+        filelist = get_file_list()
+        for x in filelist:
+            similarity = similar(x.parts[1], message)
+            if similarity > 0.8:
+                game.guess_counter += 1
+                if msg.user not in game.lista_user:
+                    game.lista_user.append(msg.user)
         if game and game.pokemon == message:
             del cls.active_games[msg.room]
             game.finish_event.set()
@@ -178,10 +201,31 @@ class GuessTheSprite:
                 get_image(game.path, msg.conn.base_url)
                 + e.Br()
                 + ce.Username(msg.user.username)
-                + " ha vinto, era "
+                + f" ha vinto, ci sono stati {len(game.lista_user)} player e {game.guess_counter} guess totali, era "
                 + e.Strong(name)
                 + "!"
             )
+            if len(game.lista_user) > 2:
+                points = 3*int(len(game.lista_user)/2)
+            else:
+                points = 3
+            db = Database.open()
+            with db.get_session() as session:
+                stmt = select(d.Player).where(d.Player.room == msg.room, d.Player.username == msg.user)
+                # Check if the player already exists in the database
+                if stmt is None:
+                    session.add(
+                        d.Player(
+                            room=msg.room,
+                            user=msg.user,
+                            points=points,
+                        )
+                    )
+                else:
+                    stmt = update(d.Player).where(
+                        d.Player.room == msg.room, d.Player.username == msg.user
+                    ).values(points=d.Player.points + points)
+
             await msg.reply_htmlbox(html)
 
 
@@ -199,3 +243,25 @@ async def remove_old_cropped_images(conn: Connection) -> None:  # noqa: ARG001
                 continue
 
         await asyncio.sleep(24 * 60 * 60)
+
+@command_wrapper(
+    aliases=("leaderboard", "lb"),
+    helpstr="Indovina un pokemon da zoom progressivamente sempre più rivelatori!",
+    allow_pm=False,
+    required_rank_editable=True,
+    single_instance=True,
+)
+class Leaderboard:
+    @classmethod
+    async def cmd_func(cls, msg: Message) -> None:
+        if msg.room is None:
+            return
+        db = Database.open()
+        with db.get_session() as session:
+            stmt = select(d.Player).where(d.Player.room == msg.room).order_by(d.Player.points.desc())
+            players = session.scalars(stmt).all()
+            if not players:
+                await msg.reply("Nessun giocatore trovato.")
+                return
+        for player in players:
+            await msg.reply(f"{player.name}: {player.points} points")
