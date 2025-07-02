@@ -95,6 +95,7 @@ class Users(Base):
     description_pending: Mapped[str | None] = mapped_column(index=True)
     icon: Mapped[str | None]
 
+
 class Player(Base):
     __tablename__ = "players"
     __table_opts__ = (
