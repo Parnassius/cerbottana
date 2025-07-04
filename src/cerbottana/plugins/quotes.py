@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 from domify import html_elements as e
 from domify.base_element import BaseElement
 from sqlalchemy import delete, func, select
-from sqlalchemy.orm.exc import ObjectDeletedError
+from sqlalchemy.exc import IntegrityError
 
 import cerbottana.databases.database as d
 from cerbottana import utils
@@ -133,19 +133,18 @@ async def addquote(msg: Message) -> None:
             date=str(datetime.now(UTC).date()),
         )
         session.add(result)
-        session.commit()
 
         try:
-            if result.id:
-                await msg.reply("Quote salvata.")
-                if msg.room is None:
-                    await msg.parametrized_room.send_modnote(
-                        "QUOTE ADDED", msg.user, msg.arg
-                    )
-                return
-        except ObjectDeletedError:
-            pass
-        await msg.reply("Quote già esistente.")
+            session.flush()
+        except IntegrityError:
+            await msg.reply("Quote già esistente.")
+            session.rollback()
+        else:
+            await msg.reply("Quote salvata.")
+            if msg.room is None:
+                await msg.parametrized_room.send_modnote(
+                    "QUOTE ADDED", msg.user, msg.arg
+                )
 
 
 @command_wrapper(

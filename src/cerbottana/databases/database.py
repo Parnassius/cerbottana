@@ -35,9 +35,7 @@ class CustomPermissions(Base):
 
 class EightBall(Base):
     __tablename__ = "eightball"
-    __table_args__ = (
-        UniqueConstraint("answer", "roomid", sqlite_on_conflict="IGNORE"),
-    )
+    __table_args__ = (UniqueConstraint("answer", "roomid"),)
 
     id: Mapped[intpk]
     answer: Mapped[str]
@@ -46,9 +44,7 @@ class EightBall(Base):
 
 class Quotes(Base):
     __tablename__ = "quotes"
-    __table_args__ = (
-        UniqueConstraint("message", "roomid", sqlite_on_conflict="IGNORE"),
-    )
+    __table_args__ = (UniqueConstraint("message", "roomid"),)
 
     id: Mapped[intpk]
     message: Mapped[str]

@@ -38,7 +38,11 @@ async def add_user(
 
     db = Database.open()
     with db.get_session() as session:
-        session.add(d.Users(userid=user.userid, username=user.username))
+        session.add(d.Users(userid=user.userid))
+        stmt = (
+            update(d.Users).filter_by(userid=user.userid).values(username=user.username)
+        )
+        session.execute(stmt)
 
     if not from_userlist or rank != " ":
         await user.load_details()
