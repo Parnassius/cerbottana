@@ -2208,13 +2208,37 @@
     }
   },
   "taurospaldeacombat": {
-    "num": 128
+    "num": 128,
+    "front": {
+      "w": 98,
+      "h": 77
+    },
+    "back": {
+      "w": 142,
+      "h": 80
+    }
   },
   "taurospaldeablaze": {
-    "num": 128
+    "num": 128,
+    "front": {
+      "w": 100,
+      "h": 80
+    },
+    "back": {
+      "w": 168,
+      "h": 79
+    }
   },
   "taurospaldeaaqua": {
-    "num": 128
+    "num": 128,
+    "front": {
+      "w": 85,
+      "h": 81
+    },
+    "back": {
+      "w": 133,
+      "h": 85
+    }
   },
   "magikarp": {
     "num": 129,
@@ -14838,10 +14862,26 @@
     }
   },
   "fidough": {
-    "num": 926
+    "num": 926,
+    "front": {
+      "w": 51,
+      "h": 39
+    },
+    "back": {
+      "w": 58,
+      "h": 39
+    }
   },
   "dachsbun": {
-    "num": 927
+    "num": 927,
+    "front": {
+      "w": 53,
+      "h": 54
+    },
+    "back": {
+      "w": 78,
+      "h": 60
+    }
   },
   "smoliv": {
     "num": 928,
@@ -14921,22 +14961,70 @@
     }
   },
   "nacli": {
-    "num": 932
+    "num": 932,
+    "front": {
+      "w": 48,
+      "h": 51
+    },
+    "back": {
+      "w": 52,
+      "h": 50
+    }
   },
   "naclstack": {
-    "num": 933
+    "num": 933,
+    "front": {
+      "w": 70,
+      "h": 54
+    },
+    "back": {
+      "w": 85,
+      "h": 53
+    }
   },
   "garganacl": {
-    "num": 934
+    "num": 934,
+    "front": {
+      "w": 109,
+      "h": 99
+    },
+    "back": {
+      "w": 106,
+      "h": 98
+    }
   },
   "charcadet": {
-    "num": 935
+    "num": 935,
+    "front": {
+      "w": 34,
+      "h": 75
+    },
+    "back": {
+      "w": 40,
+      "h": 76
+    }
   },
   "armarouge": {
-    "num": 936
+    "num": 936,
+    "front": {
+      "w": 53,
+      "h": 96
+    },
+    "back": {
+      "w": 47,
+      "h": 96
+    }
   },
   "ceruledge": {
-    "num": 937
+    "num": 937,
+    "front": {
+      "w": 65,
+      "h": 107
+    },
+    "back": {
+      "w": 41,
+      "h": 106
+    }
   },
   "tadbulb": {
     "num": 938,
@@ -14983,10 +15071,26 @@
     }
   },
   "maschiff": {
-    "num": 942
+    "num": 942,
+    "front": {
+      "w": 65,
+      "h": 51
+    },
+    "back": {
+      "w": 85,
+      "h": 48
+    }
   },
   "mabosstiff": {
-    "num": 943
+    "num": 943,
+    "front": {
+      "w": 72,
+      "h": 72
+    },
+    "back": {
+      "w": 102,
+      "h": 70
+    }
   },
   "shroodle": {
     "num": 944,
@@ -15187,7 +15291,15 @@
     }
   },
   "bombirdier": {
-    "num": 962
+    "num": 962,
+    "front": {
+      "w": 166,
+      "h": 112
+    },
+    "back": {
+      "w": 150,
+      "h": 116
+    }
   },
   "finizen": {
     "num": 963,
@@ -15501,13 +15613,37 @@
     "num": 995
   },
   "frigibax": {
-    "num": 996
+    "num": 996,
+    "front": {
+      "w": 53,
+      "h": 55
+    },
+    "back": {
+      "w": 52,
+      "h": 52
+    }
   },
   "arctibax": {
-    "num": 997
+    "num": 997,
+    "front": {
+      "w": 55,
+      "h": 84
+    },
+    "back": {
+      "w": 101,
+      "h": 81
+    }
   },
   "baxcalibur": {
-    "num": 998
+    "num": 998,
+    "front": {
+      "w": 109,
+      "h": 104
+    },
+    "back": {
+      "w": 136,
+      "h": 107
+    }
   },
   "gimmighoul": {
     "num": 999
@@ -15637,7 +15773,15 @@
     "num": 1017
   },
   "archaludon": {
-    "num": 1018
+    "num": 1018,
+    "front": {
+      "w": 97,
+      "h": 116
+    },
+    "back": {
+      "w": 106,
+      "h": 116
+    }
   },
   "hydrapple": {
     "num": 1019,
