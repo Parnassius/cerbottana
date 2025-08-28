@@ -53,16 +53,6 @@ def get_random_pokemon() -> Path:
     return path
 
 
-def get_file_list() -> list[Path]:
-    path = images_dir / "regular"
-    subdirs = list(path.iterdir())
-    relative_subdirs = []
-    for subdir in subdirs:
-        subdir = subdir.relative_to(images_dir)
-        relative_subdirs.append(subdir)
-    return relative_subdirs
-
-
 def crop_and_save(game: Game, size: int) -> Path:
     with Image.open(game.path) as im:
         half_crop = round(min(im.width, im.height) / 10 * 1.5**size) // 2
@@ -127,7 +117,7 @@ class Game:
     pokemon: str
     path: Path
     crop_origin: tuple[int, int] | None = None
-    lista_user: list[User] | None = None
+    user_list: list[User] = field(default_factory=list)
     guess_counter: int = 0
     finish_event: asyncio.Event = field(default_factory=asyncio.Event)
 
@@ -150,7 +140,7 @@ class GuessTheSprite:
         full_pokemon_path = get_random_pokemon()
         relative_path = full_pokemon_path.relative_to(images_dir)
         pokemon = relative_path.parts[1]
-        game = Game(pokemon, full_pokemon_path, None, [], 0)
+        game = Game(pokemon, full_pokemon_path)
         cls.active_games[msg.room] = game
         html = None
         for size in range(4):
@@ -158,15 +148,15 @@ class GuessTheSprite:
                 return
             if html is not None:
                 del html["open"]
-                await msg.reply_htmlbox(html, name=f"{nome}")
+                await msg.reply_htmlbox(html, name=name)
             cropped_path = crop_and_save(game, size)
-            nome = secrets.token_urlsafe(8)
+            name = secrets.token_hex(8)
             html = e.Details(
                 e.Summary(f"hint {size + 1}"),
                 get_image(cropped_path, msg.conn.base_url),
                 open_=True,
             )
-            await msg.reply_htmlbox(html, name=f"{nome}")
+            await msg.reply_htmlbox(html, name=name)
             try:
                 await asyncio.wait_for(game.finish_event.wait(), 10)
             except TimeoutError:
@@ -195,13 +185,13 @@ class GuessTheSprite:
             return
         message = utils.to_id(utils.remove_diacritics(msg.message))
         game = cls.active_games.get(msg.room)
-        filelist = get_file_list()
+        filelist = [dir.name for dir in (images_dir / "regular").iterdir()]
         for x in filelist:
-            similarity = similar(x.parts[1], message)
+            similarity = similar(x, message)
             if similarity > 0.8:
                 game.guess_counter += 1
-                if msg.user not in game.lista_user:
-                    game.lista_user.append(msg.user)
+                if msg.user not in game.user_list:
+                    game.user_list.append(msg.user)
         if game and game.pokemon == message:
             del cls.active_games[msg.room]
             game.finish_event.set()
@@ -211,34 +201,28 @@ class GuessTheSprite:
                 get_image(game.path, msg.conn.base_url)
                 + e.Br()
                 + ce.Username(msg.user.username)
-                + f" ha vinto, ci sono stati {len(game.lista_user)} player e {game.guess_counter} guess totali, era "
+                + f" ha vinto, ci sono stati {len(game.user_list)} player e {game.guess_counter} guess totali, era "
                 + e.Strong(name)
                 + "!"
             )
-            if len(game.lista_user) > 2:
-                points = 3 + 2*len(game.lista_user)
+            if len(game.user_list) > 2:
+                points = 3 + 2*len(game.user_list)
             else:
                 points = 3
             db = Database.open()
             with db.get_session() as session:
-                stmt = select(d.Player).where(
-                    d.Player.room == msg.room.roomid,
-                    d.Player.username == msg.user.userid,
-                )
                 # Check if the player already exists in the database
                 db = Database.open()
                 with db.get_session() as session:
-                    username = utils.to_id(utils.remove_diacritics(msg.user.userid))
                     session.add(
-                        d.Player(username=username, room=msg.room.roomid, points=0)
+                        d.Player(userid=msg.user.userid, room=msg.room.roomid, points=0)
                     )
                     stmt = (
                         update(d.Player)
-                        .filter_by(username=username)
+                        .filter_by(userid=msg.user.userid)
                         .values(points=d.Player.points + points)
                     )
                     session.execute(stmt)
-                    session.commit()
 
             await msg.reply_htmlbox(html)
 
@@ -260,11 +244,11 @@ async def remove_old_cropped_images(conn: Connection) -> None:  # noqa: ARG001
 
 
 @command_wrapper(
-    aliases=("leaderboard", "lb"),
+    aliases=("gtsleaderboard", "gtslb"),
     helpstr="Indovina un pokemon da zoom progressivamente sempre più rivelatori!",
-    allow_pm=False,
+    allow_pm="regularuser",
+    parametrize_room=True,
     required_rank_editable=True,
-    single_instance=True,
 )
 class Leaderboard:
     @classmethod
@@ -287,7 +271,7 @@ class Leaderboard:
             for player in players:
                 posizione += 1
                 row = e.Tr(
-                    e.Td(posizione) + e.Td(player.username) + e.Td(player.points)
+                    e.Td(posizione) + e.Td(player.userid) + e.Td(player.points)
                 )
                 html = html + row
             html: Table = e.Table(html, class_="table")
