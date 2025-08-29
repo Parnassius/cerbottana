@@ -99,10 +99,10 @@ class Users(Base):
 class Player(Base):
     __tablename__ = "players"
     __table_args__ = (
-        UniqueConstraint("room", "userid", sqlite_on_conflict="IGNORE"),
+        UniqueConstraint("roomid", "userid", sqlite_on_conflict="IGNORE"),
     )
 
     id: Mapped[intpk]
-    room: Mapped[str]
+    roomid: Mapped[str]
     userid: Mapped[str]
     points: Mapped[int] = mapped_column(default=0)

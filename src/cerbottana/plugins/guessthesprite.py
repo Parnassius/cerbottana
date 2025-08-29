@@ -25,13 +25,11 @@ from cerbottana.tasks import background_task_wrapper
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
     from cerbottana.models.message import Message, RawMessage
+    from cerbottana.models.user import User
+
 
 images_dir = utils.get_config_file("images")
 images_cropped_dir = utils.get_config_file("images_cropped")
-
-
-def similar(a, b) -> float:
-    return SequenceMatcher(None, a, b).ratio()
 
 
 def get_random_pokemon() -> Path:
@@ -142,20 +140,21 @@ class GuessTheSprite:
         pokemon = relative_path.parts[1]
         game = Game(pokemon, full_pokemon_path)
         cls.active_games[msg.room] = game
-        html = None
+        html: e.BaseElement | None = None
+        name = None
         for size in range(4):
             if msg.room not in cls.active_games:
                 return
-            if html is not None:
+            if html and name:
                 del html["open"]
                 await msg.reply_htmlbox(html, name=name)
             cropped_path = crop_and_save(game, size)
-            name = secrets.token_hex(8)
             html = e.Details(
                 e.Summary(f"hint {size + 1}"),
                 get_image(cropped_path, msg.conn.base_url),
                 open_=True,
             )
+            name = secrets.token_hex(8)
             await msg.reply_htmlbox(html, name=name)
             try:
                 await asyncio.wait_for(game.finish_event.wait(), 10)
@@ -183,16 +182,20 @@ class GuessTheSprite:
     async def on_message(cls, msg: RawMessage) -> None:
         if msg.room is None:
             return
-        message = utils.to_id(utils.remove_diacritics(msg.message))
+
         game = cls.active_games.get(msg.room)
-        filelist = [dir.name for dir in (images_dir / "regular").iterdir()]
+        if game is None:
+            return
+
+        message = utils.to_id(utils.remove_diacritics(msg.message))
+        filelist = [d.name for d in (images_dir / "regular").iterdir()]
         for x in filelist:
-            similarity = similar(x, message)
-            if similarity > 0.8:
+            similarity = SequenceMatcher(None, x, message).ratio()
+            if similarity > 0.6:
                 game.guess_counter += 1
                 if msg.user not in game.user_list:
                     game.user_list.append(msg.user)
-        if game and game.pokemon == message:
+        if game.pokemon == message:
             del cls.active_games[msg.room]
             game.finish_event.set()
             ps_dex_entry = utils.get_ps_dex_entry(game.pokemon)
@@ -201,21 +204,23 @@ class GuessTheSprite:
                 get_image(game.path, msg.conn.base_url)
                 + e.Br()
                 + ce.Username(msg.user.username)
-                + f" ha vinto, ci sono stati {len(game.user_list)} player e {game.guess_counter} guess totali, era "
+                + f" ha vinto, ci sono stati {len(game.user_list)} player"
+                + f" e {game.guess_counter} guess totali, era "
                 + e.Strong(name)
                 + "!"
             )
             if len(game.user_list) > 2:
-                points = 3 + 2*len(game.user_list)
+                points = 3 + 2 * len(game.user_list)
             else:
                 points = 3
             db = Database.open()
             with db.get_session() as session:
                 # Check if the player already exists in the database
-                db = Database.open()
                 with db.get_session() as session:
                     session.add(
-                        d.Player(userid=msg.user.userid, room=msg.room.roomid, points=0)
+                        d.Player(
+                            userid=msg.user.userid, roomid=msg.room.roomid, points=0
+                        )
                     )
                     stmt = (
                         update(d.Player)
@@ -245,34 +250,32 @@ async def remove_old_cropped_images(conn: Connection) -> None:  # noqa: ARG001
 
 @command_wrapper(
     aliases=("gtsleaderboard", "gtslb"),
-    helpstr="Indovina un pokemon da zoom progressivamente sempre più rivelatori!",
+    helpstr="Mostra la classifica gts di una room",
     allow_pm="regularuser",
     parametrize_room=True,
     required_rank_editable=True,
 )
-class Leaderboard:
-    @classmethod
-    async def cmd_func(cls, msg: Message) -> None:
-        if msg.room is None:
+async def leaderboard_cmd_func(msg: Message) -> None:
+    if msg.room is None:
+        return
+
+    db = Database.open()
+    with db.get_session() as session:
+        stmt = (
+            select(d.Player)
+            .filter_by(roomid=msg.room.roomid)
+            .order_by(d.Player.points.desc())
+        )
+        players = session.scalars(stmt).all()
+        if not players:
+            await msg.reply("Nessun giocatore in classifica.")
             return
-        db = Database.open()
-        with db.get_session() as session:
-            stmt = (
-                select(d.Player)
-                .where(d.Player.room == msg.room.roomid)
-                .order_by(d.Player.points.desc())
-            )
-            players = session.scalars(stmt).all()
-            if not players:
-                await msg.reply("Nessun giocatore in classifica.")
-                return
-            html = ""
+
+        html = e.Table(class_="table")
+        with html:
             posizione = 0
             for player in players:
                 posizione += 1
-                row = e.Tr(
-                    e.Td(posizione) + e.Td(player.userid) + e.Td(player.points)
-                )
-                html = html + row
-            html: Table = e.Table(html, class_="table")
-            await msg.reply_htmlbox(html)
+                e.Tr(e.Td(posizione), e.Td(player.userid), e.Td(player.points))
+
+        await msg.reply_htmlbox(html)
