@@ -115,7 +115,7 @@ class Game:
     pokemon: str
     path: Path
     crop_origin: tuple[int, int] | None = None
-    player_list: set[User] = field(default_factory=set)
+    active_players: set[User] = field(default_factory=set)
     guess_counter: int = 0
     finish_event: asyncio.Event = field(default_factory=asyncio.Event)
 
@@ -192,8 +192,8 @@ class GuessTheSprite:
             similarity = SequenceMatcher(None, directory.name, message).ratio()
             if similarity > 0.6:
                 game.guess_counter += 1
-                if msg.user not in game.player_list:
-                    game.player_list.add(msg.user)
+                game.active_players.add(msg.user)
+                break
         if game.pokemon == message:
             del cls.active_games[msg.room]
             game.finish_event.set()
@@ -203,12 +203,12 @@ class GuessTheSprite:
                 get_image(game.path, msg.conn.base_url)
                 + e.Br()
                 + ce.Username(msg.user.username)
-                + f" ha vinto, ci sono stati {len(game.player_list)} player"
-                + f" e {game.guess_counter} guess totali, era "
-                + e.Strong(name)
+                + f" ha vinto era {e.Strong(name)}."
+                + f" Ci sono stati {len(game.active_players)} player"
+                + f" e {game.guess_counter} guess totali "
                 + "!"
             )
-            points = 1
+
             db = Database.open()
             with db.get_session() as session:
                 with db.get_session() as session:
@@ -220,7 +220,7 @@ class GuessTheSprite:
                     stmt = (
                         update(d.Player)
                         .filter_by(userid=msg.user.userid)
-                        .values(gts_points=d.Player.gts_points + points)
+                        .values(gts_points=d.Player.gts_points + 1)
                     )
                     session.execute(stmt)
 
