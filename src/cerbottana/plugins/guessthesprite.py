@@ -244,7 +244,7 @@ async def remove_old_cropped_images(conn: Connection) -> None:  # noqa: ARG001
 
 
 @command_wrapper(
-    aliases=("gtslb"),
+    aliases=("gtslb", "leaderboardgts"),
     helpstr="Mostra la classifica gts di una room",
     allow_pm="regularuser",
     parametrize_room=True,
@@ -259,7 +259,7 @@ async def gtsleaderboard(msg: Message) -> None:
         stmt = (
             select(d.Player)
             .filter_by(roomid=msg.room.roomid)
-            .order_by(d.Player.points.desc())
+            .order_by(d.Player.gts_points.desc())
         )
         players = session.scalars(stmt).all()
         if not players:
@@ -271,6 +271,6 @@ async def gtsleaderboard(msg: Message) -> None:
             posizione = 0
             for player in players:
                 posizione += 1
-                e.Tr(e.Td(posizione), e.Td(player.userid), e.Td(player.points))
+                e.Tr(e.Td(posizione), e.Td(player.userid), e.Td(player.gts_points))
 
         await msg.reply_htmlbox(html)
