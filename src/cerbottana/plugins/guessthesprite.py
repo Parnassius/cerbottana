@@ -140,16 +140,12 @@ class GuessTheSprite:
         pokemon = relative_path.parts[1]
         game = Game(pokemon, full_pokemon_path)
         cls.active_games[msg.room] = game
-        html: e.BaseElement | None = None
-        name = None
         for size in range(4):
             if msg.room not in cls.active_games:
                 return
-            if html and name:
-                del html["open"]
-                await msg.reply_htmlbox(html, name=name)
+
             cropped_path = crop_and_save(game, size)
-            html = e.Details(
+            html: e.BaseElement = e.Details(
                 e.Summary(f"hint {size + 1}"),
                 get_image(cropped_path, msg.conn.base_url),
                 open=True,
@@ -161,9 +157,9 @@ class GuessTheSprite:
             except TimeoutError:
                 # Timeout expired, go to the next image
                 pass
-            else:
-                # The pokemon has been guessed
-                return
+
+            del html["open"]
+            await msg.reply_htmlbox(html, name=name, change=True)
 
         if msg.room in cls.active_games:
             del cls.active_games[msg.room]
@@ -203,10 +199,11 @@ class GuessTheSprite:
                 get_image(game.path, msg.conn.base_url)
                 + e.Br()
                 + ce.Username(msg.user.username)
-                + f" ha vinto era {e.Strong(name)}."
+                + " ha vinto, era "
+                + e.Strong(name)
+                + "."
                 + f" Ci sono stati {len(game.active_players)} player"
-                + f" e {game.guess_counter} guess totali "
-                + "!"
+                + f" e {game.guess_counter} guess totali!"
             )
 
             db = Database.open()
