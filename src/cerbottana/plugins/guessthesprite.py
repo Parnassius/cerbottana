@@ -115,7 +115,7 @@ class Game:
     pokemon: str
     path: Path
     crop_origin: tuple[int, int] | None = None
-    user_list: list[User] = field(default_factory=list)
+    player_list: set[User] = field(default_factory=set)
     guess_counter: int = 0
     finish_event: asyncio.Event = field(default_factory=asyncio.Event)
 
@@ -152,7 +152,7 @@ class GuessTheSprite:
             html = e.Details(
                 e.Summary(f"hint {size + 1}"),
                 get_image(cropped_path, msg.conn.base_url),
-                open_=True,
+                open=True,
             )
             name = secrets.token_hex(8)
             await msg.reply_htmlbox(html, name=name)
@@ -188,13 +188,12 @@ class GuessTheSprite:
             return
 
         message = utils.to_id(utils.remove_diacritics(msg.message))
-        filelist = [d.name for d in (images_dir / "regular").iterdir()]
-        for x in filelist:
-            similarity = SequenceMatcher(None, x, message).ratio()
+        for directory in (images_dir / "regular").iterdir():
+            similarity = SequenceMatcher(None, directory.name, message).ratio()
             if similarity > 0.6:
                 game.guess_counter += 1
-                if msg.user not in game.user_list:
-                    game.user_list.append(msg.user)
+                if msg.user not in game.player_list:
+                    game.player_list.add(msg.user)
         if game.pokemon == message:
             del cls.active_games[msg.room]
             game.finish_event.set()
@@ -204,28 +203,24 @@ class GuessTheSprite:
                 get_image(game.path, msg.conn.base_url)
                 + e.Br()
                 + ce.Username(msg.user.username)
-                + f" ha vinto, ci sono stati {len(game.user_list)} player"
+                + f" ha vinto, ci sono stati {len(game.player_list)} player"
                 + f" e {game.guess_counter} guess totali, era "
                 + e.Strong(name)
                 + "!"
             )
-            if len(game.user_list) > 2:
-                points = 3 + 2 * len(game.user_list)
-            else:
-                points = 3
+            points = 1
             db = Database.open()
             with db.get_session() as session:
-                # Check if the player already exists in the database
                 with db.get_session() as session:
                     session.add(
                         d.Player(
-                            userid=msg.user.userid, roomid=msg.room.roomid, points=0
+                            userid=msg.user.userid, roomid=msg.room.roomid, gts_points=0
                         )
                     )
                     stmt = (
                         update(d.Player)
                         .filter_by(userid=msg.user.userid)
-                        .values(points=d.Player.points + points)
+                        .values(gts_points=d.Player.gts_points + points)
                     )
                     session.execute(stmt)
 
@@ -249,13 +244,13 @@ async def remove_old_cropped_images(conn: Connection) -> None:  # noqa: ARG001
 
 
 @command_wrapper(
-    aliases=("gtsleaderboard", "gtslb"),
+    aliases=("gtslb"),
     helpstr="Mostra la classifica gts di una room",
     allow_pm="regularuser",
     parametrize_room=True,
     required_rank_editable=True,
 )
-async def leaderboard_cmd_func(msg: Message) -> None:
+async def gtsleaderboard(msg: Message) -> None:
     if msg.room is None:
         return
 

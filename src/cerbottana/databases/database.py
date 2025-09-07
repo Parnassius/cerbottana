@@ -103,6 +103,6 @@ class Player(Base):
     )
 
     id: Mapped[intpk]
+    gts_points: Mapped[int]
     roomid: Mapped[str]
     userid: Mapped[str]
-    points: Mapped[int] = mapped_column(default=0)
