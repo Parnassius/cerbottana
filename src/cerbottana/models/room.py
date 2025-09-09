@@ -13,6 +13,7 @@ from domify.base_element import BaseElement
 from pokedex.enums import Language
 
 from cerbottana import utils
+from cerbottana.models.attributes import AttributeMapping
 from cerbottana.typedefs import RoomId
 
 if TYPE_CHECKING:
@@ -38,6 +39,7 @@ class Room:
         title (str): Formatted variant of roomid.
         users (dict[User, str]): User instance, rank string.
         webhook (str | None): Discord webhook URL. None if missing.
+        attributes (AttributeMapping): Custom attributes, used by plugins.
     """
 
     _instances: WeakKeyDictionary[Connection, WeakValueDictionary[RoomId, Room]] = (
@@ -62,6 +64,8 @@ class Room:
         # Attributes updated within this instance
         self._users: dict[User, str] = {}  # user, rank
         self._message_queue: asyncio.Queue[ProtocolMessage]
+
+        self.attributes = AttributeMapping()
 
     @property
     def buffer(self) -> deque[str]:

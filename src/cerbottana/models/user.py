@@ -8,6 +8,7 @@ from weakref import WeakKeyDictionary, WeakValueDictionary
 from domify.base_element import BaseElement
 
 from cerbottana import utils
+from cerbottana.models.attributes import AttributeMapping
 from cerbottana.plugins import htmlpages
 from cerbottana.typedefs import Role, UserId
 
@@ -30,6 +31,7 @@ class User:
         global_rank (str): PS global rank, defaults to " " if rank is unknown.
         idle (bool): True if user is marked as idle.
         rooms (set[Room]): List of rooms the user is in.
+        attributes (AttributeMapping): Custom attributes, used by plugins.
     """
 
     _instances: WeakKeyDictionary[Connection, WeakValueDictionary[UserId, User]] = (
@@ -47,6 +49,8 @@ class User:
         self.conn = conn
         self.userstring = userstring
         self.global_rank: str = " "
+
+        self.attributes = AttributeMapping()
 
     @property
     def username(self) -> str:
