@@ -131,3 +131,61 @@ async def test_monopoketour(
     rules_str = ",".join(rules)
     team = f"{species}||{item}|{ability}|{moves}||4,,,,,|||||"
     pokemon_showdown.validate_team(f"{formatid} @@@ {rules_str}", team, valid)
+
+
+async def test_tier_info(mock_connection) -> None:
+    async with mock_connection() as conn:
+        await conn.add_messages(
+            [
+                ">room1",
+                "|init|chat",
+            ]
+        )
+        await conn.add_user_join("room1", "mod", "@")
+
+        # Send dummy tier information
+        await conn.add_messages(
+            [
+                "|formats|,1|S/V Singles|"
+                "[Gen 9] Random Battle,4f|[Gen 9] OU,e|[Gen 9] National Dex,e",
+            ]
+        )
+        await conn.get_messages()
+
+        # Random tiers should not trigger a tier info message
+        await conn.add_messages(
+            [
+                ">room1",
+                "|tournament|create|gen9randombattle|Single Elimination|0",
+            ]
+        )
+        reply = await conn.get_messages()
+        assert len(reply) == 0
+
+        # Non random tiers should trigger a tier info message
+        await conn.add_messages(
+            [
+                ">room1",
+                "|tournament|create|gen9ou|Single Elimination|0",
+            ]
+        )
+        reply = await conn.get_messages()
+        assert len(reply) == 1
+        assert next(iter(reply)) == "room1|!tier [Gen 9] OU"
+
+        # Tours started with custom commands should not trigger a tier info message
+        await conn.add_messages(
+            [
+                ">room1",
+                "|c|@mod|.monopoke pikachu",
+            ]
+        )
+        await conn.get_messages()
+        await conn.add_messages(
+            [
+                ">room1",
+                "|tournament|create|gen9nationaldex|Single Elimination|0",
+            ]
+        )
+        reply = await conn.get_messages()
+        assert len(reply) == 0

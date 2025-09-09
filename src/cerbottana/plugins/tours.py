@@ -1,16 +1,21 @@
 from __future__ import annotations
 
 import random
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, ClassVar, Literal
 
 import aiohttp
 
 from cerbottana.handlers import handler_wrapper
+from cerbottana.models.attributes import AttributeKey
 from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.models.message import Message
     from cerbottana.models.protocol_message import ProtocolMessage
+
+
+creating_custom_tour = AttributeKey(datetime)
 
 
 class Tour:
@@ -41,6 +46,7 @@ class Tour:
         allow_scouting: bool | None = None,
         forcetimer: bool | None = None,
         rules: list[str] | None = None,
+        hide_tier_info: bool = True,
     ) -> None:
         if formatid is None:
             formatid = cls.formatid
@@ -63,6 +69,9 @@ class Tour:
             forcetimer = cls.forcetimer
         if rules is None:
             rules = cls.rules
+
+        if msg.room and hide_tier_info:
+            msg.room.attributes[creating_custom_tour] = datetime.now(UTC)
 
         tournew = (
             "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
@@ -235,6 +244,10 @@ class Sibb(Tour):
 @handler_wrapper(["tournament"], required_parameters=2)  # hooked on |tournament|create|
 async def tournament_create(msg: ProtocolMessage) -> None:
     if msg.params[0] != "create":
+        return
+
+    creating_dt = msg.room.attributes.get(creating_custom_tour)
+    if creating_dt and (datetime.now(UTC) - creating_dt).total_seconds() < 5:
         return
 
     tierid = msg.params[1]
