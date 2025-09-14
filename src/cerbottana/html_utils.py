@@ -18,13 +18,15 @@ from sqlalchemy.sql import Select
 from cerbottana.database import Database
 
 if TYPE_CHECKING:
+    import aiohttp
+
     from cerbottana.models.room import Room
     from cerbottana.models.user import User
 
 
-async def image_url_to_html(url: str) -> BaseElement:
+async def image_url_to_html(url: str, *, session: aiohttp.ClientSession) -> BaseElement:
     """Generates an <img> tag from an image url."""
-    image = await probe(url)
+    image = await probe(url, session=session)
     return e.Img(src=url, width=image.width, height=image.height)
 
 

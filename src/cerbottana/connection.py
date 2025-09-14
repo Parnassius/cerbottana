@@ -58,6 +58,7 @@ class Connection:
         self.active_commands: dict[Room | User, dict[asyncio.Task[None], Command]] = (
             defaultdict(dict)
         )
+        self._client_session: aiohttp.ClientSession | None = None
         self.timestamp: float = 0
         self.lastmessage: float = 0
         self.websocket: aiohttp.ClientWebSocketResponse | None = None
@@ -65,55 +66,64 @@ class Connection:
         self.tiers: dict[str, Tier] = {}
         self.running_tasks: set[asyncio.Task[Any]] = set()  # type: ignore[explicit-any]
 
+    @property
+    def client_session(self) -> aiohttp.ClientSession:
+        if self._client_session is None:
+            self._client_session = aiohttp.ClientSession(
+                cookie_jar=aiohttp.DummyCookieJar()
+            )
+        return self._client_session
+
     async def open_connection(self) -> None:
         signal.signal(signal.SIGTERM, signal.getsignal(signal.SIGINT))
         try:
             await self._start_websocket()
         except asyncio.CancelledError:
             pass
+        if self._client_session is not None:
+            await self._client_session.close()
 
     async def _start_websocket(self) -> None:
         await self._run_init_background_tasks()
 
-        async with aiohttp.ClientSession() as session:
-            connection_retries = 0
-            while True:
-                try:
-                    async with session.ws_connect(
-                        self.url, max_msg_size=0, heartbeat=60
-                    ) as websocket:
-                        self.websocket = websocket
-                        self.connection_start = time()
-                        async for message in websocket:
-                            if message.type == aiohttp.WSMsgType.TEXT:
-                                print(f"<< {message.data}")
-                                await self._parse_text_message(message.data)
-                            elif message.type == aiohttp.WSMsgType.BINARY:
-                                print(f"<b {message.data.decode()}")
-                                await self._parse_binary_message(message.data)
-                            elif message.type == aiohttp.WSMsgType.ERROR:
-                                break
-                except (aiohttp.ClientConnectionError, ConnectionResetError):
-                    pass
+        connection_retries = 0
+        while True:
+            try:
+                async with self.client_session.ws_connect(
+                    self.url, max_msg_size=0, heartbeat=60
+                ) as websocket:
+                    self.websocket = websocket
+                    self.connection_start = time()
+                    async for message in websocket:
+                        if message.type == aiohttp.WSMsgType.TEXT:
+                            print(f"<< {message.data}")
+                            await self._parse_text_message(message.data)
+                        elif message.type == aiohttp.WSMsgType.BINARY:
+                            print(f"<b {message.data.decode()}")
+                            await self._parse_binary_message(message.data)
+                        elif message.type == aiohttp.WSMsgType.ERROR:
+                            break
+            except (aiohttp.ClientConnectionError, ConnectionResetError):
+                pass
 
-                for task in self.running_tasks:
-                    task.cancel()
+            for task in self.running_tasks:
+                task.cancel()
 
-                if (
-                    self.connection_start is not None
-                    and time() - self.connection_start > 60
-                ):
-                    connection_retries = 0
+            if (
+                self.connection_start is not None
+                and time() - self.connection_start > 60
+            ):
+                connection_retries = 0
 
-                self.websocket = None
-                self.connection_start = None
+            self.websocket = None
+            self.connection_start = None
 
-                if connection_retries < 12:
-                    # Cap the backoff to 2**12 seconds, which is a little over one hour
-                    connection_retries += 1
-                backoff = 2**connection_retries
-                print(f"Connection closed, retrying in {backoff} seconds")
-                await asyncio.sleep(backoff)
+            if connection_retries < 12:
+                # Cap the backoff to 2**12 seconds, which is a little over one hour
+                connection_retries += 1
+            backoff = 2**connection_retries
+            print(f"Connection closed, retrying in {backoff} seconds")
+            await asyncio.sleep(backoff)
 
     async def _run_init_background_tasks(self) -> None:
         for prio in range(1, 6):

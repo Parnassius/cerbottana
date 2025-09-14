@@ -99,7 +99,7 @@ async def sprite(msg: Message) -> None:
     url = generate_sprite_url(dex_entry, back=back, shiny=shiny, category=category)
 
     try:
-        html = await image_url_to_html(url)
+        html = await image_url_to_html(url, session=msg.conn.client_session)
         await msg.reply_htmlbox(html)
     except UnsupportedFormat:
         # Missing sprite. We received a generic Apache error webpage.
@@ -126,7 +126,7 @@ async def randsprite(msg: Message) -> None:
     url = generate_sprite_url(dex_entry, back=back, shiny=shiny)
 
     try:
-        html = await image_url_to_html(url)
+        html = await image_url_to_html(url, session=msg.conn.client_session)
         await msg.reply_htmlbox(html)
     except UnsupportedFormat:
         # Missing sprite. We received a generic Apache error webpage.

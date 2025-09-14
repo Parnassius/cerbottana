@@ -4,8 +4,6 @@ import random
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, ClassVar, Literal
 
-import aiohttp
-
 from cerbottana.handlers import handler_wrapper
 from cerbottana.models.attributes import AttributeKey
 from cerbottana.plugins import command_wrapper
@@ -267,9 +265,10 @@ async def tournament_create(msg: ProtocolMessage) -> None:
     if msg.room.webhook is not None:
         name = tier.name.replace("[", r"\[").replace("]", r"\]")
         alert = f"[**{name}** tour in {msg.room.title}](https://psim.us/{msg.room})"
-        async with aiohttp.ClientSession() as session:
-            async with session.post(msg.room.webhook, data={"content": alert}) as resp:
-                if err := await resp.text("utf-8"):
-                    print(f"Error with webhook of {msg.room}:\n{err}")
-                else:
-                    print(f"Sent tour alert to webhook of {msg.room}")
+        async with msg.conn.client_session.post(
+            msg.room.webhook, data={"content": alert}
+        ) as resp:
+            if err := await resp.text("utf-8"):
+                print(f"Error with webhook of {msg.room}:\n{err}")
+            else:
+                print(f"Sent tour alert to webhook of {msg.room}")

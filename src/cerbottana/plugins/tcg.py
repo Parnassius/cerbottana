@@ -17,21 +17,23 @@ if TYPE_CHECKING:
     from cerbottana.models.message import Message
 
 
-async def query_scryfall(url: str, resp_type: str) -> JsonDict | None:
+async def query_scryfall(
+    url: str, resp_type: str, *, session: aiohttp.ClientSession
+) -> JsonDict | None:
     """Queries the Scryfall API.
 
     Args:
         url (str): Query.
         resp_type (str): Expected Scryfall API object type.
+        session (ClientSession): aiohttp ClientSession to make the request.
 
     Returns:
         JsonDict | None: Valid JSON received from the API, None if data is not valid.
     """
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-            if resp.status != 200:
-                return None
-            json_body: JsonDict = await resp.json()
+    async with session.get(url) as resp:
+        if resp.status != 200:
+            return None
+        json_body: JsonDict = await resp.json()
 
     # API error handling
     # Check response type and trust the API that it has the required parameters.
@@ -105,13 +107,13 @@ async def card(msg: Message) -> None:
 
     query = urllib.parse.quote(msg.arg)
     url = "https://api.scryfall.com/cards/search?include_multilingual=true&q=" + query
-    json_body = await query_scryfall(url, "list")
+    json_body = await query_scryfall(url, "list", session=msg.conn.client_session)
 
     # If the search didn't match any cards, broaden the scope to include extras (tokens,
     # planes, ...).
     if json_body is None:
         url += "&include_extras=true"
-        json_body = await query_scryfall(url, "list")
+        json_body = await query_scryfall(url, "list", session=msg.conn.client_session)
 
     if json_body is None:
         await msg.reply("Nome non valido")
@@ -152,7 +154,7 @@ async def guessthecard(msg: Message) -> None:
     query = "+".join([urllib.parse.quote(param) for param in filters])
     url = "https://api.scryfall.com/cards/random?q=" + query
 
-    card_ = await query_scryfall(url, "card")
+    card_ = await query_scryfall(url, "card", session=msg.conn.client_session)
     if card_ is None:  # Safety check. Error is propagated from query_scryfall().
         return
 
@@ -183,7 +185,7 @@ async def randcard(msg: Message) -> None:
         # Users can input an optional query to restrict the cardpool.
         url += "?q=" + urllib.parse.quote(msg.arg)
 
-    card_ = await query_scryfall(url, "card")
+    card_ = await query_scryfall(url, "card", session=msg.conn.client_session)
     if card_ is None:
         await msg.reply("Ricerca non valida")
         return
