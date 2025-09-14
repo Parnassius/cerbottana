@@ -42,6 +42,18 @@ class EightBall(Base):
     roomid: Mapped[str]
 
 
+class Player(Base):
+    __tablename__ = "players"
+    __table_args__ = (
+        UniqueConstraint("roomid", "userid", sqlite_on_conflict="IGNORE"),
+    )
+
+    id: Mapped[intpk]
+    roomid: Mapped[str]
+    userid: Mapped[str]
+    gts_points: Mapped[int]
+
+
 class Quotes(Base):
     __tablename__ = "quotes"
     __table_args__ = (UniqueConstraint("message", "roomid"),)
