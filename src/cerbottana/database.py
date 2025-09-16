@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from cerbottana import utils
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 class Database:

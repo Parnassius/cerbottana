@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
 from cerbottana import utils
-from cerbottana.typedefs import Role
+
+if TYPE_CHECKING:
+    from cerbottana.typedefs import Role
 
 
 @pytest.mark.parametrize(
-    "role, userrank, expected",
+    ("role", "userrank", "expected"),
     [
         ("admin", "~", True),
         ("admin", "&", True),

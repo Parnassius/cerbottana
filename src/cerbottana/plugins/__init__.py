@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import importlib
-from collections.abc import Callable, Coroutine
 from functools import wraps
 from pathlib import Path
 from typing import TYPE_CHECKING, ClassVar, Protocol, runtime_checkable
 
-from domify.base_element import BaseElement
 from sqlalchemy import select
 
 import cerbottana.databases.database as d
@@ -18,6 +16,10 @@ from cerbottana.models.room import Room
 from cerbottana.typedefs import Role, RoomId
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Coroutine
+
+    from domify.base_element import BaseElement
+
     from cerbottana.models.message import Message, RawMessage
     from cerbottana.models.user import User
 

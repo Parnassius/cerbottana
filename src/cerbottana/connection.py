@@ -4,8 +4,7 @@ import asyncio
 import re
 import signal
 from collections import defaultdict
-from collections.abc import Coroutine
-from contextvars import Context
+from contextlib import suppress
 from time import time
 from typing import TYPE_CHECKING, Any
 
@@ -15,13 +14,15 @@ from cerbottana import utils
 from cerbottana.handlers import handlers
 from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.models.room import Room
-from cerbottana.models.user import User
 from cerbottana.plugins import Command, commands
 from cerbottana.tasks import background_tasks, init_tasks
-from cerbottana.typedefs import RoomId
 
 if TYPE_CHECKING:
-    from cerbottana.typedefs import Tier
+    from collections.abc import Coroutine
+    from contextvars import Context
+
+    from cerbottana.models.user import User
+    from cerbottana.typedefs import RoomId, Tier
 
 
 class Connection:
@@ -76,10 +77,8 @@ class Connection:
 
     async def open_connection(self) -> None:
         signal.signal(signal.SIGTERM, signal.getsignal(signal.SIGINT))
-        try:
+        with suppress(asyncio.CancelledError):
             await self._start_websocket()
-        except asyncio.CancelledError:
-            pass
         if self._client_session is not None:
             await self._client_session.close()
 

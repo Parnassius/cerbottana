@@ -7,8 +7,8 @@ from cerbottana.plugins.sprites import SPRITE_CATEGORIES, generate_sprite_url
 
 
 @pytest.mark.parametrize(
-    "pokemon, dex_name, category, fallback",
-    (
+    ("pokemon", "dex_name", "category", "fallback"),
+    [
         ("Litten", "litten", "ani", False),
         ("Nidoran-F", "nidoranf", "ani", False),
         ("Ninetales-Alola", "ninetales-alola", "ani", False),
@@ -17,7 +17,7 @@ from cerbottana.plugins.sprites import SPRITE_CATEGORIES, generate_sprite_url
         ("Alcremie-Lemon-Cream", "alcremie-lemoncream", "ani", False),
         ("Venusaur-Mega", "venusaur-mega", "gen5", True),
         ("Arghonaut", "arghonaut", "ani", True),
-    ),
+    ],
 )
 def test_generate_sprite_url(
     pokemon: str, dex_name: str, category: str, fallback: bool

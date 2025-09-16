@@ -4,13 +4,12 @@ import asyncio
 import json
 import subprocess
 from collections import Counter
-from collections.abc import AsyncGenerator, Callable
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from enum import Enum
 from pathlib import Path
 from shutil import rmtree
 from time import time
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 from sqlalchemy import create_engine
@@ -23,6 +22,9 @@ from cerbottana.database import Database
 from cerbottana.models.room import Room
 from cerbottana.tasks import pokedex, veekun
 from cerbottana.utils import env
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator, Callable
 
 
 def pytest_collection_modifyitems(items):
@@ -181,7 +183,7 @@ class MockedConnection(Connection):
         return messages
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_connection() -> Callable[[], AbstractAsyncContextManager[Any]]:
     @asynccontextmanager
     async def make_mock_connection(

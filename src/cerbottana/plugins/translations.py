@@ -90,7 +90,7 @@ async def translate(msg: Message) -> None:
 
     # Get the first two unique languages
     languages = tuple(dict.fromkeys(languages_list))[:2]
-    languages = cast(tuple[Language, Language], languages)
+    languages = cast("tuple[Language, Language]", languages)
 
     results = await _get_translations(word, languages)
 

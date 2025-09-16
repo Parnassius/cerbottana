@@ -5,16 +5,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
-from domify.base_element import BaseElement
-
 from cerbottana import utils
 from cerbottana.models.attributes import AttributeMapping
 from cerbottana.plugins import htmlpages
-from cerbottana.typedefs import Role, UserId
 
 if TYPE_CHECKING:
+    from domify.base_element import BaseElement
+
     from cerbottana.connection import Connection
     from cerbottana.models.room import Room
+    from cerbottana.typedefs import Role, UserId
 
 
 class User:
@@ -42,7 +42,7 @@ class User:
         self,
         conn: Connection,
         userstring: str,
-    ):
+    ) -> None:
         """Might override a previous instance associated with the same userid. Use
         User.get.
         """

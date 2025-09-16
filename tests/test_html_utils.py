@@ -6,7 +6,7 @@ from cerbottana import html_utils
 
 
 @pytest.mark.parametrize(
-    "uri, expected_html",
+    ("uri", "expected_html"),
     [
         ("&  <  >  \"  '", "&amp;  &lt;  &gt;  &quot;  &#x27;"),
         ("a@b.com", '<a href="mailto:a@b.com">a@b.com</a>'),

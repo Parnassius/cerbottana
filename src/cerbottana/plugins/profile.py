@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from domify import html_elements as e
-from domify.base_element import BaseElement
 from sqlalchemy import select, update
 
 import cerbottana.databases.database as d
@@ -15,6 +13,10 @@ from cerbottana.html_utils import BaseHTMLCommand, HTMLPageCommand
 from cerbottana.plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from domify.base_element import BaseElement
+
     from cerbottana.models.message import Message
     from cerbottana.models.room import Room
     from cerbottana.models.user import User

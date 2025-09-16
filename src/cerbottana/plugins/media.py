@@ -6,12 +6,13 @@ from typing import TYPE_CHECKING
 
 import aiohttp
 from domify import html_elements as e
-from domify.base_element import BaseElement
 
 from cerbottana import utils
 from cerbottana.plugins import command_wrapper
 
 if TYPE_CHECKING:
+    from domify.base_element import BaseElement
+
     from cerbottana.models.message import Message
 
 

@@ -6,15 +6,16 @@ import re
 import urllib
 from typing import TYPE_CHECKING
 
-import aiohttp
 from domify import html_elements as e
 from domify.base_element import BaseElement
 
 from cerbottana.plugins import command_wrapper
-from cerbottana.typedefs import JsonDict
 
 if TYPE_CHECKING:
+    import aiohttp
+
     from cerbottana.models.message import Message
+    from cerbottana.typedefs import JsonDict
 
 
 async def query_scryfall(

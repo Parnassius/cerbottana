@@ -4,7 +4,6 @@ import math
 import random
 import re
 import string
-from collections.abc import Callable, Mapping
 from html import escape
 from typing import TYPE_CHECKING
 
@@ -12,13 +11,15 @@ from domify import html_elements as e
 from domify.base_element import BaseElement
 from imageprobe import probe
 from sqlalchemy import func
-from sqlalchemy.engine import Row
-from sqlalchemy.sql import Select
 
 from cerbottana.database import Database
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Mapping
+
     import aiohttp
+    from sqlalchemy.engine import Row
+    from sqlalchemy.sql import Select
 
     from cerbottana.models.room import Room
     from cerbottana.models.user import User
@@ -60,12 +61,12 @@ def _linkify_uri(uri: str) -> str:
     else:
         fulluri = re.sub(r"^([a-z]*[^a-z:])", r"http://\1", uri)
         if uri.startswith(("https://docs.google.com/", "docs.google.com/")):
-            if uri.startswith("https"):
-                uri = uri[8:]
-            if uri.endswith(("?usp=sharing", "&usp=sharing")):
-                uri = uri[:-12]
-            if uri.endswith("#gid=0"):
-                uri = uri[:-6]
+            uri = (
+                uri.removeprefix("https://")
+                .removesuffix("?usp=sharing")
+                .removesuffix("&usp=sharing")
+                .removesuffix("#gid=0")
+            )
 
             slash_index = uri.rindex("/")
             if len(uri) - slash_index > 18:

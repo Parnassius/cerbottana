@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, ClassVar
 
 from dateutil.parser import parse
 from domify import html_elements as e
-from domify.base_element import BaseElement
 from sqlalchemy import delete, select
 
 import cerbottana.databases.database as d
@@ -20,6 +19,8 @@ from cerbottana.plugins import command_wrapper, htmlpage_wrapper
 from cerbottana.tasks import init_task_wrapper
 
 if TYPE_CHECKING:
+    from domify.base_element import BaseElement
+
     from cerbottana.connection import Connection
     from cerbottana.models.message import Message
     from cerbottana.models.user import User

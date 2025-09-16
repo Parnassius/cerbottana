@@ -48,7 +48,7 @@ async def test_obtainability(pokemon_showdown, *, pokemon_data: dict[str, str]) 
 
 
 @pytest.mark.parametrize(
-    "monopoke, species, item, ability, moves, valid",
+    ("monopoke", "species", "item", "ability", "moves", "valid"),
     [
         pytest.param(
             # `Past` pokemon should be accepted

@@ -1,23 +1,24 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 from typing import TYPE_CHECKING, Literal, cast
 
-from domify.base_element import BaseElement
 from sqlalchemy import String, and_, delete, literal, select, type_coerce, union
-from sqlalchemy.engine import Row
 
 import cerbottana.databases.database as d
 from cerbottana.database import Database
 from cerbottana.html_utils import HTMLPageCommand
 from cerbottana.plugins import Command, command_wrapper, htmlpage_wrapper
-from cerbottana.typedefs import Role
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from domify.base_element import BaseElement
+    from sqlalchemy.engine import Row
+
     from cerbottana.models.message import Message
     from cerbottana.models.room import Room
     from cerbottana.models.user import User
-
+    from cerbottana.typedefs import Role
 
 PERMISSION_ROLES = {
     "default": "default",
@@ -45,7 +46,7 @@ async def setpermission(msg: Message) -> None:
     rank = msg.args[2]
     if rank not in PERMISSION_ROLES:
         return
-    rank = cast(Role | Literal["default"], rank)
+    rank = cast("Role | Literal['default']", rank)
 
     db = Database.open()
     with db.get_session() as session:

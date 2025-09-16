@@ -6,8 +6,8 @@ from cerbottana.plugins.quotes import to_html_quotebox
 
 
 @pytest.mark.parametrize(
-    "testquote, n_parsed_lines",
-    (
+    ("testquote", "n_parsed_lines"),
+    [
         # (testquote, nr. of parsed lines in the resulting quotebox),
         #
         # Only chat messages
@@ -30,7 +30,7 @@ from cerbottana.plugins.quotes import to_html_quotebox
         ("[21:33 @plat0: test a one-liner with a missing right bracket", 0),
         ("salt [21:33] @plat0: test1 [21:33] @plat0: test2 [21:33] +Ihmsan: test3", 0),
         ("(There is a parentheses regex too, you never know!)", 0),
-    ),
+    ],
 )
 def test_to_html_quotebox_chat(testquote: str, n_parsed_lines: int) -> None:
     """Tests that chatlines are splitted correctly (or left unparsed)."""
@@ -39,15 +39,15 @@ def test_to_html_quotebox_chat(testquote: str, n_parsed_lines: int) -> None:
 
 
 @pytest.mark.parametrize(
-    "chatline, is_colorized",
-    (
+    ("chatline", "is_colorized"),
+    [
         # Single-line quotes.
         ("[21:33] reg: testline", True),
         ("[21:33] @auth: testline", True),
         ("[21:33] reg: hey: +how: are: @you", True),
         ("reg: auth", False),
         ("[21:33] (Plato notes: reason)", False),
-    ),
+    ],
 )
 def test_to_html_quotebox_colorize(chatline: str, is_colorized: bool) -> None:
     """Tests that usernames are colorized only once per line and if necessary."""
@@ -58,6 +58,7 @@ def test_to_html_quotebox_colorize(chatline: str, is_colorized: bool) -> None:
 
 def test_to_html_quotebox_empty() -> None:
     """Tests that empty quotes raise an exception."""
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(
+        ValueError, match=r"^Trying to create quotebox for empty quote\.$"
+    ):
         to_html_quotebox("")
-    assert str(excinfo.value) == "Trying to create quotebox for empty quote."

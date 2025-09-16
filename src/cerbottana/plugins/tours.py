@@ -196,10 +196,7 @@ class Randpoketour(Tour):
             await msg.reply("Inserisci almeno un Pokémon")
             return
 
-        if "," in msg.arg:
-            sep = ","
-        else:
-            sep = " "
+        sep = "," if "," in msg.arg else " "
         unbans = [f"+{x}-base" for x in msg.arg.split(sep)]
 
         await super().create_tour(msg, rules=[*cls.rules, *unbans])
@@ -248,10 +245,7 @@ async def tournament_create(msg: ProtocolMessage) -> None:
     if creating_dt and (datetime.now(UTC) - creating_dt).total_seconds() < 5:
         return
 
-    tierid = msg.params[1]
-    if tierid.endswith("blitz"):
-        tierid = tierid[:-5]
-
+    tierid = msg.params[1].removesuffix("blitz")
     tier = msg.conn.tiers.get(tierid)
     if tier is None:
         print(f"Unrecognized tier: '{tierid}'")

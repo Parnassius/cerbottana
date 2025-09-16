@@ -7,8 +7,8 @@ from cerbottana.plugins.translations import _get_translations
 
 
 @pytest.mark.parametrize(
-    "word, languages, results",
-    (
+    ("word", "languages", "results"),
+    [
         (
             "azione",
             (Language.ITALIAN, Language.ENGLISH),
@@ -95,7 +95,7 @@ from cerbottana.plugins.translations import _get_translations
             (Language.ENGLISH, Language.FRENCH),
             {},
         ),
-    ),
+    ],
 )
 async def test_translations(
     word: str,
