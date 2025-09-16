@@ -12,7 +12,6 @@ ENV UV_COMPILE_BYTECODE=1
 ENV UV_FROZEN=1
 ENV UV_LINK_MODE=copy
 
-RUN apk add --no-cache gcc musl-dev libffi-dev
 RUN apk add --no-cache git
 
 COPY --from=ghcr.io/astral-sh/uv /uv /bin/uv
@@ -29,7 +28,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 FROM builder as test-base
 
-RUN apk add --no-cache gcc musl-dev linux-headers
 RUN apk add --no-cache make
 RUN apk add --no-cache nodejs npm
 
