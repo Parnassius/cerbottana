@@ -762,6 +762,9 @@
       "h": 68
     }
   },
+  "clefablemega": {
+    "num": 36
+  },
   "vulpix": {
     "num": 37,
     "front": {
@@ -1302,6 +1305,9 @@
       "w": 83,
       "h": 86
     }
+  },
+  "victreebelmega": {
+    "num": 71
   },
   "tentacool": {
     "num": 72,
@@ -2104,6 +2110,9 @@
       "h": 61
     }
   },
+  "starmiemega": {
+    "num": 121
+  },
   "mrmime": {
     "num": 122,
     "front": {
@@ -2578,6 +2587,9 @@
       "h": 98
     }
   },
+  "dragonitemega": {
+    "num": 149
+  },
   "mewtwo": {
     "num": 150,
     "front": {
@@ -2663,6 +2675,9 @@
       "h": 98
     }
   },
+  "meganiummega": {
+    "num": 154
+  },
   "cyndaquil": {
     "num": 155,
     "front": {
@@ -2739,6 +2754,9 @@
       "w": 95,
       "h": 91
     }
+  },
+  "feraligatrmega": {
+    "num": 160
   },
   "sentret": {
     "num": 161,
@@ -4019,6 +4037,9 @@
       "w": 119,
       "h": 63
     }
+  },
+  "skarmorymega": {
+    "num": 227
   },
   "houndour": {
     "num": 228,
@@ -7621,6 +7642,9 @@
       "h": 79
     }
   },
+  "froslassmega": {
+    "num": 478
+  },
   "rotom": {
     "num": 479,
     "front": {
@@ -8137,6 +8161,9 @@
       "h": 102
     }
   },
+  "emboarmega": {
+    "num": 500
+  },
   "oshawott": {
     "num": 501,
     "front": {
@@ -8486,6 +8513,9 @@
       "h": 74
     }
   },
+  "excadrillmega": {
+    "num": 530
+  },
   "audino": {
     "num": 531,
     "front": {
@@ -8661,6 +8691,9 @@
       "w": 110,
       "h": 109
     }
+  },
+  "scolipedemega": {
+    "num": 545
   },
   "cottonee": {
     "num": 546,
@@ -8903,6 +8936,9 @@
       "w": 62,
       "h": 79
     }
+  },
+  "scraftymega": {
+    "num": 560
   },
   "sigilyph": {
     "num": 561,
@@ -9514,6 +9550,9 @@
       "h": 73
     }
   },
+  "eelektrossmega": {
+    "num": 604
+  },
   "elgyem": {
     "num": 605,
     "front": {
@@ -9568,6 +9607,9 @@
       "w": 115,
       "h": 110
     }
+  },
+  "chandeluremega": {
+    "num": 609
   },
   "axew": {
     "num": 610,
@@ -10185,6 +10227,9 @@
       "h": 111
     }
   },
+  "chesnaughtmega": {
+    "num": 652
+  },
   "fennekin": {
     "num": 653,
     "front": {
@@ -10217,6 +10262,9 @@
       "w": 100,
       "h": 121
     }
+  },
+  "delphoxmega": {
+    "num": 655
   },
   "froakie": {
     "num": 656,
@@ -10264,6 +10312,9 @@
       "w": 108,
       "h": 93
     }
+  },
+  "greninjamega": {
+    "num": 658
   },
   "bunnelby": {
     "num": 659,
@@ -10592,6 +10643,9 @@
       "h": 100
     }
   },
+  "pyroarmega": {
+    "num": 668
+  },
   "flabebe": {
     "num": 669,
     "front": {
@@ -10712,6 +10766,9 @@
       "w": 86,
       "h": 99
     }
+  },
+  "floettemega": {
+    "num": 670
   },
   "florges": {
     "num": 671,
@@ -11073,6 +11130,9 @@
       "h": 105
     }
   },
+  "malamarmega": {
+    "num": 687
+  },
   "binacle": {
     "num": 688,
     "front": {
@@ -11095,6 +11155,9 @@
       "h": 105
     }
   },
+  "barbaraclemega": {
+    "num": 689
+  },
   "skrelp": {
     "num": 690,
     "front": {
@@ -11116,6 +11179,9 @@
       "w": 141,
       "h": 141
     }
+  },
+  "dragalgemega": {
+    "num": 691
   },
   "clauncher": {
     "num": 692,
@@ -11226,6 +11292,9 @@
       "w": 82,
       "h": 72
     }
+  },
+  "hawluchamega": {
+    "num": 701
   },
   "dedenne": {
     "num": 702,
@@ -11545,6 +11614,9 @@
       "w": 145,
       "h": 111
     }
+  },
+  "zygardemega": {
+    "num": 718
   },
   "diancie": {
     "num": 719,
@@ -12691,6 +12763,9 @@
       "w": 111,
       "h": 73
     }
+  },
+  "drampamega": {
+    "num": 780
   },
   "dhelmise": {
     "num": 781,
@@ -14038,6 +14113,9 @@
       "w": 151,
       "h": 50
     }
+  },
+  "falinksmega": {
+    "num": 870
   },
   "pincurchin": {
     "num": 871,
@@ -15646,13 +15724,37 @@
     }
   },
   "gimmighoul": {
-    "num": 999
+    "num": 999,
+    "front": {
+      "w": 64,
+      "h": 81
+    },
+    "back": {
+      "w": 66,
+      "h": 81
+    }
   },
   "gimmighoulroaming": {
-    "num": 999
+    "num": 999,
+    "front": {
+      "w": 30,
+      "h": 33
+    },
+    "back": {
+      "w": 26,
+      "h": 32
+    }
   },
   "gholdengo": {
-    "num": 1000
+    "num": 1000,
+    "front": {
+      "w": 63,
+      "h": 82
+    },
+    "back": {
+      "w": 68,
+      "h": 82
+    }
   },
   "wochien": {
     "num": 1001
