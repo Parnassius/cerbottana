@@ -663,6 +663,9 @@
       "h": 51
     }
   },
+  "clefablemega": {
+    "num": 36
+  },
   "vulpix": {
     "num": 37,
     "front": {
@@ -1191,6 +1194,9 @@
       "w": 69,
       "h": 70
     }
+  },
+  "victreebelmega": {
+    "num": 71
   },
   "tentacool": {
     "num": 72,
@@ -1945,6 +1951,9 @@
       "h": 55
     }
   },
+  "starmiemega": {
+    "num": 121
+  },
   "mrmime": {
     "num": 122,
     "front": {
@@ -2335,6 +2344,9 @@
       "h": 81
     }
   },
+  "dragonitemega": {
+    "num": 149
+  },
   "mewtwo": {
     "num": 150,
     "front": {
@@ -2412,6 +2424,9 @@
       "h": 80
     }
   },
+  "meganiummega": {
+    "num": 154
+  },
   "cyndaquil": {
     "num": 155,
     "front": {
@@ -2480,6 +2495,9 @@
       "w": 82,
       "h": 73
     }
+  },
+  "feraligatrmega": {
+    "num": 160
   },
   "sentret": {
     "num": 161,
@@ -3736,6 +3754,9 @@
       "w": 85,
       "h": 69
     }
+  },
+  "skarmorymega": {
+    "num": 227
   },
   "houndour": {
     "num": 228,
@@ -7258,6 +7279,9 @@
       "h": 72
     }
   },
+  "froslassmega": {
+    "num": 478
+  },
   "rotom": {
     "num": 479,
     "front": {
@@ -7778,6 +7802,9 @@
       "h": 82
     }
   },
+  "emboarmega": {
+    "num": 500
+  },
   "oshawott": {
     "num": 501,
     "front": {
@@ -8127,6 +8154,9 @@
       "h": 80
     }
   },
+  "excadrillmega": {
+    "num": 530
+  },
   "audino": {
     "num": 531,
     "front": {
@@ -8294,6 +8324,9 @@
       "w": 99,
       "h": 88
     }
+  },
+  "scolipedemega": {
+    "num": 545
   },
   "cottonee": {
     "num": 546,
@@ -8516,6 +8549,9 @@
       "w": 48,
       "h": 78
     }
+  },
+  "scraftymega": {
+    "num": 560
   },
   "sigilyph": {
     "num": 561,
@@ -9107,6 +9143,9 @@
       "h": 90
     }
   },
+  "eelektrossmega": {
+    "num": 604
+  },
   "elgyem": {
     "num": 605,
     "front": {
@@ -9161,6 +9200,9 @@
       "w": 92,
       "h": 90
     }
+  },
+  "chandeluremega": {
+    "num": 609
   },
   "axew": {
     "num": 610,
@@ -9754,6 +9796,9 @@
       "h": 96
     }
   },
+  "chesnaughtmega": {
+    "num": 652
+  },
   "fennekin": {
     "num": 653,
     "front": {
@@ -9777,6 +9822,9 @@
     }
   },
   "delphox": {
+    "num": 655
+  },
+  "delphoxmega": {
     "num": 655
   },
   "froakie": {
@@ -9804,6 +9852,9 @@
     "num": 658
   },
   "greninjaash": {
+    "num": 658
+  },
+  "greninjamega": {
     "num": 658
   },
   "bunnelby": {
@@ -10117,6 +10168,9 @@
       "h": 78
     }
   },
+  "pyroarmega": {
+    "num": 668
+  },
   "flabebe": {
     "num": 669,
     "front": {
@@ -10172,6 +10226,9 @@
     "num": 670
   },
   "floetteeternal": {
+    "num": 670
+  },
+  "floettemega": {
     "num": 670
   },
   "florges": {
@@ -10358,6 +10415,9 @@
       "h": 96
     }
   },
+  "malamarmega": {
+    "num": 687
+  },
   "binacle": {
     "num": 688,
     "front": {
@@ -10372,6 +10432,9 @@
   "barbaracle": {
     "num": 689
   },
+  "barbaraclemega": {
+    "num": 689
+  },
   "skrelp": {
     "num": 690
   },
@@ -10381,6 +10444,9 @@
       "w": 98,
       "h": 98
     }
+  },
+  "dragalgemega": {
+    "num": 691
   },
   "clauncher": {
     "num": 692,
@@ -10466,6 +10532,9 @@
     }
   },
   "hawlucha": {
+    "num": 701
+  },
+  "hawluchamega": {
     "num": 701
   },
   "dedenne": {
@@ -10677,6 +10746,9 @@
     }
   },
   "zygardecomplete": {
+    "num": 718
+  },
+  "zygardemega": {
     "num": 718
   },
   "diancie": {
@@ -11636,6 +11708,9 @@
       "w": 82,
       "h": 79
     }
+  },
+  "drampamega": {
+    "num": 780
   },
   "dhelmise": {
     "num": 781,
@@ -12603,6 +12678,9 @@
       "w": 83,
       "h": 56
     }
+  },
+  "falinksmega": {
+    "num": 870
   },
   "pincurchin": {
     "num": 871,
