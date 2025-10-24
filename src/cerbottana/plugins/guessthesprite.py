@@ -4,25 +4,24 @@ import asyncio
 import random
 import secrets
 from dataclasses import dataclass, field
+from pathlib import Path
 from time import time
 from typing import TYPE_CHECKING, ClassVar
 
 from domify import html_elements as e
+from domify.base_element import BaseElement
 from PIL import Image
 
 from cerbottana import custom_elements as ce
 from cerbottana import utils
+from cerbottana.models.message import Message, RawMessage
+from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper
 from cerbottana.tasks import background_task_wrapper
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
-    from domify.base_element import BaseElement
-
     from cerbottana.connection import Connection
-    from cerbottana.models.message import Message, RawMessage
-    from cerbottana.models.room import Room
+
 
 images_dir = utils.get_config_file("images")
 images_cropped_dir = utils.get_config_file("images_cropped")

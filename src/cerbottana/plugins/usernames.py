@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import random
 from datetime import datetime
-from typing import TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
 from domify import html_elements as e
@@ -12,10 +11,8 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
 
 from cerbottana import custom_elements as ce
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
 
 
 @command_wrapper()

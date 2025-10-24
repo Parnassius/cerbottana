@@ -10,14 +10,14 @@ import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.handlers import handler_wrapper
+from cerbottana.models.message import Message
+from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper
 from cerbottana.tasks import background_task_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
-    from cerbottana.models.message import Message
-    from cerbottana.models.protocol_message import ProtocolMessage
 
 
 @command_wrapper(

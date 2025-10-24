@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, cast
+from typing import Any, cast
 
 from pokedex import pokedex
 from pokedex import tables as t
@@ -9,10 +9,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from cerbottana import utils
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
 
 
 async def _get_translations(

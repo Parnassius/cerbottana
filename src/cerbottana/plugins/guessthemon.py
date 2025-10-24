@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import random
 import re
-from typing import TYPE_CHECKING
 
 from pokedex import pokedex
 from pokedex import tables as t
@@ -12,10 +11,8 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
 
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
 
 
 @command_wrapper(

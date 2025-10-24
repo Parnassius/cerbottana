@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING
 
 from imageprobe.errors import UnsupportedFormat
 
 from cerbottana.html_utils import image_url_to_html
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
+from cerbottana.typedefs import JsonDict
 from cerbottana.utils import (
     POKEDEX,
     POKEDEX_MINI,
@@ -16,10 +17,6 @@ from cerbottana.utils import (
     get_ps_dex_entry,
     to_id,
 )
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
-    from cerbottana.typedefs import JsonDict
 
 
 def generate_sprite_url(

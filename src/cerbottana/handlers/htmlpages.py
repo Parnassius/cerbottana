@@ -1,13 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from cerbottana.handlers import handler_wrapper
+from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
-
-if TYPE_CHECKING:
-    from cerbottana.models.protocol_message import ProtocolMessage
 
 
 @handler_wrapper(["pm"], required_parameters=6)

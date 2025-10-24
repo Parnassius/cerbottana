@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from domify import html_elements as e
 from sqlalchemy import select
@@ -11,11 +10,8 @@ import cerbottana.databases.veekun as v
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.html_utils import BaseHTMLCommand
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
-
 
 LocationsSlotKey = tuple[
     int,  # location_area

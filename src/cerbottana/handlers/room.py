@@ -10,13 +10,13 @@ import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.handlers import handler_wrapper
+from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
+from cerbottana.typedefs import JsonDict
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
-    from cerbottana.models.protocol_message import ProtocolMessage
-    from cerbottana.typedefs import JsonDict
 
 
 async def add_user(

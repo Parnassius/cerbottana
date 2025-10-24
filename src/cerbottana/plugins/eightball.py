@@ -4,6 +4,7 @@ import json
 import random
 from typing import TYPE_CHECKING
 
+from domify.base_element import BaseElement
 from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError
 
@@ -11,13 +12,11 @@ import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.html_utils import HTMLPageCommand
+from cerbottana.models.message import Message
+from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
-    from domify.base_element import BaseElement
-
-    from cerbottana.models.message import Message
-    from cerbottana.models.room import Room
     from cerbottana.models.user import User
 
 

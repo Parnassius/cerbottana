@@ -9,18 +9,17 @@ from typing import TYPE_CHECKING
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
 from domify import html_elements as e
+from domify.base_element import BaseElement
 from pokedex.enums import Language
 
 from cerbottana import utils
 from cerbottana.models.attributes import AttributeMapping
+from cerbottana.models.protocol_message import ProtocolMessage
+from cerbottana.typedefs import RoomId
 
 if TYPE_CHECKING:
-    from domify.base_element import BaseElement
-
     from cerbottana.connection import Connection
-    from cerbottana.models.protocol_message import ProtocolMessage
     from cerbottana.models.user import User
-    from cerbottana.typedefs import RoomId
 
 
 class Room:

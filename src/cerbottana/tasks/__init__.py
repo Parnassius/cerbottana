@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import importlib
+from collections.abc import Callable, Coroutine
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Coroutine
-
     from cerbottana.connection import Connection
 
     InitTaskFunc = Callable[[Connection], Coroutine[None, None, None]]

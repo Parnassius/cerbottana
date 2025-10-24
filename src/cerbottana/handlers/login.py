@@ -2,13 +2,10 @@ from __future__ import annotations
 
 import asyncio
 import json
-from typing import TYPE_CHECKING
 
 from cerbottana import utils
 from cerbottana.handlers import handler_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.protocol_message import ProtocolMessage
+from cerbottana.models.protocol_message import ProtocolMessage
 
 
 @handler_wrapper(["challstr"], required_parameters=1)

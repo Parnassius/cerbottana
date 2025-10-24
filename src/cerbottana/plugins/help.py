@@ -1,14 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from domify import html_elements as e
 from domify.base_element import BaseElement
 
+from cerbottana.models.message import Message
 from cerbottana.plugins import Command, command_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
 
 
 @command_wrapper(aliases=("help",), is_unlisted=True)

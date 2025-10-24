@@ -4,13 +4,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from domify.base_element import BaseElement
 from pokedex.enums import Language
 
 from cerbottana import utils
 
 if TYPE_CHECKING:
-    from domify.base_element import BaseElement
-
     from cerbottana.models.room import Room
     from cerbottana.models.user import User
 

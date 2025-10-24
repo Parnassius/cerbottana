@@ -1,15 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from domify import html_elements as e
 
 from cerbottana import custom_elements as ce
 from cerbottana.html_utils import BaseHTMLCommand
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
 
 
 class ColorCompareHTML(BaseHTMLCommand):

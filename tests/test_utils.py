@@ -1,13 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import pytest
 
 from cerbottana import utils
-
-if TYPE_CHECKING:
-    from cerbottana.typedefs import Role
+from cerbottana.typedefs import Role
 
 
 @pytest.mark.parametrize(

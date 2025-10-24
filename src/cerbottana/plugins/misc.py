@@ -1,15 +1,12 @@
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING
 
 from domify import html_elements as e
 
 from cerbottana.html_utils import to_obfuscated_html
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
 
 
 @command_wrapper(

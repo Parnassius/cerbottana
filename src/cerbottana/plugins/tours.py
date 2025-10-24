@@ -2,16 +2,13 @@ from __future__ import annotations
 
 import random
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, ClassVar, Literal
+from typing import ClassVar, Literal
 
 from cerbottana.handlers import handler_wrapper
 from cerbottana.models.attributes import AttributeKey
+from cerbottana.models.message import Message
+from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.plugins import command_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
-    from cerbottana.models.protocol_message import ProtocolMessage
-
 
 creating_custom_tour = AttributeKey(datetime)
 

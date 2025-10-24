@@ -1,12 +1,9 @@
 from __future__ import annotations
 
 from time import time
-from typing import TYPE_CHECKING
 
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
 
 
 @command_wrapper()

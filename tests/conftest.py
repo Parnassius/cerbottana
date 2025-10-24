@@ -4,12 +4,13 @@ import asyncio
 import json
 import subprocess
 from collections import Counter
+from collections.abc import AsyncGenerator, Callable
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from enum import Enum
 from pathlib import Path
 from shutil import rmtree
 from time import time
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import pytest
 from sqlalchemy import create_engine
@@ -22,9 +23,6 @@ from cerbottana.database import Database
 from cerbottana.models.room import Room
 from cerbottana.tasks import pokedex, veekun
 from cerbottana.utils import env
-
-if TYPE_CHECKING:
-    from collections.abc import AsyncGenerator, Callable
 
 
 def pytest_collection_modifyitems(items):

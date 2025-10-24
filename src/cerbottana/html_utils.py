@@ -4,24 +4,22 @@ import math
 import random
 import re
 import string
+from collections.abc import Callable, Mapping
 from html import escape
 from typing import TYPE_CHECKING
 
+import aiohttp
 from domify import html_elements as e
 from domify.base_element import BaseElement
 from imageprobe import probe
 from sqlalchemy import func
+from sqlalchemy.engine import Row
+from sqlalchemy.sql import Select
 
 from cerbottana.database import Database
+from cerbottana.models.room import Room
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping
-
-    import aiohttp
-    from sqlalchemy.engine import Row
-    from sqlalchemy.sql import Select
-
-    from cerbottana.models.room import Room
     from cerbottana.models.user import User
 
 

@@ -4,9 +4,11 @@ import asyncio
 import re
 import signal
 from collections import defaultdict
+from collections.abc import Coroutine
 from contextlib import suppress
+from contextvars import Context
 from time import time
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import aiohttp
 
@@ -14,15 +16,10 @@ from cerbottana import utils
 from cerbottana.handlers import handlers
 from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.models.room import Room
+from cerbottana.models.user import User
 from cerbottana.plugins import Command, commands
 from cerbottana.tasks import background_tasks, init_tasks
-
-if TYPE_CHECKING:
-    from collections.abc import Coroutine
-    from contextvars import Context
-
-    from cerbottana.models.user import User
-    from cerbottana.typedefs import RoomId, Tier
+from cerbottana.typedefs import RoomId, Tier
 
 
 class Connection:

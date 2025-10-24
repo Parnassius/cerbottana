@@ -4,18 +4,14 @@ from __future__ import annotations
 
 import re
 import urllib
-from typing import TYPE_CHECKING
 
+import aiohttp
 from domify import html_elements as e
 from domify.base_element import BaseElement
 
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
-
-if TYPE_CHECKING:
-    import aiohttp
-
-    from cerbottana.models.message import Message
-    from cerbottana.typedefs import JsonDict
+from cerbottana.typedefs import JsonDict
 
 
 async def query_scryfall(
