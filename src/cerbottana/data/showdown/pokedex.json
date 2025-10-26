@@ -30107,7 +30107,10 @@
       "Undiscovered"
     ],
     "requiredItem": "Zygardite",
-    "battleOnly": "Zygarde-Complete",
+    "battleOnly": [
+      "Zygarde",
+      "Zygarde-10%"
+    ],
     "gen": 9
   },
   "diancie": {
