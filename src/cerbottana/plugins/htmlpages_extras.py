@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from cerbottana.models.message import Message
 from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper

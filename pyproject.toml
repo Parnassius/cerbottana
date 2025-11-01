@@ -1,7 +1,7 @@
 [project]
 name = "cerbottana"
 version = "0.1.0"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "aiohttp==3.13.2",
     "domify==0.4.7",
@@ -48,7 +48,7 @@ allow-direct-references = true
 
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 strict = true
 implicit_reexport = true
 
@@ -142,5 +142,4 @@ extend-immutable-calls = [
 ban-relative-imports = "all"
 
 [tool.ruff.lint.isort]
-required-imports = ["from __future__ import annotations"]
 split-on-trailing-comma = false

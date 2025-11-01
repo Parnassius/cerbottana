@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from time import time
 
 from cerbottana.models.message import Message

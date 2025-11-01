@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from cerbottana import utils
 from cerbottana.handlers import handler_wrapper
 from cerbottana.models.protocol_message import ProtocolMessage

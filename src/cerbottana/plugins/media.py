@@ -1,6 +1,5 @@
 # Author: Plato (palt0)
 
-from __future__ import annotations
 
 import aiohttp
 from domify import html_elements as e

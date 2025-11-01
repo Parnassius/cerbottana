@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from sqlalchemy import select, update
 
 import cerbottana.databases.database as d

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pytest
 
 from cerbottana.models.room import Room

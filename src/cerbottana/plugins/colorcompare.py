@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from domify import html_elements as e
 
 from cerbottana import custom_elements as ce
