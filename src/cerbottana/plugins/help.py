@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from domify import html_elements as e
 from domify.base_element import BaseElement
 

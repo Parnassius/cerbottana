@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pytest
 
 from cerbottana.plugins.quotes import to_html_quotebox

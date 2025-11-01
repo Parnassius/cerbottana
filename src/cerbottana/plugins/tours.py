@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import random
 from datetime import UTC, datetime
 from typing import ClassVar, Literal
