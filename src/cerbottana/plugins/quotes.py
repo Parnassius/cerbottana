@@ -191,7 +191,7 @@ async def removequote(msg: Message) -> None:
         stmt = delete(d.Quotes).filter_by(
             message=msg.arg, roomid=msg.parametrized_room.roomid
         )
-        if session.execute(stmt).rowcount:
+        if session.execute(stmt).rowcount:  # type: ignore[attr-defined]
             await msg.reply("Quote cancellata.")
             if msg.room is None:
                 await msg.parametrized_room.send_modnote(

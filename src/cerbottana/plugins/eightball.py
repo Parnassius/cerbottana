@@ -89,7 +89,7 @@ async def removeeightballanswer(msg: Message) -> None:
         stmt = delete(d.EightBall).filter_by(
             answer=msg.arg, roomid=msg.parametrized_room.roomid
         )
-        if session.execute(stmt).rowcount:
+        if session.execute(stmt).rowcount:  # type: ignore[attr-defined]
             await msg.reply("Risposta cancellata.")
             if msg.room is None:
                 await msg.parametrized_room.send_modnote(

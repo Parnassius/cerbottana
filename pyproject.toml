@@ -3,13 +3,13 @@ name = "cerbottana"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
-    "aiohttp==3.12.15",
+    "aiohttp==3.13.2",
     "domify==0.4.7",
     "imageprobe==0.3.0",
-    "pillow==11.3.0",
+    "pillow==12.0.0",
     "pokedex[asyncio] @ https://github.com/Parnassius/pokedex.git",
     "python-dateutil==2.9.0.post0",
-    "sqlalchemy==2.0.43",
+    "sqlalchemy==2.0.44",
     "typenv==0.2.0",
 ]
 
@@ -25,9 +25,9 @@ dev = [
     "pytest-asyncio==1.2.0",
     "pytest-cov==7.0.0",
     "pytest-mock==3.15.1",
-    "python-dotenv[cli]==1.1.1",
-    "ruff==0.13.2",
-    "types-python-dateutil==2.9.0.20250822",
+    "python-dotenv[cli]==1.2.1",
+    "ruff==0.14.3",
+    "types-python-dateutil==2.9.0.20251008",
 ]
 
 [build-system]
