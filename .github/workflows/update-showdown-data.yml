@@ -9,11 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           path: cerbottana
       - name: Clone pokemon showdown
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: smogon/pokemon-showdown
           path: pokemon-showdown
