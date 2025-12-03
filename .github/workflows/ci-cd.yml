@@ -15,7 +15,7 @@ jobs:
   editorconfig:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup editorconfig-checker
         uses: editorconfig-checker/action-editorconfig-checker@v2
       - name: Run editorconfig-checker
@@ -34,7 +34,7 @@ jobs:
     outputs:
       coverage-percentage: ${{ steps.percentage.outputs.percentage }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Cache veekun database
         uses: actions/cache@v4
         with:
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-24.04
     if: github.event_name == 'schedule'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Cache veekun database
         uses: actions/cache@v4
         with:
@@ -94,7 +94,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: "coverage-badge"
       - name: Calculate badge color
@@ -143,7 +143,7 @@ jobs:
           - name: arm64
             os: ubuntu-24.04-arm  # renovate: github-runner
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Get target image name
         id: image
         run: echo "image_name=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
