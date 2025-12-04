@@ -68,11 +68,10 @@ disallow_untyped_defs = false
 disallow_incomplete_defs = false
 
 
-[tool.pytest.ini_options]
-addopts = "--strict-config --strict-markers"
+[tool.pytest]
+strict = true
 markers = ["integration"]
 asyncio_mode = "auto"
-xfail_strict = true
 
 
 [tool.ruff.lint]
