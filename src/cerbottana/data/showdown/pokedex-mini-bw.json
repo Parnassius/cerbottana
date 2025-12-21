@@ -531,6 +531,12 @@
       "h": 93
     }
   },
+  "raichumegax": {
+    "num": 26
+  },
+  "raichumegay": {
+    "num": 26
+  },
   "sandshrew": {
     "num": 27,
     "front": {
@@ -5487,6 +5493,9 @@
       "h": 65
     }
   },
+  "chimechomega": {
+    "num": 358
+  },
   "absol": {
     "num": 359,
     "front": {
@@ -5508,6 +5517,9 @@
       "w": 96,
       "h": 96
     }
+  },
+  "absolmegaz": {
+    "num": 359
   },
   "wynaut": {
     "num": 360,
@@ -6058,6 +6070,9 @@
       "w": 74,
       "h": 68
     }
+  },
+  "staraptormega": {
+    "num": 398
   },
   "bidoof": {
     "num": 399,
@@ -6795,6 +6810,9 @@
       "h": 96
     }
   },
+  "garchompmegaz": {
+    "num": 445
+  },
   "munchlax": {
     "num": 446,
     "front": {
@@ -6838,6 +6856,9 @@
       "w": 96,
       "h": 96
     }
+  },
+  "lucariomegaz": {
+    "num": 448
   },
   "hippopotas": {
     "num": 449,
@@ -7428,6 +7449,9 @@
       "h": 52
     }
   },
+  "heatranmega": {
+    "num": 485
+  },
   "regigigas": {
     "num": 486,
     "front": {
@@ -7504,6 +7528,9 @@
       "w": 91,
       "h": 86
     }
+  },
+  "darkraimega": {
+    "num": 491
   },
   "shaymin": {
     "num": 492,
@@ -9361,6 +9388,9 @@
       "h": 80
     }
   },
+  "golurkmega": {
+    "num": 623
+  },
   "pawniard": {
     "num": 624,
     "front": {
@@ -10329,6 +10359,12 @@
   "meowsticf": {
     "num": 678
   },
+  "meowsticmmega": {
+    "num": 678
+  },
+  "meowsticfmega": {
+    "num": 678
+  },
   "honedge": {
     "num": 679,
     "front": {
@@ -10980,6 +11016,9 @@
       "h": 86
     }
   },
+  "crabominablemega": {
+    "num": 740
+  },
   "oricorio": {
     "num": 741
   },
@@ -11295,6 +11334,9 @@
     }
   },
   "golisopod": {
+    "num": 768
+  },
+  "golisopodmega": {
     "num": 768
   },
   "sandygast": {
@@ -11966,6 +12008,12 @@
       "h": 69
     }
   },
+  "magearnamega": {
+    "num": 801
+  },
+  "magearnaoriginalmega": {
+    "num": 801
+  },
   "marshadow": {
     "num": 802,
     "front": {
@@ -12015,6 +12063,9 @@
       "w": 79,
       "h": 69
     }
+  },
+  "zeraoramega": {
+    "num": 807
   },
   "meltan": {
     "num": 808,
@@ -13278,6 +13329,9 @@
   "scovillain": {
     "num": 952
   },
+  "scovillainmega": {
+    "num": 952
+  },
   "rellor": {
     "num": 953
   },
@@ -13339,6 +13393,9 @@
   "glimmora": {
     "num": 970
   },
+  "glimmoramega": {
+    "num": 970
+  },
   "greavard": {
     "num": 971
   },
@@ -13380,6 +13437,15 @@
       "w": 34,
       "h": 31
     }
+  },
+  "tatsugiricurlymega": {
+    "num": 978
+  },
+  "tatsugiridroopymega": {
+    "num": 978
+  },
+  "tatsugiristretchymega": {
+    "num": 978
   },
   "annihilape": {
     "num": 979
@@ -13474,6 +13540,9 @@
     }
   },
   "baxcalibur": {
+    "num": 998
+  },
+  "baxcaliburmega": {
     "num": 998
   },
   "gimmighoul": {
