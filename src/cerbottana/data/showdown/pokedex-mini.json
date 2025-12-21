@@ -630,6 +630,12 @@
       "h": 93
     }
   },
+  "raichumegax": {
+    "num": 26
+  },
+  "raichumegay": {
+    "num": 26
+  },
   "sandshrew": {
     "num": 27,
     "front": {
@@ -5902,6 +5908,9 @@
       "h": 75
     }
   },
+  "chimechomega": {
+    "num": 358
+  },
   "absol": {
     "num": 359,
     "front": {
@@ -5923,6 +5932,9 @@
       "w": 101,
       "h": 101
     }
+  },
+  "absolmegaz": {
+    "num": 359
   },
   "wynaut": {
     "num": 360,
@@ -6493,6 +6505,9 @@
       "w": 168,
       "h": 195
     }
+  },
+  "staraptormega": {
+    "num": 398
   },
   "bidoof": {
     "num": 399,
@@ -7218,6 +7233,9 @@
       "h": 111
     }
   },
+  "garchompmegaz": {
+    "num": 445
+  },
   "munchlax": {
     "num": 446,
     "front": {
@@ -7261,6 +7279,9 @@
       "w": 58,
       "h": 100
     }
+  },
+  "lucariomegaz": {
+    "num": 448
   },
   "hippopotas": {
     "num": 449,
@@ -7851,6 +7872,9 @@
       "h": 59
     }
   },
+  "heatranmega": {
+    "num": 485
+  },
   "regigigas": {
     "num": 486,
     "front": {
@@ -7927,6 +7951,9 @@
       "w": 136,
       "h": 130
     }
+  },
+  "darkraimega": {
+    "num": 491
   },
   "shaymin": {
     "num": 492,
@@ -9848,6 +9875,9 @@
       "h": 110
     }
   },
+  "golurkmega": {
+    "num": 623
+  },
   "pawniard": {
     "num": 624,
     "front": {
@@ -11092,6 +11122,12 @@
       "h": 75
     }
   },
+  "meowsticmmega": {
+    "num": 678
+  },
+  "meowsticfmega": {
+    "num": 678
+  },
   "honedge": {
     "num": 679,
     "front": {
@@ -11987,6 +12023,9 @@
       "h": 73
     }
   },
+  "crabominablemega": {
+    "num": 740
+  },
   "oricorio": {
     "num": 741,
     "front": {
@@ -12403,6 +12442,9 @@
       "w": 77,
       "h": 83
     }
+  },
+  "golisopodmega": {
+    "num": 768
   },
   "sandygast": {
     "num": 769,
@@ -13125,6 +13167,12 @@
       "h": 68
     }
   },
+  "magearnamega": {
+    "num": 801
+  },
+  "magearnaoriginalmega": {
+    "num": 801
+  },
   "marshadow": {
     "num": 802,
     "front": {
@@ -13190,6 +13238,9 @@
       "w": 110,
       "h": 75
     }
+  },
+  "zeraoramega": {
+    "num": 807
   },
   "meltan": {
     "num": 808,
@@ -15341,6 +15392,9 @@
       "h": 61
     }
   },
+  "scovillainmega": {
+    "num": 952
+  },
   "rellor": {
     "num": 953,
     "front": {
@@ -15550,6 +15604,9 @@
       "h": 91
     }
   },
+  "glimmoramega": {
+    "num": 970
+  },
   "greavard": {
     "num": 971,
     "front": {
@@ -15660,6 +15717,15 @@
       "h": 46
     }
   },
+  "tatsugiricurlymega": {
+    "num": 978
+  },
+  "tatsugiridroopymega": {
+    "num": 978
+  },
+  "tatsugiristretchymega": {
+    "num": 978
+  },
   "annihilape": {
     "num": 979,
     "front": {
@@ -15727,22 +15793,70 @@
     }
   },
   "greattusk": {
-    "num": 984
+    "num": 984,
+    "front": {
+      "w": 104,
+      "h": 68
+    },
+    "back": {
+      "w": 151,
+      "h": 67
+    }
   },
   "screamtail": {
-    "num": 985
+    "num": 985,
+    "front": {
+      "w": 63,
+      "h": 67
+    },
+    "back": {
+      "w": 94,
+      "h": 65
+    }
   },
   "brutebonnet": {
-    "num": 986
+    "num": 986,
+    "front": {
+      "w": 96,
+      "h": 84
+    },
+    "back": {
+      "w": 104,
+      "h": 79
+    }
   },
   "fluttermane": {
-    "num": 987
+    "num": 987,
+    "front": {
+      "w": 112,
+      "h": 87
+    },
+    "back": {
+      "w": 106,
+      "h": 92
+    }
   },
   "slitherwing": {
-    "num": 988
+    "num": 988,
+    "front": {
+      "w": 92,
+      "h": 105
+    },
+    "back": {
+      "w": 111,
+      "h": 122
+    }
   },
   "sandyshocks": {
-    "num": 989
+    "num": 989,
+    "front": {
+      "w": 74,
+      "h": 115
+    },
+    "back": {
+      "w": 97,
+      "h": 113
+    }
   },
   "irontreads": {
     "num": 990
@@ -15794,6 +15908,9 @@
       "w": 136,
       "h": 107
     }
+  },
+  "baxcaliburmega": {
+    "num": 998
   },
   "gimmighoul": {
     "num": 999,
@@ -15847,7 +15964,15 @@
     "num": 1006
   },
   "koraidon": {
-    "num": 1007
+    "num": 1007,
+    "front": {
+      "w": 147,
+      "h": 111
+    },
+    "back": {
+      "w": 209,
+      "h": 111
+    }
   },
   "miraidon": {
     "num": 1008
