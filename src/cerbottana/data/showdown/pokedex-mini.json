@@ -15978,7 +15978,15 @@
     "num": 1008
   },
   "walkingwake": {
-    "num": 1009
+    "num": 1009,
+    "front": {
+      "w": 106,
+      "h": 96
+    },
+    "back": {
+      "w": 175,
+      "h": 97
+    }
   },
   "ironleaves": {
     "num": 1010
@@ -16094,10 +16102,26 @@
     }
   },
   "gougingfire": {
-    "num": 1020
+    "num": 1020,
+    "front": {
+      "w": 90,
+      "h": 91
+    },
+    "back": {
+      "w": 179,
+      "h": 86
+    }
   },
   "ragingbolt": {
-    "num": 1021
+    "num": 1021,
+    "front": {
+      "w": 74,
+      "h": 135
+    },
+    "back": {
+      "w": 106,
+      "h": 129
+    }
   },
   "ironboulder": {
     "num": 1022
