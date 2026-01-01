@@ -36,12 +36,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Cache veekun database
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: data/veekun.sqlite
           key: veekun-${{ hashFiles('src/cerbottana/data/veekun/*.csv', 'src/cerbottana/databases/veekun.py', 'src/cerbottana/tasks/veekun.py') }}
       - name: Cache pokedex database
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: data/pokedex.sqlite
           key: pokedex-${{ hashFiles('uv.lock') }}
@@ -64,19 +64,19 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Cache veekun database
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: data/veekun.sqlite
           key: veekun-${{ hashFiles('src/cerbottana/data/veekun/*.csv', 'src/cerbottana/databases/veekun.py', 'src/cerbottana/tasks/veekun.py') }}
       - name: Cache pokedex database
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: data/pokedex.sqlite
           key: pokedex-${{ hashFiles('uv.lock') }}
           restore-keys: |
             pokedex-
       - name: Cache pokemon-showdown instance
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: pokemon-showdown
           key: pokemon-showdown-${{ github.run_id }}
