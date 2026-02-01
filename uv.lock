@@ -497,7 +497,7 @@ wheels = [
 [[package]]
 name = "pokedex"
 version = "0.0.1"
-source = { git = "https://github.com/Parnassius/pokedex.git#38822eed2d3351bb3a6bfaf3eacbe4707f2ae241" }
+source = { git = "https://github.com/Parnassius/pokedex.git#74670fd61e78e023e004d07330d8d176cd9e87b0" }
 dependencies = [
     { name = "sqlalchemy" },
 ]
