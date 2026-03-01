@@ -67,7 +67,7 @@ class Repeat:
         self.delta = timedelta(minutes=delta_minutes)
         self.delta_minutes = delta_minutes  # Kept only as an external property
 
-        self.initial_dt = initial_dt if initial_dt else now
+        self.initial_dt = initial_dt or now
 
         self.expire_dt = expire_dt
         if max_iters:
