@@ -21,7 +21,7 @@ async def challstr(msg: ProtocolMessage) -> None:
         async with msg.conn.client_session.post(url, data=payload) as resp:
             try:
                 assertion = json.loads((await resp.text("utf-8"))[1:])["assertion"]
-            except (json.JSONDecodeError, KeyError):
+            except json.JSONDecodeError, KeyError:
                 if assertion_retries == 5:
                     print("Unable to login, closing connection")
                     if msg.conn.websocket is not None:

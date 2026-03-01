@@ -97,7 +97,7 @@ class Connection:
                             await self._parse_binary_message(message.data)
                         elif message.type == aiohttp.WSMsgType.ERROR:
                             break
-            except (aiohttp.ClientConnectionError, ConnectionResetError):
+            except aiohttp.ClientConnectionError, ConnectionResetError:
                 pass
 
             for task in self.running_tasks:
@@ -160,7 +160,7 @@ class Connection:
             if msg.type == "init":
                 init = True
 
-            if init and msg.type in ["tournament"]:
+            if init and msg.type == "tournament":
                 return
 
             room.add_message_to_queue(msg)
