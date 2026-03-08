@@ -43,7 +43,7 @@ jobs:
       - name: Cache pokedex database
         uses: actions/cache@v5
         with:
-          path: data/pokedex.sqlite
+          path: data/pokedex_cache
           key: pokedex-${{ hashFiles('uv.lock') }}
           restore-keys: |
             pokedex-
@@ -71,7 +71,7 @@ jobs:
       - name: Cache pokedex database
         uses: actions/cache@v5
         with:
-          path: data/pokedex.sqlite
+          path: data/pokedex_cache
           key: pokedex-${{ hashFiles('uv.lock') }}
           restore-keys: |
             pokedex-

@@ -1,5 +1,5 @@
 import pytest
-from pokedex.enums import Language
+from pokedex import Language
 
 from cerbottana.plugins.translations import _get_translations
 
@@ -63,20 +63,20 @@ from cerbottana.plugins.translations import _get_translations
         (
             "fee",
             (Language.GERMAN, Language.ENGLISH),
-            {("egg_group", "fairy"): {"Fairy"}, ("type", "fairy"): {"Fairy"}},
+            {("egg group", "fairy"): {"Fairy"}, ("type", "fairy"): {"Fairy"}},
         ),
         (
             "dragon",
             (Language.ENGLISH, Language.FRENCH),
             {
-                ("egg_group", "draconique"): {"Draconique"},
+                ("egg group", "draconique"): {"Draconique"},
                 ("type", "dragon"): {"Dragon"},
             },
         ),
         (
             "ditto",
             (Language.SPANISH, Language.ITALIAN),
-            {("egg_group", "ditto"): {"Ditto"}, ("pokemon", "ditto"): {"Ditto"}},
+            {("egg group", "ditto"): {"Ditto"}, ("pokemon", "ditto"): {"Ditto"}},
         ),
         (
             "flygon",

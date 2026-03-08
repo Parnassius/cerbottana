@@ -9,7 +9,7 @@ from weakref import WeakKeyDictionary, WeakValueDictionary
 
 from domify import html_elements as e
 from domify.base_element import BaseElement
-from pokedex.enums import Language
+from pokedex import Language, set_context
 
 from cerbottana import utils
 from cerbottana.models.attributes import AttributeMapping
@@ -129,6 +129,7 @@ class Room:
             await self._message_queue.join()
 
     async def _process_message_queue(self) -> None:
+        set_context(self.language)
         try:
             while msg := self._message_queue.get_nowait():
                 if msg.type in self.conn.handlers:

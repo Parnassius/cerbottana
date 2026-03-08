@@ -1,10 +1,6 @@
-from typing import Any, cast
+from typing import cast
 
-from pokedex import pokedex
-from pokedex import tables as t
-from pokedex.enums import Language
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
+from pokedex import Ability, EggGroup, Item, Language, Move, Nature, Pokemon, Type
 
 from cerbottana import utils
 from cerbottana.models.message import Message
@@ -16,42 +12,33 @@ async def _get_translations(
 ) -> dict[tuple[str, str], set[str]]:
     results: dict[tuple[str, str], set[str]] = {}
 
-    async with pokedex.async_session() as session:
-        tables: dict[str, tuple[Any, Any]] = {  # type: ignore[explicit-any]
-            "ability": (t.Ability, t.AbilityName),
-            "egg_group": (t.EggGroup, t.EggGroupName),
-            "item": (t.Item, t.ItemName),
-            "move": (t.Move, t.MoveName),
-            "nature": (t.Nature, t.NatureName),
-            "pokemon": (t.PokemonSpecies, t.PokemonSpeciesName),
-            "stat": (t.Stat, t.StatName),
-            "type": (t.Type, t.TypeName),
-        }
+    entities: dict[
+        str, type[Ability | EggGroup | Item | Move | Nature | Pokemon | Type]
+    ] = {
+        "ability": Ability,
+        "egg group": EggGroup,
+        "item": Item,
+        "move": Move,
+        "nature": Nature,
+        "pokemon": Pokemon,
+        "type": Type,
+    }
 
-        for category_name, (entity_table, entity_name_table) in tables.items():
-            stmt = (
-                select(entity_table, entity_name_table.language)
-                .select_from(entity_table)
-                .join(entity_table.name_associations)
-                .where(
-                    entity_name_table.language.in_(languages),
-                    entity_name_table.normalized_name == word,
+    for category_name, entity in entities.items():
+        for language, ref in entity.search(word):
+            if language not in languages:
+                continue
+            other_language = next(iter(set(languages) - {language}))
+            translation = ref.get().names.get(other_language)
+
+            if translation is not None:
+                res = (
+                    category_name,
+                    utils.to_id(utils.remove_diacritics(translation)),
                 )
-                .group_by(entity_table, entity_name_table.language)
-                .options(selectinload(entity_table.name_associations))
-            )
-            async for row, language in await session.stream(stmt):
-                other_language = next(iter(set(languages) - {language}))
-                translation = row.names.get(other_language)
-
-                if translation is not None:
-                    res = (
-                        category_name,
-                        utils.to_id(utils.remove_diacritics(translation)),
-                    )
-                    if res not in results:
-                        results[res] = set()
-                    results[res].add(translation)
+                if res not in results:
+                    results[res] = set()
+                results[res].add(translation)
 
     if not results and Language.ENGLISH in languages:
         # Use aliases if english is one of the languages

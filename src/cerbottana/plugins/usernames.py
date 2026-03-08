@@ -3,10 +3,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from domify import html_elements as e
-from pokedex import pokedex
-from pokedex import tables as t
-from sqlalchemy import func, select
-from sqlalchemy.exc import SQLAlchemyError
+from pokedex import Pokemon
 
 from cerbottana import custom_elements as ce
 from cerbottana.models.message import Message
@@ -57,17 +54,12 @@ async def annika(msg: Message) -> None:
 
 @command_wrapper(aliases=("anto", "antonio"))
 async def antonio200509(msg: Message) -> None:
-    async with pokedex.async_session() as session:
-        stmt = (
-            select(t.PokemonSpeciesName.name)
-            .filter_by(language=msg.language)
-            .order_by(func.random())
-            .limit(1)
-        )
-        species_name = await session.scalar(stmt)
-        if not species_name:
-            err = "Missing PokemonSpecies data"
-            raise SQLAlchemyError(err)
+    identifier = random.choice(Pokemon.list_identifiers())
+    species = Pokemon.get(identifier)
+    species_name = species.names.get()
+    if not species_name:
+        err = f"Missing Pokemon name for {species.identifier}"
+        raise ValueError(err)
     numbers = str(random.randint(0, 999999)).zfill(6)
     await msg.reply(f'Antonio{numbers} guessed "{species_name}"!')
 

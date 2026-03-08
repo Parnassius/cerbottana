@@ -4,7 +4,7 @@
 from typing import TYPE_CHECKING
 
 from domify.base_element import BaseElement
-from pokedex.enums import Language
+from pokedex import Language
 
 from cerbottana import utils
 
