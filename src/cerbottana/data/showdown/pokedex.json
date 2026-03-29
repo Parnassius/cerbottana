@@ -7829,8 +7829,7 @@
       "spe": 80
     },
     "abilities": {
-      "0": "Overgrow",
-      "H": "Leaf Guard"
+      "0": "Mega Sol"
     },
     "heightm": 2.4,
     "weightkg": 201,
@@ -8110,8 +8109,7 @@
       "spe": 78
     },
     "abilities": {
-      "0": "Torrent",
-      "H": "Sheer Force"
+      "0": "Dragonize"
     },
     "heightm": 2.3,
     "weightkg": 108.8,
@@ -21449,8 +21447,7 @@
       "spe": 75
     },
     "abilities": {
-      "0": "Blaze",
-      "H": "Reckless"
+      "0": "Mold Breaker"
     },
     "heightm": 1.8,
     "weightkg": 180.3,
@@ -46180,12 +46177,43 @@
     ],
     "gen": 9
   },
+  "flox": {
+    "num": -76,
+    "name": "Flox",
+    "types": [
+      "Normal",
+      "Electric"
+    ],
+    "baseStats": {
+      "hp": 96,
+      "atk": 25,
+      "def": 67,
+      "spa": 73,
+      "spd": 68,
+      "spe": 61
+    },
+    "abilities": {
+      "0": "Static",
+      "1": "Sticky Hold",
+      "H": "Cud Chew"
+    },
+    "heightm": 0.9,
+    "weightkg": 66.6,
+    "color": "Brown",
+    "evos": [
+      "Shox"
+    ],
+    "eggGroups": [
+      "Field"
+    ],
+    "gen": 9
+  },
   "shox": {
     "num": -77,
     "name": "Shox",
     "types": [
-      "Electric",
-      "Normal"
+      "Normal",
+      "Electric"
     ],
     "baseStats": {
       "hp": 136,
@@ -46203,6 +46231,8 @@
     "heightm": 3,
     "weightkg": 99.9,
     "color": "Brown",
+    "prevo": "Flox",
+    "evoLevel": 34,
     "eggGroups": [
       "Field"
     ],
