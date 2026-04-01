@@ -217,7 +217,7 @@ class Sibb(Tour):
         "HP Percentage Mod",
         "Force Open Team Sheets",
         "Sleep Clause Mod",
-        "Species Clause",
+        "Forme Clause",
         "Terastal Clause",
     ]
 
