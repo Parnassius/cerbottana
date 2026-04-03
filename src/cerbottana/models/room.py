@@ -80,7 +80,7 @@ class Room:
 
     @property
     def language(self) -> Language:
-        return Language.get(self.language_name) or Language.get_default()
+        return utils.get_language(self.language_name) or Language.get_default()
 
     @property
     def users(self) -> dict[User, str]:

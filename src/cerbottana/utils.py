@@ -5,6 +5,7 @@ import unicodedata
 from html import escape
 from pathlib import Path
 
+from pokedex import Language
 from typenv import Env
 
 from cerbottana.typedefs import JsonDict, Role, RoomId, UserId
@@ -83,6 +84,43 @@ def is_youtube_link(url: str) -> bool:
     # Note: You should let PS display youtube links natively with "!show {url}".
     youtube_regex = r"^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)(\/|$)"
     return re.match(youtube_regex, url, re.IGNORECASE) is not None
+
+
+def get_language(language_name: str) -> Language | None:
+    language_name = re.sub(r"[^a-z]", "", language_name.lower())
+    table = {
+        "jp": Language.JAPANESE_KANA,
+        "japanese": Language.JAPANESE_KANA,
+        "kana": Language.JAPANESE_KANA,
+        "jpkana": Language.JAPANESE_KANA,
+        "japanesekana": Language.JAPANESE_KANA,
+        "kanji": Language.JAPANESE_KANJI,
+        "jpkanji": Language.JAPANESE_KANJI,
+        "japanesekanji": Language.JAPANESE_KANJI,
+        "fr": Language.FRENCH,
+        "french": Language.FRENCH,
+        "de": Language.GERMAN,
+        "german": Language.GERMAN,
+        "es": Language.SPANISH,
+        "spanish": Language.SPANISH,
+        "it": Language.ITALIAN,
+        "italian": Language.ITALIAN,
+        "en": Language.ENGLISH,
+        "english": Language.ENGLISH,
+        "ko": Language.KOREAN,
+        "korean": Language.KOREAN,
+        "zh": Language.CHINESE_SIMPLIFIED,
+        "chinese": Language.CHINESE_SIMPLIFIED,
+        "zhsimp": Language.CHINESE_SIMPLIFIED,
+        "chinesesimplified": Language.CHINESE_SIMPLIFIED,
+        "zhtrad": Language.CHINESE_TRADITIONAL,
+        "chinesetraditional": Language.CHINESE_TRADITIONAL,
+        "eslatam": Language.SPANISH_LATAM,
+        "spanishlatam": Language.SPANISH_LATAM,
+        "eslatinamerica": Language.SPANISH_LATAM,
+        "spanishlatinamerica": Language.SPANISH_LATAM,
+    }
+    return table.get(language_name)
 
 
 def get_language_id(language_name: str, *, fallback: int = 9) -> int:
