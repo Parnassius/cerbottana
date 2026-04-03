@@ -63,7 +63,7 @@ async def translate(msg: Message) -> None:
 
     languages_list: list[Language] = []
     for lang_name in msg.args[1:]:  # Get language ids from the command parameters
-        lang = Language.get(lang_name)
+        lang = utils.get_language(lang_name)
         if lang:
             languages_list.append(lang)
     languages_list.append(msg.language)  # Add the room language
