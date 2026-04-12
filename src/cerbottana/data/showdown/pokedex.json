@@ -2282,9 +2282,7 @@
       "spe": 70
     },
     "abilities": {
-      "0": "Cute Charm",
-      "1": "Magic Guard",
-      "H": "Unaware"
+      "0": "Magic Bounce"
     },
     "heightm": 1.7,
     "weightkg": 42.3,
@@ -3859,8 +3857,7 @@
       "spe": 70
     },
     "abilities": {
-      "0": "Chlorophyll",
-      "H": "Gluttony"
+      "0": "Innards Out"
     },
     "heightm": 4.5,
     "weightkg": 125.5,
@@ -6149,16 +6146,14 @@
     "gender": "N",
     "baseStats": {
       "hp": 60,
-      "atk": 140,
+      "atk": 100,
       "def": 105,
       "spa": 130,
       "spd": 105,
       "spe": 120
     },
     "abilities": {
-      "0": "Illuminate",
-      "1": "Natural Cure",
-      "H": "Analytic"
+      "0": "Huge Power"
     },
     "heightm": 2.3,
     "weightkg": 80,
@@ -10586,9 +10581,7 @@
       "spe": 110
     },
     "abilities": {
-      "0": "Keen Eye",
-      "1": "Sturdy",
-      "H": "Weak Armor"
+      "0": "Stalwart"
     },
     "heightm": 1.7,
     "weightkg": 40.4,
@@ -22427,9 +22420,7 @@
       "spe": 103
     },
     "abilities": {
-      "0": "Sand Rush",
-      "1": "Sand Force",
-      "H": "Mold Breaker"
+      "0": "Piercing Drill"
     },
     "heightm": 0.9,
     "weightkg": 60,
@@ -25231,7 +25222,7 @@
       "0": "Levitate"
     },
     "heightm": 3,
-    "weightkg": 160,
+    "weightkg": 180,
     "color": "Blue",
     "eggGroups": [
       "Amorphous"
@@ -25413,9 +25404,7 @@
       "spe": 90
     },
     "abilities": {
-      "0": "Flash Fire",
-      "1": "Flame Body",
-      "H": "Infiltrator"
+      "0": "Infiltrator"
     },
     "heightm": 2.5,
     "weightkg": 69.6,
@@ -25893,9 +25882,7 @@
       "spe": 55
     },
     "abilities": {
-      "0": "Iron Fist",
-      "1": "Klutz",
-      "H": "No Guard"
+      "0": "Unseen Fist"
     },
     "heightm": 4,
     "weightkg": 330,
@@ -28275,8 +28262,7 @@
       "spe": 102
     },
     "abilities": {
-      "0": "Flower Veil",
-      "H": "Symbiosis"
+      "0": "Fairy Aura"
     },
     "heightm": 0.2,
     "weightkg": 100.8,
@@ -28615,9 +28601,7 @@
       "spe": 124
     },
     "abilities": {
-      "0": "Keen Eye",
-      "1": "Infiltrator",
-      "H": "Competitive"
+      "0": "Trace"
     },
     "heightm": 0.8,
     "weightkg": 10.1,
@@ -28647,9 +28631,7 @@
       "spe": 124
     },
     "abilities": {
-      "0": "Keen Eye",
-      "1": "Infiltrator",
-      "H": "Competitive"
+      "0": "Trace"
     },
     "heightm": 0.8,
     "weightkg": 10.1,
@@ -29530,9 +29512,7 @@
       "spe": 118
     },
     "abilities": {
-      "0": "Limber",
-      "1": "Unburden",
-      "H": "Mold Breaker"
+      "0": "No Guard"
     },
     "heightm": 1,
     "weightkg": 25,
@@ -31410,9 +31390,7 @@
       "spe": 33
     },
     "abilities": {
-      "0": "Hyper Cutter",
-      "1": "Iron Fist",
-      "H": "Anger Point"
+      "0": "Iron Fist"
     },
     "heightm": 2.6,
     "weightkg": 252.8,
@@ -33785,12 +33763,10 @@
       "spe": 36
     },
     "abilities": {
-      "0": "Berserk",
-      "1": "Sap Sipper",
-      "H": "Cloud Nine"
+      "0": "Berserk"
     },
     "heightm": 3,
-    "weightkg": 185,
+    "weightkg": 240.5,
     "color": "White",
     "eggGroups": [
       "Monster",
@@ -40844,9 +40820,7 @@
       "spe": 75
     },
     "abilities": {
-      "0": "Chlorophyll",
-      "1": "Insomnia",
-      "H": "Moody"
+      "0": "Spicy Spray"
     },
     "heightm": 1.2,
     "weightkg": 22,
@@ -41430,8 +41404,7 @@
       "spe": 101
     },
     "abilities": {
-      "0": "Toxic Debris",
-      "H": "Corrosion"
+      "0": "Adaptability"
     },
     "heightm": 2.8,
     "weightkg": 77,
@@ -41754,7 +41727,7 @@
       "H": "Storm Drain"
     },
     "heightm": 0.3,
-    "weightkg": 8,
+    "weightkg": 24,
     "color": "Red",
     "eggGroups": [
       "Water 2"
@@ -41784,7 +41757,7 @@
       "H": "Storm Drain"
     },
     "heightm": 0.3,
-    "weightkg": 8,
+    "weightkg": 24,
     "color": "Pink",
     "eggGroups": [
       "Water 2"
@@ -41814,7 +41787,7 @@
       "H": "Storm Drain"
     },
     "heightm": 0.3,
-    "weightkg": 8,
+    "weightkg": 24,
     "color": "Yellow",
     "eggGroups": [
       "Water 2"
