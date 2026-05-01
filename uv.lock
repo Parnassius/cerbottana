@@ -518,8 +518,8 @@ wheels = [
 
 [[package]]
 name = "pokedex"
-version = "0.1.dev78+g48ad63d7a"
-source = { git = "https://github.com/Parnassius/pokedex.git#48ad63d7afe8bd68a3c62dbc183686631ba52296" }
+version = "0.1.dev80+g9507df807"
+source = { git = "https://github.com/Parnassius/pokedex.git#9507df807126f3acd19e7c6be70a38f3007d5fc7" }
 dependencies = [
     { name = "cattrs" },
     { name = "pyyaml" },
