@@ -16912,8 +16912,7 @@
       "spe": 110
     },
     "abilities": {
-      "0": "Intimidate",
-      "H": "Reckless"
+      "0": "Contrary"
     },
     "heightm": 1.9,
     "weightkg": 50,
@@ -22943,9 +22942,7 @@
       "spe": 62
     },
     "abilities": {
-      "0": "Poison Point",
-      "1": "Swarm",
-      "H": "Speed Boost"
+      "0": "Shell Armor"
     },
     "heightm": 3.2,
     "weightkg": 230.5,
@@ -23672,9 +23669,7 @@
       "spe": 68
     },
     "abilities": {
-      "0": "Shed Skin",
-      "1": "Moxie",
-      "H": "Intimidate"
+      "0": "Intimidate"
     },
     "heightm": 1.1,
     "weightkg": 31,
@@ -25219,7 +25214,7 @@
       "spe": 80
     },
     "abilities": {
-      "0": "Levitate"
+      "0": "Eelevate"
     },
     "heightm": 3,
     "weightkg": 180,
@@ -28109,9 +28104,7 @@
       "spe": 126
     },
     "abilities": {
-      "0": "Rivalry",
-      "1": "Unnerve",
-      "H": "Moxie"
+      "0": "Fire Mane"
     },
     "heightm": 1.5,
     "weightkg": 93.3,
@@ -28965,9 +28958,7 @@
       "spe": 88
     },
     "abilities": {
-      "0": "Contrary",
-      "1": "Suction Cups",
-      "H": "Infiltrator"
+      "0": "Contrary"
     },
     "heightm": 2.9,
     "weightkg": 69.8,
@@ -29063,9 +29054,7 @@
       "spe": 88
     },
     "abilities": {
-      "0": "Tough Claws",
-      "1": "Sniper",
-      "H": "Pickpocket"
+      "0": "Tough Claws"
     },
     "heightm": 2.2,
     "weightkg": 100,
@@ -29162,9 +29151,7 @@
       "spe": 44
     },
     "abilities": {
-      "0": "Poison Point",
-      "1": "Poison Touch",
-      "H": "Adaptability"
+      "0": "Regenerator"
     },
     "heightm": 2.1,
     "weightkg": 100.3,
@@ -37565,8 +37552,7 @@
       "spe": 100
     },
     "abilities": {
-      "0": "Battle Armor",
-      "H": "Defiant"
+      "0": "Defiant"
     },
     "heightm": 1.6,
     "weightkg": 99,
