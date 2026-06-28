@@ -175,7 +175,8 @@
       "Monster",
       "Grass"
     ],
-    "changesFrom": "Venusaur"
+    "changesFrom": "Venusaur",
+    "placeholderFor": "Venusaur"
   },
   "charmander": {
     "num": 4,
@@ -386,7 +387,8 @@
       "Monster",
       "Dragon"
     ],
-    "changesFrom": "Charizard"
+    "changesFrom": "Charizard",
+    "placeholderFor": "Charizard"
   },
   "squirtle": {
     "num": 7,
@@ -559,7 +561,8 @@
       "Monster",
       "Water 1"
     ],
-    "changesFrom": "Blastoise"
+    "changesFrom": "Blastoise",
+    "placeholderFor": "Blastoise"
   },
   "caterpie": {
     "num": 10,
@@ -674,7 +677,8 @@
     "eggGroups": [
       "Bug"
     ],
-    "changesFrom": "Butterfree"
+    "changesFrom": "Butterfree",
+    "placeholderFor": "Butterfree"
   },
   "weedle": {
     "num": 13,
@@ -1295,6 +1299,9 @@
     "heightm": 0.4,
     "weightkg": 6,
     "color": "Yellow",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -1323,6 +1330,9 @@
     "heightm": 0.4,
     "weightkg": 6,
     "color": "Yellow",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -1352,6 +1362,9 @@
     "heightm": 0.4,
     "weightkg": 6,
     "color": "Yellow",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -1381,6 +1394,9 @@
     "heightm": 0.4,
     "weightkg": 6,
     "color": "Yellow",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -1410,6 +1426,9 @@
     "heightm": 0.4,
     "weightkg": 6,
     "color": "Yellow",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -1439,6 +1458,9 @@
     "heightm": 0.4,
     "weightkg": 6,
     "color": "Yellow",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -1702,7 +1724,8 @@
       "Field",
       "Fairy"
     ],
-    "changesFrom": "Pikachu"
+    "changesFrom": "Pikachu",
+    "placeholderFor": "Pikachu"
   },
   "pikachuworld": {
     "num": 25,
@@ -3042,7 +3065,8 @@
     "eggGroups": [
       "Field"
     ],
-    "changesFrom": "Meowth"
+    "changesFrom": "Meowth",
+    "placeholderFor": "Meowth"
   },
   "persian": {
     "num": 53,
@@ -3741,7 +3765,8 @@
     "eggGroups": [
       "Human-Like"
     ],
-    "changesFrom": "Machamp"
+    "changesFrom": "Machamp",
+    "placeholderFor": "Machamp"
   },
   "bellsprout": {
     "num": 69,
@@ -5031,7 +5056,8 @@
     "eggGroups": [
       "Amorphous"
     ],
-    "changesFrom": "Gengar"
+    "changesFrom": "Gengar",
+    "placeholderFor": "Gengar"
   },
   "onix": {
     "num": 95,
@@ -5205,7 +5231,8 @@
     "eggGroups": [
       "Water 3"
     ],
-    "changesFrom": "Kingler"
+    "changesFrom": "Kingler",
+    "placeholderFor": "Kingler"
   },
   "voltorb": {
     "num": 100,
@@ -6708,7 +6735,8 @@
       "Monster",
       "Water 1"
     ],
-    "changesFrom": "Lapras"
+    "changesFrom": "Lapras",
+    "placeholderFor": "Lapras"
   },
   "ditto": {
     "num": 132,
@@ -6847,7 +6875,8 @@
     "eggGroups": [
       "Field"
     ],
-    "changesFrom": "Eevee"
+    "changesFrom": "Eevee",
+    "placeholderFor": "Eevee"
   },
   "vaporeon": {
     "num": 134,
@@ -7248,7 +7277,8 @@
     "eggGroups": [
       "Monster"
     ],
-    "changesFrom": "Snorlax"
+    "changesFrom": "Snorlax",
+    "placeholderFor": "Snorlax"
   },
   "articuno": {
     "num": 144,
@@ -8494,6 +8524,9 @@
     "heightm": 0.3,
     "weightkg": 2,
     "color": "Yellow",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -24020,7 +24053,8 @@
     "eggGroups": [
       "Mineral"
     ],
-    "changesFrom": "Garbodor"
+    "changesFrom": "Garbodor",
+    "placeholderFor": "Garbodor"
   },
   "zorua": {
     "num": 570,
@@ -31170,6 +31204,9 @@
     "heightm": 1.4,
     "weightkg": 60,
     "color": "Brown",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Field"
     ]
@@ -31289,6 +31326,9 @@
     "heightm": 2.6,
     "weightkg": 147.5,
     "color": "Blue",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Bug"
     ]
@@ -31616,6 +31656,9 @@
     "heightm": 0.4,
     "weightkg": 2,
     "color": "Yellow",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Bug",
       "Fairy"
@@ -32053,6 +32096,9 @@
     "heightm": 3.1,
     "weightkg": 217.5,
     "color": "Green",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Water 1",
       "Bug"
@@ -32143,6 +32189,9 @@
     "heightm": 1.5,
     "weightkg": 58,
     "color": "Pink",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Grass"
     ]
@@ -32300,6 +32349,9 @@
     },
     "heightm": 2.1,
     "weightkg": 81,
+    "tags": [
+      "True Past"
+    ],
     "color": "Black",
     "eggGroups": [
       "Monster",
@@ -33543,6 +33595,9 @@
     "heightm": 0.6,
     "weightkg": 13,
     "color": "Gray",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Field",
       "Fairy"
@@ -33637,6 +33692,9 @@
     "heightm": 0.4,
     "weightkg": 2.8,
     "color": "Yellow",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Amorphous"
     ]
@@ -33908,6 +33966,9 @@
     "heightm": 2.4,
     "weightkg": 207.5,
     "color": "Gray",
+    "tags": [
+      "True Past"
+    ],
     "eggGroups": [
       "Dragon"
     ]
@@ -34920,7 +34981,8 @@
     "eggGroups": [
       "Undiscovered"
     ],
-    "changesFrom": "Melmetal"
+    "changesFrom": "Melmetal",
+    "placeholderFor": "Melmetal"
   },
   "grookey": {
     "num": 810,
@@ -35054,7 +35116,8 @@
       "Field",
       "Grass"
     ],
-    "changesFrom": "Rillaboom"
+    "changesFrom": "Rillaboom",
+    "placeholderFor": "Rillaboom"
   },
   "scorbunny": {
     "num": 813,
@@ -35188,7 +35251,8 @@
       "Field",
       "Human-Like"
     ],
-    "changesFrom": "Cinderace"
+    "changesFrom": "Cinderace",
+    "placeholderFor": "Cinderace"
   },
   "sobble": {
     "num": 816,
@@ -35322,7 +35386,8 @@
       "Water 1",
       "Field"
     ],
-    "changesFrom": "Inteleon"
+    "changesFrom": "Inteleon",
+    "placeholderFor": "Inteleon"
   },
   "skwovet": {
     "num": 819,
@@ -35497,7 +35562,8 @@
     "eggGroups": [
       "Flying"
     ],
-    "changesFrom": "Corviknight"
+    "changesFrom": "Corviknight",
+    "placeholderFor": "Corviknight"
   },
   "blipbug": {
     "num": 824,
@@ -35618,7 +35684,8 @@
     "eggGroups": [
       "Bug"
     ],
-    "changesFrom": "Orbeetle"
+    "changesFrom": "Orbeetle",
+    "placeholderFor": "Orbeetle"
   },
   "nickit": {
     "num": 827,
@@ -35881,7 +35948,8 @@
       "Monster",
       "Water 1"
     ],
-    "changesFrom": "Drednaw"
+    "changesFrom": "Drednaw",
+    "placeholderFor": "Drednaw"
   },
   "yamper": {
     "num": 835,
@@ -36057,7 +36125,8 @@
     "eggGroups": [
       "Mineral"
     ],
-    "changesFrom": "Coalossal"
+    "changesFrom": "Coalossal",
+    "placeholderFor": "Coalossal"
   },
   "applin": {
     "num": 840,
@@ -36153,7 +36222,8 @@
       "Grass",
       "Dragon"
     ],
-    "changesFrom": "Flapple"
+    "changesFrom": "Flapple",
+    "placeholderFor": "Flapple"
   },
   "appletun": {
     "num": 842,
@@ -36216,7 +36286,8 @@
       "Grass",
       "Dragon"
     ],
-    "changesFrom": "Appletun"
+    "changesFrom": "Appletun",
+    "placeholderFor": "Appletun"
   },
   "silicobra": {
     "num": 843,
@@ -36306,7 +36377,8 @@
       "Field",
       "Dragon"
     ],
-    "changesFrom": "Sandaconda"
+    "changesFrom": "Sandaconda",
+    "placeholderFor": "Sandaconda"
   },
   "cramorant": {
     "num": 845,
@@ -36588,7 +36660,8 @@
     "eggGroups": [
       "Human-Like"
     ],
-    "changesFrom": "Toxtricity"
+    "changesFrom": "Toxtricity",
+    "placeholderFor": "Toxtricity"
   },
   "toxtricitylowkeygmax": {
     "num": 849,
@@ -36619,7 +36692,8 @@
       "Human-Like"
     ],
     "battleOnly": "Toxtricity-Low-Key",
-    "changesFrom": "Toxtricity-Low-Key"
+    "changesFrom": "Toxtricity-Low-Key",
+    "placeholderFor": "Toxtricity-Low-Key"
   },
   "sizzlipede": {
     "num": 850,
@@ -36709,7 +36783,8 @@
     "eggGroups": [
       "Bug"
     ],
-    "changesFrom": "Centiskorch"
+    "changesFrom": "Centiskorch",
+    "placeholderFor": "Centiskorch"
   },
   "clobbopus": {
     "num": 852,
@@ -37029,7 +37104,8 @@
     "eggGroups": [
       "Fairy"
     ],
-    "changesFrom": "Hatterene"
+    "changesFrom": "Hatterene",
+    "placeholderFor": "Hatterene"
   },
   "impidimp": {
     "num": 859,
@@ -37159,7 +37235,8 @@
       "Fairy",
       "Human-Like"
     ],
-    "changesFrom": "Grimmsnarl"
+    "changesFrom": "Grimmsnarl",
+    "placeholderFor": "Grimmsnarl"
   },
   "obstagoon": {
     "num": 862,
@@ -37498,7 +37575,8 @@
       "Fairy",
       "Amorphous"
     ],
-    "changesFrom": "Alcremie"
+    "changesFrom": "Alcremie",
+    "placeholderFor": "Alcremie"
   },
   "falinks": {
     "num": 870,
@@ -37950,7 +38028,8 @@
       "Field",
       "Mineral"
     ],
-    "changesFrom": "Copperajah"
+    "changesFrom": "Copperajah",
+    "placeholderFor": "Copperajah"
   },
   "dracozolt": {
     "num": 880,
@@ -38125,7 +38204,8 @@
       "Mineral",
       "Dragon"
     ],
-    "changesFrom": "Duraludon"
+    "changesFrom": "Duraludon",
+    "placeholderFor": "Duraludon"
   },
   "dreepy": {
     "num": 885,
@@ -38418,6 +38498,9 @@
     "heightm": 100,
     "weightkg": 0,
     "color": "Purple",
+    "tags": [
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -38567,7 +38650,8 @@
     "eggGroups": [
       "Undiscovered"
     ],
-    "changesFrom": "Urshifu"
+    "changesFrom": "Urshifu",
+    "placeholderFor": "Urshifu"
   },
   "urshifurapidstrikegmax": {
     "num": 892,
@@ -38600,7 +38684,8 @@
       "Undiscovered"
     ],
     "battleOnly": "Urshifu-Rapid-Strike",
-    "changesFrom": "Urshifu-Rapid-Strike"
+    "changesFrom": "Urshifu-Rapid-Strike",
+    "placeholderFor": "Urshifu-Rapid-Strike"
   },
   "zarude": {
     "num": 893,
@@ -46313,6 +46398,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Field"
     ],
@@ -46340,6 +46430,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46376,6 +46471,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46403,6 +46503,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46432,6 +46537,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46462,6 +46572,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46491,6 +46606,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46520,6 +46640,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46550,6 +46675,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46578,6 +46708,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46607,6 +46742,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46636,6 +46776,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46665,6 +46810,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46694,6 +46844,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46723,6 +46878,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46752,6 +46912,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
@@ -46784,6 +46949,11 @@
     "heightm": 1.5,
     "weightkg": 61,
     "color": "White",
+    "tags": [
+      "Pokestar",
+      "True Past",
+      "Past Unobtainable"
+    ],
     "eggGroups": [
       "Undiscovered"
     ],
