@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-
 async def test_locations(mock_connection):
     async with mock_connection() as conn:
         await conn.add_messages(

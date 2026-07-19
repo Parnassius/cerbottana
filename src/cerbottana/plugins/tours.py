@@ -1,16 +1,14 @@
-from __future__ import annotations
-
 import random
-from typing import TYPE_CHECKING, ClassVar, Literal
-
-import aiohttp
+from datetime import UTC, datetime
+from typing import ClassVar, Literal
 
 from cerbottana.handlers import handler_wrapper
+from cerbottana.models.attributes import AttributeKey
+from cerbottana.models.message import Message
+from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.plugins import command_wrapper
 
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
-    from cerbottana.models.protocol_message import ProtocolMessage
+creating_custom_tour = AttributeKey(datetime)
 
 
 class Tour:
@@ -41,6 +39,7 @@ class Tour:
         allow_scouting: bool | None = None,
         forcetimer: bool | None = None,
         rules: list[str] | None = None,
+        hide_tier_info: bool = True,
     ) -> None:
         if formatid is None:
             formatid = cls.formatid
@@ -63,6 +62,9 @@ class Tour:
             forcetimer = cls.forcetimer
         if rules is None:
             rules = cls.rules
+
+        if msg.room and hide_tier_info:
+            msg.room.attributes[creating_custom_tour] = datetime.now(UTC)
 
         tournew = (
             "/tour new {formatid}, {generator}, {playercap}, {generatormod}, {name}"
@@ -189,10 +191,7 @@ class Randpoketour(Tour):
             await msg.reply("Inserisci almeno un Pokémon")
             return
 
-        if "," in msg.arg:
-            sep = ","
-        else:
-            sep = " "
+        sep = "," if "," in msg.arg else " "
         unbans = [f"+{x}-base" for x in msg.arg.split(sep)]
 
         await super().create_tour(msg, rules=[*cls.rules, *unbans])
@@ -218,7 +217,7 @@ class Sibb(Tour):
         "HP Percentage Mod",
         "Force Open Team Sheets",
         "Sleep Clause Mod",
-        "Species Clause",
+        "Forme Clause",
         "Terastal Clause",
     ]
 
@@ -237,10 +236,11 @@ async def tournament_create(msg: ProtocolMessage) -> None:
     if msg.params[0] != "create":
         return
 
-    tierid = msg.params[1]
-    if tierid.endswith("blitz"):
-        tierid = tierid[:-5]
+    creating_dt = msg.room.attributes.get(creating_custom_tour)
+    if creating_dt and (datetime.now(UTC) - creating_dt).total_seconds() < 5:
+        return
 
+    tierid = msg.params[1].removesuffix("blitz")
     tier = msg.conn.tiers.get(tierid)
     if tier is None:
         print(f"Unrecognized tier: '{tierid}'")
@@ -254,9 +254,10 @@ async def tournament_create(msg: ProtocolMessage) -> None:
     if msg.room.webhook is not None:
         name = tier.name.replace("[", r"\[").replace("]", r"\]")
         alert = f"[**{name}** tour in {msg.room.title}](https://psim.us/{msg.room})"
-        async with aiohttp.ClientSession() as session:
-            async with session.post(msg.room.webhook, data={"content": alert}) as resp:
-                if err := await resp.text("utf-8"):
-                    print(f"Error with webhook of {msg.room}:\n{err}")
-                else:
-                    print(f"Sent tour alert to webhook of {msg.room}")
+        async with msg.conn.client_session.post(
+            msg.room.webhook, data={"content": alert}
+        ) as resp:
+            if err := await resp.text("utf-8"):
+                print(f"Error with webhook of {msg.room}:\n{err}")
+            else:
+                print(f"Sent tour alert to webhook of {msg.room}")

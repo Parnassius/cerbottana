@@ -1,6 +1,5 @@
 # Author: Plato (palt0)
 
-from __future__ import annotations
 
 import asyncio
 import math
@@ -15,13 +14,13 @@ from sqlalchemy import delete, select
 import cerbottana.databases.database as d
 from cerbottana.database import Database
 from cerbottana.html_utils import HTMLPageCommand
+from cerbottana.models.message import Message
 from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper, htmlpage_wrapper
 from cerbottana.tasks import init_task_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
-    from cerbottana.models.message import Message
     from cerbottana.models.user import User
 
 
@@ -68,7 +67,7 @@ class Repeat:
         self.delta = timedelta(minutes=delta_minutes)
         self.delta_minutes = delta_minutes  # Kept only as an external property
 
-        self.initial_dt = initial_dt if initial_dt else now
+        self.initial_dt = initial_dt or now
 
         self.expire_dt = expire_dt
         if max_iters:

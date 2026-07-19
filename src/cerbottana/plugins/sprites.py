@@ -1,13 +1,12 @@
 # Author: Plato (palt0)
 
-from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING
 
 from imageprobe.errors import UnsupportedFormat
 
 from cerbottana.html_utils import image_url_to_html
+from cerbottana.models.message import Message
 from cerbottana.plugins import command_wrapper
 from cerbottana.typedefs import JsonDict
 from cerbottana.utils import (
@@ -17,9 +16,6 @@ from cerbottana.utils import (
     get_ps_dex_entry,
     to_id,
 )
-
-if TYPE_CHECKING:
-    from cerbottana.models.message import Message
 
 
 def generate_sprite_url(
@@ -99,7 +95,7 @@ async def sprite(msg: Message) -> None:
     url = generate_sprite_url(dex_entry, back=back, shiny=shiny, category=category)
 
     try:
-        html = await image_url_to_html(url)
+        html = await image_url_to_html(url, session=msg.conn.client_session)
         await msg.reply_htmlbox(html)
     except UnsupportedFormat:
         # Missing sprite. We received a generic Apache error webpage.
@@ -126,7 +122,7 @@ async def randsprite(msg: Message) -> None:
     url = generate_sprite_url(dex_entry, back=back, shiny=shiny)
 
     try:
-        html = await image_url_to_html(url)
+        html = await image_url_to_html(url, session=msg.conn.client_session)
         await msg.reply_htmlbox(html)
     except UnsupportedFormat:
         # Missing sprite. We received a generic Apache error webpage.

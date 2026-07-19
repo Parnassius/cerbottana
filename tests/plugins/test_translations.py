@@ -1,14 +1,12 @@
-from __future__ import annotations
-
 import pytest
-from pokedex.enums import Language
+from pokedex import Language
 
 from cerbottana.plugins.translations import _get_translations
 
 
 @pytest.mark.parametrize(
-    "word, languages, results",
-    (
+    ("word", "languages", "results"),
+    [
         (
             "azione",
             (Language.ITALIAN, Language.ENGLISH),
@@ -65,20 +63,20 @@ from cerbottana.plugins.translations import _get_translations
         (
             "fee",
             (Language.GERMAN, Language.ENGLISH),
-            {("egg_group", "fairy"): {"Fairy"}, ("type", "fairy"): {"Fairy"}},
+            {("egg group", "fairy"): {"Fairy"}, ("type", "fairy"): {"Fairy"}},
         ),
         (
             "dragon",
             (Language.ENGLISH, Language.FRENCH),
             {
-                ("egg_group", "draconique"): {"Draconique"},
+                ("egg group", "draconique"): {"Draconique"},
                 ("type", "dragon"): {"Dragon"},
             },
         ),
         (
             "ditto",
             (Language.SPANISH, Language.ITALIAN),
-            {("egg_group", "ditto"): {"Ditto"}, ("pokemon", "ditto"): {"Ditto"}},
+            {("egg group", "ditto"): {"Ditto"}, ("pokemon", "ditto"): {"Ditto"}},
         ),
         (
             "flygon",
@@ -95,7 +93,7 @@ from cerbottana.plugins.translations import _get_translations
             (Language.ENGLISH, Language.FRENCH),
             {},
         ),
-    ),
+    ],
 )
 async def test_translations(
     word: str,

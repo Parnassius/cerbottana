@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pytest
 
 from cerbottana import utils
@@ -7,7 +5,7 @@ from cerbottana.typedefs import Role
 
 
 @pytest.mark.parametrize(
-    "role, userrank, expected",
+    ("role", "userrank", "expected"),
     [
         ("admin", "~", True),
         ("admin", "&", True),

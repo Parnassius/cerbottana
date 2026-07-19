@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Annotated
 
 from sqlalchemy import UniqueConstraint
@@ -35,9 +33,7 @@ class CustomPermissions(Base):
 
 class EightBall(Base):
     __tablename__ = "eightball"
-    __table_args__ = (
-        UniqueConstraint("answer", "roomid", sqlite_on_conflict="IGNORE"),
-    )
+    __table_args__ = (UniqueConstraint("answer", "roomid"),)
 
     id: Mapped[intpk]
     answer: Mapped[str]
@@ -58,9 +54,7 @@ class Player(Base):
 
 class Quotes(Base):
     __tablename__ = "quotes"
-    __table_args__ = (
-        UniqueConstraint("message", "roomid", sqlite_on_conflict="IGNORE"),
-    )
+    __table_args__ = (UniqueConstraint("message", "roomid"),)
 
     id: Mapped[intpk]
     message: Mapped[str]

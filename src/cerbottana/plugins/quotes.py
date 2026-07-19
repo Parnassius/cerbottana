@@ -1,6 +1,5 @@
 # Author: Plato (palt0)
 
-from __future__ import annotations
 
 import re
 import string
@@ -10,17 +9,17 @@ from typing import TYPE_CHECKING
 from domify import html_elements as e
 from domify.base_element import BaseElement
 from sqlalchemy import delete, func, select
-from sqlalchemy.orm.exc import ObjectDeletedError
+from sqlalchemy.exc import IntegrityError
 
 import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.html_utils import HTMLPageCommand, linkify
+from cerbottana.models.message import Message
+from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
-    from cerbottana.models.message import Message
-    from cerbottana.models.room import Room
     from cerbottana.models.user import User
 
 
@@ -133,19 +132,18 @@ async def addquote(msg: Message) -> None:
             date=str(datetime.now(UTC).date()),
         )
         session.add(result)
-        session.commit()
 
         try:
-            if result.id:
-                await msg.reply("Quote salvata.")
-                if msg.room is None:
-                    await msg.parametrized_room.send_modnote(
-                        "QUOTE ADDED", msg.user, msg.arg
-                    )
-                return
-        except ObjectDeletedError:
-            pass
-        await msg.reply("Quote già esistente.")
+            session.flush()
+        except IntegrityError:
+            await msg.reply("Quote già esistente.")
+            session.rollback()
+        else:
+            await msg.reply("Quote salvata.")
+            if msg.room is None:
+                await msg.parametrized_room.send_modnote(
+                    "QUOTE ADDED", msg.user, msg.arg
+                )
 
 
 @command_wrapper(
@@ -192,7 +190,7 @@ async def removequote(msg: Message) -> None:
         stmt = delete(d.Quotes).filter_by(
             message=msg.arg, roomid=msg.parametrized_room.roomid
         )
-        if session.execute(stmt).rowcount:
+        if session.execute(stmt).rowcount:  # type: ignore[attr-defined]
             await msg.reply("Quote cancellata.")
             if msg.room is None:
                 await msg.parametrized_room.send_modnote(

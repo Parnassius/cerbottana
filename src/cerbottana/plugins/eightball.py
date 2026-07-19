@@ -1,22 +1,20 @@
-from __future__ import annotations
-
 import json
 import random
 from typing import TYPE_CHECKING
 
 from domify.base_element import BaseElement
 from sqlalchemy import delete, select
-from sqlalchemy.orm.exc import ObjectDeletedError
+from sqlalchemy.exc import IntegrityError
 
 import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.html_utils import HTMLPageCommand
+from cerbottana.models.message import Message
+from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper, htmlpage_wrapper
 
 if TYPE_CHECKING:
-    from cerbottana.models.message import Message
-    from cerbottana.models.room import Room
     from cerbottana.models.user import User
 
 
@@ -24,19 +22,18 @@ if TYPE_CHECKING:
     aliases=("8ball",), helpstr="Chiedi qualsiasi cosa!", required_rank_editable=True
 )
 async def eightball(msg: Message) -> None:
-    db = Database.open()
+    language_name = msg.language_name
+    if language_name not in DEFAULT_ANSWERS:
+        language_name = "English"
+    answers = DEFAULT_ANSWERS[language_name]
 
-    with db.get_session() as session:
-        language_name = msg.language_name
-        if language_name not in DEFAULT_ANSWERS:
-            language_name = "English"
-        answers = DEFAULT_ANSWERS[language_name]
-
-        if msg.room:
+    if msg.room:
+        db = Database.open()
+        with db.get_session() as session:
             stmt = select(d.EightBall.answer).filter_by(roomid=msg.room.roomid)
             answers.extend(session.execute(stmt).scalars())
 
-        await msg.reply(random.choice(answers))
+    await msg.reply(random.choice(answers))
 
 
 @command_wrapper(
@@ -53,19 +50,18 @@ async def addeightballanswer(msg: Message) -> None:
     with db.get_session() as session:
         result = d.EightBall(answer=msg.arg, roomid=msg.parametrized_room.roomid)
         session.add(result)
-        session.commit()
 
         try:
-            if result.id:
-                await msg.reply("Risposta salvata.")
-                if msg.room is None:
-                    await msg.parametrized_room.send_modnote(
-                        "EIGHTBALL ANSWER ADDED", msg.user, msg.arg
-                    )
-                return
-        except ObjectDeletedError:
-            pass
-        await msg.reply("Risposta già esistente.")
+            session.flush()
+        except IntegrityError:
+            await msg.reply("Risposta già esistente.")
+            session.rollback()
+        else:
+            await msg.reply("Risposta salvata.")
+            if msg.room is None:
+                await msg.parametrized_room.send_modnote(
+                    "EIGHTBALL ANSWER ADDED", msg.user, msg.arg
+                )
 
 
 @command_wrapper(
@@ -91,7 +87,7 @@ async def removeeightballanswer(msg: Message) -> None:
         stmt = delete(d.EightBall).filter_by(
             answer=msg.arg, roomid=msg.parametrized_room.roomid
         )
-        if session.execute(stmt).rowcount:
+        if session.execute(stmt).rowcount:  # type: ignore[attr-defined]
             await msg.reply("Risposta cancellata.")
             if msg.room is None:
                 await msg.parametrized_room.send_modnote(

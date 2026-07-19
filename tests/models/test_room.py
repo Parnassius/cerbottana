@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pytest
 
 from cerbottana.models.room import Room
@@ -7,14 +5,14 @@ from cerbottana.models.user import User
 
 
 @pytest.mark.parametrize(
-    "room, roomid",
-    (
+    ("room", "roomid"),
+    [
         ("Room1", "room1"),
         ("Room 2", "room2"),
         ("ROOM-3", "room-3"),
         ("room_4", "room4"),
         ("Français", "franais"),
-    ),
+    ],
 )
 async def test_roomid(mock_connection, room: str, roomid: str) -> None:
     async with mock_connection() as conn:
@@ -22,8 +20,8 @@ async def test_roomid(mock_connection, room: str, roomid: str) -> None:
 
 
 @pytest.mark.parametrize(
-    "messages, buffer",
-    (
+    ("messages", "buffer"),
+    [
         (
             [
                 [
@@ -80,7 +78,7 @@ async def test_roomid(mock_connection, room: str, roomid: str) -> None:
             ],
             [],
         ),
-    ),
+    ],
 )
 async def test_buffer(
     mock_connection, messages: list[list[str]], buffer: list[str]
@@ -94,13 +92,13 @@ async def test_buffer(
 
 
 @pytest.mark.parametrize(
-    "public_roomids, room, is_private",
-    (
+    ("public_roomids", "room", "is_private"),
+    [
         (set(), "room1", True),
         ({"room1"}, "room1", False),
         ({"room12"}, "room1", True),
         ({"room1"}, "room12", True),
-    ),
+    ],
 )
 async def test_is_private(
     mock_connection, public_roomids: set[str], room: str, is_private: bool
@@ -111,8 +109,8 @@ async def test_is_private(
 
 
 @pytest.mark.parametrize(
-    "language_name, language_id",
-    (
+    ("language_name", "language_id"),
+    [
         (None, 9),  # English
         ("Japanese", 9),  # English
         ("French", 5),
@@ -121,7 +119,7 @@ async def test_is_private(
         ("Italian", 8),
         ("English", 9),
         ("Dummy", 9),  # English
-    ),
+    ],
 )
 async def test_language_id(
     mock_connection, language_name: str | None, language_id: int
@@ -134,13 +132,13 @@ async def test_language_id(
 
 
 @pytest.mark.parametrize(
-    "usernames_add, usernames_remove",
-    (
+    ("usernames_add", "usernames_remove"),
+    [
         ({"user1": " "}, set()),
         ({"user1": None, "user2": " ", "user3": "+", "user4": "#"}, set()),
         ({"user1": None}, {"user1"}),
         ({"user1": None, "user2": None}, {"user2", "user3"}),
-    ),
+    ],
 )
 async def test_users(
     mock_connection, usernames_add: dict[str, str], usernames_remove: set[str]

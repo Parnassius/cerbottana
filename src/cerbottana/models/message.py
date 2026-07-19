@@ -1,13 +1,16 @@
 # Author: Plato (palt0)
 
-from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from domify.base_element import BaseElement
-from pokedex.enums import Language
+from pokedex import Language
 
 from cerbottana import utils
-from cerbottana.models.room import Room
-from cerbottana.models.user import User
+
+if TYPE_CHECKING:
+    from cerbottana.models.room import Room
+    from cerbottana.models.user import User
 
 
 class RawMessage:
@@ -45,7 +48,7 @@ class RawMessage:
 
     @property
     def language(self) -> Language:
-        return Language.get(self.language_name) or Language.get_default()
+        return utils.get_language(self.language_name) or Language.get_default()
 
     async def reply(self, message: str, escape: bool = True) -> None:
         """Sends a text message to a room or in PM to a user, depending on the context.

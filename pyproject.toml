@@ -1,15 +1,15 @@
 [project]
 name = "cerbottana"
 version = "0.1.0"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
-    "aiohttp==3.12.6",
-    "domify==0.4.7",
+    "aiohttp==3.14.1",
+    "domify==0.4.9",
     "imageprobe==0.3.0",
-    "pillow==11.2.1",
-    "pokedex[asyncio] @ https://github.com/Parnassius/pokedex.git",
+    "pillow==12.2.0",
+    "pokedex @ https://github.com/Parnassius/pokedex.git",
     "python-dateutil==2.9.0.post0",
-    "sqlalchemy==2.0.41",
+    "sqlalchemy==2.0.51",
     "typenv==0.2.0",
 ]
 
@@ -19,15 +19,15 @@ cerbottana = "cerbottana.__main__:main"
 [dependency-groups]
 dev = [
     "darglint==1.8.1",
-    "freezegun==1.5.2",
-    "mypy==1.16.0",
-    "pytest==8.3.5",
-    "pytest-asyncio==1.0.0",
-    "pytest-cov==6.1.1",
-    "pytest-mock==3.14.1",
-    "python-dotenv[cli]==1.1.0",
-    "ruff==0.11.12",
-    "types-python-dateutil==2.9.0.20250516",
+    "freezegun==1.5.5",
+    "mypy==2.1.0",
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+    "pytest-cov==7.1.0",
+    "pytest-mock==3.15.1",
+    "python-dotenv[cli]==1.2.2",
+    "ruff==0.15.20",
+    "types-python-dateutil==2.9.0.20260518",
 ]
 
 [build-system]
@@ -48,7 +48,7 @@ allow-direct-references = true
 
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 strict = true
 implicit_reexport = true
 
@@ -68,32 +68,41 @@ disallow_untyped_defs = false
 disallow_incomplete_defs = false
 
 
-[tool.pytest.ini_options]
-addopts = "--strict-config --strict-markers"
+[tool.pytest]
+strict = true
 markers = ["integration"]
 asyncio_mode = "auto"
-xfail_strict = true
 
 
 [tool.ruff.lint]
 select = [
     "A",     # flake8-builtins
+    "ANN",   # flake8-annotations
     "ARG",   # flake8-unused-arguments
+    "ASYNC", # flake8-async
     "B",     # flake8-bugbear
     "C4",    # flake8-comprehensions
     "DTZ",   # flake8-datetimez
     "E",     # pycodestyle
     "EM",    # flake8-errmsg
     "F",     # pyflakes
+    "FURB",  # refurb
     "I",     # isort
     "ICN",   # flake8-import-conventions
+    "INP",   # flake8-no-pep420
     "ISC",   # flake8-implicit-str-concat
     "N",     # pep8-naming
+    "PERF",  # perflint
     "PGH",   # pygrep-hooks
+    "PT",    # flake8-pytest-style
     "PTH",   # flake8-use-pathlib
     "RET",   # flake8-return
+    "RSE",   # flake8-raise
     "RUF",   # Ruff-specific rules
+    "SIM",   # flake8-simplify
+    "SLF",   # flake8-self
     "T10",   # flake8-debugger
+    "TC",    # flake8-type-checking
     "TID",   # flake8-tidy-imports
     "TRY",   # tryceratops
     "UP",    # pyupgrade
@@ -102,10 +111,14 @@ select = [
 ]
 ignore = [
     "A003",  # builtin-attribute-shadowing
+    "TC001", # typing-only-first-party-import
+    "TC002", # typing-only-third-party-import
+    "TC003", # typing-only-standard-library-import
 ]
 fixable = [
     "I",     # isort
     "F401",  # unused-import
+    "TC",    # flake8-type-checking
     "TID",   # flake8-tidy-imports
     "UP",    # pyupgrade
 ]
@@ -113,7 +126,11 @@ dummy-variable-rgx = "^_$"
 
 [tool.ruff.lint.per-file-ignores]
 "src/cerbottana/plugins/*" = ["A005"]  # stdlib-module-shadowing
-"tests/*" = ["ARG001"]
+"tests/*" = [
+    "ANN",  # flake8-annotations
+    "ARG001",  # unused-function-argument
+    "SLF",  # flake8-self
+]
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = [
@@ -124,5 +141,4 @@ extend-immutable-calls = [
 ban-relative-imports = "all"
 
 [tool.ruff.lint.isort]
-required-imports = ["from __future__ import annotations"]
 split-on-trailing-comma = false

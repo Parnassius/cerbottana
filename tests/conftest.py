@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import asyncio
 import json
 import subprocess
@@ -181,7 +179,7 @@ class MockedConnection(Connection):
         return messages
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_connection() -> Callable[[], AbstractAsyncContextManager[Any]]:
     @asynccontextmanager
     async def make_mock_connection(
@@ -199,7 +197,7 @@ def mock_connection() -> Callable[[], AbstractAsyncContextManager[Any]]:
         if rooms is None:
             rooms = ["room1"]
         if webhooks is None:
-            webhooks = {"room1": "https://discord.com/api/webhooks/00000/aaaaa"}
+            webhooks = {}
 
         conn = MockedConnection(
             url="",

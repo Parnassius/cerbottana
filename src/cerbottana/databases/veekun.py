@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from functools import total_ordering
 from typing import Annotated, Literal, cast, overload
 
@@ -80,7 +78,7 @@ class TranslatableMixin:
             language_id = self._sa_instance_state.session.info.get(  # type: ignore[attr-defined]
                 "language_id", 9
             )
-            language_id = cast(int, language_id)
+            language_id = cast("int", language_id)
         if translation_column is None:
             translation_column = "name"
         if language_column is None:

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import json
 import string
 from typing import TYPE_CHECKING
@@ -10,13 +8,13 @@ import cerbottana.databases.database as d
 from cerbottana import utils
 from cerbottana.database import Database
 from cerbottana.handlers import handler_wrapper
+from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
 from cerbottana.typedefs import JsonDict
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
-    from cerbottana.models.protocol_message import ProtocolMessage
 
 
 async def add_user(
@@ -38,7 +36,11 @@ async def add_user(
 
     db = Database.open()
     with db.get_session() as session:
-        session.add(d.Users(userid=user.userid, username=user.username))
+        session.add(d.Users(userid=user.userid))
+        stmt = (
+            update(d.Users).filter_by(userid=user.userid).values(username=user.username)
+        )
+        session.execute(stmt)
 
     if not from_userlist or rank != " ":
         await user.load_details()

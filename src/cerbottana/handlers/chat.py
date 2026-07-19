@@ -1,17 +1,15 @@
-from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 from cerbottana import utils
 from cerbottana.handlers import handler_wrapper
 from cerbottana.models.message import Message, RawMessage
+from cerbottana.models.protocol_message import ProtocolMessage
 from cerbottana.models.room import Room
 from cerbottana.models.user import User
 from cerbottana.plugins import LongRunningCommandClass
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
-    from cerbottana.models.protocol_message import ProtocolMessage
 
 
 async def parse_chat_message(

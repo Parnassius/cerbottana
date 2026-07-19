@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import asyncio
 import random
 import secrets
@@ -18,13 +16,13 @@ import cerbottana.databases.database as d
 from cerbottana import custom_elements as ce
 from cerbottana import utils
 from cerbottana.database import Database
+from cerbottana.models.message import Message, RawMessage
 from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper
 from cerbottana.tasks import background_task_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
-    from cerbottana.models.message import Message, RawMessage
     from cerbottana.models.user import User
 
 
@@ -70,7 +68,9 @@ def crop_and_save(game: Game, size: int) -> Path:
                 )
                 # Try again if there are little to no opaque pixels
                 opaque_pixels = sum(
-                    1 for alpha in im_cropped.getchannel("A").getdata() if alpha == 255
+                    1
+                    for alpha in iter(im_cropped.getchannel("A").getdata())
+                    if alpha == 255
                 )
                 if opaque_pixels > im_cropped.width * im_cropped.height * 0.25:
                     break

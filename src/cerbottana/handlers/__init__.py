@@ -1,16 +1,12 @@
-from __future__ import annotations
-
 import importlib
 from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
 from functools import wraps
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from cerbottana.models.protocol_message import ProtocolMessage
+from cerbottana.models.protocol_message import ProtocolMessage
 
-    HandlerFunc = Callable[[ProtocolMessage], Coroutine[None, None, None]]
+HandlerFunc = Callable[[ProtocolMessage], Coroutine[None, None, None]]
 
 
 @dataclass

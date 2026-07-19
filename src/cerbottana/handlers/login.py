@@ -1,16 +1,9 @@
-from __future__ import annotations
-
 import asyncio
 import json
-from typing import TYPE_CHECKING
-
-import aiohttp
 
 from cerbottana import utils
 from cerbottana.handlers import handler_wrapper
-
-if TYPE_CHECKING:
-    from cerbottana.models.protocol_message import ProtocolMessage
+from cerbottana.models.protocol_message import ProtocolMessage
 
 
 @handler_wrapper(["challstr"], required_parameters=1)
@@ -24,19 +17,18 @@ async def challstr(msg: ProtocolMessage) -> None:
 
     assertion: str | None = None
     assertion_retries = 0
-    async with aiohttp.ClientSession() as session:
-        while assertion is None:
-            async with session.post(url, data=payload) as resp:
-                try:
-                    assertion = json.loads((await resp.text("utf-8"))[1:])["assertion"]
-                except (json.JSONDecodeError, KeyError):
-                    if assertion_retries == 5:
-                        print("Unable to login, closing connection")
-                        if msg.conn.websocket is not None:
-                            await msg.conn.websocket.close()
-                        return
-                    await asyncio.sleep(2**assertion_retries)
-                    assertion_retries += 1
+    while assertion is None:
+        async with msg.conn.client_session.post(url, data=payload) as resp:
+            try:
+                assertion = json.loads((await resp.text("utf-8"))[1:])["assertion"]
+            except json.JSONDecodeError, KeyError:
+                if assertion_retries == 5:
+                    print("Unable to login, closing connection")
+                    if msg.conn.websocket is not None:
+                        await msg.conn.websocket.close()
+                    return
+                await asyncio.sleep(2**assertion_retries)
+                assertion_retries += 1
 
     await msg.conn.send(f"|/trn {msg.conn.username},0,{assertion}")
 
