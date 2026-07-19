@@ -170,6 +170,9 @@ class GuessTheSprite:
                 + e.Br()
                 + "Nessuno ha vinto, era "
                 + e.Strong(name)
+                + "."
+                + f" Ci sono stati {len(game.active_players)} player"
+                + f" e {game.guess_counter} guess totali!"
                 + "!"
             )
             await msg.reply_htmlbox(html)
@@ -208,18 +211,17 @@ class GuessTheSprite:
 
             db = Database.open()
             with db.get_session() as session:
-                with db.get_session() as session:
-                    session.add(
-                        d.Player(
-                            userid=msg.user.userid, roomid=msg.room.roomid, gts_points=0
-                        )
+                session.add(
+                    d.Player(
+                        userid=msg.user.userid, roomid=msg.room.roomid, gts_points=0
                     )
-                    stmt = (
-                        update(d.Player)
-                        .filter_by(userid=msg.user.userid)
-                        .values(gts_points=d.Player.gts_points + 1)
-                    )
-                    session.execute(stmt)
+                )
+                stmt = (
+                    update(d.Player)
+                    .filter_by(userid=msg.user.userid, roomid=msg.room.roomid)
+                    .values(gts_points=d.Player.gts_points + 1)
+                )
+                session.execute(stmt)
 
             await msg.reply_htmlbox(html)
 
@@ -254,9 +256,11 @@ async def gtsleaderboard(msg: Message) -> None:
     db = Database.open()
     with db.get_session() as session:
         stmt = (
-            select(d.Player)
-            .filter_by(roomid=msg.room.roomid)
+            select(d.Player, d.Users.username)
+            .join(d.Users, d.Player.userid == d.Users.userid)
+            .filter(d.Player.roomid == msg.room.roomid)
             .order_by(d.Player.gts_points.desc())
+            .limit(10)
         )
         players = session.scalars(stmt).all()
         if not players:
@@ -265,6 +269,7 @@ async def gtsleaderboard(msg: Message) -> None:
 
         html = e.Table(class_="table")
         with html:
+            e.Tr(e.Th(), e.Th("Username"), e.Th("Punti"))
             posizione = 0
             for player in players:
                 posizione += 1
