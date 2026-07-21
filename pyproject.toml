@@ -6,7 +6,7 @@ dependencies = [
     "aiohttp==3.14.1",
     "domify==0.4.9",
     "imageprobe==0.3.0",
-    "pillow==12.2.0",
+    "pillow==12.3.0",
     "pokedex @ https://github.com/Parnassius/pokedex.git",
     "python-dateutil==2.9.0.post0",
     "sqlalchemy==2.0.51",
