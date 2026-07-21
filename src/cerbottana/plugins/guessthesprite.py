@@ -1,6 +1,7 @@
 import asyncio
 import random
 import secrets
+from contextlib import suppress
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -156,7 +157,7 @@ class GuessTheSprite:
                 await asyncio.wait_for(game.finish_event.wait(), 10)
             except TimeoutError:
                 # Timeout expired, go to the next image
-                pass
+                suppress(TimeoutError)
 
             del html["open"]
             await msg.reply_htmlbox(html, name=name, change=True)
@@ -226,22 +227,6 @@ class GuessTheSprite:
             await msg.reply_htmlbox(html)
 
 
-@background_task_wrapper()
-async def remove_old_cropped_images(conn: Connection) -> None:  # noqa: ARG001
-    await asyncio.sleep(1 * 60 * 60)
-
-    while True:
-        cutoff_time = time() - 3 * 24 * 60 * 60  # 3 days
-        for img in images_cropped_dir.iterdir():
-            try:
-                if img.is_file() and img.stat().st_mtime < cutoff_time:
-                    img.unlink()
-            except FileNotFoundError:
-                continue
-
-        await asyncio.sleep(24 * 60 * 60)
-
-
 @command_wrapper(
     aliases=("gtslb", "leaderboardgts"),
     helpstr="Mostra la classifica gts di una room",
@@ -262,7 +247,7 @@ async def gtsleaderboard(msg: Message) -> None:
             .order_by(d.Player.gts_points.desc())
             .limit(10)
         )
-        players = session.scalars(stmt).all()
+        players = session.execute(stmt).all()
         if not players:
             await msg.reply("Nessun giocatore in classifica.")
             return
@@ -270,9 +255,28 @@ async def gtsleaderboard(msg: Message) -> None:
         html = e.Table(class_="table")
         with html:
             e.Tr(e.Th(), e.Th("Username"), e.Th("Punti"))
-            posizione = 0
-            for player in players:
-                posizione += 1
-                e.Tr(e.Td(posizione), e.Td(player.userid), e.Td(player.gts_points))
+            position = 0
+            for position, player in enumerate(players, start=1):
+                e.Tr(
+                    e.Td(position),
+                    e.Td(ce.Username(player[1])),
+                    e.Td(player[0].gts_points),
+                )
 
         await msg.reply_htmlbox(html)
+
+
+@background_task_wrapper()
+async def remove_old_cropped_images(conn: Connection) -> None:  # noqa: ARG001
+    await asyncio.sleep(1 * 60 * 60)
+
+    while True:
+        cutoff_time = time() - 3 * 24 * 60 * 60  # 3 days
+        for img in images_cropped_dir.iterdir():
+            try:
+                if img.is_file() and img.stat().st_mtime < cutoff_time:
+                    img.unlink()
+            except FileNotFoundError:
+                continue
+
+        await asyncio.sleep(24 * 60 * 60)
