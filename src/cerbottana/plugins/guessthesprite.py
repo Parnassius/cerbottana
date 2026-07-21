@@ -153,11 +153,8 @@ class GuessTheSprite:
             )
             name = secrets.token_hex(8)
             await msg.reply_htmlbox(html, name=name)
-            try:
+            with suppress(TimeoutError):
                 await asyncio.wait_for(game.finish_event.wait(), 10)
-            except TimeoutError:
-                # Timeout expired, go to the next image
-                suppress(TimeoutError)
 
             del html["open"]
             await msg.reply_htmlbox(html, name=name, change=True)
