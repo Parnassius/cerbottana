@@ -31,7 +31,7 @@ images_dir = utils.get_config_file("images")
 images_cropped_dir = utils.get_config_file("images_cropped")
 
 
-def get_random_pokemon() -> tuple[Path, set[str]]:
+def get_random_pokemon() -> tuple[Path, list[str]]:
     if random.randint(1, 128) == 128:
         path = images_dir / "shiny"
     else:
@@ -40,11 +40,7 @@ def get_random_pokemon() -> tuple[Path, set[str]]:
     subdirs = list(path.iterdir())
     path = random.choice(subdirs)
 
-    pokemonlist = set()
-
-    for entry in subdirs:
-        pokemonlist.add(entry.stem)
-
+    all_options = [entry.stem for entry in subdirs]
 
     subdirs = list(path.iterdir())
     path = random.choice(subdirs)
@@ -53,7 +49,7 @@ def get_random_pokemon() -> tuple[Path, set[str]]:
         subdirs = list(path.iterdir())
         path = random.choice(subdirs)
 
-    return path, pokemonlist
+    return path, all_options
 
 
 def crop_and_save(game: Game, size: int) -> Path:
@@ -121,7 +117,7 @@ def get_image(path: Path, base_url: str) -> BaseElement:
 class Game:
     pokemon: str
     path: Path
-    all_options: set[str]
+    all_options: list[str]
     crop_origin: tuple[int, int] | None = None
     active_players: set[User] = field(default_factory=set)
     guess_counter: int = 0
