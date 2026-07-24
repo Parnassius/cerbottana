@@ -139,10 +139,10 @@ class GuessTheSprite:
         if msg.room is None:
             return
 
-        full_pokemon_path, pokemonlist = get_random_pokemon()
+        full_pokemon_path, all_options = get_random_pokemon()
         relative_path = full_pokemon_path.relative_to(images_dir)
         pokemon = relative_path.parts[1]
-        game = Game(pokemon, full_pokemon_path, pokemonlist)
+        game = Game(pokemon, full_pokemon_path, all_options)
         cls.active_games[msg.room] = game
 
         for size in range(4):
