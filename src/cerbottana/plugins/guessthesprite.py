@@ -40,17 +40,18 @@ def get_random_pokemon() -> tuple[Path, set[str]]:
     subdirs = list(path.iterdir())
     path = random.choice(subdirs)
 
+    pokemonlist = set()
+
+    for entry in subdirs:
+        pokemonlist.add(entry.stem)
+
+
     subdirs = list(path.iterdir())
     path = random.choice(subdirs)
 
     if path.is_dir():
         subdirs = list(path.iterdir())
         path = random.choice(subdirs)
-
-    pokemonlist = set()
-
-    for path in subdirs:
-        pokemonlist.add(path.stem)
 
     return path, pokemonlist
 
