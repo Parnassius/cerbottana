@@ -31,7 +31,7 @@ images_dir = utils.get_config_file("images")
 images_cropped_dir = utils.get_config_file("images_cropped")
 
 
-def get_random_pokemon() -> Path:
+def get_random_pokemon() -> tuple[Path, set[str]]:
     if random.randint(1, 128) == 128:
         path = images_dir / "shiny"
     else:
@@ -47,7 +47,12 @@ def get_random_pokemon() -> Path:
         subdirs = list(path.iterdir())
         path = random.choice(subdirs)
 
-    return path
+    pokemonlist = set()
+
+    for path in subdirs:
+        pokemonlist.add(path.stem)
+
+    return path, pokemonlist
 
 
 def crop_and_save(game: Game, size: int) -> Path:
@@ -115,6 +120,7 @@ def get_image(path: Path, base_url: str) -> BaseElement:
 class Game:
     pokemon: str
     path: Path
+    all_options: set[str]
     crop_origin: tuple[int, int] | None = None
     active_players: set[User] = field(default_factory=set)
     guess_counter: int = 0
@@ -136,11 +142,12 @@ class GuessTheSprite:
         if msg.room is None:
             return
 
-        full_pokemon_path = get_random_pokemon()
+        full_pokemon_path, pokemonlist = get_random_pokemon()
         relative_path = full_pokemon_path.relative_to(images_dir)
         pokemon = relative_path.parts[1]
-        game = Game(pokemon, full_pokemon_path)
+        game = Game(pokemon, full_pokemon_path, pokemonlist)
         cls.active_games[msg.room] = game
+
         for size in range(4):
             if msg.room not in cls.active_games:
                 return
@@ -171,7 +178,6 @@ class GuessTheSprite:
                 + "."
                 + f" Ci sono stati {len(game.active_players)} player"
                 + f" e {game.guess_counter} guess totali!"
-                + "!"
             )
             await msg.reply_htmlbox(html)
 
@@ -185,8 +191,8 @@ class GuessTheSprite:
             return
 
         message = utils.to_id(utils.remove_diacritics(msg.message))
-        for directory in (images_dir / "regular").iterdir():
-            similarity = SequenceMatcher(None, directory.name, message).ratio()
+        for pokemon in game.all_options:
+            similarity = SequenceMatcher(None, pokemon, message).ratio()
             if similarity > 0.6:
                 game.guess_counter += 1
                 game.active_players.add(msg.user)
@@ -211,7 +217,9 @@ class GuessTheSprite:
             with db.get_session() as session:
                 session.add(
                     d.Player(
-                        userid=msg.user.userid, roomid=msg.room.roomid, gts_points=0
+                        userid=msg.user.userid,
+                        roomid=msg.room.roomid,
+                        gts_points=0,
                     )
                 )
                 stmt = (
@@ -252,12 +260,11 @@ async def gtsleaderboard(msg: Message) -> None:
         html = e.Table(class_="table")
         with html:
             e.Tr(e.Th(), e.Th("Username"), e.Th("Punti"))
-            position = 0
-            for position, player in enumerate(players, start=1):
+            for position, (player, username) in enumerate(players, start=1):
                 e.Tr(
                     e.Td(position),
-                    e.Td(ce.Username(player[1])),
-                    e.Td(player[0].gts_points),
+                    e.Td(ce.Username(username)),
+                    e.Td(player.gts_points),
                 )
 
         await msg.reply_htmlbox(html)
