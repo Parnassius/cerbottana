@@ -1,7 +1,9 @@
 import asyncio
 import random
 import secrets
+from contextlib import suppress
 from dataclasses import dataclass, field
+from difflib import SequenceMatcher
 from pathlib import Path
 from time import time
 from typing import TYPE_CHECKING, ClassVar
@@ -9,9 +11,12 @@ from typing import TYPE_CHECKING, ClassVar
 from domify import html_elements as e
 from domify.base_element import BaseElement
 from PIL import Image
+from sqlalchemy import select, update
 
+import cerbottana.databases.database as d
 from cerbottana import custom_elements as ce
 from cerbottana import utils
+from cerbottana.database import Database
 from cerbottana.models.message import Message, RawMessage
 from cerbottana.models.room import Room
 from cerbottana.plugins import command_wrapper
@@ -19,13 +24,14 @@ from cerbottana.tasks import background_task_wrapper
 
 if TYPE_CHECKING:
     from cerbottana.connection import Connection
+    from cerbottana.models.user import User
 
 
 images_dir = utils.get_config_file("images")
 images_cropped_dir = utils.get_config_file("images_cropped")
 
 
-def get_random_pokemon() -> Path:
+def get_random_pokemon() -> tuple[Path, list[str]]:
     if random.randint(1, 128) == 128:
         path = images_dir / "shiny"
     else:
@@ -34,6 +40,8 @@ def get_random_pokemon() -> Path:
     subdirs = list(path.iterdir())
     path = random.choice(subdirs)
 
+    all_options = [entry.stem for entry in subdirs]
+
     subdirs = list(path.iterdir())
     path = random.choice(subdirs)
 
@@ -41,7 +49,7 @@ def get_random_pokemon() -> Path:
         subdirs = list(path.iterdir())
         path = random.choice(subdirs)
 
-    return path
+    return path, all_options
 
 
 def crop_and_save(game: Game, size: int) -> Path:
@@ -109,7 +117,10 @@ def get_image(path: Path, base_url: str) -> BaseElement:
 class Game:
     pokemon: str
     path: Path
+    all_options: list[str]
     crop_origin: tuple[int, int] | None = None
+    active_players: set[User] = field(default_factory=set)
+    guess_counter: int = 0
     finish_event: asyncio.Event = field(default_factory=asyncio.Event)
 
 
@@ -128,10 +139,10 @@ class GuessTheSprite:
         if msg.room is None:
             return
 
-        full_pokemon_path = get_random_pokemon()
+        full_pokemon_path, all_options = get_random_pokemon()
         relative_path = full_pokemon_path.relative_to(images_dir)
         pokemon = relative_path.parts[1]
-        game = Game(pokemon, full_pokemon_path)
+        game = Game(pokemon, full_pokemon_path, all_options)
         cls.active_games[msg.room] = game
 
         for size in range(4):
@@ -139,16 +150,18 @@ class GuessTheSprite:
                 return
 
             cropped_path = crop_and_save(game, size)
-            html = get_image(cropped_path, msg.conn.base_url)
-            await msg.reply_htmlbox(html)
-            try:
+            html: e.BaseElement = e.Details(
+                e.Summary(f"hint {size + 1}"),
+                get_image(cropped_path, msg.conn.base_url),
+                open=True,
+            )
+            name = secrets.token_hex(8)
+            await msg.reply_htmlbox(html, name=name)
+            with suppress(TimeoutError):
                 await asyncio.wait_for(game.finish_event.wait(), 10)
-            except TimeoutError:
-                # Timeout expired, go to the next image
-                pass
-            else:
-                # The pokemon has been guessed
-                return
+
+            del html["open"]
+            await msg.reply_htmlbox(html, name=name, change=True)
 
         if msg.room in cls.active_games:
             del cls.active_games[msg.room]
@@ -159,7 +172,9 @@ class GuessTheSprite:
                 + e.Br()
                 + "Nessuno ha vinto, era "
                 + e.Strong(name)
-                + "!"
+                + "."
+                + f" Ci sono stati {len(game.active_players)} player"
+                + f" e {game.guess_counter} guess totali!"
             )
             await msg.reply_htmlbox(html)
 
@@ -168,9 +183,18 @@ class GuessTheSprite:
         if msg.room is None:
             return
 
-        message = utils.to_id(utils.remove_diacritics(msg.message))
         game = cls.active_games.get(msg.room)
-        if game and game.pokemon == message:
+        if game is None:
+            return
+
+        message = utils.to_id(utils.remove_diacritics(msg.message))
+        for pokemon in game.all_options:
+            similarity = SequenceMatcher(None, pokemon, message).ratio()
+            if similarity > 0.6:
+                game.guess_counter += 1
+                game.active_players.add(msg.user)
+                break
+        if game.pokemon == message:
             del cls.active_games[msg.room]
             game.finish_event.set()
             ps_dex_entry = utils.get_ps_dex_entry(game.pokemon)
@@ -181,9 +205,66 @@ class GuessTheSprite:
                 + ce.Username(msg.user.username)
                 + " ha vinto, era "
                 + e.Strong(name)
-                + "!"
+                + "."
+                + f" Ci sono stati {len(game.active_players)} player"
+                + f" e {game.guess_counter} guess totali!"
             )
+
+            db = Database.open()
+            with db.get_session() as session:
+                session.add(
+                    d.Player(
+                        userid=msg.user.userid,
+                        roomid=msg.room.roomid,
+                        gts_points=0,
+                    )
+                )
+                stmt = (
+                    update(d.Player)
+                    .filter_by(userid=msg.user.userid, roomid=msg.room.roomid)
+                    .values(gts_points=d.Player.gts_points + 1)
+                )
+                session.execute(stmt)
+
             await msg.reply_htmlbox(html)
+
+
+@command_wrapper(
+    aliases=("gtslb", "leaderboardgts"),
+    helpstr="Mostra la classifica gts di una room",
+    allow_pm="regularuser",
+    parametrize_room=True,
+    required_rank_editable=True,
+)
+async def gtsleaderboard(msg: Message) -> None:
+    if msg.room is None:
+        return
+
+    db = Database.open()
+    with db.get_session() as session:
+        stmt = (
+            select(d.Player, d.Users.username)
+            .join(d.Users, d.Player.userid == d.Users.userid)
+            .filter(d.Player.roomid == msg.room.roomid)
+            .order_by(d.Player.gts_points.desc())
+            .limit(10)
+        )
+        players = session.execute(stmt).all()
+        if not players:
+            await msg.reply("Nessun giocatore in classifica.")
+            return
+
+        html = e.Table(class_="table")
+        with html:
+            e.Tr(e.Th(), e.Th("Username"), e.Th("Punti"))
+            for position, (player, username) in enumerate(players, start=1):
+                e.Tr(
+                    e.Td(position),
+                    e.Td(ce.Username(username)),
+                    e.Td(player.gts_points),
+                )
+
+        await msg.reply_htmlbox(html)
 
 
 @background_task_wrapper()
