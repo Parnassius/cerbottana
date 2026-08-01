@@ -92,7 +92,9 @@ async def csv_to_sqlite(conn: Connection) -> None:  # noqa: ARG001
                                 update(tables_classes[tname])
                                 .values(
                                     identifier=func.replace(
-                                        tables_classes[tname].identifier, "-", ""
+                                        tables_classes[tname].identifier,  # type: ignore[attr-defined]
+                                        "-",
+                                        "",
                                     )
                                 )
                                 .execution_options(synchronize_session=False)

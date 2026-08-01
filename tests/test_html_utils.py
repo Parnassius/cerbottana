@@ -15,7 +15,7 @@ from cerbottana import html_utils
         ("a.bcde", "a.bcde"),  # Not a valid link
         (
             "https://docs.google.com/document/d/1Qw55gu000000WMErXG_empg_BNUbYO3-3qHOau3ezR0/edit?usp=sharing/",
-            '<a href="https://docs.google.com/document/d/1Qw55gu000000WMErXG_empg_BNUbYO3-3qHOau3ezR0/edit?usp=sharing/">docs.google.com/doc<small class="message-overflow">ument/d/1Qw55gu000000WMErXG_empg_BNUbYO3-3qHOau3ezR0/edit?usp=sha</small>ring/</a>',  # noqa: E501
+            '<a href="https://docs.google.com/document/d/1Qw55gu000000WMErXG_empg_BNUbYO3-3qHOau3ezR0/edit?usp=sharing/">docs.google.com/doc<small class="message-overflow">ument/d/1Qw55gu000000WMErXG_empg_BNUbYO3-3qHOau3ezR0/edit?usp=sha</small>ring/</a>',
         ),
     ],
 )

@@ -144,8 +144,7 @@ async def test_tier_info(mock_connection) -> None:
         # Send dummy tier information
         await conn.add_messages(
             [
-                "|formats|,1|S/V Singles|"
-                "[Gen 9] Random Battle,4f|[Gen 9] OU,e|[Gen 9] National Dex,e",
+                "|formats|,1|S/V Singles|[Gen 9] Random Battle,4f|[Gen 9] OU,e|[Gen 9] National Dex,e",
             ]
         )
         await conn.get_messages()

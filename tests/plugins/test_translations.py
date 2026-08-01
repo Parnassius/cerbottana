@@ -38,7 +38,7 @@ from cerbottana.plugins.translations import _get_translations
         (
             "klaps",
             (Language.GERMAN, Language.FRENCH),
-            {("move", "ecrasface"): {"Écras’Face"}},  # noqa: RUF001
+            {("move", "ecrasface"): {"Écras’Face"}},
         ),
         (
             "charge",
@@ -162,7 +162,7 @@ async def test_translations_conn(mock_connection):
         )
         reply = await conn.get_messages()
         assert len(reply) == 1
-        assert next(iter(reply)).replace("room1|", "") == "Écras’Face"  # noqa: RUF001
+        assert next(iter(reply)).replace("room1|", "") == "Écras’Face"
 
         await conn.add_messages(
             [
