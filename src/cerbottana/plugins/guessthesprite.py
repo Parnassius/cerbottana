@@ -146,24 +146,23 @@ class GuessTheSprite:
         game = Game(pokemon, full_pokemon_path, all_options)
         cls.active_games[msg.room] = game
 
-        while msg.room in cls.active_games:
-            for size in range(4):
-                if msg.room not in cls.active_games:
-                    return
+        for size in range(4):
+            if msg.room not in cls.active_games:
+                return
 
-                cropped_path = crop_and_save(game, size)
-                html: e.BaseElement = e.Details(
-                    e.Summary(f"hint {size + 1}"),
-                    get_image(cropped_path, msg.conn.base_url),
-                    open=True,
-                )
-                name = secrets.token_hex(8)
-                await msg.reply_htmlbox(html, name=name)
-                with suppress(TimeoutError):
-                    await asyncio.wait_for(game.finish_event.wait(), 10)
+            cropped_path = crop_and_save(game, size)
+            html: e.BaseElement = e.Details(
+                e.Summary(f"hint {size + 1}"),
+                get_image(cropped_path, msg.conn.base_url),
+                open=True,
+            )
+            name = secrets.token_hex(8)
+            await msg.reply_htmlbox(html, name=name)
+            with suppress(TimeoutError):
+                await asyncio.wait_for(game.finish_event.wait(), 10)
 
-                del html["open"]
-                await msg.reply_htmlbox(html, name=name, change=True)
+            del html["open"]
+            await msg.reply_htmlbox(html, name=name, change=True)
 
         if msg.room in cls.active_games:
             del cls.active_games[msg.room]
