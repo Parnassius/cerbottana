@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from pathlib import Path
 from time import time
+from datetime import datetime
 from typing import TYPE_CHECKING, ClassVar
 
 from domify import html_elements as e
@@ -145,23 +146,24 @@ class GuessTheSprite:
         game = Game(pokemon, full_pokemon_path, all_options)
         cls.active_games[msg.room] = game
 
-        for size in range(4):
-            if msg.room not in cls.active_games:
-                return
+        while msg.room in cls.active_games:
+            for size in range(4):
+                if msg.room not in cls.active_games:
+                    return
 
-            cropped_path = crop_and_save(game, size)
-            html: e.BaseElement = e.Details(
-                e.Summary(f"hint {size + 1}"),
-                get_image(cropped_path, msg.conn.base_url),
-                open=True,
-            )
-            name = secrets.token_hex(8)
-            await msg.reply_htmlbox(html, name=name)
-            with suppress(TimeoutError):
-                await asyncio.wait_for(game.finish_event.wait(), 10)
+                cropped_path = crop_and_save(game, size)
+                html: e.BaseElement = e.Details(
+                    e.Summary(f"hint {size + 1}"),
+                    get_image(cropped_path, msg.conn.base_url),
+                    open=True,
+                )
+                name = secrets.token_hex(8)
+                await msg.reply_htmlbox(html, name=name)
+                with suppress(TimeoutError):
+                    await asyncio.wait_for(game.finish_event.wait(), 10)
 
-            del html["open"]
-            await msg.reply_htmlbox(html, name=name, change=True)
+                del html["open"]
+                await msg.reply_htmlbox(html, name=name, change=True)
 
         if msg.room in cls.active_games:
             del cls.active_games[msg.room]
@@ -216,12 +218,14 @@ class GuessTheSprite:
                     d.Player(
                         userid=msg.user.userid,
                         roomid=msg.room.roomid,
+                        month=today.month,
+                        year=today.year,
                         gts_points=0,
                     )
                 )
                 stmt = (
                     update(d.Player)
-                    .filter_by(userid=msg.user.userid, roomid=msg.room.roomid)
+                    .filter_by(userid=msg.user.userid, roomid=msg.room.roomid, month=today.month, year=today.year)
                     .values(gts_points=d.Player.gts_points + 1)
                 )
                 session.execute(stmt)

@@ -50,6 +50,8 @@ class Player(Base):
     roomid: Mapped[str]
     userid: Mapped[str]
     gts_points: Mapped[int]
+    month: Mapped[int]
+    year: Mapped[int]
 
 
 class Quotes(Base):
