@@ -147,9 +147,8 @@ async def test_users(
         room = Room.get(conn, "room1")
         users = {}
 
-        for username in usernames_add:
+        for username, rank in usernames_add.items():
             user = User.get(conn, username)
-            rank = usernames_add[username]
             room.add_user(user, rank)
             users[user] = rank or " "
 

@@ -265,6 +265,7 @@ class PokemonShowdown:
             capture_output=True,
             cwd=self.cwd,
             timeout=30,
+            check=False,
             text=True,
         )
 
