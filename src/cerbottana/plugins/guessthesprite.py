@@ -3,10 +3,10 @@ import random
 import secrets
 from contextlib import suppress
 from dataclasses import dataclass, field
+from datetime import datetime
 from difflib import SequenceMatcher
 from pathlib import Path
 from time import time
-from datetime import datetime
 from typing import TYPE_CHECKING, ClassVar
 
 from domify import html_elements as e
@@ -212,6 +212,7 @@ class GuessTheSprite:
                 + f" e {game.guess_counter} guess totali!"
             )
 
+            today = datetime.now(UTC)
             db = Database.open()
             with db.get_session() as session:
                 session.add(
@@ -225,7 +226,12 @@ class GuessTheSprite:
                 )
                 stmt = (
                     update(d.Player)
-                    .filter_by(userid=msg.user.userid, roomid=msg.room.roomid, month=today.month, year=today.year)
+                    .filter_by(
+                        userid=msg.user.userid,
+                        roomid=msg.room.roomid,
+                        month=today.month,
+                        year=today.year,
+                    )
                     .values(gts_points=d.Player.gts_points + 1)
                 )
                 session.execute(stmt)
