@@ -246,15 +246,14 @@ class GuessTheSprite:
     required_rank_editable=True,
 )
 async def gtsleaderboard(msg: Message) -> None:
-    if msg.room is None:
-        return
-
     today = datetime.now(UTC)
     db = Database.open()
     with db.get_session() as session:
         stmt = (
             select(d.Player, d.Users.username)
-            .filter_by(roomid=msg.room.roomid, year=today.year, month=today.month)
+            .filter_by(
+                roomid=msg.parametrized_room.roomid, year=today.year, month=today.month
+            )
             .join(d.Users, d.Player.userid == d.Users.userid)
             .order_by(d.Player.gts_points.desc(), d.Player.userid)
             .limit(10)
