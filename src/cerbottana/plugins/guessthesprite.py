@@ -3,7 +3,7 @@ import random
 import secrets
 from contextlib import suppress
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from difflib import SequenceMatcher
 from pathlib import Path
 from time import time
@@ -218,8 +218,8 @@ class GuessTheSprite:
                     d.Player(
                         userid=msg.user.userid,
                         roomid=msg.room.roomid,
-                        month=today.month,
                         year=today.year,
+                        month=today.month,
                         gts_points=0,
                     )
                 )
@@ -228,8 +228,8 @@ class GuessTheSprite:
                     .filter_by(
                         userid=msg.user.userid,
                         roomid=msg.room.roomid,
-                        month=today.month,
                         year=today.year,
+                        month=today.month,
                     )
                     .values(gts_points=d.Player.gts_points + 1)
                 )
@@ -249,13 +249,14 @@ async def gtsleaderboard(msg: Message) -> None:
     if msg.room is None:
         return
 
+    today = datetime.now(UTC)
     db = Database.open()
     with db.get_session() as session:
         stmt = (
             select(d.Player, d.Users.username)
+            .filter_by(roomid=msg.room.roomid, year=today.year, month=today.month)
             .join(d.Users, d.Player.userid == d.Users.userid)
-            .filter(d.Player.roomid == msg.room.roomid)
-            .order_by(d.Player.gts_points.desc())
+            .order_by(d.Player.gts_points.desc(), d.Player.userid)
             .limit(10)
         )
         players = session.execute(stmt).all()

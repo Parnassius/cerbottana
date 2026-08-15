@@ -43,15 +43,17 @@ class EightBall(Base):
 class Player(Base):
     __tablename__ = "players"
     __table_args__ = (
-        UniqueConstraint("roomid", "userid", sqlite_on_conflict="IGNORE"),
+        UniqueConstraint(
+            "roomid", "userid", "year", "month", sqlite_on_conflict="IGNORE"
+        ),
     )
 
     id: Mapped[intpk]
     roomid: Mapped[str]
     userid: Mapped[str]
-    gts_points: Mapped[int]
-    month: Mapped[int]
     year: Mapped[int]
+    month: Mapped[int]
+    gts_points: Mapped[int]
 
 
 class Quotes(Base):
