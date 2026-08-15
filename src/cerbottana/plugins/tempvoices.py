@@ -42,7 +42,7 @@ async def demote_old_temporary_voices(conn: Connection) -> None:
     db = Database.open()
     while True:
         with db.get_session() as session:
-            stmt = select(d.TemporaryVoices).filter(
+            stmt = select(d.TemporaryVoices).where(
                 d.TemporaryVoices.date < datetime.now(UTC) - timedelta(days=30)
             )
             user: d.TemporaryVoices | None = session.scalar(stmt)
