@@ -39,8 +39,7 @@ build-backend = "hatchling.build"
 exclude_lines = ["if TYPE_CHECKING:"]
 
 [tool.coverage.run]
-relative_files = true
-source = ["src/cerbottana"]
+source_pkgs = ["cerbottana"]
 
 
 [tool.hatch.metadata]
