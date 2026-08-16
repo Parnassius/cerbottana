@@ -32,7 +32,7 @@ async def parse_chat_message(
         command = message.split(" ")[0][len(conn.command_character) :].lower()
 
         if command in conn.commands:
-            msg = Message(room, user, message)
+            msg = Message(room, user, command, message)
             cmd = conn.commands[command]
             if (
                 cmd.single_instance

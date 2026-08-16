@@ -112,6 +112,7 @@ class Message(RawMessage):
             is a PM.
         user (User): Message author.
         message (str): Raw message content.
+        command (str): Command name.
         arg (str): Text body of the message without the initial command keyword.
         args (list[str]): arg attribute splitted by commas.
         parametrized_room (Room): See plugins.parametrize_room decorator.
@@ -120,9 +121,12 @@ class Message(RawMessage):
         language (Language): Pokedex enum for language.
     """
 
-    def __init__(self, room: Room | None, user: User, message: str) -> None:
+    def __init__(
+        self, room: Room | None, user: User, command: str, message: str
+    ) -> None:
         super().__init__(room, user, message)
 
+        self.command = command
         self.arg = self.message.partition(" ")[2].strip()
 
         # Attributes to support supplementary functionalities
