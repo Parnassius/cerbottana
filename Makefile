@@ -1,3 +1,7 @@
+.PHONY: run
+run:
+	@uv run cerbottana
+
 .PHONY: format
 format:
 	@uv run ruff check src tests --fix-only
