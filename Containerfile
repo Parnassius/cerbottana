@@ -14,7 +14,8 @@ ENV UV_LINK_MODE=copy
 ENV UV_NO_EDITABLE=1
 ENV UV_NO_SYNC=1
 
-RUN apk add --no-cache git
+RUN --mount=type=cache,target=/etc/apk/cache \
+    apk add git
 
 COPY --from=ghcr.io/astral-sh/uv /uv /bin/uv
 
@@ -30,8 +31,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 FROM builder as test-base
 
-RUN apk add --no-cache make
-RUN apk add --no-cache nodejs npm
+RUN --mount=type=cache,target=/etc/apk/cache \
+    apk add make
+RUN --mount=type=cache,target=/etc/apk/cache \
+    apk add nodejs npm
 
 ENV CERBOTTANA_SHOWDOWN_PATH=/pokemon-showdown
 
