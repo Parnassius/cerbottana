@@ -32673,7 +32673,7 @@
       "spe": 40
     },
     "abilities": {
-      "0": "Emergency Exit"
+      "0": "Tough Claws"
     },
     "heightm": 2.3,
     "weightkg": 148,
@@ -42518,8 +42518,7 @@
       "spe": 87
     },
     "abilities": {
-      "0": "Thermal Exchange",
-      "H": "Ice Body"
+      "0": "Thermal Exchange"
     },
     "heightm": 2.1,
     "weightkg": 315,
