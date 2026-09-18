@@ -3,14 +3,14 @@ name = "cerbottana"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
-    "aiohttp==3.14.3",
-    "domify==0.4.9",
-    "imageprobe==0.3.0",
-    "pillow==12.3.0",
+    "aiohttp",
+    "domify",
+    "imageprobe",
+    "pillow",
     "pokedex @ https://github.com/Parnassius/pokedex.git",
-    "python-dateutil==2.9.0.post0",
-    "sqlalchemy==2.0.52",
-    "typenv==0.2.0",
+    "python-dateutil",
+    "sqlalchemy",
+    "typenv",
 ]
 
 [project.scripts]
@@ -18,16 +18,16 @@ cerbottana = "cerbottana.__main__:main"
 
 [dependency-groups]
 dev = [
-    "darglint==1.8.1",
-    "freezegun==1.5.5",
-    "mypy==2.3.1",
-    "pytest==9.1.1",
-    "pytest-asyncio==1.4.0",
-    "pytest-cov==7.1.0",
-    "pytest-mock==3.15.1",
-    "python-dotenv[cli]==1.2.3",
-    "ruff==0.16.5",
-    "types-python-dateutil==2.9.0.20260807",
+    "darglint",
+    "freezegun",
+    "mypy",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-mock",
+    "python-dotenv[cli]",
+    "ruff",
+    "types-python-dateutil",
 ]
 
 [build-system]

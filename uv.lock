@@ -202,28 +202,28 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "aiohttp", specifier = "==3.14.3" },
-    { name = "domify", specifier = "==0.4.9" },
-    { name = "imageprobe", specifier = "==0.3.0" },
-    { name = "pillow", specifier = "==12.3.0" },
+    { name = "aiohttp" },
+    { name = "domify" },
+    { name = "imageprobe" },
+    { name = "pillow" },
     { name = "pokedex", git = "https://github.com/Parnassius/pokedex.git" },
-    { name = "python-dateutil", specifier = "==2.9.0.post0" },
-    { name = "sqlalchemy", specifier = "==2.0.52" },
-    { name = "typenv", specifier = "==0.2.0" },
+    { name = "python-dateutil" },
+    { name = "sqlalchemy" },
+    { name = "typenv" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "darglint", specifier = "==1.8.1" },
-    { name = "freezegun", specifier = "==1.5.5" },
-    { name = "mypy", specifier = "==2.3.1" },
-    { name = "pytest", specifier = "==9.1.1" },
-    { name = "pytest-asyncio", specifier = "==1.4.0" },
-    { name = "pytest-cov", specifier = "==7.1.0" },
-    { name = "pytest-mock", specifier = "==3.15.1" },
-    { name = "python-dotenv", extras = ["cli"], specifier = "==1.2.3" },
-    { name = "ruff", specifier = "==0.16.5" },
-    { name = "types-python-dateutil", specifier = "==2.9.0.20260807" },
+    { name = "darglint" },
+    { name = "freezegun" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "pytest-mock" },
+    { name = "python-dotenv", extras = ["cli"] },
+    { name = "ruff" },
+    { name = "types-python-dateutil" },
 ]
 
 [[package]]
