@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   editorconfig:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup editorconfig-checker
@@ -27,9 +27,9 @@ jobs:
       matrix:
         arch:
           - name: amd64
-            os: ubuntu-24.04  # renovate: github-runner
+            os: ubuntu-26.04  # renovate: github-runner
           - name: arm64
-            os: ubuntu-24.04-arm  # renovate: github-runner
+            os: ubuntu-26.04-arm  # renovate: github-runner
     if: github.event_name != 'schedule'
     outputs:
       coverage-percentage: ${{ steps.percentage.outputs.percentage }}
@@ -59,7 +59,7 @@ jobs:
         run: cat coverage/coverage.md >> $GITHUB_STEP_SUMMARY
 
   integration:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     if: github.event_name == 'schedule'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -88,7 +88,7 @@ jobs:
         run: podman build --volume "$PWD"/pokemon-showdown:/pokemon-showdown --volume "$PWD"/data:/data --target integration .
 
   coverage-badge:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [editorconfig, test]
     if: github.event_name == 'push' && github.ref_name == 'main'
     permissions:
@@ -139,9 +139,9 @@ jobs:
       matrix:
         arch:
           - name: amd64
-            os: ubuntu-24.04  # renovate: github-runner
+            os: ubuntu-26.04  # renovate: github-runner
           - name: arm64
-            os: ubuntu-24.04-arm  # renovate: github-runner
+            os: ubuntu-26.04-arm  # renovate: github-runner
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Get target image name
@@ -157,7 +157,7 @@ jobs:
       contents: read
       packages: write
     needs: publish
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Get target image name
         id: image
@@ -178,7 +178,7 @@ jobs:
           min-versions-to-keep: 10
 
   dummy-required-job:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [editorconfig, test]
     if: always()
     steps:
