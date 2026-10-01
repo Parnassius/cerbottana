@@ -269,7 +269,7 @@ async def gtsleaderboard(msg: Message) -> None:
             for position, (player, username) in enumerate(players, start=1):
                 e.Tr(
                     e.Td(position),
-                    e.Td(ce.Username(username)),
+                    e.Td(ce.Username(username or player.userid)),
                     e.Td(player.gts_points),
                 )
 
