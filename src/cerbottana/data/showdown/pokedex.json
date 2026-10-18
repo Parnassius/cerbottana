@@ -38572,7 +38572,7 @@
     ],
     "prevo": "Kubfu",
     "evoType": "other",
-    "evoCondition": "Defeat the Single Strike Tower",
+    "evoCondition": "Use a Scroll of Darkness",
     "eggGroups": [
       "Undiscovered"
     ],
@@ -38614,7 +38614,7 @@
     "color": "Gray",
     "prevo": "Kubfu",
     "evoType": "other",
-    "evoCondition": "Defeat the Rapid Strike Tower",
+    "evoCondition": "Use a Scroll of Waters",
     "eggGroups": [
       "Undiscovered"
     ],
@@ -39014,7 +39014,8 @@
     "color": "Brown",
     "prevo": "Scyther",
     "evoType": "useItem",
-    "evoCondition": "Black Augurite",
+    "evoItem": "Black Augurite",
+    "evoCondition": "in Legends: Arceus or Legends: Z-A",
     "eggGroups": [
       "Bug"
     ]
@@ -39043,8 +39044,9 @@
     "weightkg": 290,
     "color": "Brown",
     "prevo": "Ursaring",
-    "evoType": "other",
-    "evoCondition": "Peat Block when there's a full moon",
+    "evoType": "useItem",
+    "evoItem": "Peat Block",
+    "evoCondition": "in Legends: Arceus when there's a full moon",
     "eggGroups": [
       "Field"
     ],
