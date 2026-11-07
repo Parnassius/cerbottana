@@ -1,7 +1,7 @@
 # Author: Plato (palt0)
 
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
 from domify.base_element import BaseElement
@@ -33,9 +33,9 @@ class User:
         attributes (AttributeMapping): Custom attributes, used by plugins.
     """
 
-    _instances: WeakKeyDictionary[Connection, WeakValueDictionary[UserId, User]] = (
-        WeakKeyDictionary()
-    )
+    _instances: ClassVar[
+        WeakKeyDictionary[Connection, WeakValueDictionary[UserId, User]]
+    ] = WeakKeyDictionary()
 
     def __init__(
         self,

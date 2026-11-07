@@ -4,7 +4,7 @@
 import asyncio
 from collections import deque
 from textwrap import shorten
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
 from domify import html_elements as e
@@ -41,9 +41,9 @@ class Room:
         attributes (AttributeMapping): Custom attributes, used by plugins.
     """
 
-    _instances: WeakKeyDictionary[Connection, WeakValueDictionary[RoomId, Room]] = (
-        WeakKeyDictionary()
-    )
+    _instances: ClassVar[
+        WeakKeyDictionary[Connection, WeakValueDictionary[RoomId, Room]]
+    ] = WeakKeyDictionary()
 
     def __init__(
         self,
