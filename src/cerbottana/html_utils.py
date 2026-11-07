@@ -125,22 +125,18 @@ class HTMLPageCommand(BaseHTMLCommand):
         stmt: Select,  # type: ignore[type-arg]
         *,
         title: str,
-        fields: list[  # type: ignore[type-arg]
-            tuple[str, str | Callable[[Row], BaseElement | str]]
-        ],
+        fields: list[tuple[str, str | Callable[[Row], BaseElement | str]]],  # type: ignore[type-arg]
         actions_header: str = "",
-        actions: (  # type: ignore[type-arg]
-            list[
-                tuple[
-                    str,  # cmd
-                    list[str | Callable[[Row], str]],  # params
-                    bool | Callable[[Row], bool],  # disabled
-                    str | None,  # btn_icon
-                    str,  # btn_text
-                ]
+        actions: list[
+            tuple[
+                str,  # cmd
+                list[str | Callable[[Row], str]],  # type: ignore[type-arg]  # params
+                bool | Callable[[Row], bool],  # type: ignore[type-arg]  # disabled
+                str | None,  # btn_icon
+                str,  # btn_text
             ]
-            | None
-        ) = None,
+        ]
+        | None = None,
     ) -> None:
         super().__init__()
 
